@@ -3,12 +3,8 @@ plugins {
 }
 
 android {
-    namespace = "com.example.presentation"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    namespace = "com.medsy.presentation"
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 26

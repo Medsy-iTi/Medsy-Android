@@ -1,15 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt) apply false
 }
 
 android {
-    namespace = "com.example.medsy"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    namespace = "com.medsy.medsy"
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.medsy"
