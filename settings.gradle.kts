@@ -24,4 +24,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Medsy"
 include(":app")
- 
+include(":data")
+include(":presentation")
+include(":domain")
