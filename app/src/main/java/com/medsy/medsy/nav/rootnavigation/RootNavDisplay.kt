@@ -1,0 +1,150 @@
+package com.medsy.medsy.nav.rootnavigation
+
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
+import com.medsy.presentation.aichat.AiChatRoot
+import com.medsy.presentation.auth.emailverification.EmailVerificationRoot
+import com.medsy.presentation.auth.forgotpassword.ForgotPasswordRoot
+import com.medsy.presentation.auth.login.LoginRoot
+import com.medsy.presentation.auth.signup.SignupRoot
+import com.medsy.presentation.onboarding.OnboardingRoot
+import com.medsy.presentation.productdetails.ProductDetailsRoot
+import com.medsy.presentation.search.SearchRoot
+import com.medsy.presentation.settings.SettingsRoot
+import com.medsy.presentation.splash.SplashRoot
+
+@Composable
+fun RootNavDisplay() {
+    val rootBackStack = rememberNavBackStack(Route.Splash)
+
+    NavDisplay(
+        modifier = Modifier.fillMaxSize(),
+        backStack = rootBackStack,
+        onBack = { rootBackStack.removeLastOrNull() },
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        transitionSpec = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(350)
+            ) togetherWith slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(350)
+            )
+        },
+        popTransitionSpec = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(350)
+            ) togetherWith slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(350)
+            )
+        },
+        entryProvider = entryProvider {
+            entry<Route.Splash> {
+                SplashRoot(
+                    openLogin = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.Onboarding)
+                        }
+                    }
+                )
+            }
+            entry<Route.Onboarding> {
+                OnboardingRoot(
+                    openLogin = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.Login)
+                        }
+                    }
+                )
+            }
+            entry<Route.Login> {
+                LoginRoot(
+                    openSignup = {
+                        rootBackStack.navigateSingleTop(Route.Signup)
+                    }
+                )
+            }
+            entry<Route.Signup> {
+                SignupRoot(
+                    onNext = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.NestedNav)
+                        }
+                    }
+                )
+            }
+            entry<Route.EmailVerification> {
+                EmailVerificationRoot(
+                    onNext = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.Login)
+                        }
+                    }
+                )
+            }
+            entry<Route.ForgotPassword> {
+                ForgotPasswordRoot(
+                    onNext = { rootBackStack.removeLastOrNull() }
+                )
+            }
+            entry<Route.NestedNav> {
+                NestedNavDisplay(
+                    navigateBack = {
+                        rootBackStack.popIfCurrentIs<Route.NestedNav>()
+                    },
+                    openProductDetails = {
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = "temporary-product-id")
+                        )
+                    },
+                    openSettings = {
+                        rootBackStack.navigateSingleTop(Route.Settings)
+                    }
+                )
+            }
+            entry<Route.AiChat> {
+                AiChatRoot(
+                    onNext = { rootBackStack.removeLastOrNull() }
+                )
+            }
+            entry<Route.ProductDetails> {
+                ProductDetailsRoot(
+                    onNext = { rootBackStack.removeLastOrNull() }
+                )
+            }
+            entry<Route.Settings> {
+                SettingsRoot(
+                    onNext = { rootBackStack.removeLastOrNull() }
+                )
+            }
+            entry<Route.SearchNav> {
+                SearchRoot(
+                    onNext = {
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = "temporary-product-id")
+                        )
+                    }
+                )
+            }
+        }
+    )
+}
