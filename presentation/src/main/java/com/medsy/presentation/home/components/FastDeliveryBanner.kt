@@ -6,51 +6,47 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Moped
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.medsy.designsystem.ui.theme.LightGreen
 import com.medsy.presentation.R
 
 @Composable
 fun FastDeliveryBanner() {
-    val primaryGreen = Color(0xFF1E7B4D)
-
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF0FDF4), RoundedCornerShape(12.dp))
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .background(LightGreen, RoundedCornerShape(12.dp))
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Moped,
             contentDescription = null,
-            tint = primaryGreen,
-            modifier = Modifier.size(24.dp)
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .size(32.dp)
+                .align(Alignment.CenterStart)
         )
-        Spacer(modifier = Modifier.width(12.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+        
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.align(Alignment.Center)
         ) {
             Text(
                 text = stringResource(R.string.home_banner_fast_delivery),
-                fontWeight = FontWeight.Bold,
-                color = primaryGreen,
-                fontSize = 14.sp
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = stringResource(R.string.home_banner_to_door),
-                color = primaryGreen,
-                fontSize = 14.sp
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }

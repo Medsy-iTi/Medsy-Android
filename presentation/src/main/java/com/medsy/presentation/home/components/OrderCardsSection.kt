@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.medsy.designsystem.ui.theme.OffWhiteBg
 import com.medsy.presentation.R
 
 @Composable
@@ -27,14 +28,11 @@ fun OrderCardsSection(
     onSearchMedicineClick: () -> Unit,
     onUploadPrescriptionClick: () -> Unit
 ) {
-    val primaryGreen = Color(0xFF1E7B4D)
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.home_section_order),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -57,7 +55,7 @@ fun OrderCardsSection(
                 title = stringResource(R.string.home_card_upload_title),
                 subtitle = stringResource(R.string.home_card_upload_desc),
                 icon = Icons.Default.CameraAlt,
-                iconTint = primaryGreen,
+                iconTint = MaterialTheme.colorScheme.primary,
                 onClick = onUploadPrescriptionClick
             )
         }

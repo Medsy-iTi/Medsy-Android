@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.medsy.designsystem.ui.theme.*
 import com.medsy.presentation.R
 import com.medsy.presentation.home.CategoryIconType
 import com.medsy.presentation.home.CategoryUi
@@ -31,8 +32,6 @@ fun CategoriesSection(
     onViewAllClick: () -> Unit,
     onCategoryClick: (String) -> Unit
 ) {
-    val primaryGreen = Color(0xFF1E7B4D)
-
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -41,15 +40,13 @@ fun CategoriesSection(
         ) {
             Text(
                 text = stringResource(R.string.home_section_categories),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = stringResource(R.string.home_view_all),
-                fontSize = 14.sp,
-                color = primaryGreen,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable { onViewAllClick() }
             )
         }
@@ -65,32 +62,32 @@ fun CategoriesSection(
                 val (icon, bgCol, iconCol) = when (cat.iconType) {
                     CategoryIconType.MEDICINE -> Triple(
                         Icons.Default.Medication,
-                        Color(0xFFE0E7FF),
-                        Color(0xFF3B82F6)
+                        CategoryMedicineBg,
+                        CategoryMedicineIcon
                     )
 
                     CategoryIconType.VITAMINS -> Triple(
                         Icons.Default.HealthAndSafety,
-                        Color(0xFFFFEDD5),
-                        Color(0xFFF97316)
+                        CategoryVitaminsBg,
+                        CategoryVitaminsIcon
                     )
 
                     CategoryIconType.PERSONAL_CARE -> Triple(
                         Icons.Default.Face,
-                        Color(0xFFFCE7F3),
-                        Color(0xFFEC4899)
+                        CategoryPersonalCareBg,
+                        CategoryPersonalCareIcon
                     )
 
                     CategoryIconType.MEDICAL_DEVICES -> Triple(
                         Icons.Default.MedicalServices,
-                        Color(0xFFF3E8FF),
-                        Color(0xFF8B5CF6)
+                        CategoryMedicalDevicesBg,
+                        CategoryMedicalDevicesIcon
                     )
 
                     CategoryIconType.MORE -> Triple(
                         Icons.Default.MoreHoriz,
-                        Color(0xFFF3F4F6),
-                        Color(0xFF6B7280)
+                        CategoryMoreBg,
+                        CategoryMoreIcon
                     )
                 }
 
@@ -114,9 +111,8 @@ fun CategoriesSection(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = stringResource(cat.nameRes),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.DarkGray
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }

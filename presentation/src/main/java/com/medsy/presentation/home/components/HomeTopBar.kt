@@ -9,15 +9,14 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.medsy.presentation.R
 
 @Composable
@@ -39,23 +38,22 @@ fun HomeTopBar(
             Icon(
                 imageVector = Icons.Default.LocationOn,
                 contentDescription = null,
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "${stringResource(R.string.home_delivery_to)} $deliveryAddress",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
-
+        
         Box(
             modifier = Modifier
                 .size(40.dp)
@@ -65,13 +63,13 @@ fun HomeTopBar(
             Icon(
                 imageVector = Icons.Outlined.Notifications,
                 contentDescription = null,
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onBackground
             )
             if (notificationCount > 0) {
                 Box(
                     modifier = Modifier
                         .size(10.dp)
-                        .background(Color.Red, CircleShape)
+                        .background(MaterialTheme.colorScheme.error, CircleShape)
                         .align(Alignment.TopEnd)
                         .offset(x = (-4).dp, y = 6.dp)
                 )
