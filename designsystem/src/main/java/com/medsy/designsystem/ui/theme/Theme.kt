@@ -1,17 +1,12 @@
-package com.medsy.medsy.ui.theme
+package com.medsy.designsystem.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialExpressiveTheme
-import androidx.compose.material3.MotionScheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.medsy.medsy.ui.theme.LocalExtendedColors
-import com.medsy.medsy.ui.theme.Typography
-import com.medsy.medsy.ui.theme.darkExtendedColors
-import com.medsy.medsy.ui.theme.lightExtendedColors
-import com.medsy.medsy.ui.theme.shapes
+import com.medsy.designsystem.ui.theme.shapes
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -101,10 +96,9 @@ fun MedsyTheme(
     CompositionLocalProvider(
         LocalExtendedColors provides extendedColors
     ) {
-        MaterialExpressiveTheme(
+        MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,
-            motionScheme = MotionScheme.expressive(),
             shapes = shapes,
             content = content
         )

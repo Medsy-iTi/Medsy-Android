@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.medsy.designsystem.ui.theme.LocalExtendedColors
 import com.medsy.presentation.R
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -36,11 +37,12 @@ fun SplashScreen(onFinished: () -> Unit) {
         onFinished()
     }
 
+    val colors = LocalExtendedColors.current
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(colors.background),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -49,7 +51,7 @@ fun SplashScreen(onFinished: () -> Unit) {
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
                 fontSize = 28.sp,
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = colors.textPrimary,
             ),
         )
     }

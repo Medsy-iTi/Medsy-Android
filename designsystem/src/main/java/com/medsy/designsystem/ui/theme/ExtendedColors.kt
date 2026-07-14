@@ -1,4 +1,4 @@
-package com.medsy.medsy.ui.theme
+package com.medsy.designsystem.ui.theme
 
 
 import androidx.compose.runtime.Immutable
