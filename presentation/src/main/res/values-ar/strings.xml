@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_delivery_to">التوصيل إلى</string>
+    <string name="home_address_mock">شارع النيل، المعادي</string>
+    <string name="home_search_hint">ابحث باسم الدواء</string>
+    <string name="home_promo_title">صحتك تهمنا</string>
+    <string name="home_promo_subtitle">خصم حتى 30%</string>
+    <string name="home_promo_desc">على مجموعة مختارة</string>
+    <string name="home_promo_button">تسوق الآن</string>
+    <string name="home_section_order">سهلنا الطلب عليك</string>
+    <string name="home_card_search_title">ابحث عن دواء</string>
+    <string name="home_card_search_desc">ابحث عن أي دواء تحتاجه بسهولة</string>
+    <string name="home_card_upload_title">اطلب بالروشتة</string>
+    <string name="home_card_upload_desc">ارفع صورة الروشتة وسنقوم بمراجعتها</string>
+    <string name="home_section_categories">تسوق من الفئات</string>
+    <string name="home_view_all">عرض الكل</string>
+    <string name="home_cat_medicine">أدوية</string>
+    <string name="home_cat_vitamins">فيتامينات</string>
+    <string name="home_cat_personal_care">عناية شخصية</string>
+    <string name="home_cat_medical_devices">أجهزة طبية</string>
+    <string name="home_cat_more">المزيد</string>
+    <string name="home_banner_fast_delivery">توصيل سريع</string>
+    <string name="home_banner_to_door">إلى باب منزلك</string>
+
+</resources>
