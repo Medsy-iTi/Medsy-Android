@@ -11,6 +11,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.emailverification.EmailVerificationRoot
@@ -38,19 +39,19 @@ fun RootNavDisplay() {
         transitionSpec = {
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(350)
+                animationSpec = tween(NAVIGATION_DURATION_MILLIS)
             ) togetherWith slideOutOfContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(350)
+                animationSpec = tween(NAVIGATION_DURATION_MILLIS)
             )
         },
         popTransitionSpec = {
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(350)
+                animationSpec = tween(NAVIGATION_DURATION_MILLIS)
             ) togetherWith slideOutOfContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(350)
+                animationSpec = tween(NAVIGATION_DURATION_MILLIS)
             )
         },
         entryProvider = entryProvider {

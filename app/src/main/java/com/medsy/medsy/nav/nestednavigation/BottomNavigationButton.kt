@@ -1,6 +1,7 @@
 package com.medsy.medsy.nav.nestednavigation
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShortNavigationBarItem
@@ -9,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun BottomNavigationButton(
@@ -16,7 +19,7 @@ fun BottomNavigationButton(
     @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
     selected: Boolean = false,
-    label: String,
+    @StringRes label: Int,
 ) {
     ShortNavigationBarItem(
         selected = selected,
@@ -29,7 +32,8 @@ fun BottomNavigationButton(
         },
         label = {
             Text(
-                text = label,
+                text = stringResource(label),
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
             )
         },
         modifier = modifier,

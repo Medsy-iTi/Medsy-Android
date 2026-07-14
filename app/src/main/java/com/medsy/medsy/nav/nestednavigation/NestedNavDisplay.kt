@@ -16,6 +16,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.rootnavigation.Route
 import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
 import com.medsy.presentation.cart.CartRoot
@@ -23,6 +24,7 @@ import com.medsy.presentation.home.HomeRoot
 import com.medsy.presentation.profile.ProfileRoot
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+
 
 @Composable
 fun NestedNavDisplay(
@@ -63,8 +65,7 @@ fun NestedNavDisplay(
                             }
                         },
                         icon = if (isSelected) destination.selectedIcon else destination.icon,
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         selected = isSelected,
                         label = destination.title
                     )
@@ -85,7 +86,11 @@ fun NestedNavDisplay(
                 }
             },
             transitionSpec = {
-                fadeIn(tween(350)) togetherWith fadeOut(tween(350))
+                fadeIn(
+                    tween(NAVIGATION_DURATION_MILLIS)
+                ) togetherWith fadeOut(
+                    tween(NAVIGATION_DURATION_MILLIS)
+                )
             },
             entryProvider = entryProvider {
                 entry<Route.NestedNav.Home> {
