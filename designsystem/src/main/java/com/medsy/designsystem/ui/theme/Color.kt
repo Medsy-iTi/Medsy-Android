@@ -22,6 +22,7 @@ val HintPlaceholder = Color(0xFF9CA3AF)
 val SuccessGreen = Color(0xFF22C55E)
 val ErrorRed = Color(0xFFEF4444)
 val WarningYellow = Color(0xFFF59E0B)
+val OrderCardBg = Color(0xFFF8FAFC)
 
 // Category Colors
 val CategoryMedicineBg = Color(0xFFE0E7FF)
