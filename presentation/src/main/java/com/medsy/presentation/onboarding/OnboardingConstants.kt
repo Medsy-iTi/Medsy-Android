@@ -18,10 +18,6 @@ object OnboardingConstants {
     val SpacerLarge = 32.dp
     val SpacerMedium = 16.dp
     val SpacerSmall = 8.dp
-    
-    val ButtonHeight = 56.dp
-    val ButtonCornerRadius = 12.dp
-    
     const val FADE_ANIMATION_MULTIPLIER = 2f
     const val TRANSLATE_Y_MULTIPLIER = 50f
 }

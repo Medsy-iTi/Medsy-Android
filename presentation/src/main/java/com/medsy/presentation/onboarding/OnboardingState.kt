@@ -1,6 +1,7 @@
 package com.medsy.presentation.onboarding
 
+import com.medsy.presentation.onboarding.model.OnboardingPage
+
 data class OnboardingState(
-    val paramOne: String = "default",
-    val paramTwo: List<String> = emptyList(),
+    val pages: List<OnboardingPage> = emptyList()
 )
