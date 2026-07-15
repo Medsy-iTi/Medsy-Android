@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.medsy.designsystem.R as DesignR
+import com.medsy.designsystem.ui.theme.NeutralWhite
+import com.medsy.designsystem.ui.theme.PrimaryText
 import com.medsy.presentation.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -54,6 +56,7 @@ fun SplashScreen(onFinished: () -> Unit) {
     val logoAlpha = remember { Animatable(0f) }
     val textAlpha = remember { Animatable(0f) }
     val textOffsetY = remember { Animatable(SplashConstants.TEXT_SLIDE_START_OFFSET) }
+
 
     LaunchedEffect(Unit) {
         launch {
@@ -86,7 +89,7 @@ fun SplashScreen(onFinished: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(NeutralWhite),
         contentAlignment = Alignment.Center,
     ) {
         Column(
@@ -104,7 +107,7 @@ fun SplashScreen(onFinished: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             val primaryColor = MaterialTheme.colorScheme.primary
-            val textColor = Color(0xFF1C1C1C)
+            val textColor = PrimaryText
             val prefix = stringResource(R.string.app_name_prefix)
             val suffix = stringResource(R.string.app_name_suffix)
 
@@ -124,4 +127,5 @@ fun SplashScreen(onFinished: () -> Unit) {
             )
         }
     }
+
 }
