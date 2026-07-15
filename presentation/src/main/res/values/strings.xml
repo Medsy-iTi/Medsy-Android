@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Medsy</string>
+    <string name="app_name_prefix">Med</string>
+    <string name="app_name_suffix">sy</string>
 </resources>

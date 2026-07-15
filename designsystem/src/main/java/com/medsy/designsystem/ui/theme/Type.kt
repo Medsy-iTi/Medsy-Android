@@ -29,6 +29,11 @@ val PoppinsFontFamily = FontFamily(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
+    displayLarge = TextStyle(
+        fontFamily = CairoFontFamily,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 48.sp,
+    ),
     headlineLarge = TextStyle(
         fontFamily = CairoFontFamily,
         fontWeight = FontWeight.Bold,
