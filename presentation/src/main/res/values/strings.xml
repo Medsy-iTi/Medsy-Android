@@ -36,4 +36,5 @@
 
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>
+    <string name="app_name">Medsy</string>
 </resources>
