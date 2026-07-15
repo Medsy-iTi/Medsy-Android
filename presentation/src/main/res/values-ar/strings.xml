@@ -2,4 +2,15 @@
     <string name="app_name">ميدسي</string>
     <string name="app_name_prefix">ميد</string>
     <string name="app_name_suffix">سي</string>
+
+    <string name="onboarding_title_1">اطلب أدويتك</string>
+    <string name="onboarding_desc_1">اطلب جميع احتياجاتك من الأدوية ومنتجات الصيدلية من مكان واحد</string>
+    <string name="onboarding_title_2">توصيل سريع و آمن</string>
+    <string name="onboarding_desc_2">نصل طلبك بسرعة إلى باب بيتك مع الحفاظ على جودة المنتجات</string>
+    <string name="onboarding_title_3">موثوق و آمن</string>
+    <string name="onboarding_desc_3">نختار لك أفضل الصيدليات والمنتجات لنضمن لك تجربة آمنة وموثوقة</string>
+
+    <string name="action_skip">تخطي</string>
+    <string name="action_next">التالي</string>
+    <string name="action_get_started">ابدأ الآن</string>
 </resources>
