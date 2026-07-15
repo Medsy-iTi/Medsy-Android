@@ -22,12 +22,15 @@
     <string name="home_cat_more">المزيد</string>
     <string name="home_banner_fast_delivery">توصيل سريع</string>
     <string name="home_banner_to_door">إلى باب منزلك</string>
+
+    <!-- App -->
+
     <string name="app_name">ميدسي</string>
     <string name="app_name_prefix">ميد</string>
     <string name="app_name_suffix">سي</string>
-
     <string name="medsy_logo_content_desc">شعار ميدسي</string>
 
+    <!-- Onboarding -->
     <string name="onboarding_title_1">اطلب أدويتك</string>
     <string name="onboarding_desc_1">اطلب جميع احتياجاتك من الأدوية ومنتجات الصيدلية من مكان واحد</string>
     <string name="onboarding_title_2">توصيل سريع و آمن</string>

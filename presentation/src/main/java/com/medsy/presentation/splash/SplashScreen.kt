@@ -34,19 +34,19 @@ fun SplashRoot(
     openOnboarding: () -> Unit,
 ) {
     SplashScreen(
-        onFinished = {
-            openOnboarding()
-        }
+        onFinished = openOnboarding
     )
 }
 
 @Composable
 fun SplashScreen(onFinished: () -> Unit) {
+
     val logoAlpha = remember { Animatable(0f) }
     val textAlpha = remember { Animatable(0f) }
     val textOffsetY = remember { Animatable(SplashConstants.TEXT_SLIDE_START_OFFSET) }
 
     LaunchedEffect(Unit) {
+
         launch {
             logoAlpha.animateTo(
                 targetValue = 1f,
@@ -83,6 +83,7 @@ fun SplashScreen(onFinished: () -> Unit) {
         textOffsetJob.join()
 
         delay(SplashConstants.HOLD_DURATION.milliseconds)
+
         onFinished()
     }
 
@@ -92,7 +93,10 @@ fun SplashScreen(onFinished: () -> Unit) {
             .background(NeutralWhite),
         contentAlignment = Alignment.Center,
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
             Image(
                 painter = painterResource(id = DesignR.drawable.ic_logo_transparent),
@@ -107,6 +111,7 @@ fun SplashScreen(onFinished: () -> Unit) {
 
             val primaryColor = MaterialTheme.colorScheme.primary
             val textColor = PrimaryText
+
             val prefix = stringResource(R.string.app_name_prefix)
             val suffix = stringResource(R.string.app_name_suffix)
 
@@ -114,6 +119,7 @@ fun SplashScreen(onFinished: () -> Unit) {
                 modifier = Modifier
                     .graphicsLayer { alpha = textAlpha.value }
                     .offset { IntOffset(0, textOffsetY.value.toInt()) },
+
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = primaryColor)) {
                         append(prefix)
@@ -122,6 +128,7 @@ fun SplashScreen(onFinished: () -> Unit) {
                         append(suffix)
                     }
                 },
+
                 style = MaterialTheme.typography.displayLarge
             )
         }
