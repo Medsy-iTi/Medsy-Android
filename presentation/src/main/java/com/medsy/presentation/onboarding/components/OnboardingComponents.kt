@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.medsy.designsystem.components.MedsyButton
 import com.medsy.designsystem.ui.theme.BorderGray
 import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.designsystem.ui.theme.SecondaryText
@@ -142,7 +143,7 @@ fun OnboardingNextButton(
 ) {
     val scope = rememberCoroutineScope()
 
-    Button(
+    MedsyButton(
         onClick = {
             if (pagerState.currentPage == pageCount - 1) {
                 onGetStarted()
@@ -153,14 +154,8 @@ fun OnboardingNextButton(
             }
         },
         modifier = Modifier
-            .fillMaxWidth()
             .padding(horizontal = OnboardingConstants.ScreenPaddingHorizontal)
             .padding(bottom = OnboardingConstants.SpacerLarge)
-            .height(OnboardingConstants.ButtonHeight),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        ),
-        shape = RoundedCornerShape(OnboardingConstants.ButtonCornerRadius)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
