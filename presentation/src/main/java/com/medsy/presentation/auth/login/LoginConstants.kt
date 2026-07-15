@@ -1,0 +1,22 @@
+package com.medsy.presentation.auth.login
+
+import androidx.compose.ui.unit.dp
+
+object LoginConstants {
+    val ScreenPaddingHorizontal = 24.dp
+    val ScreenPaddingVertical = 24.dp
+    val TopSpacer = 40.dp
+    val LogoWidth = 140.dp
+    val SpacerLogoText = 16.dp
+    val SpacerTextForm = 48.dp
+    val SpacerInput = 16.dp
+    val SpacerInputButton = 24.dp
+    val SpacerOr = 24.dp
+    val SpacerSocial = 16.dp
+
+    val SocialButtonHeight = 56.dp
+    val SocialButtonCornerRadius = 12.dp
+    val SocialButtonTextWidth = 150.dp
+    val DividerWidth = 60.dp
+    val IconSize = 24.dp
+}
