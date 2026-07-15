@@ -3,12 +3,9 @@ package com.medsy.presentation.auth.register.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.medsy.designsystem.components.MedsyTextField
 
 
 @Composable
@@ -32,20 +30,16 @@ fun AuthTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        OutlinedTextField(
+        MedsyTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
             placeholder = { Text(stringResource(labelRes)) },
             leadingIcon = { Icon(imageVector = leadingIcon, contentDescription = null) },
             trailingIcon = trailingIcon,
             visualTransformation = visualTransformation,
-            isError = errorRes != null,
-            singleLine = true,
-            shape = RoundedCornerShape(14.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            colors = OutlinedTextFieldDefaults.colors(),
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
         )
+
         if (errorRes != null) {
             Text(
                 text = stringResource(errorRes),
