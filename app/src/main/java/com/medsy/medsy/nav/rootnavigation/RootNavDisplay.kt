@@ -81,6 +81,7 @@ fun RootNavDisplay() {
                 )
             }
 
+
             entry<Route.Register> {
                 RegisterRoot(
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
