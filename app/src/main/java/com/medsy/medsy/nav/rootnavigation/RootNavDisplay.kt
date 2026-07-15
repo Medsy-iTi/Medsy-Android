@@ -77,6 +77,9 @@ fun RootNavDisplay() {
                 LoginRoot(
                     openSignup = {
                         rootBackStack.navigateSingleTop(Route.Register)
+                    },
+                    openHome = {
+                        rootBackStack.navigateSingleTop(Route.NestedNav)
                     }
                 )
             }

@@ -47,6 +47,7 @@ import com.medsy.designsystem.R as DesignR
 @Composable
 fun LoginRoot(
     openSignup: () -> Unit,
+    openHome: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -55,6 +56,7 @@ fun LoginRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 LoginUIEffect.NavigateToSignup -> openSignup()
+                LoginUIEffect.NavigateToHome -> openHome()
             }
         }
     }
@@ -147,7 +149,7 @@ fun LoginScreen(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 ),
-                modifier = Modifier.clickable {  }
+                modifier = Modifier.clickable { }
             )
         }
 
@@ -155,7 +157,7 @@ fun LoginScreen(
 
         // Login Button
         MedsyButton(
-            onClick = {  }
+            onClick = { onIntent(LoginUIIntent.OnLoginClick) }
         ) {
             Text(
                 text = stringResource(R.string.login_button),
@@ -177,7 +179,7 @@ fun LoginScreen(
         LoginSocialButton(
             iconResId = DesignR.drawable.ic_google,
             text = stringResource(R.string.login_google),
-            onClick = {  }
+            onClick = { }
         )
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerSocial))
@@ -186,7 +188,7 @@ fun LoginScreen(
         LoginSocialButton(
             iconResId = DesignR.drawable.ic_facebook,
             text = stringResource(R.string.login_facebook),
-            onClick = {  }
+            onClick = { }
         )
 
         Spacer(modifier = Modifier.weight(1f))

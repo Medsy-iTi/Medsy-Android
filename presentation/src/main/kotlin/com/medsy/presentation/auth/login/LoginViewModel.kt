@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 sealed interface LoginUIEffect {
     data object NavigateToSignup : LoginUIEffect
+    data object NavigateToHome : LoginUIEffect
 }
 
 @HiltViewModel
@@ -28,6 +29,12 @@ class LoginViewModel @Inject constructor() : ViewModel() {
             LoginUIIntent.OnSignupClick -> {
                 viewModelScope.launch {
                     _effect.send(LoginUIEffect.NavigateToSignup)
+                }
+            }
+
+            LoginUIIntent.OnLoginClick -> {
+                viewModelScope.launch {
+                    _effect.send(LoginUIEffect.NavigateToHome)
                 }
             }
         }
