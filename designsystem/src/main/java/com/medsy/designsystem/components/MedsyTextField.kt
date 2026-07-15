@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.BorderGray
 import com.medsy.designsystem.ui.theme.NeutralWhite
+import com.medsy.designsystem.ui.theme.PrimaryText
 
 @Composable
 fun MedsyTextField(
@@ -38,7 +39,10 @@ fun MedsyTextField(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = BorderGray,
             focusedContainerColor = NeutralWhite,
-            unfocusedContainerColor = NeutralWhite
+            unfocusedContainerColor = NeutralWhite,
+            focusedTextColor = PrimaryText,
+            unfocusedTextColor = PrimaryText,
+            cursorColor = MaterialTheme.colorScheme.primary
         ),
         keyboardOptions = keyboardOptions,
         singleLine = singleLine
