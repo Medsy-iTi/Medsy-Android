@@ -69,32 +69,32 @@ fun CategoriesSection(
                 val (icon, bgCol, iconCol) = when (cat.iconType) {
                     CategoryIconType.MEDICINE -> Triple(
                         Icons.Default.Medication,
-                        colors.categoryMedicineBg,
-                        colors.categoryMedicineIcon
+                        colors.blueContainer,
+                        colors.blueContent
                     )
 
                     CategoryIconType.VITAMINS -> Triple(
                         Icons.Default.HealthAndSafety,
-                        colors.categoryVitaminsBg,
-                        colors.categoryVitaminsIcon
+                        colors.orangeContainer,
+                        colors.orangeContent
                     )
 
                     CategoryIconType.PERSONAL_CARE -> Triple(
                         Icons.Default.Face,
-                        colors.categoryPersonalCareBg,
-                        colors.categoryPersonalCareIcon
+                        colors.pinkContainer,
+                        colors.pinkContent
                     )
 
                     CategoryIconType.MEDICAL_DEVICES -> Triple(
                         Icons.Default.MedicalServices,
-                        colors.categoryMedicalDevicesBg,
-                        colors.categoryMedicalDevicesIcon
+                        colors.purpleContainer,
+                        colors.purpleContent
                     )
 
                     CategoryIconType.MORE -> Triple(
                         Icons.Default.MoreHoriz,
-                        colors.categoryMoreBg,
-                        colors.categoryMoreIcon
+                        colors.neutralContainer,
+                        colors.neutralContent
                     )
                 }
 

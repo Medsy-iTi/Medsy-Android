@@ -18,13 +18,14 @@ import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
+import com.medsy.presentation.profile.personaldetails.PersonalDetailsRoot
 import com.medsy.presentation.search.SearchRoot
 import com.medsy.presentation.settings.SettingsRoot
 import com.medsy.presentation.splash.SplashRoot
 
 @Composable
 fun RootNavDisplay() {
-    val rootBackStack = rememberNavBackStack(Route.Splash)
+    val rootBackStack = rememberNavBackStack(Route.NestedNav)
 
     NavDisplay(
         modifier = Modifier.fillMaxSize(),
@@ -84,8 +85,6 @@ fun RootNavDisplay() {
                 )
             }
 
-
-
             entry<Route.Register> {
                 RegisterRoot(
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
@@ -103,8 +102,8 @@ fun RootNavDisplay() {
                             Route.ProductDetails(id = "temporary-product-id")
                         )
                     },
-                    openSettings = {
-                        rootBackStack.navigateSingleTop(Route.Settings)
+                    openPersonalDetails = {
+                        rootBackStack.navigateSingleTop(Route.PersonalDetails)
                     }
                 )
             }
@@ -121,6 +120,11 @@ fun RootNavDisplay() {
             entry<Route.Settings> {
                 SettingsRoot(
                     onNext = { rootBackStack.removeLastOrNull() }
+                )
+            }
+            entry<Route.PersonalDetails> {
+                PersonalDetailsRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() }
                 )
             }
             entry<Route.SearchNav> {

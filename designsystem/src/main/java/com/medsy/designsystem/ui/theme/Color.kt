@@ -11,7 +11,7 @@ val LightGreen = Color(0xFFE8F8F4)
 // Neutral
 val NeutralWhite = Color(0xFFFFFFFF)
 val OffWhiteBg = Color(0xFFF7F9F9)
-val BorderGray = Color(0xFFE0E0E0)
+val BorderGreen = Color(0xFFDCE8E2)
 
 // Text Colors
 val PrimaryText = Color(0xFF1C1C1C)

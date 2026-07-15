@@ -31,4 +31,32 @@
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
     <string name="app_name">Medsy</string>
+    <!-- الملف الشخصي -->
+    <string name="profile_title">حسابي</string>
+    <string name="profile_avatar_content_description">الصورة الشخصية</string>
+    <string name="profile_section_account">الحساب</string>
+    <string name="profile_personal_details">البيانات الشخصية</string>
+    <string name="profile_personal_details_subtitle">تعديل الاسم والبيانات الأساسية</string>
+    <string name="profile_notifications">الإشعارات</string>
+    <string name="profile_notifications_subtitle">إدارة إشعارات الطلبات والعروض</string>
+    <string name="profile_section_preferences">التفضيلات</string>
+    <string name="profile_language">اللغة</string>
+    <string name="profile_language_arabic">العربية</string>
+    <string name="profile_language_english">الإنجليزية</string>
+    <string name="profile_appearance">المظهر</string>
+    <string name="profile_appearance_system_default">حسب إعدادات الجهاز</string>
+    <string name="profile_appearance_light">الوضع الفاتح</string>
+    <string name="profile_appearance_dark">الوضع الداكن</string>
+    <string name="profile_section_support">الدعم والمساعدة</string>
+    <string name="profile_help_center">مركز المساعدة</string>
+    <string name="profile_help_center_subtitle">الأسئلة الشائعة والدعم</string>
+    <string name="profile_contact_us">تواصل معنا</string>
+    <string name="profile_terms">الشروط والأحكام</string>
+    <string name="profile_section_more">المزيد</string>
+    <string name="profile_about">عن Medsy</string>
+    <string name="profile_privacy">سياسة الخصوصية</string>
+    <string name="profile_logout">تسجيل الخروج</string>
+    <string name="profile_personal_details_title">البيانات الشخصية</string>
+    <string name="profile_personal_details_placeholder">ستتوفر تفاصيل البيانات الشخصية هنا قريبًا.</string>
+
 </resources>

@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.BorderGray
+import com.medsy.designsystem.ui.theme.BorderGreen
 import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.designsystem.ui.theme.SecondaryText
 import com.medsy.presentation.auth.login.LoginConstants
@@ -39,7 +39,7 @@ fun LoginSocialButton(
             .height(LoginConstants.SocialButtonHeight)
             .clickable { onClick() },
         shape = RoundedCornerShape(LoginConstants.SocialButtonCornerRadius),
-        border = BorderStroke(1.dp, BorderGray),
+        border = BorderStroke(1.dp, BorderGreen),
         color = NeutralWhite
     ) {
         Row(
@@ -52,12 +52,12 @@ fun LoginSocialButton(
                 contentDescription = null,
                 modifier = Modifier.size(LoginConstants.IconSize)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Text(
                 text = text,
-                modifier = Modifier.width(LoginConstants.SocialButtonTextWidth), 
+                modifier = Modifier.width(LoginConstants.SocialButtonTextWidth),
                 textAlign = TextAlign.Start,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodyLarge.copy(

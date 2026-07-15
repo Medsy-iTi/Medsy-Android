@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.BorderGray
+import com.medsy.designsystem.ui.theme.BorderGreen
 import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.designsystem.ui.theme.PrimaryText
 
@@ -37,7 +37,7 @@ fun MedsyTextField(
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = BorderGray,
+            unfocusedBorderColor = BorderGreen,
             focusedContainerColor = NeutralWhite,
             unfocusedContainerColor = NeutralWhite,
             focusedTextColor = PrimaryText,
