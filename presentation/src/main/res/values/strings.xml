@@ -93,4 +93,19 @@
     <string name="home_banner_to_door">to your doorstep</string>
 
 
+    <!--  Search  -->
+    <string name="search_results_title">Search Results</string>
+    <string name="search_input_placeholder">Search by medicine name</string>
+    <string name="search_clear_query_desc">Clear search</string>
+    <string name="search_filter_chip_filter">Filter</string>
+    <string name="search_filter_chip_type">Type</string>
+    <string name="search_filter_chip_price">Price</string>
+    <string name="search_filter_chip_most_relevant">Most relevant</string>
+    <string name="search_results_count">%1$d results</string>
+    <string name="search_price_egp">%1$d EGP</string>
+    <string name="search_favorite_desc">Add to favorites</string>
+    <string name="search_add_to_cart_desc">Add to cart</string>
+    <string name="search_added_to_cart">Added to cart</string>
+    <string name="search_empty_title">No results found</string>
+    <string name="search_empty_subtitle">Try a different search term</string>
 </resources>

@@ -105,6 +105,9 @@ fun RootNavDisplay() {
                     },
                     openSettings = {
                         rootBackStack.navigateSingleTop(Route.Settings)
+                    },
+                    openSearch = {
+                        rootBackStack.navigateSingleTop(Route.SearchNav)
                     }
                 )
             }
@@ -129,7 +132,8 @@ fun RootNavDisplay() {
                         rootBackStack.navigateSingleTop(
                             Route.ProductDetails(id = "temporary-product-id")
                         )
-                    }
+                    },
+                    onBack = { rootBackStack.removeLastOrNull() },
                 )
             }
         }
