@@ -15,7 +15,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.feature.createaccount.components.PrimaryButton
@@ -34,6 +34,36 @@ import com.medsy.presentation.auth.register.components.ScreenHeader
 import com.medsy.presentation.auth.register.components.SectionTitle
 import com.medsy.presentation.auth.register.components.TermsCheckboxRow
 import kotlinx.coroutines.flow.collectLatest
+
+@Composable
+fun RegisterRoot(
+    onNavigateBack: () -> Unit,
+    onNavigateToSignIn: () -> Unit,
+    onNavigateToHome: () -> Unit,
+    viewModel: RegisterViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is RegisterUIEffect.NavigateBack -> onNavigateBack()
+                is RegisterUIEffect.NavigateToSignIn -> onNavigateToSignIn()
+                is RegisterUIEffect.NavigateToHome -> onNavigateToHome()
+                is RegisterUIEffect.ShowMessage -> {
+
+                }
+            }
+        }
+    }
+
+    RegisterScreen(
+        onNavigateBack = onNavigateBack,
+        onNavigateToSignIn = onNavigateToSignIn,
+        onNavigateToHome = onNavigateToHome
+    )
+}
 
 
 @Composable
