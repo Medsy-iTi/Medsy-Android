@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 fun SectionTitle(
     textRes: Int,
     modifier: Modifier = Modifier,
-    color: Color = Color(0xFF1E7C3F),
+    color: Color = MaterialTheme.colorScheme.primary,
 ) {
     Text(
         text = stringResource(textRes),

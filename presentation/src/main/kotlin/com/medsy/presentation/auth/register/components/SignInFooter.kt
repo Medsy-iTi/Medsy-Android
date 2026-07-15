@@ -36,7 +36,7 @@ fun SignInFooter(
             text = " ${stringResource(R.string.sign_in)}",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1E7C3F),
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.clickable { onSignInClick() },
         )
     }
