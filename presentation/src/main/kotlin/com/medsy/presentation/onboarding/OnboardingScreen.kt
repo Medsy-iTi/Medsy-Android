@@ -36,23 +36,23 @@ fun OnboardingRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
-            when (event) {
-                OnboardingEvent.NavigateToLogin -> openLogin()
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                OnboardingUIEffect.NavigateToLogin -> openLogin()
             }
         }
     }
 
     OnboardingScreen(
         state = state,
-        onAction = viewModel::onAction
+        onIntent = viewModel::onIntent
     )
 }
 
 @Composable
 fun OnboardingScreen(
     state: OnboardingState,
-    onAction: (OnboardingAction) -> Unit,
+    onIntent: (OnboardingUIIntent) -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { state.pages.size })
 
@@ -78,7 +78,7 @@ fun OnboardingScreen(
                     fontWeight = FontWeight.Medium,
                     color = SecondaryText
                 ),
-                modifier = Modifier.clickable { onAction(OnboardingAction.OnSkipClick) }
+                modifier = Modifier.clickable { onIntent(OnboardingUIIntent.OnSkipClick) }
             )
         }
 
@@ -104,7 +104,7 @@ fun OnboardingScreen(
         OnboardingNextButton(
             pagerState = pagerState,
             pageCount = state.pages.size,
-            onGetStarted = { onAction(OnboardingAction.OnGetStartedClick) }
+            onGetStarted = { onIntent(OnboardingUIIntent.OnGetStartedClick) }
         )
     }
 }
