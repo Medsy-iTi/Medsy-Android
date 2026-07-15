@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,7 +32,7 @@ fun PromoBannerCarousel(
     currentIndex: Int,
     onPromoClick: () -> Unit
 ) {
-    val primaryGreen = Color(0xFF1E7B4D)
+
 
     if (banners.isNotEmpty()) {
         val pagerState = rememberPagerState(pageCount = { banners.size })
@@ -45,7 +46,7 @@ fun PromoBannerCarousel(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .height(190.dp) 
-                    .background(primaryGreen, RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
                     .clickable { onPromoClick() }
                     .padding(16.dp)
             ) {
@@ -86,7 +87,7 @@ fun PromoBannerCarousel(
                         ) {
                             Text(
                                 text = stringResource(currentBanner.ctaTextRes),
-                                color = primaryGreen,
+                                color = MaterialTheme.colorScheme.primary,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -119,7 +120,7 @@ fun PromoBannerCarousel(
                 horizontalArrangement = Arrangement.Center
             ) {
                 banners.forEachIndexed { index, _ ->
-                    val dotColor = if (index == pagerState.currentPage) primaryGreen else Color.LightGray
+                    val dotColor = if (index == pagerState.currentPage) MaterialTheme.colorScheme.primary else Color.LightGray
                     Box(modifier = Modifier
                         .size(8.dp)
                         .background(dotColor, CircleShape))
