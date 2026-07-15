@@ -14,7 +14,13 @@ import com.medsy.presentation.home.components.*
 
 @Composable
 fun HomeRoot(
-    onNext: () -> Unit,
+    onSearchClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    onAddressClick: () -> Unit,
+    onUploadPrescriptionClick: () -> Unit,
+    onViewAllCategoriesClick: () -> Unit,
+    onCategoryClick: (String) -> Unit,
+
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -22,30 +28,12 @@ fun HomeRoot(
     LaunchedEffect(viewModel) {
         viewModel.event.collect { event ->
             when (event) {
-                is HomeUIEffect.NavigateToSearch -> onNext()
-                else -> {}
-            }
-        }
-    }
-
-    HomeScreen(
-        state = state,
-        onAction = viewModel::onAction
-    )
-}
-
-@Composable
-fun HomeRoute(
-    viewModel: HomeViewModel,
-    onNavigateToSearch: () -> Unit
-) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.event.collect { event ->
-            when (event) {
-                is HomeUIEffect.NavigateToSearch -> onNavigateToSearch()
-                else -> {}
+                is HomeUIEffect.NavigateToSearch -> onSearchClick()
+                is HomeUIEffect.NavigateToCategory -> onCategoryClick(event.categoryId)
+                is HomeUIEffect.NavigateToNotifications -> onNotificationClick()
+                is HomeUIEffect.NavigateToAddressSelection -> onAddressClick()
+                is HomeUIEffect.NavigateToUploadPrescription -> onUploadPrescriptionClick()
+                is HomeUIEffect.NavigateToCategories -> onViewAllCategoriesClick()
             }
         }
     }

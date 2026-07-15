@@ -94,7 +94,14 @@ fun NestedNavDisplay(
             },
             entryProvider = entryProvider {
                 entry<Route.NestedNav.Home> {
-                    HomeRoot(onNext = openProductDetails)
+                    HomeRoot(
+                        onSearchClick = { /* Handle search click */ },
+                        onNotificationClick = { /* Handle notification click */ },
+                        onAddressClick = { /* Handle address click */ },
+                        onUploadPrescriptionClick = { /* Handle upload prescription click */ },
+                        onViewAllCategoriesClick = { /* Handle view all categories click */ },
+                        onCategoryClick = { categoryName -> /* Handle category click */ }
+                    )
                 }
                 entry<Route.NestedNav.Cart> {
                     CartRoot(onNext = openProductDetails)
