@@ -3,7 +3,7 @@ package com.medsy.designsystem.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Primary
-val PrimaryGreen = Color(0xFF1FAF8B)
+val PrimaryGreen = Color(0xFF1E7B4D)
 val DarkGreen = Color(0xFF158F73)
 val LightGreen = Color(0xFFE8F8F4)
 

@@ -37,4 +37,17 @@
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>
     <string name="app_name">Medsy</string>
+    <string name="app_name_prefix">Med</string>
+    <string name="app_name_suffix">sy</string>
+
+    <string name="onboarding_title_1">Order your medicines</string>
+    <string name="onboarding_desc_1">Order all your pharmacy needs from one place easily</string>
+    <string name="onboarding_title_2">Fast and safe delivery</string>
+    <string name="onboarding_desc_2">We deliver to your door quickly while maintaining quality</string>
+    <string name="onboarding_title_3">Reliable and safe</string>
+    <string name="onboarding_desc_3">We choose the best pharmacies to ensure a safe experience</string>
+
+    <string name="action_skip">Skip</string>
+    <string name="action_next">Next</string>
+    <string name="action_get_started">Get Started</string>
 </resources>
