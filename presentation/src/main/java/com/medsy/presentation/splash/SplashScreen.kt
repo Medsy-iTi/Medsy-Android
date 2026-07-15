@@ -6,32 +6,21 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.designsystem.ui.theme.PrimaryText
 import com.medsy.designsystem.R as DesignR
@@ -45,23 +34,26 @@ fun SplashRoot(
     openOnboarding: () -> Unit,
 ) {
     SplashScreen(
-        onFinished = {
-            openOnboarding()
-        }
+        onFinished = openOnboarding
     )
 }
 
 @Composable
 fun SplashScreen(onFinished: () -> Unit) {
+
     val logoAlpha = remember { Animatable(0f) }
     val textAlpha = remember { Animatable(0f) }
     val textOffsetY = remember { Animatable(SplashConstants.TEXT_SLIDE_START_OFFSET) }
 
     LaunchedEffect(Unit) {
+
         launch {
             logoAlpha.animateTo(
                 targetValue = 1f,
-                animationSpec = tween(durationMillis = SplashConstants.LOGO_ANIMATION_DURATION, easing = LinearEasing)
+                animationSpec = tween(
+                    durationMillis = SplashConstants.LOGO_ANIMATION_DURATION,
+                    easing = LinearEasing
+                )
             )
         }
 
@@ -70,18 +62,28 @@ fun SplashScreen(onFinished: () -> Unit) {
         val textAlphaJob = launch {
             textAlpha.animateTo(
                 targetValue = 1f,
-                animationSpec = tween(durationMillis = SplashConstants.TEXT_ANIMATION_DURATION, easing = FastOutSlowInEasing)
+                animationSpec = tween(
+                    durationMillis = SplashConstants.TEXT_ANIMATION_DURATION,
+                    easing = FastOutSlowInEasing
+                )
             )
         }
+
         val textOffsetJob = launch {
             textOffsetY.animateTo(
                 targetValue = SplashConstants.TEXT_SLIDE_END_OFFSET,
-                animationSpec = tween(durationMillis = SplashConstants.TEXT_ANIMATION_DURATION, easing = FastOutSlowInEasing)
+                animationSpec = tween(
+                    durationMillis = SplashConstants.TEXT_ANIMATION_DURATION,
+                    easing = FastOutSlowInEasing
+                )
             )
         }
+
         textAlphaJob.join()
         textOffsetJob.join()
+
         delay(SplashConstants.HOLD_DURATION.milliseconds)
+
         onFinished()
     }
 
@@ -91,9 +93,11 @@ fun SplashScreen(onFinished: () -> Unit) {
             .background(NeutralWhite),
         contentAlignment = Alignment.Center,
     ) {
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Image(
                 painter = painterResource(id = DesignR.drawable.ic_logo_transparent),
                 contentDescription = stringResource(R.string.app_name),
@@ -107,6 +111,7 @@ fun SplashScreen(onFinished: () -> Unit) {
 
             val primaryColor = MaterialTheme.colorScheme.primary
             val textColor = PrimaryText
+
             val prefix = stringResource(R.string.app_name_prefix)
             val suffix = stringResource(R.string.app_name_suffix)
 
@@ -114,6 +119,7 @@ fun SplashScreen(onFinished: () -> Unit) {
                 modifier = Modifier
                     .graphicsLayer { alpha = textAlpha.value }
                     .offset { IntOffset(0, textOffsetY.value.toInt()) },
+
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = primaryColor)) {
                         append(prefix)
@@ -122,6 +128,7 @@ fun SplashScreen(onFinished: () -> Unit) {
                         append(suffix)
                     }
                 },
+
                 style = MaterialTheme.typography.displayLarge
             )
         }
