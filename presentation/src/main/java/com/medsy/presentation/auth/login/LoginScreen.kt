@@ -91,14 +91,14 @@ fun LoginScreen(
         // Logo
         Image(
             painter = painterResource(id = DesignR.drawable.ic_logo_transparent),
-            contentDescription = "Medsy Logo",
+            contentDescription = stringResource(R.string.medsy_logo_content_desc),
             modifier = Modifier.width(LoginConstants.LogoWidth),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.FillWidth
         )
 
         // Medesy Name
         Text(
-            text = "Medesy",
+            text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.displaySmall.copy(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
