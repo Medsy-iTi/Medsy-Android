@@ -15,8 +15,8 @@ import com.medsy.presentation.onboarding.model.OnboardingPage
 import com.medsy.presentation.R
 import com.medsy.designsystem.R as DesignR
 
-sealed interface OnboardingEvent {
-    data object NavigateToLogin : OnboardingEvent
+sealed interface OnboardingUIEffect {
+    data object NavigateToLogin : OnboardingUIEffect
 }
 
 @HiltViewModel
@@ -56,15 +56,15 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
             initialValue = OnboardingState()
         )
         
-    private val _events = Channel<OnboardingEvent>()
-    val events = _events.receiveAsFlow()
+    private val _effect = Channel<OnboardingUIEffect>()
+    val effect = _effect.receiveAsFlow()
 
-    fun onAction(action: OnboardingAction) {
-        when (action) {
-            OnboardingAction.OnSkipClick,
-            OnboardingAction.OnGetStartedClick -> {
+    fun onIntent(intent: OnboardingUIIntent) {
+        when (intent) {
+            OnboardingUIIntent.OnSkipClick,
+            OnboardingUIIntent.OnGetStartedClick -> {
                 viewModelScope.launch {
-                    _events.send(OnboardingEvent.NavigateToLogin)
+                    _effect.send(OnboardingUIEffect.NavigateToLogin)
                 }
             }
         }

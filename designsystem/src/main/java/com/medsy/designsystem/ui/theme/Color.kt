@@ -23,19 +23,3 @@ val SuccessGreen = Color(0xFF22C55E)
 val ErrorRed = Color(0xFFEF4444)
 val WarningYellow = Color(0xFFF59E0B)
 val OrderCardBg = Color(0xFFF8FAFC)
-
-// Category Colors
-val CategoryMedicineBg = Color(0xFFE0E7FF)
-val CategoryMedicineIcon = Color(0xFF3B82F6)
-
-val CategoryVitaminsBg = Color(0xFFFFEDD5)
-val CategoryVitaminsIcon = Color(0xFFF97316)
-
-val CategoryPersonalCareBg = Color(0xFFFCE7F3)
-val CategoryPersonalCareIcon = Color(0xFFEC4899)
-
-val CategoryMedicalDevicesBg = Color(0xFFF3E8FF)
-val CategoryMedicalDevicesIcon = Color(0xFF8B5CF6)
-
-val CategoryMoreBg = Color(0xFFF3F4F6)
-val CategoryMoreIcon = Color(0xFF6B7280)
