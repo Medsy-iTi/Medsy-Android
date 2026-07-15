@@ -10,6 +10,17 @@
     <string name="onboarding_title_3">موثوق و آمن</string>
     <string name="onboarding_desc_3">نختار لك أفضل الصيدليات والمنتجات لنضمن لك تجربة آمنة وموثوقة</string>
 
+    <string name="login_motto">صحتك، أولويتنا</string>
+    <string name="login_phone_hint">رقم الهاتف</string>
+    <string name="login_password_hint">كلمة المرور</string>
+    <string name="login_forgot_password">نسيت كلمة المرور؟</string>
+    <string name="login_button">تسجيل الدخول</string>
+    <string name="login_or">أو</string>
+    <string name="login_google">تسجيل الدخول بواسطة Google</string>
+    <string name="login_facebook">تسجيل الدخول بواسطة Facebook</string>
+    <string name="login_no_account">ليس لديك حساب؟ </string>
+    <string name="login_signup"> إنشاء حساب</string>
+    <string name="login_no_account_full">ليس لديك حساب؟ %1$s</string>
     <string name="action_skip">تخطي</string>
     <string name="action_next">التالي</string>
     <string name="action_get_started">ابدأ الآن</string>
