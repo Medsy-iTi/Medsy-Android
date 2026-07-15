@@ -1,3 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Create Account Screen -->
+    <string name="create_account_title">Create Account</string>
+    <string name="create_account_subtitle">Set up your account easily</string>
+    <string name="create_account_section_personal_info">Personal Information</string>
+
+    <!-- Field labels / placeholders -->
+    <string name="field_full_name">Full Name</string>
+    <string name="field_phone_number">Phone Number</string>
+    <string name="field_email">Email Address</string>
+    <string name="field_password">Password</string>
+    <string name="field_confirm_password">Confirm Password</string>
+
+    <!-- Terms -->
+    <string name="terms_agree_prefix">I agree to the</string>
+    <string name="terms_and_conditions">Terms &amp; Conditions</string>
+    <string name="terms_and_privacy_policy">and Privacy Policy</string>
+
+    <!-- Buttons / actions -->
+    <string name="button_create_account">Create Account</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="content_desc_back">Back</string>
+    <string name="content_desc_toggle_password_visibility">Toggle password visibility</string>
+
+    <!-- Validation errors -->
+    <string name="error_name_required">Please enter your full name</string>
+    <string name="error_phone_invalid">Please enter a valid phone number</string>
+    <string name="error_email_invalid">Please enter a valid email address</string>
+    <string name="error_password_too_short">Password must be at least 8 characters</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_terms_not_accepted">You must accept the Terms &amp; Conditions to continue</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+
+    <!-- Success -->
+    <string name="success_account_created">Account created successfully</string>
     <string name="app_name">Medsy</string>
 </resources>
