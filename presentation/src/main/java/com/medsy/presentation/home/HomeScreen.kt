@@ -1,31 +1,39 @@
 package com.medsy.presentation.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.presentation.home.components.*
 
 @Composable
 fun HomeRoot(
-    onNext: () -> Unit,
+    onSearchClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    onAddressClick: () -> Unit,
+    onUploadPrescriptionClick: () -> Unit,
+    onViewAllCategoriesClick: () -> Unit,
+    onCategoryClick: (String) -> Unit,
+
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
-        viewModel.events.collect { event ->
+        viewModel.event.collect { event ->
             when (event) {
-                HomeEvent.NavigateNext -> onNext()
+                is HomeUIEffect.NavigateToSearch -> onSearchClick()
+                is HomeUIEffect.NavigateToCategory -> onCategoryClick(event.categoryId)
+                is HomeUIEffect.NavigateToNotifications -> onNotificationClick()
+                is HomeUIEffect.NavigateToAddressSelection -> onAddressClick()
+                is HomeUIEffect.NavigateToUploadPrescription -> onUploadPrescriptionClick()
+                is HomeUIEffect.NavigateToCategories -> onViewAllCategoriesClick()
             }
         }
     }
@@ -38,23 +46,69 @@ fun HomeRoot(
 
 @Composable
 fun HomeScreen(
-    state: HomeState,
-    onAction: (HomeAction) -> Unit,
+    state: HomeUIState,
+    onAction: (HomeUIIntent) -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+            .verticalScroll(scrollState)
+            .padding(vertical = 24.dp)
     ) {
-        Text(text = "Home Screen")
-        Button(
-            onClick = {
-                onAction(HomeAction.OnNextClick)
-            }
-        ) {
-            Text(text = "Open Product")
+        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+            HomeTopBar(
+                deliveryAddress = state.deliveryAddress,
+                notificationCount = state.notificationCount,
+                onAddressClick = { onAction(HomeUIIntent.OnAddressClick) },
+                onNotificationClick = { onAction(HomeUIIntent.OnNotificationClick) }
+            )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+            HomeSearchBar(
+                onSearchClick = { onAction(HomeUIIntent.OnSearchFieldClick) }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        PromoBannerCarousel(
+            banners = state.banners,
+            currentIndex = state.currentBannerIndex,
+            onPromoClick = { onAction(HomeUIIntent.OnPromoClick) }
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+            OrderCardsSection(
+                onSearchMedicineClick = { onAction(HomeUIIntent.OnSearchMedicineClick) },
+                onUploadPrescriptionClick = { onAction(HomeUIIntent.OnUploadPrescriptionClick) }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+            CategoriesSection(
+                categories = state.categories,
+                onViewAllClick = { onAction(HomeUIIntent.OnViewAllCategoriesClick) },
+                onCategoryClick = { onAction(HomeUIIntent.OnCategoryClick(it)) }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+            FastDeliveryBanner()
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
     }
 }
+

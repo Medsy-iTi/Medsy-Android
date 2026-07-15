@@ -70,5 +70,27 @@
 
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>
+    <string name="home_delivery_to">Delivery to</string>
+    <string name="home_address_mock">El Nile St, Maadi</string>
+    <string name="home_search_hint">Search by medicine name</string>
+    <string name="home_promo_title">Your health matters to us</string>
+    <string name="home_promo_subtitle">Discount up to 30%</string>
+    <string name="home_promo_desc">On selected items</string>
+    <string name="home_promo_button">Shop now</string>
+    <string name="home_section_order">Order made easy</string>
+    <string name="home_card_search_title">Search medicine</string>
+    <string name="home_card_search_desc">Search for any medicine you need easily</string>
+    <string name="home_card_upload_title">Upload prescription</string>
+    <string name="home_card_upload_desc">Upload prescription image and we will review it</string>
+    <string name="home_section_categories">Shop by category</string>
+    <string name="home_view_all">View all</string>
+    <string name="home_cat_medicine">Medicine</string>
+    <string name="home_cat_vitamins">Vitamins</string>
+    <string name="home_cat_personal_care">Personal care</string>
+    <string name="home_cat_medical_devices">Medical devices</string>
+    <string name="home_cat_more">More</string>
+    <string name="home_banner_fast_delivery">Fast delivery</string>
+    <string name="home_banner_to_door">to your doorstep</string>
+
 
 </resources>
