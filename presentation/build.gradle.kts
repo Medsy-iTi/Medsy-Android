@@ -22,55 +22,45 @@ android {
 }
 
 dependencies {
+
     implementation(project(":domain"))
-    implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.material3)
     implementation(project(":designsystem"))
+
+    // Compose BOM
     implementation(platform(libs.androidx.compose.bom))
+
+    implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
-
-
-    implementation(platform(libs.androidx.compose.bom))
-
-    //Hilt
-
-
-    implementation(platform(libs.androidx.compose.bom))
-
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
+
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.material)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
 
-    implementation(libs.androidx.compose.material3.v130)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    // collect as state with lifecycle
-    implementation(libs.androidx.lifecycle.runtime.compose)
-
-    // coil
+    // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    //Hilt
+    // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    // hilt view model
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
-    //lottie
+    // Lottie
     implementation(libs.lottie.compose)
+
+    // Testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
 }

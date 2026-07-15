@@ -1,0 +1,223 @@
+package com.medsy.presentation.auth.login
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsyButton
+import com.medsy.designsystem.ui.theme.NeutralWhite
+import com.medsy.designsystem.ui.theme.PrimaryText
+import com.medsy.presentation.R
+import com.medsy.presentation.auth.login.components.LoginOrDivider
+import com.medsy.presentation.auth.login.components.LoginPasswordInput
+import com.medsy.presentation.auth.login.components.LoginPhoneInput
+import com.medsy.presentation.auth.login.components.LoginSocialButton
+import com.medsy.designsystem.R as DesignR
+
+@Composable
+fun LoginRoot(
+    openSignup: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            when (event) {
+                LoginEvent.NavigateToSignup -> openSignup()
+            }
+        }
+    }
+
+    LoginScreen(
+        state = state,
+        onAction = viewModel::onAction
+    )
+}
+
+@Composable
+fun LoginScreen(
+    state: LoginState,
+    onAction: (LoginAction) -> Unit,
+) {
+    var phone by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(NeutralWhite)
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .padding(
+                horizontal = LoginConstants.ScreenPaddingHorizontal,
+                vertical = LoginConstants.ScreenPaddingVertical
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(LoginConstants.TopSpacer))
+
+        // Logo
+        Image(
+            painter = painterResource(id = DesignR.drawable.ic_logo_transparent),
+            contentDescription = stringResource(R.string.medsy_logo_content_desc),
+            modifier = Modifier.width(LoginConstants.LogoWidth),
+            contentScale = ContentScale.FillWidth
+        )
+
+        // Medesy Name
+        Text(
+            text = stringResource(R.string.app_name),
+            style = MaterialTheme.typography.displaySmall.copy(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        )
+
+        Spacer(modifier = Modifier.height(LoginConstants.SpacerLogoText))
+
+        // Motto
+        Text(
+            text = stringResource(R.string.login_motto),
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = PrimaryText
+            )
+        )
+
+        Spacer(modifier = Modifier.height(LoginConstants.SpacerTextForm))
+
+        // Phone Input
+        LoginPhoneInput(
+            phone = phone,
+            onPhoneChange = { phone = it }
+        )
+
+        Spacer(modifier = Modifier.height(LoginConstants.SpacerInput))
+
+        // Password Input
+        LoginPasswordInput(
+            password = password,
+            onPasswordChange = { password = it },
+            passwordVisible = passwordVisible,
+            onTogglePasswordVisibility = { passwordVisible = !passwordVisible }
+        )
+
+        Spacer(modifier = Modifier.height(LoginConstants.SpacerInput))
+
+        // Forgot Password
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Text(
+                text = stringResource(R.string.login_forgot_password),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                ),
+                modifier = Modifier.clickable {  }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(LoginConstants.SpacerInputButton))
+
+        // Login Button
+        MedsyButton(
+            onClick = {  }
+        ) {
+            Text(
+                text = stringResource(R.string.login_button),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = NeutralWhite
+                )
+            )
+        }
+
+        Spacer(modifier = Modifier.height(LoginConstants.SpacerOr))
+
+        // OR Divider
+        LoginOrDivider()
+
+        Spacer(modifier = Modifier.height(LoginConstants.SpacerOr))
+
+        // Google Button
+        LoginSocialButton(
+            iconResId = DesignR.drawable.ic_google,
+            text = stringResource(R.string.login_google),
+            onClick = {  }
+        )
+
+        Spacer(modifier = Modifier.height(LoginConstants.SpacerSocial))
+
+        // Facebook Button
+        LoginSocialButton(
+            iconResId = DesignR.drawable.ic_facebook,
+            text = stringResource(R.string.login_facebook),
+            onClick = {  }
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Don't have an account
+        val fullText = stringResource(
+            R.string.login_no_account_full,
+            stringResource(R.string.login_signup)
+        )
+
+        val annotated = buildAnnotatedString {
+            val start = fullText.indexOf(stringResource(R.string.login_signup))
+
+            append(fullText)
+
+            addStyle(
+                style = SpanStyle(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                ),
+                start = start,
+                end = start + stringResource(R.string.login_signup).length
+            )
+        }
+
+        Text(
+            text = annotated,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .clickable { onAction(LoginAction.OnSignupClick) }
+        )
+    }
+}
