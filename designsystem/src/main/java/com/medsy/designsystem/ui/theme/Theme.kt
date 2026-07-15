@@ -48,8 +48,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun MedsyTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Set dynamicColor to false to maintain brand identity
+    darkTheme: Boolean = false, // Force light mode to maintain Medsy brand identity
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

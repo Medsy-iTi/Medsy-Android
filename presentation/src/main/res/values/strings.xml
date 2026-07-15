@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Create Account Screen -->
+    <string name="app_name">Medesy</string>
+    <string name="medsy_logo_content_desc">Medesy Logo</string>
+    <string name="app_name_prefix">Med</string>
+    <string name="app_name_suffix">sy</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">Order your medicines</string>
+    <string name="onboarding_desc_1">Order all your pharmacy needs from one place easily</string>
+    <string name="onboarding_title_2">Fast and safe delivery</string>
+    <string name="onboarding_desc_2">We deliver to your door quickly while maintaining quality</string>
+    <string name="onboarding_title_3">Reliable and safe</string>
+    <string name="onboarding_desc_3">We choose the best pharmacies and products to ensure a safe and reliable experience</string>
+
+    <!-- Login -->
+    <string name="login_motto">Your health, our priority</string>
+    <string name="login_phone_hint">Phone number</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_button">Log in</string>
+    <string name="login_or">or</string>
+    <string name="login_google">Log in with Google</string>
+    <string name="login_facebook">Log in with Facebook</string>
+    <string name="login_no_account">Don\'t have an account? </string>
+    <string name="login_signup"> Sign up</string>
+    <string name="login_no_account_full">Don’t have an account? %1$s</string>
+
+    <!-- Actions -->
+    <string name="action_skip">Skip</string>
+    <string name="action_next">Next</string>
+    <string name="action_get_started">Get Started</string>
+
+    <!-- Create Account -->
     <string name="create_account_title">Create Account</string>
     <string name="create_account_subtitle">Set up your account easily</string>
     <string name="create_account_section_personal_info">Personal Information</string>
 
-    <!-- Field labels / placeholders -->
+    <!-- Fields -->
     <string name="field_full_name">Full Name</string>
     <string name="field_phone_number">Phone Number</string>
     <string name="field_email">Email Address</string>
@@ -18,14 +49,16 @@
     <string name="terms_and_conditions">Terms &amp; Conditions</string>
     <string name="terms_and_privacy_policy">and Privacy Policy</string>
 
-    <!-- Buttons / actions -->
+    <!-- Buttons -->
     <string name="button_create_account">Create Account</string>
     <string name="already_have_account">Already have an account?</string>
     <string name="sign_in">Sign In</string>
+
+    <!-- Content Descriptions -->
     <string name="content_desc_back">Back</string>
     <string name="content_desc_toggle_password_visibility">Toggle password visibility</string>
 
-    <!-- Validation errors -->
+    <!-- Errors -->
     <string name="error_name_required">Please enter your full name</string>
     <string name="error_phone_invalid">Please enter a valid phone number</string>
     <string name="error_email_invalid">Please enter a valid email address</string>
@@ -58,5 +91,6 @@
     <string name="home_cat_more">More</string>
     <string name="home_banner_fast_delivery">Fast delivery</string>
     <string name="home_banner_to_door">to your doorstep</string>
+
 
 </resources>
