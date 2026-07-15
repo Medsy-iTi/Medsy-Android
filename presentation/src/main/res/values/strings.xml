@@ -70,7 +70,6 @@
 
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>
-    <string name="app_name">Medsy</string>
     <string name="home_delivery_to">Delivery to</string>
     <string name="home_address_mock">El Nile St, Maadi</string>
     <string name="home_search_hint">Search by medicine name</string>
