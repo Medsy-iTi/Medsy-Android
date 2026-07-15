@@ -1,3 +1,6 @@
+package com.medsy.data.di
+
+import com.medsy.data.BuildConfig
 import com.medsy.data.remote.api.ApiService
 import dagger.Module
 import dagger.Provides
@@ -17,9 +20,18 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                            redactHeader("Authorization")
+                            redactHeader("Cookie")
+                            redactHeader("Set-Cookie")
+                        }
+                    )
+                }
+            }
             .build()
     }
 
