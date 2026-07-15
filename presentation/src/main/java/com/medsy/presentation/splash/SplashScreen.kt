@@ -21,9 +21,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.medsy.designsystem.R as DesignR
 import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.designsystem.ui.theme.PrimaryText
-import com.medsy.designsystem.R as DesignR
 import com.medsy.presentation.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

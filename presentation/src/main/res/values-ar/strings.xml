@@ -1,8 +1,10 @@
 <resources>
 
+    <!-- App -->
     <string name="app_name">ميدسي</string>
     <string name="app_name_prefix">ميد</string>
     <string name="app_name_suffix">سي</string>
+    <string name="medsy_logo_content_desc">شعار ميدسي</string>
 
     <!-- Onboarding -->
     <string name="onboarding_title_1">اطلب أدويتك</string>
@@ -11,6 +13,19 @@
     <string name="onboarding_desc_2">نصل طلبك بسرعة إلى باب بيتك مع الحفاظ على جودة المنتجات</string>
     <string name="onboarding_title_3">موثوق و آمن</string>
     <string name="onboarding_desc_3">نختار لك أفضل الصيدليات والمنتجات لنضمن لك تجربة آمنة وموثوقة</string>
+
+    <!-- Login -->
+    <string name="login_motto">صحتك، أولويتنا</string>
+    <string name="login_phone_hint">رقم الهاتف</string>
+    <string name="login_password_hint">كلمة المرور</string>
+    <string name="login_forgot_password">نسيت كلمة المرور؟</string>
+    <string name="login_button">تسجيل الدخول</string>
+    <string name="login_or">أو</string>
+    <string name="login_google">تسجيل الدخول بواسطة Google</string>
+    <string name="login_facebook">تسجيل الدخول بواسطة Facebook</string>
+    <string name="login_no_account">ليس لديك حساب؟ </string>
+    <string name="login_signup"> إنشاء حساب</string>
+    <string name="login_no_account_full">ليس لديك حساب؟ %1$s</string>
 
     <!-- Actions -->
     <string name="action_skip">تخطي</string>

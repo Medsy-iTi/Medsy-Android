@@ -14,6 +14,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
+import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
@@ -69,6 +70,13 @@ fun RootNavDisplay() {
                             clear()
                             navigateSingleTop(Route.Login)
                         }
+                    }
+                )
+            }
+            entry<Route.Login> {
+                LoginRoot(
+                    openSignup = {
+                        rootBackStack.navigateSingleTop(Route.Register)
                     }
                 )
             }
