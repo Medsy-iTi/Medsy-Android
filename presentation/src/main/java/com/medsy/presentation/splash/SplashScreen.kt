@@ -59,7 +59,10 @@ fun SplashScreen(onFinished: () -> Unit) {
         launch {
             logoAlpha.animateTo(
                 targetValue = 1f,
-                animationSpec = tween(durationMillis = SplashConstants.LOGO_ANIMATION_DURATION, easing = LinearEasing)
+                animationSpec = tween(
+                    durationMillis = SplashConstants.LOGO_ANIMATION_DURATION,
+                    easing = LinearEasing
+                )
             )
         }
 
@@ -68,17 +71,26 @@ fun SplashScreen(onFinished: () -> Unit) {
         val textAlphaJob = launch {
             textAlpha.animateTo(
                 targetValue = 1f,
-                animationSpec = tween(durationMillis = SplashConstants.TEXT_ANIMATION_DURATION, easing = FastOutSlowInEasing)
+                animationSpec = tween(
+                    durationMillis = SplashConstants.TEXT_ANIMATION_DURATION,
+                    easing = FastOutSlowInEasing
+                )
             )
         }
+
         val textOffsetJob = launch {
             textOffsetY.animateTo(
                 targetValue = SplashConstants.TEXT_SLIDE_END_OFFSET,
-                animationSpec = tween(durationMillis = SplashConstants.TEXT_ANIMATION_DURATION, easing = FastOutSlowInEasing)
+                animationSpec = tween(
+                    durationMillis = SplashConstants.TEXT_ANIMATION_DURATION,
+                    easing = FastOutSlowInEasing
+                )
             )
         }
+
         textAlphaJob.join()
         textOffsetJob.join()
+
         delay(SplashConstants.HOLD_DURATION.milliseconds)
         onFinished()
     }
@@ -89,9 +101,8 @@ fun SplashScreen(onFinished: () -> Unit) {
             .background(Color.White),
         contentAlignment = Alignment.Center,
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
             Image(
                 painter = painterResource(id = DesignR.drawable.ic_logo_transparent),
                 contentDescription = stringResource(R.string.app_name),
