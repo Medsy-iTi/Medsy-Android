@@ -14,10 +14,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
-import com.medsy.presentation.auth.emailverification.EmailVerificationRoot
-import com.medsy.presentation.auth.forgotpassword.ForgotPasswordRoot
-import com.medsy.presentation.auth.login.LoginRoot
-import com.medsy.presentation.auth.signup.SignupRoot
+import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.search.SearchRoot
@@ -75,36 +72,12 @@ fun RootNavDisplay() {
                     }
                 )
             }
-            entry<Route.Login> {
-                LoginRoot(
-                    openSignup = {
-                        rootBackStack.navigateSingleTop(Route.Signup)
-                    }
-                )
-            }
-            entry<Route.Signup> {
-                SignupRoot(
-                    onNext = {
-                        rootBackStack.apply {
-                            clear()
-                            navigateSingleTop(Route.NestedNav)
-                        }
-                    }
-                )
-            }
-            entry<Route.EmailVerification> {
-                EmailVerificationRoot(
-                    onNext = {
-                        rootBackStack.apply {
-                            clear()
-                            navigateSingleTop(Route.Login)
-                        }
-                    }
-                )
-            }
-            entry<Route.ForgotPassword> {
-                ForgotPasswordRoot(
-                    onNext = { rootBackStack.removeLastOrNull() }
+
+            entry<Route.Register> {
+                RegisterRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateToSignIn = { rootBackStack.navigateSingleTop(Route.Login) },
+                    onNavigateToHome = { rootBackStack.navigateSingleTop(Route.NestedNav) }
                 )
             }
             entry<Route.NestedNav> {

@@ -22,7 +22,7 @@ sealed interface Route : NavKey {
     data object ForgotPassword : Route
 
     @Serializable
-    data object Signup : Route
+    data object Register : Route
 
     @Serializable
     data object NestedNav : Route {
