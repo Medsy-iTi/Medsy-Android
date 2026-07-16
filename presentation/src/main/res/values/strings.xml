@@ -93,4 +93,33 @@
     <string name="home_banner_to_door">to your doorstep</string>
 
 
+    <!--  Search  -->
+    <string name="search_results_title">Search Results</string>
+    <string name="search_input_placeholder">Search by medicine name</string>
+    <string name="search_clear_query_desc">Clear search</string>
+    <string name="search_filter_chip_filter">Filter</string>
+    <string name="search_filter_chip_type">Type</string>
+    <string name="search_filter_chip_price">Price</string>
+    <string name="search_filter_chip_most_relevant">Most relevant</string>
+    <string name="search_results_count">%1$d results</string>
+    <string name="search_price_egp">%1$d EGP</string>
+    <string name="search_favorite_desc">Add to favorites</string>
+    <string name="search_add_to_cart_desc">Add to cart</string>
+    <string name="search_added_to_cart">Added to cart</string>
+    <string name="search_empty_title">No results found</string>
+    <string name="search_empty_subtitle">Try a different search term</string>
+
+    <!--  Product Details  -->
+    <string name="product_details_share_desc">Share</string>
+    <string name="product_details_image_desc">Product image</string>
+    <string name="product_details_pack_info_format">%1$s · %2$s</string>
+    <string name="product_details_pharmacist_notice">This medicine is dispensed only after pharmacist review to determine the appropriate dose for your condition.</string>
+    <string name="product_details_info_title">Product Information</string>
+    <string name="product_details_label_manufacturer">Manufacturer</string>
+    <string name="product_details_label_type">Type</string>
+    <string name="product_details_label_category">Drug Category</string>
+    <string name="product_details_label_dispensing_method">Dispensing Method</string>
+    <string name="product_details_dispensing_method_value">Dispensed after pharmacist review</string>
+    <string name="product_details_add_to_cart">Add to Cart</string>
+    <string name="product_details_consult_pharmacist">Consult Pharmacist</string>
 </resources>

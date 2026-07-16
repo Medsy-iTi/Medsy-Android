@@ -31,6 +31,7 @@ fun NestedNavDisplay(
     navigateBack: () -> Unit,
     openProductDetails: () -> Unit,
     openSettings: () -> Unit,
+    openSearch: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -95,7 +96,7 @@ fun NestedNavDisplay(
             entryProvider = entryProvider {
                 entry<Route.NestedNav.Home> {
                     HomeRoot(
-                        onSearchClick = { /* Handle search click */ },
+                        onSearchClick = { openSearch() },
                         onNotificationClick = { /* Handle notification click */ },
                         onAddressClick = { /* Handle address click */ },
                         onUploadPrescriptionClick = { /* Handle upload prescription click */ },
