@@ -30,5 +30,9 @@ enum class CategoryIconType {
     VITAMINS,
     PERSONAL_CARE,
     MEDICAL_DEVICES,
+    BABY_CARE,
+    SKIN_CARE,
+    HAIR_CARE,
+    DAILY_ESSENTIALS,
     MORE
 }
