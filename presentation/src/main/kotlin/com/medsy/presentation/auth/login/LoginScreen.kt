@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -76,10 +77,12 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
+    val isDarkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeutralWhite)
+            .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
             .padding(
@@ -90,9 +93,15 @@ fun LoginScreen(
     ) {
         Spacer(modifier = Modifier.height(LoginConstants.TopSpacer))
 
+        val logoRes = if (isDarkTheme) {
+            DesignR.drawable.ic_logo_transparent_dark
+        } else {
+            DesignR.drawable.ic_logo_transparent
+        }
+
         // Logo
         Image(
-            painter = painterResource(id = DesignR.drawable.ic_logo_transparent),
+            painter = painterResource(id = logoRes),
             contentDescription = stringResource(R.string.medsy_logo_content_desc),
             modifier = Modifier.width(LoginConstants.LogoWidth),
             contentScale = ContentScale.FillWidth
@@ -114,7 +123,7 @@ fun LoginScreen(
             text = stringResource(R.string.login_motto),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
-                color = PrimaryText
+                color = MaterialTheme.colorScheme.onBackground
             )
         )
 
@@ -216,7 +225,7 @@ fun LoginScreen(
 
         Text(
             text = annotated,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .clickable { onIntent(LoginUIIntent.OnSignupClick) }
