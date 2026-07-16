@@ -22,7 +22,7 @@ nav3 = "1.1.4"
 hilt = "2.60.1"
 hiltAndroidx = "1.4.0"
 ksp = "2.3.10"
-
+moshi = "1.15.2"
 lottieCompose = "6.7.1"
 coil = "3.5.0"
 coreSplashscreen = "1.2.0"
@@ -33,6 +33,7 @@ runtime = "1.11.4"
 material3 = "1.4.0"
 
 [libraries]
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 androidx-compose-material3-v130 = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
