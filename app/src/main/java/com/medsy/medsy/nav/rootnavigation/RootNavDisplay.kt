@@ -16,6 +16,7 @@ import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
+import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.search.SearchRoot
@@ -108,6 +109,9 @@ fun RootNavDisplay() {
                     },
                     openSearch = {
                         rootBackStack.navigateSingleTop(Route.SearchNav)
+                    },
+                    openCategories = {
+                        rootBackStack.navigateSingleTop(Route.Categories)
                     }
                 )
             }
@@ -140,6 +144,12 @@ fun RootNavDisplay() {
                         )
                     },
                     onBack = { rootBackStack.removeLastOrNull() },
+                )
+            }
+            entry<Route.Categories> {
+                CategoriesRoot(
+                    onBackClick = { rootBackStack.removeLastOrNull() },
+                    onCategoryClick = { categoryId -> /* Handle category click */ }
                 )
             }
         }
