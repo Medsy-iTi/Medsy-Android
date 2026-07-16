@@ -33,6 +33,7 @@ fun NestedNavDisplay(
     openPersonalDetails: () -> Unit,
     openLogin: () -> Unit,
     openSearch: () -> Unit,
+    openCategories: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -101,8 +102,8 @@ fun NestedNavDisplay(
                         onNotificationClick = { /* Handle notification click */ },
                         onAddressClick = { /* Handle address click */ },
                         onUploadPrescriptionClick = { /* Handle upload prescription click */ },
-                        onViewAllCategoriesClick = { /* Handle view all categories click */ },
-                        onCategoryClick = { categoryName -> /* Handle category click */ }
+                        onViewAllCategoriesClick = { openCategories() },
+                        onCategoryClick = { categoryId -> openCategories() }
                     )
                 }
                 entry<Route.NestedNav.Cart> {

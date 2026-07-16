@@ -8,8 +8,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySearchBar
+import com.medsy.presentation.R
 import com.medsy.presentation.home.components.*
 
 @Composable
@@ -70,12 +73,13 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            HomeSearchBar(
+            MedsySearchBar(
+                hint = stringResource(R.string.home_search_hint),
                 onSearchClick = { onIntent(HomeUIIntent.OnSearchFieldClick) }
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         PromoBannerCarousel(
             banners = state.banners,
@@ -83,7 +87,7 @@ fun HomeScreen(
             onPromoClick = { onIntent(HomeUIIntent.OnPromoClick) }
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Box(modifier = Modifier.padding(horizontal = 16.dp)) {
             OrderCardsSection(

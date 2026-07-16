@@ -91,7 +91,7 @@ fun CategoriesSection(
                         colors.purpleContent
                     )
 
-                    CategoryIconType.MORE -> Triple(
+                    else -> Triple(
                         Icons.Default.MoreHoriz,
                         colors.neutralContainer,
                         colors.neutralContent
