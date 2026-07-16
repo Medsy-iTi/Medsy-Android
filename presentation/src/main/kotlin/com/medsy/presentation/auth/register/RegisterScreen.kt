@@ -21,7 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -106,6 +108,9 @@ fun CreateAccountContent(
     onNavigateBack: () -> Unit,
     onNavigateToSignIn: () -> Unit
 ) {
+    var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -168,8 +173,8 @@ fun CreateAccountContent(
             value = state.password,
             onValueChange = { onIntent(RegisterIntent.PasswordChanged(it)) },
             labelRes = R.string.auth_password,
-            isVisible = false,
-            onToggleVisibility = { },
+            isVisible = passwordVisible,
+            onToggleVisibility = { passwordVisible = !passwordVisible },
             errorRes = state.passwordErrorRes,
             modifier = Modifier.padding(top = 16.dp),
         )
@@ -178,8 +183,8 @@ fun CreateAccountContent(
             value = state.confirmPassword,
             onValueChange = { onIntent(RegisterIntent.ConfirmPasswordChanged(it)) },
             labelRes = R.string.auth_confirm_password,
-            isVisible = false,
-            onToggleVisibility = { },
+            isVisible = confirmPasswordVisible,
+            onToggleVisibility = { confirmPasswordVisible = !confirmPasswordVisible },
             errorRes = state.confirmPasswordErrorRes,
             modifier = Modifier.padding(top = 16.dp),
         )

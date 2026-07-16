@@ -49,6 +49,7 @@ class LoginViewModel @Inject constructor(
                 _effect.send(LoginEffect.NavigateHome)
             }
             is DomainResult.Error -> {
+                android.util.Log.e("LoginViewModel", "Login failed: ${result.error}")
                 val message = (result.error as? DomainError.Api)?.message
                     ?: "Something went wrong. Please try again."
                 _state.update { it.copy(isLoading = false, errorMessage = message) }

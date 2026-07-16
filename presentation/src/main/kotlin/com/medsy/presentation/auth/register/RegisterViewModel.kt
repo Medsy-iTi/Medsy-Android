@@ -84,6 +84,7 @@ class RegisterViewModel @Inject constructor(
                 _effect.send(RegisterEffect.NavigateToOtp(currentState.email))
             }
             is DomainResult.Error -> {
+                android.util.Log.e("RegisterViewModel", "Registration failed: ${result.error}")
                 val message = (result.error as? DomainError.Api)?.message
                     ?: "Something went wrong. Please try again."
                 _state.update { it.copy(isLoading = false, errorMessage = message) }
