@@ -28,12 +28,12 @@ class RegisterViewModel @Inject constructor(
 
     fun onIntent(intent: RegisterIntent) {
         when (intent) {
-            is RegisterIntent.EmailChanged -> _state.update { it.copy(email = intent.value, errorMessage = null) }
-            is RegisterIntent.PhoneChanged -> _state.update { it.copy(phoneNumber = intent.value, errorMessage = null) }
-            is RegisterIntent.FirstNameChanged -> _state.update { it.copy(firstName = intent.value, errorMessage = null) }
-            is RegisterIntent.LastNameChanged -> _state.update { it.copy(lastName = intent.value, errorMessage = null) }
-            is RegisterIntent.PasswordChanged -> _state.update { it.copy(password = intent.value, errorMessage = null) }
-            is RegisterIntent.ConfirmPasswordChanged -> _state.update { it.copy(confirmPassword = intent.value, errorMessage = null) }
+            is RegisterIntent.EmailChanged -> _state.update { it.copy(email = intent.value, emailErrorRes = null, errorMessage = null) }
+            is RegisterIntent.PhoneChanged -> _state.update { it.copy(phoneNumber = intent.value, phoneErrorRes = null, errorMessage = null) }
+            is RegisterIntent.FirstNameChanged -> _state.update { it.copy(firstName = intent.value, firstNameErrorRes = null, errorMessage = null) }
+            is RegisterIntent.LastNameChanged -> _state.update { it.copy(lastName = intent.value, lastNameErrorRes = null, errorMessage = null) }
+            is RegisterIntent.PasswordChanged -> _state.update { it.copy(password = intent.value, passwordErrorRes = null, errorMessage = null) }
+            is RegisterIntent.ConfirmPasswordChanged -> _state.update { it.copy(confirmPassword = intent.value, confirmPasswordErrorRes = null, errorMessage = null) }
             is RegisterIntent.DobChanged -> _state.update { it.copy(dob = intent.value, errorMessage = null) }
             is RegisterIntent.RoleChanged -> _state.update { it.copy(role = intent.value, errorMessage = null) }
             is RegisterIntent.AddressChanged -> _state.update { it.copy(homeAddress = intent.value, errorMessage = null) }
@@ -44,8 +44,24 @@ class RegisterViewModel @Inject constructor(
 
     private fun submit() = viewModelScope.launch {
         val currentState = _state.value
-        if (currentState.password != currentState.confirmPassword) {
-            _state.update { it.copy(errorMessage = "Passwords do not match") }
+        val emailError = if (currentState.email.isBlank()) com.medsy.presentation.R.string.auth_error_required_field else null
+        val phoneError = if (currentState.phoneNumber.isBlank()) com.medsy.presentation.R.string.auth_error_required_field else null
+        val firstNameError = if (currentState.firstName.isBlank()) com.medsy.presentation.R.string.auth_error_required_field else null
+        val lastNameError = if (currentState.lastName.isBlank()) com.medsy.presentation.R.string.auth_error_required_field else null
+        val passwordError = if (currentState.password.isBlank()) com.medsy.presentation.R.string.auth_error_required_field else if (currentState.password.length < 6) com.medsy.presentation.R.string.auth_error_password_min_6 else null
+        val confirmPasswordError = if (currentState.confirmPassword.isBlank()) com.medsy.presentation.R.string.auth_error_required_field else if (currentState.password != currentState.confirmPassword) com.medsy.presentation.R.string.error_password_mismatch else null
+
+        if (emailError != null || phoneError != null || firstNameError != null || lastNameError != null || passwordError != null || confirmPasswordError != null) {
+            _state.update {
+                it.copy(
+                    emailErrorRes = emailError,
+                    phoneErrorRes = phoneError,
+                    firstNameErrorRes = firstNameError,
+                    lastNameErrorRes = lastNameError,
+                    passwordErrorRes = passwordError,
+                    confirmPasswordErrorRes = confirmPasswordError
+                )
+            }
             return@launch
         }
         

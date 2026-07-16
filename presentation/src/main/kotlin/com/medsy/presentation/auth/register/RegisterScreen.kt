@@ -127,7 +127,7 @@ fun CreateAccountContent(
             onValueChange = { onIntent(RegisterIntent.FirstNameChanged(it)) },
             labelRes = R.string.auth_first_name,
             leadingIcon =  Icons.Filled.Person,
-            errorRes = null,
+            errorRes = state.firstNameErrorRes,
             keyboardType = KeyboardType.Text,
         )
 
@@ -136,7 +136,7 @@ fun CreateAccountContent(
             onValueChange = { onIntent(RegisterIntent.LastNameChanged(it)) },
             labelRes = R.string.auth_last_name,
             leadingIcon =  Icons.Filled.Person,
-            errorRes = null,
+            errorRes = state.lastNameErrorRes,
             keyboardType = KeyboardType.Text,
             modifier = Modifier.padding(top = 16.dp),
         )
@@ -146,7 +146,7 @@ fun CreateAccountContent(
             onValueChange = { onIntent(RegisterIntent.PhoneChanged(it)) },
             labelRes = R.string.auth_phone,
             leadingIcon = Icons.Filled.Phone,
-            errorRes = null,
+            errorRes = state.phoneErrorRes,
             keyboardType = KeyboardType.Phone,
             modifier = Modifier.padding(top = 16.dp),
         )
@@ -156,7 +156,7 @@ fun CreateAccountContent(
             onValueChange = { onIntent(RegisterIntent.EmailChanged(it)) },
             labelRes = R.string.auth_email,
             leadingIcon = Icons.Filled.Email,
-            errorRes = null,
+            errorRes = state.emailErrorRes,
             keyboardType = KeyboardType.Email,
             modifier = Modifier.padding(top = 16.dp),
         )
@@ -167,7 +167,7 @@ fun CreateAccountContent(
             labelRes = R.string.auth_password,
             isVisible = false,
             onToggleVisibility = { },
-            errorRes = null,
+            errorRes = state.passwordErrorRes,
             modifier = Modifier.padding(top = 16.dp),
         )
 
@@ -177,7 +177,7 @@ fun CreateAccountContent(
             labelRes = R.string.auth_confirm_password,
             isVisible = false,
             onToggleVisibility = { },
-            errorRes = null,
+            errorRes = state.confirmPasswordErrorRes,
             modifier = Modifier.padding(top = 16.dp),
         )
 

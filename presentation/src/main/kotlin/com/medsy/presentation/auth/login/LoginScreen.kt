@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -129,12 +130,18 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(LoginConstants.SpacerTextForm))
 
         // Email Input (reusing LoginPhoneInput component for now, or just use OutlinedTextField)
-        androidx.compose.material3.OutlinedTextField(
+        OutlinedTextField(
             value = state.email,
             onValueChange = { onIntent(LoginIntent.EmailChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(R.string.auth_email)) },
-            singleLine = true
+            singleLine = true,
+            isError = state.emailErrorRes != null,
+            supportingText = {
+                if (state.emailErrorRes != null) {
+                    Text(stringResource(state.emailErrorRes))
+                }
+            }
         )
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerInput))
@@ -144,7 +151,8 @@ fun LoginScreen(
             password = state.password,
             onPasswordChange = { onIntent(LoginIntent.PasswordChanged(it)) },
             passwordVisible = passwordVisible,
-            onTogglePasswordVisibility = { passwordVisible = !passwordVisible }
+            onTogglePasswordVisibility = { passwordVisible = !passwordVisible },
+            errorRes = state.passwordErrorRes
         )
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerInput))

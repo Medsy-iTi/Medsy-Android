@@ -1,8 +1,8 @@
-package com.medsy.data.auth.mapper
+package com.medsy.data.mapper.auth
 
-import com.medsy.data.auth.remote.dto.AuthDataDto
-import com.medsy.data.auth.remote.dto.RegisterRequestDto
-import com.medsy.data.auth.remote.dto.UserDto
+import com.medsy.data.remote.auth.dto.AuthDataDto
+import com.medsy.data.remote.auth.dto.RegisterRequestDto
+import com.medsy.data.remote.auth.dto.UserDto
 import com.medsy.domain.auth.model.AuthSession
 import com.medsy.domain.auth.model.RegisterParams
 import com.medsy.domain.auth.model.Role

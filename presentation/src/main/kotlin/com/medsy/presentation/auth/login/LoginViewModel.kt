@@ -27,14 +27,22 @@ class LoginViewModel @Inject constructor(
 
     fun onIntent(intent: LoginIntent) {
         when (intent) {
-            is LoginIntent.EmailChanged -> _state.update { it.copy(email = intent.value, errorMessage = null) }
-            is LoginIntent.PasswordChanged -> _state.update { it.copy(password = intent.value, errorMessage = null) }
+            is LoginIntent.EmailChanged -> _state.update { it.copy(email = intent.value, emailErrorRes = null, errorMessage = null) }
+            is LoginIntent.PasswordChanged -> _state.update { it.copy(password = intent.value, passwordErrorRes = null, errorMessage = null) }
             LoginIntent.Submit -> submit()
         }
     }
 
     private fun submit() = viewModelScope.launch {
-        _state.update { it.copy(isLoading = true, errorMessage = null) }
+        val emailError = if (_state.value.email.isBlank()) com.medsy.presentation.R.string.auth_error_required_field else null
+        val passwordError = if (_state.value.password.isBlank()) com.medsy.presentation.R.string.auth_error_required_field else if (_state.value.password.length < 6) com.medsy.presentation.R.string.auth_error_password_min_6 else null
+
+        if (emailError != null || passwordError != null) {
+            _state.update { it.copy(emailErrorRes = emailError, passwordErrorRes = passwordError) }
+            return@launch
+        }
+
+        _state.update { it.copy(isLoading = true, errorMessage = null, emailErrorRes = null, passwordErrorRes = null) }
         when (val result = loginUseCase(_state.value.email, _state.value.password)) {
             is DomainResult.Success -> {
                 _state.update { it.copy(isLoading = false) }

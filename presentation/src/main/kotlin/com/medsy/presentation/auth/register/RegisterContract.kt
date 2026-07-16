@@ -14,6 +14,12 @@ data class RegisterState(
     val homeAddress: String = "",
     val pharmacyId: Long? = null,
     val isLoading: Boolean = false,
+    val emailErrorRes: Int? = null,
+    val phoneErrorRes: Int? = null,
+    val firstNameErrorRes: Int? = null,
+    val lastNameErrorRes: Int? = null,
+    val passwordErrorRes: Int? = null,
+    val confirmPasswordErrorRes: Int? = null,
     val errorMessage: String? = null
 )
 

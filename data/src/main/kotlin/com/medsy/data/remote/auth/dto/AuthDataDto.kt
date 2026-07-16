@@ -1,4 +1,4 @@
-package com.medsy.data.auth.remote.dto
+package com.medsy.data.remote.auth.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

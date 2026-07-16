@@ -16,7 +16,7 @@ import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
-import com.medsy.presentation.auth.welcome.WelcomeScreen
+
 import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
@@ -57,10 +57,10 @@ fun RootNavDisplay() {
         entryProvider = entryProvider {
             entry<Route.Splash> {
                 SplashRoot(
-                    openWelcome = {
+                    openOnboarding = {
                         rootBackStack.apply {
                             clear()
-                            navigateSingleTop(Route.Welcome)
+                            navigateSingleTop(Route.Onboarding)
                         }
                     },
                     openHome = {
@@ -71,18 +71,13 @@ fun RootNavDisplay() {
                     }
                 )
             }
-            entry<Route.Welcome> {
-                WelcomeScreen(
-                    onNavigateLogin = { rootBackStack.navigateSingleTop(Route.Login) },
-                    onNavigateRegister = { rootBackStack.navigateSingleTop(Route.Register) }
-                )
-            }
+
             entry<Route.Onboarding> {
                 OnboardingRoot(
                     openLogin = {
                         rootBackStack.apply {
                             clear()
-                            navigateSingleTop(Route.Welcome)
+                            navigateSingleTop(Route.Login)
                         }
                     }
                 )

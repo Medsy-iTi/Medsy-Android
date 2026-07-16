@@ -1,10 +1,10 @@
-package com.medsy.data.auth.remote.dto
+package com.medsy.data.remote.auth.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class VerifyOtpRequestDto(
+data class LoginRequestDto(
     @Json(name = "email") val email: String,
-    @Json(name = "otpCode") val otpCode: String
+    @Json(name = "password") val password: String
 )

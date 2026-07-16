@@ -1,13 +1,13 @@
-package com.medsy.data.auth.repository
+package com.medsy.data.repository.auth
 
-import com.medsy.data.auth.local.TokenStorage
-import com.medsy.data.auth.mapper.toDomain
-import com.medsy.data.auth.mapper.toDto
-import com.medsy.data.auth.remote.api.AuthApi
-import com.medsy.data.auth.remote.dto.ApiResponseDto
-import com.medsy.data.auth.remote.dto.LoginRequestDto
-import com.medsy.data.auth.remote.dto.RefreshRequestDto
-import com.medsy.data.auth.remote.dto.VerifyOtpRequestDto
+import com.medsy.data.local.auth.TokenStorage
+import com.medsy.data.mapper.auth.toDomain
+import com.medsy.data.mapper.auth.toDto
+import com.medsy.data.remote.auth.api.AuthApi
+import com.medsy.data.remote.auth.dto.ApiResponseDto
+import com.medsy.data.remote.auth.dto.LoginRequestDto
+import com.medsy.data.remote.auth.dto.RefreshRequestDto
+import com.medsy.data.remote.auth.dto.VerifyOtpRequestDto
 import com.medsy.domain.auth.model.AuthSession
 import com.medsy.domain.auth.model.RegisterParams
 import com.medsy.domain.auth.repository.AuthRepository

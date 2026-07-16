@@ -136,4 +136,6 @@
     <string name="auth_invalid_code">الرمز غير صحيح أو منتهي الصلاحية</string>
     <string name="auth_welcome_title">مرحباً بك في Medsy</string>
     <string name="auth_already_have_account">لديك حساب بالفعل؟ تسجيل الدخول</string>
+    <string name="auth_error_required_field">هذا الحقل مطلوب</string>
+    <string name="auth_error_password_min_6">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل</string>
 </resources>

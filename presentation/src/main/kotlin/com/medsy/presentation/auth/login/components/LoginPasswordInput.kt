@@ -22,7 +22,8 @@ fun LoginPasswordInput(
     password: String,
     onPasswordChange: (String) -> Unit,
     passwordVisible: Boolean,
-    onTogglePasswordVisibility: () -> Unit
+    onTogglePasswordVisibility: () -> Unit,
+    errorRes: Int? = null
 ) {
     MedsyTextField(
         value = password,
@@ -45,6 +46,7 @@ fun LoginPasswordInput(
             }
         },
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        errorRes = errorRes
     )
 }

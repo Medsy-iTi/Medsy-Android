@@ -141,4 +141,6 @@
     <string name="auth_invalid_code">Invalid or expired code</string>
     <string name="auth_welcome_title">Welcome to Medsy</string>
     <string name="auth_already_have_account">Already have an account? Log in</string>
+    <string name="auth_error_required_field">This field is required</string>
+    <string name="auth_error_password_min_6">Password must be at least 6 characters</string>
 </resources>

@@ -24,7 +24,8 @@ fun MedsyTextField(
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    errorRes: Int? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -45,6 +46,16 @@ fun MedsyTextField(
             cursorColor = MaterialTheme.colorScheme.primary
         ),
         keyboardOptions = keyboardOptions,
-        singleLine = singleLine
+        singleLine = singleLine,
+        isError = errorRes != null,
+        supportingText = {
+            if (errorRes != null) {
+                androidx.compose.material3.Text(
+                    text = androidx.compose.ui.res.stringResource(errorRes),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
     )
 }

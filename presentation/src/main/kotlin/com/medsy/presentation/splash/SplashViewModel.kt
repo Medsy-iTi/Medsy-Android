@@ -20,12 +20,12 @@ class SplashViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val session = observeSessionUseCase().firstOrNull()
-            _effect.send(if (session != null) SplashEffect.ToHome else SplashEffect.ToWelcome)
+            _effect.send(if (session != null) SplashEffect.ToHome else SplashEffect.ToOnboarding)
         }
     }
 }
 
 sealed interface SplashEffect {
     data object ToHome : SplashEffect
-    data object ToWelcome : SplashEffect
+    data object ToOnboarding : SplashEffect
 }

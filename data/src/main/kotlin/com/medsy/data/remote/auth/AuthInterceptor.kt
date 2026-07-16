@@ -1,6 +1,6 @@
-package com.medsy.data.auth.remote
+package com.medsy.data.remote.auth
 
-import com.medsy.data.auth.local.TokenStorage
+import com.medsy.data.local.auth.TokenStorage
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.medsy.data.auth.local
+package com.medsy.data.local.auth
 
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.core.content.edit
 
 @Singleton
 class TokenStorage @Inject constructor(
@@ -32,22 +33,24 @@ class TokenStorage @Inject constructor(
     val sessionFlow = _sessionFlow.asStateFlow()
 
     fun save(session: AuthSession) {
-        prefs.edit()
-            .putString(KEY_ACCESS, session.accessToken)
-            .putString(KEY_REFRESH, session.refreshToken)
-            .putLong(KEY_USER_ID, session.user.id)
-            .putString(KEY_USER_EMAIL, session.user.email)
-            .putString(KEY_USER_FIRST, session.user.firstName)
-            .putString(KEY_USER_LAST, session.user.lastName)
-            .putString(KEY_USER_ROLE, session.user.role.name)
-            .putString(KEY_USER_ADDRESS, session.user.homeAddress)
-            .putString(KEY_USER_DOB, session.user.dob)
-            .apply()
+        prefs.edit {
+            putString(KEY_ACCESS, session.accessToken)
+                .putString(KEY_REFRESH, session.refreshToken)
+                .putLong(KEY_USER_ID, session.user.id)
+                .putString(KEY_USER_EMAIL, session.user.email)
+                .putString(KEY_USER_FIRST, session.user.firstName)
+                .putString(KEY_USER_LAST, session.user.lastName)
+                .putString(KEY_USER_ROLE, session.user.role.name)
+                .putString(KEY_USER_ADDRESS, session.user.homeAddress)
+                .putString(KEY_USER_DOB, session.user.dob)
+        }
         _sessionFlow.value = session
     }
 
     fun clear() {
-        prefs.edit().clear().apply()
+        prefs.edit {
+            clear()
+        }
         _sessionFlow.value = null
     }
 

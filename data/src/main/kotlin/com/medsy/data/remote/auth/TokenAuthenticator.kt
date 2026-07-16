@@ -1,9 +1,9 @@
-package com.medsy.data.auth.remote
+package com.medsy.data.remote.auth
 
-import com.medsy.data.auth.local.TokenStorage
-import com.medsy.data.auth.mapper.toDomain
-import com.medsy.data.auth.remote.api.AuthApi
-import com.medsy.data.auth.remote.dto.RefreshRequestDto
+import com.medsy.data.local.auth.TokenStorage
+import com.medsy.data.mapper.auth.toDomain
+import com.medsy.data.remote.auth.api.AuthApi
+import com.medsy.data.remote.auth.dto.RefreshRequestDto
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
