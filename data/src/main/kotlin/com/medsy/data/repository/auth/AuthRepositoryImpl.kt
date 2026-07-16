@@ -95,6 +95,7 @@ class AuthRepositoryImpl @Inject constructor(
     } catch (e: IOException) {
         DomainResult.Error(DomainError.Network)
     } catch (e: Exception) {
+        android.util.Log.e("AuthRepository", "Unknown error during API call", e)
         DomainResult.Error(DomainError.Unknown)
     }
 

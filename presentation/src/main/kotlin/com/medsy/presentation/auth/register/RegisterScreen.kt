@@ -78,9 +78,11 @@ fun RegisterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    LaunchedEffect(state.errorMessage) {
+    LaunchedEffect(state.errorMessage, state.errorMessageRes) {
         if (state.errorMessage != null) {
             snackbarHostState.showSnackbar(state.errorMessage)
+        } else if (state.errorMessageRes != null) {
+            snackbarHostState.showSnackbar(context.getString(state.errorMessageRes))
         }
     }
 

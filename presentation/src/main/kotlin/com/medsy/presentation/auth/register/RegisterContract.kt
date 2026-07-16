@@ -20,7 +20,8 @@ data class RegisterState(
     val lastNameErrorRes: Int? = null,
     val passwordErrorRes: Int? = null,
     val confirmPasswordErrorRes: Int? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val errorMessageRes: Int? = null
 )
 
 sealed interface RegisterIntent {

@@ -13,7 +13,7 @@ import retrofit2.http.POST
 
 interface AuthApi {
     @POST("api/v1/auth/register")
-    suspend fun register(@Body body: RegisterRequestDto): Response<ApiResponseDto<Unit>>
+    suspend fun register(@Body body: RegisterRequestDto): Response<ApiResponseDto<Any>>
 
     @POST("api/v1/auth/verify")
     suspend fun verify(@Body body: VerifyOtpRequestDto): Response<ApiResponseDto<AuthDataDto>>
@@ -26,5 +26,5 @@ interface AuthApi {
     suspend fun refresh(@Body body: RefreshRequestDto): Response<ApiResponseDto<AuthDataDto>>
 
     @POST("api/v1/auth/logout")
-    suspend fun logout(@Body body: RefreshRequestDto): Response<ApiResponseDto<Unit>>
+    suspend fun logout(@Body body: RefreshRequestDto): Response<ApiResponseDto<Any>>
 }

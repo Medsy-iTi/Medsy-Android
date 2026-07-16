@@ -28,16 +28,16 @@ class RegisterViewModel @Inject constructor(
 
     fun onIntent(intent: RegisterIntent) {
         when (intent) {
-            is RegisterIntent.EmailChanged -> _state.update { it.copy(email = intent.value, emailErrorRes = null, errorMessage = null) }
-            is RegisterIntent.PhoneChanged -> _state.update { it.copy(phoneNumber = intent.value, phoneErrorRes = null, errorMessage = null) }
-            is RegisterIntent.FirstNameChanged -> _state.update { it.copy(firstName = intent.value, firstNameErrorRes = null, errorMessage = null) }
-            is RegisterIntent.LastNameChanged -> _state.update { it.copy(lastName = intent.value, lastNameErrorRes = null, errorMessage = null) }
-            is RegisterIntent.PasswordChanged -> _state.update { it.copy(password = intent.value, passwordErrorRes = null, errorMessage = null) }
-            is RegisterIntent.ConfirmPasswordChanged -> _state.update { it.copy(confirmPassword = intent.value, confirmPasswordErrorRes = null, errorMessage = null) }
-            is RegisterIntent.DobChanged -> _state.update { it.copy(dob = intent.value, errorMessage = null) }
-            is RegisterIntent.RoleChanged -> _state.update { it.copy(role = intent.value, errorMessage = null) }
-            is RegisterIntent.AddressChanged -> _state.update { it.copy(homeAddress = intent.value, errorMessage = null) }
-            is RegisterIntent.PharmacyIdChanged -> _state.update { it.copy(pharmacyId = intent.value, errorMessage = null) }
+            is RegisterIntent.EmailChanged -> _state.update { it.copy(email = intent.value, emailErrorRes = null, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.PhoneChanged -> _state.update { it.copy(phoneNumber = intent.value, phoneErrorRes = null, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.FirstNameChanged -> _state.update { it.copy(firstName = intent.value, firstNameErrorRes = null, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.LastNameChanged -> _state.update { it.copy(lastName = intent.value, lastNameErrorRes = null, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.PasswordChanged -> _state.update { it.copy(password = intent.value, passwordErrorRes = null, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.ConfirmPasswordChanged -> _state.update { it.copy(confirmPassword = intent.value, confirmPasswordErrorRes = null, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.DobChanged -> _state.update { it.copy(dob = intent.value, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.RoleChanged -> _state.update { it.copy(role = intent.value, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.AddressChanged -> _state.update { it.copy(homeAddress = intent.value, errorMessage = null, errorMessageRes = null) }
+            is RegisterIntent.PharmacyIdChanged -> _state.update { it.copy(pharmacyId = intent.value, errorMessage = null, errorMessageRes = null) }
             RegisterIntent.Submit -> submit()
         }
     }
@@ -65,7 +65,7 @@ class RegisterViewModel @Inject constructor(
             return@launch
         }
         
-        _state.update { it.copy(isLoading = true, errorMessage = null) }
+        _state.update { it.copy(isLoading = true, errorMessage = null, errorMessageRes = null) }
         val params = RegisterParams(
             email = currentState.email,
             phoneNumber = currentState.phoneNumber,
@@ -85,9 +85,12 @@ class RegisterViewModel @Inject constructor(
             }
             is DomainResult.Error -> {
                 android.util.Log.e("RegisterViewModel", "Registration failed: ${result.error}")
-                val message = (result.error as? DomainError.Api)?.message
-                    ?: "Something went wrong. Please try again."
-                _state.update { it.copy(isLoading = false, errorMessage = message) }
+                val apiMessage = (result.error as? DomainError.Api)?.message
+                if (apiMessage != null) {
+                    _state.update { it.copy(isLoading = false, errorMessage = apiMessage, errorMessageRes = null) }
+                } else {
+                    _state.update { it.copy(isLoading = false, errorMessage = null, errorMessageRes = com.medsy.presentation.R.string.error_generic) }
+                }
             }
         }
     }
