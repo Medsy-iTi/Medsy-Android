@@ -20,11 +20,16 @@ import com.medsy.presentation.auth.register.components.ScreenHeader
 
 @Composable
 fun OtpRoot(
+    email: String,
     onNavigateHome: () -> Unit,
     onNavigateBack: () -> Unit,
     viewModel: OtpViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(email) {
+        viewModel.setEmail(email)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -96,7 +101,8 @@ fun OtpScreen(
             MedsyButton(
                 onClick = { onIntent(OtpIntent.Submit) },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = state.code.length == 6
+                enabled = state.code.length == 6,
+                isLoading = state.isLoading
             ) {
                 if (state.isLoading) {
                     CircularProgressIndicator(

@@ -194,6 +194,7 @@ fun CreateAccountContent(
         MedsyButton(
             onClick = { onIntent(RegisterIntent.Submit) },
             modifier = Modifier.padding(top = 24.dp),
+            isLoading = state.isLoading
         ) {
             if (state.isLoading) {
                 CircularProgressIndicator(

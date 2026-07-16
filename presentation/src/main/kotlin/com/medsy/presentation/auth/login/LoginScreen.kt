@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -180,15 +182,23 @@ fun LoginScreen(
 
         // Login Button
         MedsyButton(
-            onClick = { onIntent(LoginIntent.Submit) }
+            onClick = { onIntent(LoginIntent.Submit) },
+            isLoading = state.isLoading
         ) {
-            Text(
-                text = stringResource(R.string.login_button),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = NeutralWhite
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
-            )
+            } else {
+                Text(
+                    text = stringResource(R.string.login_button),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = NeutralWhite
+                    )
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerOr))

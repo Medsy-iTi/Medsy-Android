@@ -104,6 +104,7 @@ fun RootNavDisplay() {
             }
             entry<Route.Otp> { route ->
                 OtpRoot(
+                    email = route.email,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateHome = {
                         rootBackStack.apply {
