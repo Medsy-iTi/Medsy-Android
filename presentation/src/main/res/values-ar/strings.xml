@@ -4,10 +4,15 @@
     <string name="home_delivery_to">التوصيل إلى</string>
     <string name="home_address_mock">شارع النيل، المعادي</string>
     <string name="home_search_hint">ابحث باسم الدواء</string>
-    <string name="home_promo_title">صحتك تهمنا</string>
-    <string name="home_promo_subtitle">خصم حتى 30%</string>
-    <string name="home_promo_desc">على مجموعة مختارة</string>
-    <string name="home_promo_button">تسوق الآن</string>
+    <string name="home_promo_title_one">ابحث عن أي دواء</string>
+    <string name="home_promo_title_two">ارفع وصفتك الطبية</string>
+    <string name="home_promo_title_three">استشر طبيبًا</string>
+    <string name="home_promo_subtitle_one">بحث سريع بنتائج ذكية</string>
+    <string name="home_promo_subtitle_two">وسنتولى الباقي</string>
+    <string name="home_promo_subtitle_three">احصل على استشارة في أي وقت</string>
+    <string name="home_promo_extratext_one">اطّلع على البدائل إذا لم يكن الدواء متوفرًا</string>
+    <string name="home_promo_extratext_two">لا مزيد من الحيرة بسبب خط الأطباء</string>
+    <string name="home_promo_extratext_three">تحدث مع أطباء معتمدين فورًا</string>
     <string name="home_section_order">سهلنا الطلب عليك</string>
     <string name="home_card_search_title">ابحث عن دواء</string>
     <string name="home_card_search_desc">ابحث عن أي دواء تحتاجه بسهولة</string>
@@ -22,6 +27,9 @@
     <string name="home_cat_more">المزيد</string>
     <string name="home_banner_fast_delivery">توصيل سريع</string>
     <string name="home_banner_to_door">إلى باب منزلك</string>
+    <string name="home_banner_image_desc_one">بانر يعرض ميزة البحث عن الدواء</string>
+    <string name="home_banner_image_desc_two">بانر يعرض ميزة رفع الروشتة</string>
+    <string name="home_banner_image_desc_three">بانر يعرض ميزة استشارة الطبيب</string>
 
     <!-- App -->
     <string name="app_name">ميدسي</string>
