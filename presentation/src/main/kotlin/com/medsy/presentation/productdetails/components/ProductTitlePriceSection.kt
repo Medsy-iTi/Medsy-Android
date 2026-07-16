@@ -1,0 +1,49 @@
+package com.medsy.presentation.productdetails.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.medsy.designsystem.ui.theme.SecondaryText
+import com.medsy.presentation.R
+
+@Composable
+fun ProductTitlePriceSection(
+    name: String,
+    strength: String,
+    packInfo: String,
+    price: Int,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+    ) {
+        Text(
+            text = name,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+        Text(
+            text = stringResource(R.string.product_details_pack_info_format, strength, packInfo),
+            style = MaterialTheme.typography.bodyMedium,
+            color = SecondaryText,
+            modifier = Modifier.padding(top = 4.dp),
+        )
+        Text(
+            text = stringResource(R.string.search_price_egp, price),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(top = 8.dp),
+        )
+    }
+}

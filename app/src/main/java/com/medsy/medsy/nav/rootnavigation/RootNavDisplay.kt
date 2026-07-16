@@ -118,7 +118,13 @@ fun RootNavDisplay() {
             }
             entry<Route.ProductDetails> {
                 ProductDetailsRoot(
-                    onNext = { rootBackStack.removeLastOrNull() }
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateToCart = {
+                        rootBackStack.navigateSingleTop(Route.NestedNav)
+                    },
+                    onNavigateToPharmacistChat = {
+
+                    }
                 )
             }
             entry<Route.Settings> {
