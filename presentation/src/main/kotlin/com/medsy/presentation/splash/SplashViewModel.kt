@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -19,7 +21,11 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val session = observeSessionUseCase().firstOrNull()
+            // Run session check and minimum splash duration in parallel,
+            // then navigate only after both complete.
+            val sessionDeferred = async { observeSessionUseCase().firstOrNull() }
+            delay(SplashConstants.MIN_SPLASH_DURATION_MS)
+            val session = sessionDeferred.await()
             _effect.send(if (session != null) SplashEffect.ToHome else SplashEffect.ToOnboarding)
         }
     }

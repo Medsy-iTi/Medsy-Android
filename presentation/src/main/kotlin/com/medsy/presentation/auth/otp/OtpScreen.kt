@@ -1,6 +1,11 @@
 package com.medsy.presentation.auth.otp
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,11 +21,13 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +62,8 @@ import com.medsy.presentation.R
 
 private const val OTP_LENGTH = 6
 
+// ─── Root ─────────────────────────────────────────────────────────────────────
+
 @Composable
 fun OtpRoot(
     email: String,
@@ -63,9 +73,7 @@ fun OtpRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(email) {
-        viewModel.setEmail(email)
-    }
+    LaunchedEffect(email) { viewModel.setEmail(email) }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -75,12 +83,10 @@ fun OtpRoot(
         }
     }
 
-    OtpScreen(
-        state = state,
-        onIntent = viewModel::onIntent,
-        onNavigateBack = onNavigateBack
-    )
+    OtpScreen(state = state, onIntent = viewModel::onIntent, onNavigateBack = onNavigateBack)
 }
+
+// ─── Screen ───────────────────────────────────────────────────────────────────
 
 @Composable
 fun OtpScreen(
@@ -91,9 +97,7 @@ fun OtpScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(state.errorMessage) {
-        if (state.errorMessage != null) {
-            snackbarHostState.showSnackbar(state.errorMessage)
-        }
+        state.errorMessage?.let { snackbarHostState.showSnackbar(it) }
     }
 
     Scaffold(
@@ -125,9 +129,14 @@ fun OtpScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Animated email illustration
+            OtpEmailIllustration()
+
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Title section
+            // Title
             Text(
                 text = stringResource(R.string.otp_title),
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
@@ -135,28 +144,29 @@ fun OtpScreen(
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
+            // Subtitle with masked email
             Text(
                 text = stringResource(R.string.otp_subtitle, state.email),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 color = SecondaryText,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            // OTP Boxes
+            // OTP digit boxes
             OtpInputField(
                 code = state.code,
                 hasError = state.errorMessage != null,
                 onCodeChanged = { if (it.length <= OTP_LENGTH) onIntent(OtpIntent.CodeChanged(it)) }
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            // Verify Button
+            // Verify button
             MedsyButton(
                 onClick = { onIntent(OtpIntent.Submit) },
                 modifier = Modifier.fillMaxWidth(),
@@ -177,12 +187,12 @@ fun OtpScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            // Resend timer or button
+            // Countdown or resend button
             if (state.countdown > 0) {
                 Text(
-                    text = stringResource(R.string.auth_resend_cooldown, state.countdown),
+                    text = stringResource(R.string.auth_resend_cooldown, formatCountdown(state.countdown)),
                     style = MaterialTheme.typography.bodyMedium,
                     color = SecondaryText,
                     textAlign = TextAlign.Center
@@ -201,6 +211,48 @@ fun OtpScreen(
         }
     }
 }
+
+// ─── Email Illustration ───────────────────────────────────────────────────────
+
+@Composable
+private fun OtpEmailIllustration() {
+    val infiniteTransition = rememberInfiniteTransition(label = "otp_icon_anim")
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.08f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1200, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "otp_scale"
+    )
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(110.dp)
+            .scale(scale)
+            .clip(CircleShape)
+            .background(LightGreen)
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(84.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Email,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(44.dp)
+            )
+        }
+    }
+}
+
+// ─── OTP Input ────────────────────────────────────────────────────────────────
 
 @Composable
 private fun OtpInputField(
@@ -249,7 +301,7 @@ private fun OtpInputField(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .weight(1f)
-                            .height(60.dp)
+                            .height(58.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(bgColor)
                             .border(
@@ -269,10 +321,9 @@ private fun OtpInputField(
                                 textAlign = TextAlign.Center
                             )
                         } else if (isFocused) {
-                            // Cursor indicator
                             Box(
                                 modifier = Modifier
-                                    .size(width = 2.dp, height = 24.dp)
+                                    .size(width = 2.dp, height = 22.dp)
                                     .background(MaterialTheme.colorScheme.primary)
                             )
                         }
@@ -281,4 +332,13 @@ private fun OtpInputField(
             }
         }
     )
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Converts seconds → "MM:SS" e.g. 300 → "05:00" */
+private fun formatCountdown(seconds: Int): String {
+    val m = seconds / 60
+    val s = seconds % 60
+    return "%02d:%02d".format(m, s)
 }

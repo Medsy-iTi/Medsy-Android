@@ -67,6 +67,9 @@
     <string name="error_password_mismatch">Passwords do not match</string>
     <string name="error_terms_not_accepted">You must accept the Terms &amp; Conditions to continue</string>
     <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_network">No internet connection. Please check your network.</string>
+    <string name="error_phone_exists">Phone Number already exists.</string>
+    <string name="error_email_exists">Email already exists.</string>
 
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>
@@ -137,7 +140,7 @@
     <string name="auth_otp_code">OTP Code</string>
     <string name="auth_verify_otp">Verify</string>
     <string name="auth_resend_otp">Resend OTP</string>
-    <string name="auth_resend_cooldown">Resend OTP in %d s</string>
+    <string name="auth_resend_cooldown">Resend OTP in %s</string>
     <string name="auth_invalid_code">Invalid or expired code</string>
     <string name="auth_welcome_title">Welcome to Medsy</string>
     <string name="auth_already_have_account">Already have an account? Log in</string>

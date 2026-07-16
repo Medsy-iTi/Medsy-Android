@@ -84,6 +84,9 @@
     <string name="error_password_mismatch">كلمتا المرور غير متطابقتين</string>
     <string name="error_terms_not_accepted">يجب الموافقة على الشروط والأحكام للمتابعة</string>
     <string name="error_generic">حدث خطأ ما، يرجى المحاولة مرة أخرى.</string>
+    <string name="error_network">لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة.</string>
+    <string name="error_phone_exists">رقم الهاتف مسجل بالفعل.</string>
+    <string name="error_email_exists">البريد الإلكتروني مسجل بالفعل.</string>
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
 
@@ -132,7 +135,7 @@
     <string name="auth_otp_code">رمز التحقق (OTP)</string>
     <string name="auth_verify_otp">تأكيد</string>
     <string name="auth_resend_otp">إعادة إرسال الرمز</string>
-    <string name="auth_resend_cooldown">إعادة الإرسال خلال %d ثانية</string>
+    <string name="auth_resend_cooldown">إعادة الإرسال خلال %s</string>
     <string name="auth_invalid_code">الرمز غير صحيح أو منتهي الصلاحية</string>
     <string name="auth_welcome_title">مرحباً بك في Medsy</string>
     <string name="auth_already_have_account">لديك حساب بالفعل؟ تسجيل الدخول</string>

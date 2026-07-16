@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,6 +50,7 @@ import com.medsy.presentation.auth.login.components.LoginOrDivider
 import com.medsy.presentation.auth.login.components.LoginPasswordInput
 import com.medsy.presentation.auth.login.components.LoginPhoneInput
 import com.medsy.presentation.auth.login.components.LoginSocialButton
+import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.designsystem.R as DesignR
 
 @Composable
@@ -84,19 +86,23 @@ fun LoginScreen(
 
     val isDarkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
-            .verticalScroll(rememberScrollState())
-            .imePadding()
-            .padding(
-                horizontal = LoginConstants.ScreenPaddingHorizontal,
-                vertical = LoginConstants.ScreenPaddingVertical
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .padding(
+                    horizontal = LoginConstants.ScreenPaddingHorizontal,
+                    vertical = LoginConstants.ScreenPaddingVertical
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
         Spacer(modifier = Modifier.height(LoginConstants.TopSpacer))
 
         val logoRes = if (isDarkTheme) {
@@ -254,5 +260,12 @@ fun LoginScreen(
                 .padding(vertical = 16.dp)
                 .clickable { openSignup() }
         )
-    }
+        } // end Column
+
+        // Floating top snackbar
+        MedsySnackbarHost(
+            snackbarData = state.snackbar,
+            onDismiss = { onIntent(LoginIntent.DismissSnackbar) }
+        )
+    } // end Box
 }

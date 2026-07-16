@@ -5,9 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import com.medsy.designsystem.ui.theme.SuccessGreen
 
 @Immutable
 data class ExtendedColors(
+    val success: Color,
+    val onSuccess: Color,
     // Category Colors
     val categoryMedicineBg: Color,
     val categoryMedicineIcon: Color,
@@ -30,6 +33,8 @@ val MaterialTheme.extendedColors: ExtendedColors
     get() = LocalExtendedColors.current
 
 internal val lightExtendedColors = ExtendedColors(
+    success = SuccessGreen,
+    onSuccess = Color.White,
     categoryMedicineBg = Color(0xFFE0E7FF),
     categoryMedicineIcon = Color(0xFF3B82F6),
     categoryVitaminsBg = Color(0xFFFFEDD5),
@@ -46,6 +51,8 @@ internal val lightExtendedColors = ExtendedColors(
 )
 
 internal val darkExtendedColors = ExtendedColors(
+    success = SuccessGreen,
+    onSuccess = Color.White,
     categoryMedicineBg = Color(0xFFE0E7FF),
     categoryMedicineIcon = Color(0xFF3B82F6),
     categoryVitaminsBg = Color(0xFFFFEDD5),

@@ -1,5 +1,6 @@
 package com.medsy.presentation.auth.register
 
+import com.medsy.designsystem.components.MedsySnackbarData
 import com.medsy.domain.auth.model.Role
 
 data class RegisterState(
@@ -8,7 +9,6 @@ data class RegisterState(
     val firstName: String = "",
     val lastName: String = "",
     val password: String = "",
-    val confirmPassword: String = "",
     val dob: String = "",
     val role: Role = Role.CUSTOMER,
     val homeAddress: String = "",
@@ -19,9 +19,7 @@ data class RegisterState(
     val firstNameErrorRes: Int? = null,
     val lastNameErrorRes: Int? = null,
     val passwordErrorRes: Int? = null,
-    val confirmPasswordErrorRes: Int? = null,
-    val errorMessage: String? = null,
-    val errorMessageRes: Int? = null
+    val snackbar: MedsySnackbarData? = null
 )
 
 sealed interface RegisterIntent {
@@ -30,11 +28,11 @@ sealed interface RegisterIntent {
     data class FirstNameChanged(val value: String) : RegisterIntent
     data class LastNameChanged(val value: String) : RegisterIntent
     data class PasswordChanged(val value: String) : RegisterIntent
-    data class ConfirmPasswordChanged(val value: String) : RegisterIntent
     data class DobChanged(val value: String) : RegisterIntent
     data class RoleChanged(val value: Role) : RegisterIntent
     data class AddressChanged(val value: String) : RegisterIntent
     data class PharmacyIdChanged(val value: Long?) : RegisterIntent
+    data object DismissSnackbar : RegisterIntent
     data object Submit : RegisterIntent
 }
 
