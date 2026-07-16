@@ -38,9 +38,9 @@ fun MedsyTextField(
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = BorderGray,
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            focusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
+            unfocusedContainerColor = androidx.compose.ui.graphics.Color.Transparent,
             focusedTextColor = MaterialTheme.colorScheme.onSurface,
             unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
             cursorColor = MaterialTheme.colorScheme.primary
