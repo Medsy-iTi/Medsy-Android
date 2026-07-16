@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.draw.shadow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.home.CategoryIconType
 import com.medsy.presentation.home.CategoryUi
-import com.medsy.presentation.R
 
 @Composable
 fun CategoryGridCard(
@@ -48,26 +47,26 @@ fun CategoryGridCard(
     val (icon, bgColor, iconColor) = when (category.iconType) {
         CategoryIconType.MEDICINE -> Triple(
             Icons.Default.Medication,
-            colors.categoryMedicineBg,
-            colors.categoryMedicineIcon
+            colors.blueContainer,
+            colors.blueContent
         )
 
         CategoryIconType.VITAMINS -> Triple(
             Icons.Default.HealthAndSafety,
-            colors.categoryVitaminsBg,
-            colors.categoryVitaminsIcon
+            colors.orangeContainer,
+            colors.orangeContent
         )
 
         CategoryIconType.PERSONAL_CARE -> Triple(
             Icons.Default.Face,
-            colors.categoryPersonalCareBg,
-            colors.categoryPersonalCareIcon
+            colors.pinkContainer,
+            colors.pinkContent
         )
 
         CategoryIconType.MEDICAL_DEVICES -> Triple(
             Icons.Default.MedicalServices,
-            colors.categoryMedicalDevicesBg,
-            colors.categoryMedicalDevicesIcon
+            colors.purpleContainer,
+            colors.purpleContent
         )
 
         CategoryIconType.BABY_CARE -> Triple(

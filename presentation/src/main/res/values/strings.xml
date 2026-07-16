@@ -107,9 +107,6 @@
     <string name="home_cat_more">More</string>
     <string name="home_banner_fast_delivery">Fast delivery</string>
     <string name="home_banner_to_door">to your doorstep</string>
-    <string name="home_banner_image_desc_one">Banner showing medicine search feature</string>
-    <string name="home_banner_image_desc_two">Banner showing prescription upload feature</string>
-    <string name="home_banner_image_desc_three">Banner showing doctor consultation feature</string>
 
 
     <!-- Profile -->

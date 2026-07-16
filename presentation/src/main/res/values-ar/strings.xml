@@ -38,9 +38,6 @@
     <string name="home_banner_image_desc_one">بانر يعرض ميزة البحث عن الدواء</string>
     <string name="home_banner_image_desc_two">بانر يعرض ميزة رفع الروشتة</string>
     <string name="home_banner_image_desc_three">بانر يعرض ميزة استشارة الطبيب</string>
-    <string name="home_banner_image_desc_one">بانر يعرض ميزة البحث عن الدواء</string>
-    <string name="home_banner_image_desc_two">بانر يعرض ميزة رفع الروشتة</string>
-    <string name="home_banner_image_desc_three">بانر يعرض ميزة استشارة الطبيب</string>
 
     <!-- Categories Screen -->
     <string name="categories_title">الفئات</string>
@@ -106,7 +103,7 @@
     <string name="error_generic">حدث خطأ ما، يرجى المحاولة مرة أخرى.</string>
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
-    
+
     <!-- الملف الشخصي -->
     <string name="profile_title">حسابي</string>
     <string name="profile_avatar_content_description">الصورة الشخصية</string>
