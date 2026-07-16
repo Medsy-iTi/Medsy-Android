@@ -27,7 +27,7 @@ private val DarkColorScheme = darkColorScheme(
     surfaceVariant = PrimaryText,
     onSurfaceVariant = SecondaryText,
     error = ErrorRed,
-    outline = BorderGray
+    outline = BorderGreen
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -43,7 +43,7 @@ private val LightColorScheme = lightColorScheme(
     surfaceVariant = NeutralWhite,
     onSurfaceVariant = SecondaryText,
     error = ErrorRed,
-    outline = BorderGray
+    outline = BorderGreen
 )
 
 @Composable

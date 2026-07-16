@@ -49,5 +49,11 @@ sealed interface Route : NavKey {
     data object Settings : Route
 
     @Serializable
+    data object PersonalDetails : Route
+
+    @Serializable
     data object SearchNav : Route
+
+    @Serializable
+    data object Categories : Route
 }

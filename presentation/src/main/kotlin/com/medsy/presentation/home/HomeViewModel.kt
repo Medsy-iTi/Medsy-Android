@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.exp
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
@@ -30,32 +31,28 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 banners = listOf(
                     PromoBannerUi(
                         id = "1",
-                        titleRes = R.string.home_promo_title,
-                        subtitleRes = R.string.home_promo_subtitle,
-                        discountTextRes = R.string.home_promo_desc,
-                        ctaTextRes = R.string.home_promo_button
+                        titleRes = R.string.home_promo_title_one,
+                        subtitleRes = R.string.home_promo_subtitle_one,
+                        extraTitleRes = R.string.home_promo_extratext_one,
+                        imageRes = R.drawable.banner1,
+                        imageContentDescRes = R.string.home_banner_image_desc_one
                     ),
                     PromoBannerUi(
                         id = "2",
-                        titleRes = R.string.home_promo_title,
-                        subtitleRes = R.string.home_promo_subtitle,
-                        discountTextRes = R.string.home_promo_desc,
-                        ctaTextRes = R.string.home_promo_button
+                        titleRes = R.string.home_promo_title_two,
+                        subtitleRes = R.string.home_promo_subtitle_two,
+                        extraTitleRes = R.string.home_promo_extratext_two,
+                        imageRes = R.drawable.banner2,
+                        imageContentDescRes = R.string.home_banner_image_desc_two
                     ),
                     PromoBannerUi(
                         id = "3",
-                        titleRes = R.string.home_promo_title,
-                        subtitleRes = R.string.home_promo_subtitle,
-                        discountTextRes = R.string.home_promo_desc,
-                        ctaTextRes = R.string.home_promo_button
+                        titleRes = R.string.home_promo_title_three,
+                        subtitleRes = R.string.home_promo_subtitle_three,
+                        extraTitleRes = R.string.home_promo_extratext_three,
+                        imageRes = R.drawable.banner3,
+                        imageContentDescRes = R.string.home_banner_image_desc_three
                     ),
-                    PromoBannerUi(
-                        id = "4",
-                        titleRes = R.string.home_promo_title,
-                        subtitleRes = R.string.home_promo_subtitle,
-                        discountTextRes = R.string.home_promo_desc,
-                        ctaTextRes = R.string.home_promo_button
-                    )
                 ),
                 categories = listOf(
                     CategoryUi("1", R.string.home_cat_medicine, CategoryIconType.MEDICINE),

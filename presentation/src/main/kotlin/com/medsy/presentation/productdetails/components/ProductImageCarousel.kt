@@ -29,8 +29,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.medsy.designsystem.ui.theme.BorderGray
-import com.medsy.designsystem.ui.theme.ErrorRed
 import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.presentation.R
 
@@ -42,7 +40,7 @@ fun ProductImageCarousel(
     onPageChanged: (Int) -> Unit,
     onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: Painter?=null
+    placeholder: Painter? = null
 ) {
     val pagerState = rememberPagerState(
         initialPage = selectedIndex,
@@ -75,7 +73,8 @@ fun ProductImageCarousel(
                         placeholder = placeholder,
                         error = placeholder,
                         fallback = placeholder,
-                        contentScale = ContentScale.Crop)
+                        contentScale = ContentScale.Crop
+                    )
                 }
             }
 
@@ -91,7 +90,7 @@ fun ProductImageCarousel(
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = stringResource(R.string.search_favorite_desc),
-                    tint = if (isFavorite) ErrorRed else BorderGray,
+                    tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
                 )
             }
         }
@@ -110,7 +109,7 @@ fun ProductImageCarousel(
                         .size(if (isSelected) 8.dp else 6.dp)
                         .clip(CircleShape)
                         .background(
-                            if (isSelected) MaterialTheme.colorScheme.primary else BorderGray
+                            if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
                         ),
                 )
             }
