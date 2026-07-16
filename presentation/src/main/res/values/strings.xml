@@ -143,4 +143,8 @@
     <string name="auth_already_have_account">Already have an account? Log in</string>
     <string name="auth_error_required_field">This field is required</string>
     <string name="auth_error_password_min_6">Password must be at least 6 characters</string>
+
+    <!-- OTP -->
+    <string name="otp_title">Verify your email</string>
+    <string name="otp_subtitle">We sent a 6-digit code to %s. Enter it below to confirm your account.</string>
 </resources>

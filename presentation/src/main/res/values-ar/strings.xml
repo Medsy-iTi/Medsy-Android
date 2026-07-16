@@ -138,4 +138,8 @@
     <string name="auth_already_have_account">لديك حساب بالفعل؟ تسجيل الدخول</string>
     <string name="auth_error_required_field">هذا الحقل مطلوب</string>
     <string name="auth_error_password_min_6">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل</string>
+
+    <!-- OTP -->
+    <string name="otp_title">تحقق من بريدك الإلكتروني</string>
+    <string name="otp_subtitle">أرسلنا رمزاً مكوناً من 6 أرقام إلى %s. أدخله أدناه لتأكيد حسابك.</string>
 </resources>
