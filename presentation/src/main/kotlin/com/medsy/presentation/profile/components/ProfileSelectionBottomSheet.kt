@@ -19,18 +19,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-data class ProfileSelectionOption(
+data class ProfileSelectionOption<T>(
+    val value: T,
     val label: String,
     val selected: Boolean,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileSelectionBottomSheet(
+fun <T> ProfileSelectionBottomSheet(
     title: String,
-    options: List<ProfileSelectionOption>,
+    options: List<ProfileSelectionOption<T>>,
     onDismissRequest: () -> Unit,
-    onOptionClick: () -> Unit,
+    onOptionClick: (T) -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -55,13 +56,13 @@ fun ProfileSelectionBottomSheet(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable(onClick = onOptionClick)
+                        .clickable { onOptionClick(option.value) }
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     RadioButton(
                         selected = option.selected,
-                        onClick = onOptionClick,
+                        onClick = { onOptionClick(option.value) },
                         colors = RadioButtonDefaults.colors(
                             selectedColor = MaterialTheme.colorScheme.primary,
                         ),

@@ -6,10 +6,10 @@ import javax.inject.Inject
 class GetProfileUseCase @Inject constructor() {
 
     operator fun invoke(): Profile = Profile(
-        name = "محمود الدمرداش",
+        name = "Mahmoud ELDemerdash",
         image = null,
         email = "mahmoudeldemerdash5@gmail.com",
-        phoneNumber = "+20 1097662212",
+        phoneNumber = "+20 109 766 2212",
         age = 24,
     )
 }

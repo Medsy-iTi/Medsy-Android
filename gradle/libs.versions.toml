@@ -26,6 +26,8 @@ ksp = "2.3.10"
 lottieCompose = "6.7.1"
 coil = "3.5.0"
 coreSplashscreen = "1.2.0"
+dataStore = "1.2.1"
+coroutines = "1.11.0"
 
 runtime = "1.11.4"
 material3 = "1.4.0"
@@ -59,6 +61,9 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converte
 
 #core-splashscreen
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+#preferences datastore
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 #nav3
 androidx-navigation3 = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3" }

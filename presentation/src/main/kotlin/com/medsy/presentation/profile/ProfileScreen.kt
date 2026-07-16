@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.ui.theme.extendedColors
+import com.medsy.domain.common.preferences.model.AppLanguage
+import com.medsy.domain.common.preferences.model.ThemeMode
 import com.medsy.presentation.R
 import com.medsy.presentation.profile.components.ProfileHeaderCard
 import com.medsy.presentation.profile.components.ProfileMenuItem
@@ -88,6 +90,13 @@ fun ProfileScreen(
     val isArabic = Locale.current.language == "ar"
     val currentLanguage = stringResource(
         if (isArabic) R.string.profile_language_arabic else R.string.profile_language_english
+    )
+    val currentAppearance = stringResource(
+        when (state.themeMode) {
+            ThemeMode.System -> R.string.profile_appearance_system_default
+            ThemeMode.Light -> R.string.profile_appearance_light
+            ThemeMode.Dark -> R.string.profile_appearance_dark
+        }
     )
 
     LazyColumn(
@@ -151,7 +160,7 @@ fun ProfileScreen(
                     ),
                     ProfileMenuItem(
                         title = stringResource(R.string.profile_appearance),
-                        value = stringResource(R.string.profile_appearance_system_default),
+                        value = currentAppearance,
                         icon = Icons.Outlined.DarkMode,
                         iconTint = MaterialTheme.extendedColors.purpleContent,
                         onClick = { onIntent(ProfileUIIntent.AppearanceClicked) },
@@ -217,36 +226,45 @@ fun ProfileScreen(
             title = stringResource(R.string.profile_language),
             options = listOf(
                 ProfileSelectionOption(
+                    value = AppLanguage.Arabic,
                     label = stringResource(R.string.profile_language_arabic),
                     selected = isArabic,
                 ),
                 ProfileSelectionOption(
+                    value = AppLanguage.English,
                     label = stringResource(R.string.profile_language_english),
                     selected = !isArabic,
                 ),
             ),
             onDismissRequest = { onIntent(ProfileUIIntent.SheetDismissed) },
-            onOptionClick = { onIntent(ProfileUIIntent.SheetOptionClicked) },
+            onOptionClick = { language ->
+                onIntent(ProfileUIIntent.LanguageSelected(language))
+            },
         )
 
         ProfileSheet.Appearance -> ProfileSelectionBottomSheet(
             title = stringResource(R.string.profile_appearance),
             options = listOf(
                 ProfileSelectionOption(
+                    value = ThemeMode.System,
                     label = stringResource(R.string.profile_appearance_system_default),
-                    selected = true,
+                    selected = state.themeMode == ThemeMode.System,
                 ),
                 ProfileSelectionOption(
+                    value = ThemeMode.Light,
                     label = stringResource(R.string.profile_appearance_light),
-                    selected = false,
+                    selected = state.themeMode == ThemeMode.Light,
                 ),
                 ProfileSelectionOption(
+                    value = ThemeMode.Dark,
                     label = stringResource(R.string.profile_appearance_dark),
-                    selected = false,
+                    selected = state.themeMode == ThemeMode.Dark,
                 ),
             ),
             onDismissRequest = { onIntent(ProfileUIIntent.SheetDismissed) },
-            onOptionClick = { onIntent(ProfileUIIntent.SheetOptionClicked) },
+            onOptionClick = { themeMode ->
+                onIntent(ProfileUIIntent.ThemeSelected(themeMode))
+            },
         )
 
         null -> Unit
