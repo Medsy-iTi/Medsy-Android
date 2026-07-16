@@ -14,8 +14,9 @@ data class PromoBannerUi(
     val id: String,
     val titleRes: Int,
     val subtitleRes: Int,
-    val discountTextRes: Int,
-    val ctaTextRes: Int
+    val extraTitleRes: Int,
+    val imageRes: Int,
+    val imageContentDescRes: Int
 )
 
 data class CategoryUi(

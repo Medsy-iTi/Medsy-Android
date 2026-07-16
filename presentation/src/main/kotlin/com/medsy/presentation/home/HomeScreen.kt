@@ -79,7 +79,7 @@ fun HomeScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         PromoBannerCarousel(
             banners = state.banners,
@@ -87,7 +87,7 @@ fun HomeScreen(
             onPromoClick = { onIntent(HomeUIIntent.OnPromoClick) }
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Box(modifier = Modifier.padding(horizontal = 16.dp)) {
             OrderCardsSection(
