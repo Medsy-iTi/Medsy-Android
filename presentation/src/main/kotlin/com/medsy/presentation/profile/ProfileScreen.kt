@@ -1,10 +1,13 @@
 package com.medsy.presentation.profile
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
@@ -66,31 +70,12 @@ fun ProfileRoot(
     )
 }
 
-@Preview(name = "Profile Menu Section")
-@Composable
-private fun ProfileMenuSectionPreview() {
-    Surface {
-        ProfileScreen(
-            state = ProfileState(
-                name = "John Doe",
-                image = null,
-                phoneNumber = "+1 234 567 890",
-                isVerified = true,
-            ),
-        ) { }
-
-    }
-}
-
 @Composable
 fun ProfileScreen(
     state: ProfileState,
     onIntent: (ProfileUIIntent) -> Unit,
 ) {
-    val isArabic = Locale.current.language == "ar"
-    val currentLanguage = stringResource(
-        if (isArabic) R.string.profile_language_arabic else R.string.profile_language_english
-    )
+
     val currentAppearance = stringResource(
         when (state.themeMode) {
             ThemeMode.System -> R.string.profile_appearance_system_default
@@ -99,124 +84,154 @@ fun ProfileScreen(
         }
     )
 
-    LazyColumn(
+    Box(
         modifier = Modifier
-            .fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp),
-    ) {
-        item {
-            Text(
-                text = stringResource(R.string.profile_title),
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Center,
-            )
-        }
-
-        item {
-            ProfileHeaderCard(
-                name = state.name,
-                image = state.image,
-                phoneNumber = state.phoneNumber,
-                isVerified = state.isVerified,
-            )
-        }
-
-        item {
-            ProfileMenuSection(
-                title = stringResource(R.string.profile_section_account),
-                items = listOf(
-                    ProfileMenuItem(
-                        title = stringResource(R.string.profile_personal_details),
-                        subtitle = stringResource(R.string.profile_personal_details_subtitle),
-                        icon = Icons.Outlined.Person,
-                        iconTint = MaterialTheme.colorScheme.primary,
-                        onClick = { onIntent(ProfileUIIntent.PersonalDetailsClicked) },
-                    ),
-                    ProfileMenuItem(
-                        title = stringResource(R.string.profile_notifications),
-                        subtitle = stringResource(R.string.profile_notifications_subtitle),
-                        icon = Icons.Outlined.Notifications,
-                        iconTint = MaterialTheme.extendedColors.blueContent,
-                        onClick = {},
-                    ),
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    )
+    {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.01f),
+                            MaterialTheme.colorScheme.background.copy(alpha = 0f),
+                        ),
+                    )
                 ),
-            )
-        }
+        )
 
-        item {
-            ProfileMenuSection(
-                title = stringResource(R.string.profile_section_preferences),
-                items = listOf(
-                    ProfileMenuItem(
-                        title = stringResource(R.string.profile_language),
-                        value = currentLanguage,
-                        icon = Icons.Outlined.Language,
-                        iconTint = MaterialTheme.extendedColors.orangeContent,
-                        onClick = { onIntent(ProfileUIIntent.LanguageClicked) },
-                    ),
-                    ProfileMenuItem(
-                        title = stringResource(R.string.profile_appearance),
-                        value = currentAppearance,
-                        icon = Icons.Outlined.DarkMode,
-                        iconTint = MaterialTheme.extendedColors.purpleContent,
-                        onClick = { onIntent(ProfileUIIntent.AppearanceClicked) },
-                    ),
-                ),
-            )
-        }
-
-        item {
-            ProfileMenuSection(
-                title = stringResource(R.string.profile_section_support),
-                items = listOf(
-                    ProfileMenuItem(
-                        title = stringResource(R.string.profile_help_center),
-                        subtitle = stringResource(R.string.profile_help_center_subtitle),
-                        icon = Icons.AutoMirrored.Outlined.HelpOutline,
-                        iconTint = MaterialTheme.colorScheme.primary,
-                        onClick = {},
-                    ),
-                    ProfileMenuItem(
-                        title = stringResource(R.string.profile_contact_us),
-                        icon = Icons.Outlined.SupportAgent,
-                        iconTint = MaterialTheme.extendedColors.pinkContent,
-                        onClick = {},
-                    ),
-                    ProfileMenuItem(
-                        title = stringResource(R.string.profile_terms),
-                        icon = Icons.Outlined.Description,
-                        iconTint = MaterialTheme.extendedColors.neutralContent,
-                        onClick = {},
-                    ),
-                ),
-            )
-        }
-
-
-        item {
-            OutlinedButton(
-                onClick = {},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error,
-                    containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.05f)
-                ),
-                contentPadding = PaddingValues(vertical = 14.dp),
-            ) {
-                Icon(imageVector = Icons.AutoMirrored.Outlined.Logout, contentDescription = null)
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 20.dp,
+                top = 30.dp,
+                end = 20.dp,
+                bottom = 36.dp,
+            ),
+            verticalArrangement = Arrangement.spacedBy(22.dp),
+        ) {
+            item {
                 Text(
-                    text = stringResource(R.string.profile_logout),
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    fontWeight = FontWeight.SemiBold,
+                    text = stringResource(R.string.profile_title),
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
                 )
+            }
+            item {
+                ProfileHeaderCard(
+                    name = state.name,
+                    image = state.image,
+                    phoneNumber = state.phoneNumber,
+                    isVerified = state.isVerified,
+                )
+            }
+
+            item {
+                ProfileMenuSection(
+                    title = stringResource(R.string.profile_section_account),
+                    items = listOf(
+                        ProfileMenuItem(
+                            title = stringResource(R.string.profile_personal_details),
+                            subtitle = stringResource(R.string.profile_personal_details_subtitle),
+                            icon = Icons.Outlined.Person,
+                            iconTint = MaterialTheme.colorScheme.primary,
+                            onClick = { onIntent(ProfileUIIntent.PersonalDetailsClicked) },
+                        ),
+                        ProfileMenuItem(
+                            title = stringResource(R.string.profile_notifications),
+                            subtitle = stringResource(R.string.profile_notifications_subtitle),
+                            icon = Icons.Outlined.Notifications,
+                            iconTint = MaterialTheme.extendedColors.blueContent,
+                            onClick = {},
+                        ),
+                    ),
+                )
+            }
+
+            item {
+                ProfileMenuSection(
+                    title = stringResource(R.string.profile_section_preferences),
+                    items = listOf(
+                        ProfileMenuItem(
+                            title = stringResource(R.string.profile_language),
+                            value = getCurrentLanguage(),
+                            icon = Icons.Outlined.Language,
+                            iconTint = MaterialTheme.extendedColors.orangeContent,
+                            onClick = { onIntent(ProfileUIIntent.LanguageClicked) },
+                        ),
+                        ProfileMenuItem(
+                            title = stringResource(R.string.profile_appearance),
+                            value = currentAppearance,
+                            icon = Icons.Outlined.DarkMode,
+                            iconTint = MaterialTheme.extendedColors.purpleContent,
+                            onClick = { onIntent(ProfileUIIntent.AppearanceClicked) },
+                        ),
+                    ),
+                )
+            }
+
+            item {
+                ProfileMenuSection(
+                    title = stringResource(R.string.profile_section_support),
+                    items = listOf(
+                        ProfileMenuItem(
+                            title = stringResource(R.string.profile_help_center),
+                            subtitle = stringResource(R.string.profile_help_center_subtitle),
+                            icon = Icons.AutoMirrored.Outlined.HelpOutline,
+                            iconTint = MaterialTheme.colorScheme.primary,
+                            onClick = {},
+                        ),
+                        ProfileMenuItem(
+                            title = stringResource(R.string.profile_contact_us),
+                            icon = Icons.Outlined.SupportAgent,
+                            iconTint = MaterialTheme.extendedColors.pinkContent,
+                            onClick = {},
+                        ),
+                        ProfileMenuItem(
+                            title = stringResource(R.string.profile_terms),
+                            icon = Icons.Outlined.Description,
+                            iconTint = MaterialTheme.extendedColors.neutralContent,
+                            onClick = {},
+                        ),
+                    ),
+                )
+            }
+
+            item {
+                OutlinedButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.error.copy(alpha = 0.72f),
+                    ),
+                    shape = RoundedCornerShape(18.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error,
+                        containerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.06f),
+                    ),
+                    contentPadding = PaddingValues(vertical = 15.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.Logout,
+                        contentDescription = null,
+                    )
+                    Text(
+                        text = stringResource(R.string.profile_logout),
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
             }
         }
     }
@@ -268,5 +283,31 @@ fun ProfileScreen(
         )
 
         null -> Unit
+    }
+
+}
+
+
+private val isArabic = Locale.current.language == "ar"
+
+@Composable
+private fun getCurrentLanguage(): String = stringResource(
+    if (isArabic) R.string.profile_language_arabic else R.string.profile_language_english
+)
+
+
+@Preview(name = "Profile Menu Section")
+@Composable
+private fun ProfileMenuSectionPreview() {
+    Surface {
+        ProfileScreen(
+            state = ProfileState(
+                name = "John Doe",
+                image = null,
+                phoneNumber = "+1 234 567 890",
+                isVerified = true,
+            ),
+        ) { }
+
     }
 }

@@ -12,20 +12,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,7 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 data class ProfileMenuItem(
@@ -54,38 +49,40 @@ fun ProfileMenuSection(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(
             text = title,
             modifier = Modifier.padding(horizontal = 4.dp),
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-            border = BorderStroke(1.04.dp, MaterialTheme.colorScheme.outline)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            border = BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.72f),
+            ),
         ) {
             items.forEachIndexed { index, item ->
                 ProfileMenuRow(item = item)
                 if (index < items.lastIndex) {
                     HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.padding(start = 74.dp, end = 16.dp),
+                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.62f),
                     )
                 }
             }
         }
     }
 }
-
 @Composable
 private fun ProfileMenuRow(
     item: ProfileMenuItem,
@@ -95,7 +92,7 @@ private fun ProfileMenuRow(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = item.onClick)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
@@ -137,8 +134,11 @@ private fun ProfileMenuRow(
         item.value?.let { value ->
             Text(
                 text = value,
+                modifier = Modifier.widthIn(max = 120.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
             Spacer(modifier = Modifier.width(6.dp))
         }
@@ -146,50 +146,8 @@ private fun ProfileMenuRow(
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
+            modifier = Modifier.size(20.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.55f),
         )
-    }
-}
-
-@Preview(name = "Profile Menu Section")
-@Composable
-private fun ProfileMenuSectionPreview() {
-    MaterialTheme {
-        Surface {
-            ProfileMenuSection(
-                title = "Account Settings",
-                items = listOf(
-                    ProfileMenuItem(
-                        title = "Delivery Addresses",
-                        subtitle = "Manage your saved addresses",
-                        icon = Icons.Default.LocationOn,
-                        iconTint = Color(0xFF048C4E),
-                        onClick = {},
-                    ),
-                    ProfileMenuItem(
-                        title = "Payment Methods",
-                        subtitle = "Manage your payment options",
-                        icon = Icons.Default.Payment,
-                        iconTint = Color(0xFF1565C0),
-                        onClick = {},
-                    ),
-                    ProfileMenuItem(
-                        title = "Notifications",
-                        icon = Icons.Default.Notifications,
-                        iconTint = Color(0xFFF57C00),
-                        value = "Enabled",
-                        onClick = {},
-                    ),
-                    ProfileMenuItem(
-                        title = "Language",
-                        icon = Icons.Default.Language,
-                        iconTint = Color(0xFF7B1FA2),
-                        value = "English",
-                        onClick = {},
-                    ),
-                ),
-                modifier = Modifier.padding(16.dp),
-            )
-        }
     }
 }
