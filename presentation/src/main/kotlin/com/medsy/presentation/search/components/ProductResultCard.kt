@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.BorderGray
 import com.medsy.designsystem.ui.theme.LightGreen
 import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.presentation.R
@@ -57,7 +56,7 @@ fun ProductResultCard(
             .fillMaxWidth()
             .heightIn(min = 100.dp)
             .background(NeutralWhite, RoundedCornerShape(16.dp))
-            .border(1.dp, BorderGray, RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
