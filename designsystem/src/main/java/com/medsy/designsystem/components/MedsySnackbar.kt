@@ -46,12 +46,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
-// ── Snackbar type ─────────────────────────────────────────────────────────────
 
 enum class MedsySnackbarType { Success, Error, Info }
 
-// ── Custom visuals ────────────────────────────────────────────────────────────
 
 private class MedsySnackbarVisuals(
     override val message: String,
@@ -61,12 +60,6 @@ private class MedsySnackbarVisuals(
     override val duration: SnackbarDuration = SnackbarDuration.Short,
 ) : SnackbarVisuals
 
-// ── Host composable ───────────────────────────────────────────────────────────
-
-/**
- * Drop-in replacement for [SnackbarHost] with Medsy-branded visuals.
- * Place this inside a [androidx.compose.material3.Scaffold]'s `snackbarHost` slot.
- */
 @Composable
 fun MedsySnackbarHost(
     hostState: SnackbarHostState,
@@ -78,7 +71,7 @@ fun MedsySnackbarHost(
 
     LaunchedEffect(currentData) {
         if (currentData != null) {
-            delay(2500L)
+            delay(2500L.milliseconds)
             currentData.dismiss()
         }
     }
@@ -111,7 +104,6 @@ fun MedsySnackbarHost(
     }
 }
 
-// ── Banner composable ─────────────────────────────────────────────────────────
 
 @Composable
 private fun MedsySnackbarBanner(data: SnackbarData) {
@@ -177,8 +169,6 @@ private fun MedsySnackbarBanner(data: SnackbarData) {
     }
 }
 
-// ── SnackbarHostState extension functions ─────────────────────────────────────
-
 suspend fun SnackbarHostState.showError(
     message: String,
     actionLabel: String? = null,
@@ -199,7 +189,6 @@ private suspend fun SnackbarHostState.showUnique(
     type: MedsySnackbarType,
     actionLabel: String?,
 ): SnackbarResult? {
-    // Avoid duplicate snackbars with the same message+type
     val current = currentSnackbarData?.visuals as? MedsySnackbarVisuals
     if (current != null && current.message == message && current.type == type) return null
     currentSnackbarData?.dismiss()

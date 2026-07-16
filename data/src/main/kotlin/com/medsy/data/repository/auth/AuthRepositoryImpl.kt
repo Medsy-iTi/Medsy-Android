@@ -63,8 +63,6 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun hasValidSession(): Boolean = tokenStorage.readSession() != null
 
-    // ── Private helpers ──────────────────────────────────────────────────────
-
     private fun DomainResult<AuthSession>.onSuccessSave(): DomainResult<AuthSession> {
         if (this is DomainResult.Success) tokenStorage.save(data)
         return this
@@ -97,7 +95,6 @@ class AuthRepositoryImpl @Inject constructor(
             }
 
             else -> {
-                // body is null for error responses — parse errorBody() as ApiResponseDto
                 val message = body?.message
                     ?: parseErrorBody(response.errorBody()?.string())
                     ?: "Request failed (${response.code()})"
@@ -112,10 +109,6 @@ class AuthRepositoryImpl @Inject constructor(
         DomainResult.Error(DomainError.Unknown)
     }
 
-    /**
-     * Parses the raw error body JSON (e.g. {"success":false,"message":"Phone Number already exists","data":null})
-     * and extracts the `message` field.
-     */
     private fun parseErrorBody(raw: String?): String? {
         if (raw.isNullOrBlank()) return null
         return try {
