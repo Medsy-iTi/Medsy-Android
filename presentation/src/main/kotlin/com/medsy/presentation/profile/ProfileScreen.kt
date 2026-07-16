@@ -44,6 +44,7 @@ import com.medsy.domain.common.preferences.model.AppLanguage
 import com.medsy.domain.common.preferences.model.ThemeMode
 import com.medsy.presentation.R
 import com.medsy.presentation.profile.components.ProfileHeaderCard
+import com.medsy.presentation.profile.components.ProfileLogoutBottomSheet
 import com.medsy.presentation.profile.components.ProfileMenuItem
 import com.medsy.presentation.profile.components.ProfileMenuSection
 import com.medsy.presentation.profile.components.ProfileSelectionBottomSheet
@@ -52,6 +53,7 @@ import com.medsy.presentation.profile.components.ProfileSelectionOption
 @Composable
 fun ProfileRoot(
     onNavigateToPersonalDetails: () -> Unit,
+    onNavigateToLogin: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -60,6 +62,7 @@ fun ProfileRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 ProfileUIEffect.NavigateToPersonalDetails -> onNavigateToPersonalDetails()
+                ProfileUIEffect.NavigateToLogin -> onNavigateToLogin()
             }
         }
     }
@@ -207,7 +210,7 @@ fun ProfileScreen(
 
             item {
                 OutlinedButton(
-                    onClick = {},
+                    onClick = { onIntent(ProfileUIIntent.LogoutClicked) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
@@ -282,9 +285,13 @@ fun ProfileScreen(
             },
         )
 
+        ProfileSheet.Logout -> ProfileLogoutBottomSheet(
+            onDismissRequest = { onIntent(ProfileUIIntent.SheetDismissed) },
+            onLogoutClick = { onIntent(ProfileUIIntent.LogoutConfirmed) },
+        )
+
         null -> Unit
     }
-
 }
 
 

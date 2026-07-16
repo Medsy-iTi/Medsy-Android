@@ -9,6 +9,7 @@ import com.medsy.domain.common.preferences.model.ThemeMode
 import com.medsy.domain.common.preferences.usecase.ObserveUserPreferencesUseCase
 import com.medsy.domain.common.preferences.usecase.SetThemeModeUseCase
 import com.medsy.domain.profile.usecase.GetProfileUseCase
+import com.medsy.domain.profile.usecase.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ class ProfileViewModel @Inject constructor(
     private val getProfileUseCase: GetProfileUseCase,
     private val observeUserPreferencesUseCase: ObserveUserPreferencesUseCase,
     private val setThemeModeUseCase: SetThemeModeUseCase,
+    private val logoutUseCase: LogoutUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
@@ -70,6 +72,14 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    private fun logout() {
+        _state.update { it.copy(activeSheet = null) }
+        viewModelScope.launch {
+            logoutUseCase()
+            _effect.send(ProfileUIEffect.NavigateToLogin)
+        }
+    }
+
     fun onIntent(intent: ProfileUIIntent) {
         when (intent) {
             ProfileUIIntent.PersonalDetailsClicked -> {
@@ -82,6 +92,14 @@ class ProfileViewModel @Inject constructor(
 
             ProfileUIIntent.AppearanceClicked -> {
                 _state.update { it.copy(activeSheet = ProfileSheet.Appearance) }
+            }
+
+            ProfileUIIntent.LogoutClicked -> {
+                _state.update { it.copy(activeSheet = ProfileSheet.Logout) }
+            }
+
+            ProfileUIIntent.LogoutConfirmed -> {
+                logout()
             }
 
             ProfileUIIntent.SheetDismissed -> {

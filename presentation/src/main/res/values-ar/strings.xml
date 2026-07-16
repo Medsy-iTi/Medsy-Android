@@ -111,6 +111,8 @@
     <string name="profile_about">عن Medsy</string>
     <string name="profile_privacy">سياسة الخصوصية</string>
     <string name="profile_logout">تسجيل الخروج</string>
+    <string name="profile_logout_confirmation_message">هل أنت متأكد من أنك تريد تسجيل الخروج؟</string>
+    <string name="profile_logout_cancel">إلغاء</string>
     <string name="profile_personal_details_title">البيانات الشخصية</string>
     <string name="profile_personal_details_placeholder">ستتوفر تفاصيل البيانات الشخصية هنا قريبًا.</string>
 

@@ -118,6 +118,8 @@
     <string name="profile_about">About Medsy</string>
     <string name="profile_privacy">Privacy Policy</string>
     <string name="profile_logout">Log out</string>
+    <string name="profile_logout_confirmation_message">Are you sure you want to log out?</string>
+    <string name="profile_logout_cancel">Cancel</string>
     <string name="profile_personal_details_title">Personal Details</string>
     <string name="profile_personal_details_placeholder">Personal details will be available here soon.</string>
 

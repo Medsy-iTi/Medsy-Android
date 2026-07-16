@@ -14,4 +14,5 @@ data class ProfileState(
 enum class ProfileSheet {
     Language,
     Appearance,
+    Logout,
 }

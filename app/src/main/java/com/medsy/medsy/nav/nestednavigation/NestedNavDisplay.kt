@@ -31,6 +31,7 @@ fun NestedNavDisplay(
     navigateBack: () -> Unit,
     openProductDetails: () -> Unit,
     openPersonalDetails: () -> Unit,
+    openLogin: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -43,7 +44,7 @@ fun NestedNavDisplay(
                 }
             }
         },
-        Route.NestedNav.Profile
+        Route.NestedNav.Home
     )
 
     Scaffold(
@@ -107,7 +108,10 @@ fun NestedNavDisplay(
                     CartRoot(onNext = openProductDetails)
                 }
                 entry<Route.NestedNav.Profile> {
-                    ProfileRoot(onNavigateToPersonalDetails = openPersonalDetails)
+                    ProfileRoot(
+                        onNavigateToPersonalDetails = openPersonalDetails,
+                        onNavigateToLogin = openLogin,
+                    )
                 }
             }
         )
