@@ -1,10 +1,13 @@
 package com.medsy.data.remote.network
 
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
 import java.io.IOException
 
-private val moshi = Moshi.Builder().build()
+private val moshi = Moshi.Builder()
+    .add(KotlinJsonAdapterFactory())
+    .build()
 
 private val errorAdapter = moshi.adapter(ErrorResponse::class.java)
 
