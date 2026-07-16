@@ -16,6 +16,8 @@ import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
+import com.medsy.presentation.auth.welcome.WelcomeScreen
+import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.search.SearchRoot
@@ -55,12 +57,24 @@ fun RootNavDisplay() {
         entryProvider = entryProvider {
             entry<Route.Splash> {
                 SplashRoot(
-                    openOnboarding = {
+                    openWelcome = {
                         rootBackStack.apply {
                             clear()
-                            navigateSingleTop(Route.Onboarding)
+                            navigateSingleTop(Route.Welcome)
+                        }
+                    },
+                    openHome = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.NestedNav)
                         }
                     }
+                )
+            }
+            entry<Route.Welcome> {
+                WelcomeScreen(
+                    onNavigateLogin = { rootBackStack.navigateSingleTop(Route.Login) },
+                    onNavigateRegister = { rootBackStack.navigateSingleTop(Route.Register) }
                 )
             }
             entry<Route.Onboarding> {
@@ -68,7 +82,7 @@ fun RootNavDisplay() {
                     openLogin = {
                         rootBackStack.apply {
                             clear()
-                            navigateSingleTop(Route.Login)
+                            navigateSingleTop(Route.Welcome)
                         }
                     }
                 )
@@ -90,7 +104,18 @@ fun RootNavDisplay() {
                 RegisterRoot(
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToSignIn = { rootBackStack.navigateSingleTop(Route.Login) },
-                    onNavigateToHome = { rootBackStack.navigateSingleTop(Route.NestedNav) }
+                    onNavigateToOtp = { email -> rootBackStack.navigateSingleTop(Route.Otp(email)) }
+                )
+            }
+            entry<Route.Otp> { route ->
+                OtpRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateHome = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.NestedNav)
+                        }
+                    }
                 )
             }
             entry<Route.NestedNav> {

@@ -43,55 +43,41 @@ import kotlinx.coroutines.flow.collectLatest
 fun RegisterRoot(
     onNavigateBack: () -> Unit,
     onNavigateToSignIn: () -> Unit,
-    onNavigateToHome: () -> Unit,
+    onNavigateToOtp: (String) -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is RegisterUIEffect.NavigateBack -> onNavigateBack()
-                is RegisterUIEffect.NavigateToSignIn -> onNavigateToSignIn()
-                is RegisterUIEffect.NavigateToHome -> onNavigateToHome()
-                is RegisterUIEffect.ShowMessage -> {
-
-                }
+                is RegisterEffect.NavigateToOtp -> onNavigateToOtp(effect.email)
             }
         }
     }
 
     RegisterScreen(
+        state = state,
+        onIntent = viewModel::onIntent,
         onNavigateBack = onNavigateBack,
-        onNavigateToSignIn = onNavigateToSignIn,
-        onNavigateToHome = onNavigateToHome
+        onNavigateToSignIn = onNavigateToSignIn
     )
 }
 
 
 @Composable
 fun RegisterScreen(
+    state: RegisterState,
+    onIntent: (RegisterIntent) -> Unit,
     onNavigateBack: () -> Unit,
-    onNavigateToSignIn: () -> Unit,
-    onNavigateToHome: () -> Unit,
-    viewModel: RegisterViewModel = viewModel(),
+    onNavigateToSignIn: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest { effect ->
-            when (effect) {
-                RegisterUIEffect.NavigateBack -> onNavigateBack()
-                RegisterUIEffect.NavigateToSignIn -> onNavigateToSignIn()
-                RegisterUIEffect.NavigateToHome -> onNavigateToHome()
-                is RegisterUIEffect.ShowMessage -> {
-                    snackbarHostState.showSnackbar(context.getString(effect.messageRes))
-
-                }
-            }
+    LaunchedEffect(state.errorMessage) {
+        if (state.errorMessage != null) {
+            snackbarHostState.showSnackbar(state.errorMessage)
         }
     }
 
@@ -100,8 +86,10 @@ fun RegisterScreen(
     ) { paddingValues ->
         CreateAccountContent(
             state = state,
-            onIntent = viewModel::onIntent,
+            onIntent = onIntent,
             modifier = Modifier.padding(paddingValues),
+            onNavigateBack = onNavigateBack,
+            onNavigateToSignIn = onNavigateToSignIn
         )
     }
 }
@@ -109,9 +97,11 @@ fun RegisterScreen(
 
 @Composable
 fun CreateAccountContent(
-    state: RegisterUIState,
-    onIntent: (RegisterUIIntent) -> Unit,
+    state: RegisterState,
+    onIntent: (RegisterIntent) -> Unit,
     modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit,
+    onNavigateToSignIn: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -121,75 +111,78 @@ fun CreateAccountContent(
         verticalArrangement = Arrangement.Top,
     ) {
         ScreenHeader(
-            titleRes = R.string.create_account_title,
-            subtitleRes = R.string.create_account_subtitle,
-            onBackClick = { onIntent(RegisterUIIntent.BackClicked) },
+            titleRes = R.string.auth_create_account,
+            subtitleRes = R.string.auth_already_have_account,
+            onBackClick = { onNavigateBack() },
             modifier = Modifier.padding(top = 8.dp),
         )
 
         SectionTitle(
-            textRes =  R.string.create_account_section_personal_info,
+            textRes =  R.string.auth_first_name,
             modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
         )
 
         AuthTextField(
-            value = state.fullName,
-            onValueChange = { onIntent(RegisterUIIntent.FullNameChanged(it)) },
-            labelRes = R.string.field_full_name,
+            value = state.firstName,
+            onValueChange = { onIntent(RegisterIntent.FirstNameChanged(it)) },
+            labelRes = R.string.auth_first_name,
             leadingIcon =  Icons.Filled.Person,
-            errorRes = state.fullNameError,
+            errorRes = null,
             keyboardType = KeyboardType.Text,
         )
 
         AuthTextField(
+            value = state.lastName,
+            onValueChange = { onIntent(RegisterIntent.LastNameChanged(it)) },
+            labelRes = R.string.auth_last_name,
+            leadingIcon =  Icons.Filled.Person,
+            errorRes = null,
+            keyboardType = KeyboardType.Text,
+            modifier = Modifier.padding(top = 16.dp),
+        )
+
+        AuthTextField(
             value = state.phoneNumber,
-            onValueChange = { onIntent(RegisterUIIntent.PhoneNumberChanged(it)) },
-            labelRes = R.string.field_phone_number,
+            onValueChange = { onIntent(RegisterIntent.PhoneChanged(it)) },
+            labelRes = R.string.auth_phone,
             leadingIcon = Icons.Filled.Phone,
-            errorRes = state.phoneNumberError,
+            errorRes = null,
             keyboardType = KeyboardType.Phone,
             modifier = Modifier.padding(top = 16.dp),
         )
 
         AuthTextField(
             value = state.email,
-            onValueChange = { onIntent(RegisterUIIntent.EmailChanged(it)) },
-            labelRes = R.string.field_email,
+            onValueChange = { onIntent(RegisterIntent.EmailChanged(it)) },
+            labelRes = R.string.auth_email,
             leadingIcon = Icons.Filled.Email,
-            errorRes = state.emailError,
+            errorRes = null,
             keyboardType = KeyboardType.Email,
             modifier = Modifier.padding(top = 16.dp),
         )
 
         PasswordField(
             value = state.password,
-            onValueChange = { onIntent(RegisterUIIntent.PasswordChanged(it)) },
-            labelRes = R.string.field_password,
-            isVisible = state.isPasswordVisible,
-            onToggleVisibility = { onIntent(RegisterUIIntent.TogglePasswordVisibility) },
-            errorRes = state.passwordError,
+            onValueChange = { onIntent(RegisterIntent.PasswordChanged(it)) },
+            labelRes = R.string.auth_password,
+            isVisible = false,
+            onToggleVisibility = { },
+            errorRes = null,
             modifier = Modifier.padding(top = 16.dp),
         )
 
         PasswordField(
             value = state.confirmPassword,
-            onValueChange = { onIntent(RegisterUIIntent.ConfirmPasswordChanged(it)) },
-            labelRes = R.string.field_confirm_password,
-            isVisible = state.isConfirmPasswordVisible,
-            onToggleVisibility = { onIntent(RegisterUIIntent.ToggleConfirmPasswordVisibility) },
-            errorRes = state.confirmPasswordError,
+            onValueChange = { onIntent(RegisterIntent.ConfirmPasswordChanged(it)) },
+            labelRes = R.string.auth_confirm_password,
+            isVisible = false,
+            onToggleVisibility = { },
+            errorRes = null,
             modifier = Modifier.padding(top = 16.dp),
         )
 
-        TermsCheckboxRow(
-            checked = state.isTermsAccepted,
-            onCheckedChange = { onIntent(RegisterUIIntent.TermsAcceptedChanged(it)) },
-            errorRes = state.termsError,
-            modifier = Modifier.padding(top = 20.dp),
-        )
-
         MedsyButton(
-            onClick = { onIntent(RegisterUIIntent.SubmitClicked) },
+            onClick = { onIntent(RegisterIntent.Submit) },
             modifier = Modifier.padding(top = 24.dp),
         ) {
             if (state.isLoading) {
@@ -199,14 +192,14 @@ fun CreateAccountContent(
                 )
             } else {
                 Text(
-                    text = stringResource(R.string.button_create_account),
+                    text = stringResource(R.string.auth_register_button),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
         }
 
         SignInFooter(
-            onSignInClick = { onIntent(RegisterUIIntent.SignInClicked) },
+            onSignInClick = onNavigateToSignIn,
             modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
         )
     }

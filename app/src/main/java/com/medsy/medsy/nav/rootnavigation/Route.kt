@@ -13,13 +13,13 @@ sealed interface Route : NavKey {
 
 
     @Serializable
+    data object Welcome : Route
+
+    @Serializable
     data object Login : Route
 
     @Serializable
-    data object EmailVerification : Route
-
-    @Serializable
-    data object ForgotPassword : Route
+    data class Otp(val email: String) : Route
 
     @Serializable
     data object Register : Route

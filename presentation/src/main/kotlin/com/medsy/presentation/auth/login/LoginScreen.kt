@@ -56,25 +56,24 @@ fun LoginRoot(
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                LoginUIEffect.NavigateToSignup -> openSignup()
-                LoginUIEffect.NavigateToHome -> openHome()
+                is LoginEffect.NavigateHome -> openHome()
             }
         }
     }
 
     LoginScreen(
         state = state,
-        onIntent = viewModel::onIntent
+        onIntent = viewModel::onIntent,
+        openSignup = openSignup
     )
 }
 
 @Composable
 fun LoginScreen(
     state: LoginState,
-    onIntent: (LoginUIIntent) -> Unit,
+    onIntent: (LoginIntent) -> Unit,
+    openSignup: () -> Unit,
 ) {
-    var phone by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
     val isDarkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
@@ -129,18 +128,21 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerTextForm))
 
-        // Phone Input
-        LoginPhoneInput(
-            phone = phone,
-            onPhoneChange = { phone = it }
+        // Email Input (reusing LoginPhoneInput component for now, or just use OutlinedTextField)
+        androidx.compose.material3.OutlinedTextField(
+            value = state.email,
+            onValueChange = { onIntent(LoginIntent.EmailChanged(it)) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(R.string.auth_email)) },
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerInput))
 
         // Password Input
         LoginPasswordInput(
-            password = password,
-            onPasswordChange = { password = it },
+            password = state.password,
+            onPasswordChange = { onIntent(LoginIntent.PasswordChanged(it)) },
             passwordVisible = passwordVisible,
             onTogglePasswordVisibility = { passwordVisible = !passwordVisible }
         )
@@ -166,7 +168,7 @@ fun LoginScreen(
 
         // Login Button
         MedsyButton(
-            onClick = { onIntent(LoginUIIntent.OnLoginClick) }
+            onClick = { onIntent(LoginIntent.Submit) }
         ) {
             Text(
                 text = stringResource(R.string.login_button),
@@ -228,7 +230,7 @@ fun LoginScreen(
             style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .clickable { onIntent(LoginUIIntent.OnSignupClick) }
+                .clickable { openSignup() }
         )
     }
 }
