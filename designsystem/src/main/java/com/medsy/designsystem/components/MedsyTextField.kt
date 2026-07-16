@@ -38,10 +38,10 @@ fun MedsyTextField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = BorderGray,
-            focusedContainerColor = NeutralWhite,
-            unfocusedContainerColor = NeutralWhite,
-            focusedTextColor = PrimaryText,
-            unfocusedTextColor = PrimaryText,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
             cursorColor = MaterialTheme.colorScheme.primary
         ),
         keyboardOptions = keyboardOptions,

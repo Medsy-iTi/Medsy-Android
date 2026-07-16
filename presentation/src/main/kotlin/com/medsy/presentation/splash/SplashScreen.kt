@@ -21,9 +21,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.luminance
 import com.medsy.designsystem.R as DesignR
-import com.medsy.designsystem.ui.theme.NeutralWhite
-import com.medsy.designsystem.ui.theme.PrimaryText
+
 import com.medsy.presentation.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -87,10 +87,12 @@ fun SplashScreen(onFinished: () -> Unit) {
         onFinished()
     }
 
+    val isDarkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeutralWhite),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center,
     ) {
 
@@ -98,8 +100,14 @@ fun SplashScreen(onFinished: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            val logoRes = if (isDarkTheme) {
+                DesignR.drawable.ic_logo_transparent_dark
+            } else {
+                DesignR.drawable.ic_logo_transparent
+            }
+
             Image(
-                painter = painterResource(id = DesignR.drawable.ic_logo_transparent),
+                painter = painterResource(id = logoRes),
                 contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier
                     .size(160.dp)
@@ -110,7 +118,7 @@ fun SplashScreen(onFinished: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             val primaryColor = MaterialTheme.colorScheme.primary
-            val textColor = PrimaryText
+            val textColor = MaterialTheme.colorScheme.onBackground
 
             val prefix = stringResource(R.string.app_name_prefix)
             val suffix = stringResource(R.string.app_name_suffix)

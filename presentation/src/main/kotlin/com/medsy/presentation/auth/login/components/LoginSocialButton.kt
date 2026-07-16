@@ -40,7 +40,7 @@ fun LoginSocialButton(
             .clickable { onClick() },
         shape = RoundedCornerShape(LoginConstants.SocialButtonCornerRadius),
         border = BorderStroke(1.dp, BorderGray),
-        color = NeutralWhite
+        color = MaterialTheme.colorScheme.surface
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -61,7 +61,7 @@ fun LoginSocialButton(
                 textAlign = TextAlign.Start,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    color = SecondaryText,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Medium
                 )
             )
