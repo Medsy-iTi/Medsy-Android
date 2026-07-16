@@ -116,4 +116,64 @@
     <string name="profile_personal_details_title">البيانات الشخصية</string>
     <string name="profile_personal_details_placeholder">ستتوفر تفاصيل البيانات الشخصية هنا قريبًا.</string>
 
+    <string name="create_account_title">إنشاء حساب</string>
+    <string name="create_account_subtitle">قم بإعداد حسابك بكل سهولة</string>
+    <string name="create_account_section_personal_info">المعلومات الشخصية</string>
+
+    <string name="field_full_name">الاسم الكامل</string>
+    <string name="field_phone_number">رقم الهاتف</string>
+    <string name="field_email">البريد الإلكتروني</string>
+    <string name="field_password">كلمة المرور</string>
+    <string name="field_confirm_password">تأكيد كلمة المرور</string>
+
+    <string name="terms_agree_prefix">أوافق على</string>
+    <string name="terms_and_conditions">الشروط والأحكام</string>
+    <string name="terms_and_privacy_policy">وسياسة الخصوصية</string>
+
+    <string name="button_create_account">إنشاء حساب</string>
+    <string name="already_have_account">هل لديك حساب بالفعل؟</string>
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="content_desc_back">رجوع</string>
+    <string name="content_desc_toggle_password_visibility">تبديل إظهار كلمة المرور</string>
+
+    <string name="error_name_required">يرجى إدخال اسمك الكامل</string>
+    <string name="error_phone_invalid">يرجى إدخال رقم هاتف صحيح</string>
+    <string name="error_email_invalid">يرجى إدخال بريد إلكتروني صحيح</string>
+    <string name="error_password_too_short">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل</string>
+    <string name="error_password_mismatch">كلمتا المرور غير متطابقتين</string>
+    <string name="error_terms_not_accepted">يجب الموافقة على الشروط والأحكام للمتابعة</string>
+    <string name="error_generic">حدث خطأ ما، يرجى المحاولة مرة أخرى.</string>
+
+    <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
+
+
+    <!--  Search  -->
+    <string name="search_results_title">نتائج البحث</string>
+    <string name="search_input_placeholder">ابحث باسم الدواء</string>
+    <string name="search_clear_query_desc">مسح البحث</string>
+    <string name="search_filter_chip_filter">تصفية</string>
+    <string name="search_filter_chip_type">النوع</string>
+    <string name="search_filter_chip_price">السعر</string>
+    <string name="search_filter_chip_most_relevant">الأكثر صلة</string>
+    <string name="search_results_count">%1$d نتيجة</string>
+    <string name="search_price_egp">%1$d جنيه</string>
+    <string name="search_favorite_desc">أضف للمفضلة</string>
+    <string name="search_add_to_cart_desc">أضف إلى السلة</string>
+    <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
+    <string name="search_empty_title">لا توجد نتائج</string>
+    <string name="search_empty_subtitle">جرّب كلمة بحث مختلفة</string>
+
+    <!--  Product Details  -->
+    <string name="product_details_share_desc">مشاركة</string>
+    <string name="product_details_image_desc">صورة المنتج</string>
+    <string name="product_details_pack_info_format">%1$s - %2$s</string>
+    <string name="product_details_pharmacist_notice">لا يتم صرف هذا الدواء إلا بعد مراجعة الصيدلي لتحديد الجرعة المناسبة لحالتك.</string>
+    <string name="product_details_info_title">معلومات المنتج</string>
+    <string name="product_details_label_manufacturer">الشركة المنتجة</string>
+    <string name="product_details_label_type">النوع</string>
+    <string name="product_details_label_category">فئة الدواء</string>
+    <string name="product_details_label_dispensing_method">طريقة الصرف</string>
+    <string name="product_details_dispensing_method_value">تصرف بعد مراجعة الصيدلي</string>
+    <string name="product_details_add_to_cart">أضف إلى السلة</string>
+    <string name="product_details_consult_pharmacist">استشارة صيدلي</string>
 </resources>

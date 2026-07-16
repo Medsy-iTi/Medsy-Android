@@ -1,0 +1,119 @@
+package com.medsy.presentation.productdetails.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import com.medsy.designsystem.ui.theme.BorderGray
+import com.medsy.designsystem.ui.theme.ErrorRed
+import com.medsy.designsystem.ui.theme.NeutralWhite
+import com.medsy.presentation.R
+
+@Composable
+fun ProductImageCarousel(
+    imageUrls: List<String>,
+    selectedIndex: Int,
+    isFavorite: Boolean,
+    onPageChanged: (Int) -> Unit,
+    onFavoriteClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    placeholder: Painter?=null
+) {
+    val pagerState = rememberPagerState(
+        initialPage = selectedIndex,
+        pageCount = { imageUrls.size },
+    )
+
+    LaunchedEffect(pagerState.currentPage) {
+        onPageChanged(pagerState.currentPage)
+    }
+
+    Column(modifier = modifier.fillMaxWidth()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(240.dp)
+                    .padding(horizontal = 32.dp, vertical = 8.dp),
+            ) { page ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(NeutralWhite),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    AsyncImage(
+                        model = imageUrls[page],
+                        contentDescription = stringResource(R.string.product_details_image_desc),
+                        placeholder = placeholder,
+                        error = placeholder,
+                        fallback = placeholder,
+                        contentScale = ContentScale.Crop)
+                }
+            }
+
+            IconButton(
+                onClick = onFavoriteClick,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 8.dp, end = 16.dp)
+                    .clip(CircleShape)
+                    .background(NeutralWhite)
+                    .size(40.dp),
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = stringResource(R.string.search_favorite_desc),
+                    tint = if (isFavorite) ErrorRed else BorderGray,
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            repeat(imageUrls.size) { index ->
+                val isSelected = index == pagerState.currentPage
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 4.dp)
+                        .size(if (isSelected) 8.dp else 6.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (isSelected) MaterialTheme.colorScheme.primary else BorderGray
+                        ),
+                )
+            }
+        }
+    }
+}

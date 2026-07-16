@@ -85,6 +85,8 @@ fun RootNavDisplay() {
                 )
             }
 
+
+
             entry<Route.Register> {
                 RegisterRoot(
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
@@ -101,6 +103,9 @@ fun RootNavDisplay() {
                         rootBackStack.navigateSingleTop(
                             Route.ProductDetails(id = "temporary-product-id")
                         )
+                    },
+                    openSearch = {
+                        rootBackStack.navigateSingleTop(Route.SearchNav)
                     },
                     openPersonalDetails = {
                         rootBackStack.navigateSingleTop(Route.PersonalDetails)
@@ -120,7 +125,13 @@ fun RootNavDisplay() {
             }
             entry<Route.ProductDetails> {
                 ProductDetailsRoot(
-                    onNext = { rootBackStack.removeLastOrNull() }
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateToCart = {
+                        rootBackStack.navigateSingleTop(Route.NestedNav)
+                    },
+                    onNavigateToPharmacistChat = {
+
+                    }
                 )
             }
             entry<Route.Settings> {
@@ -139,7 +150,8 @@ fun RootNavDisplay() {
                         rootBackStack.navigateSingleTop(
                             Route.ProductDetails(id = "temporary-product-id")
                         )
-                    }
+                    },
+                    onBack = { rootBackStack.removeLastOrNull() },
                 )
             }
         }
