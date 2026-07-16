@@ -68,8 +68,13 @@
     <string name="error_terms_not_accepted">You must accept the Terms &amp; Conditions to continue</string>
     <string name="error_generic">Something went wrong. Please try again.</string>
     <string name="error_network">No internet connection. Please check your network.</string>
-    <string name="error_phone_exists">Phone Number already exists.</string>
-    <string name="error_email_exists">Email already exists.</string>
+    <string name="error_conflict">This data is already registered. Please use different details.</string>
+    <string name="error_phone_exists">This phone number is already registered. Please use a different number.</string>
+    <string name="error_email_exists">This email address is already registered. Please use a different email.</string>
+    <string name="error_unauthorized">User name or password is incorrect.</string>
+    <string name="error_forbidden">You don\'t have permission to perform this action.</string>
+    <string name="error_not_found">The requested resource was not found.</string>
+    <string name="error_server">Server error. Please try again later.</string>
 
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>

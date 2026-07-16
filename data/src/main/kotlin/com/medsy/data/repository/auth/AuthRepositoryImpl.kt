@@ -13,6 +13,9 @@ import com.medsy.domain.auth.model.RegisterParams
 import com.medsy.domain.auth.repository.AuthRepository
 import com.medsy.domain.common.DomainError
 import com.medsy.domain.common.DomainResult
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import java.io.IOException
@@ -20,7 +23,8 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
-    private val tokenStorage: TokenStorage
+    private val tokenStorage: TokenStorage,
+    private val moshi: Moshi
 ) : AuthRepository {
 
     override suspend fun register(params: RegisterParams): DomainResult<Unit> =
@@ -59,6 +63,8 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun hasValidSession(): Boolean = tokenStorage.readSession() != null
 
+    // ── Private helpers ──────────────────────────────────────────────────────
+
     private fun DomainResult<AuthSession>.onSuccessSave(): DomainResult<AuthSession> {
         if (this is DomainResult.Success) tokenStorage.save(data)
         return this
@@ -81,23 +87,43 @@ class AuthRepositoryImpl @Inject constructor(
     ): DomainResult<T> = try {
         val response = block()
         val body = response.body()
-        if (response.isSuccessful && body?.data != null) {
-            DomainResult.Success(body.data)
-        } else if (response.isSuccessful && body != null) {
-            @Suppress("UNCHECKED_CAST")
-            DomainResult.Success(Unit as T)
-        } else {
-            val message = body?.message
-                ?: response.errorBody()?.string()?.let { parseMessageFallback(it) }
-                ?: "Request failed (${response.code()})"
-            DomainResult.Error(DomainError.Api(message, response.code()))
+        when {
+            response.isSuccessful && body?.data != null ->
+                DomainResult.Success(body.data)
+
+            response.isSuccessful && body != null -> {
+                @Suppress("UNCHECKED_CAST")
+                DomainResult.Success(Unit as T)
+            }
+
+            else -> {
+                // body is null for error responses — parse errorBody() as ApiResponseDto
+                val message = body?.message
+                    ?: parseErrorBody(response.errorBody()?.string())
+                    ?: "Request failed (${response.code()})"
+                DomainResult.Error(DomainError.Api(message, response.code()))
+            }
         }
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: IOException) {
         DomainResult.Error(DomainError.Network)
     } catch (e: Exception) {
-        android.util.Log.e("AuthRepository", "Unknown error during API call", e)
         DomainResult.Error(DomainError.Unknown)
     }
 
-    private fun parseMessageFallback(raw: String): String? = null
+    /**
+     * Parses the raw error body JSON (e.g. {"success":false,"message":"Phone Number already exists","data":null})
+     * and extracts the `message` field.
+     */
+    private fun parseErrorBody(raw: String?): String? {
+        if (raw.isNullOrBlank()) return null
+        return try {
+            val type = Types.newParameterizedType(ApiResponseDto::class.java, Any::class.java)
+            val adapter = moshi.adapter<ApiResponseDto<Any>>(type)
+            adapter.fromJson(raw)?.message
+        } catch (e: Exception) {
+            null
+        }
+    }
 }

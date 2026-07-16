@@ -10,13 +10,3 @@ sealed class DomainError {
     data object Network : DomainError()
     data object Unknown : DomainError()
 }
-
-inline fun <T> DomainResult<T>.onSuccess(action: (T) -> Unit): DomainResult<T> {
-    if (this is DomainResult.Success) action(data)
-    return this
-}
-
-inline fun <T> DomainResult<T>.onError(action: (DomainError) -> Unit): DomainResult<T> {
-    if (this is DomainResult.Error) action(error)
-    return this
-}

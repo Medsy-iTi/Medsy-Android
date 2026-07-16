@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,7 +51,10 @@ import com.medsy.presentation.auth.login.components.LoginOrDivider
 import com.medsy.presentation.auth.login.components.LoginPasswordInput
 import com.medsy.presentation.auth.login.components.LoginPhoneInput
 import com.medsy.presentation.auth.login.components.LoginSocialButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showError
 import com.medsy.designsystem.R as DesignR
 
 @Composable
@@ -60,11 +64,16 @@ fun LoginRoot(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is LoginEffect.NavigateHome -> openHome()
+                is LoginEffect.ShowError    -> snackbarHostState.showError(
+                    message = context.getString(effect.messageRes)
+                )
             }
         }
     }
@@ -72,7 +81,8 @@ fun LoginRoot(
     LoginScreen(
         state = state,
         onIntent = viewModel::onIntent,
-        openSignup = openSignup
+        openSignup = openSignup,
+        snackbarHostState = snackbarHostState,
     )
 }
 
@@ -81,19 +91,21 @@ fun LoginScreen(
     state: LoginState,
     onIntent: (LoginIntent) -> Unit,
     openSignup: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     val isDarkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
+        ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .statusBarsPadding()
                 .verticalScroll(rememberScrollState())
                 .imePadding()
@@ -261,11 +273,8 @@ fun LoginScreen(
                 .clickable { openSignup() }
         )
         } // end Column
+        } // end Scaffold
 
-        // Floating top snackbar
-        MedsySnackbarHost(
-            snackbarData = state.snackbar,
-            onDismiss = { onIntent(LoginIntent.DismissSnackbar) }
-        )
+        MedsySnackbarHost(hostState = snackbarHostState)
     } // end Box
 }
