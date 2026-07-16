@@ -91,7 +91,7 @@ fun CategoriesSection(
                         colors.categoryMedicalDevicesIcon
                     )
 
-                    CategoryIconType.MORE -> Triple(
+                    else -> Triple(
                         Icons.Default.MoreHoriz,
                         colors.categoryMoreBg,
                         colors.categoryMoreIcon
