@@ -9,6 +9,7 @@ import androidx.compose.material3.ShortNavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,10 +40,10 @@ fun BottomNavigationButton(
         modifier = modifier,
         colors = ShortNavigationBarItemDefaults.colors(
             selectedIconColor = MaterialTheme.colorScheme.primary,
-            selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            selectedIndicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
-            unselectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            unselectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            selectedTextColor = MaterialTheme.colorScheme.primary,
+            unselectedIconColor = MaterialTheme.colorScheme.onBackground,
+            unselectedTextColor = MaterialTheme.colorScheme.onBackground,
+            selectedIndicatorColor = Color.Transparent,
         ),
     )
 }

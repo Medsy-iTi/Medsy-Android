@@ -1,7 +1,8 @@
 package com.medsy.medsy.nav.nestednavigation
 
-import com.medsy.medsy.R
 import com.medsy.medsy.nav.rootnavigation.Route
+import com.medsy.medsy.R as RApp
+import com.medsy.presentation.R as RPresentation
 
 enum class BottomBarDestination(
     val title: Int,
@@ -10,21 +11,21 @@ enum class BottomBarDestination(
     val route: Route
 ) {
     Home(
-        title = R.string.home,
-        icon = android.R.drawable.ic_menu_view,
-        selectedIcon = android.R.drawable.ic_menu_view,
+        title = RApp.string.home,
+        icon = RPresentation.drawable.home,
+        selectedIcon = RPresentation.drawable.home,
         route = Route.NestedNav.Home
     ),
     Cart(
-        title = R.string.cart,
-        icon = android.R.drawable.ic_menu_add,
-        selectedIcon = android.R.drawable.ic_menu_add,
+        title = RApp.string.cart,
+        icon = RPresentation.drawable.cart,
+        selectedIcon = RPresentation.drawable.cart,
         route = Route.NestedNav.Cart
     ),
     Profile(
-        title = R.string.profile,
-        icon = android.R.drawable.ic_menu_myplaces,
-        selectedIcon = android.R.drawable.ic_menu_myplaces,
+        title = RApp.string.profile,
+        icon = RPresentation.drawable.person,
+        selectedIcon = RPresentation.drawable.person,
         route = Route.NestedNav.Profile
     )
 }

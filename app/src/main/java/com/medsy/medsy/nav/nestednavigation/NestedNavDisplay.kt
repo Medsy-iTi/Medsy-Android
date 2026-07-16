@@ -30,7 +30,8 @@ import kotlinx.serialization.modules.polymorphic
 fun NestedNavDisplay(
     navigateBack: () -> Unit,
     openProductDetails: () -> Unit,
-    openSettings: () -> Unit,
+    openPersonalDetails: () -> Unit,
+    openLogin: () -> Unit,
     openSearch: () -> Unit,
     openCategories: () -> Unit,
 ) {
@@ -109,7 +110,10 @@ fun NestedNavDisplay(
                     CartRoot(onNext = openProductDetails)
                 }
                 entry<Route.NestedNav.Profile> {
-                    ProfileRoot(onNext = openSettings)
+                    ProfileRoot(
+                        onNavigateToPersonalDetails = openPersonalDetails,
+                        onNavigateToLogin = openLogin,
+                    )
                 }
             }
         )

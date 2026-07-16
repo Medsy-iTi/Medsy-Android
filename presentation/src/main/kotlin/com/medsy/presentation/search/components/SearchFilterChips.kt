@@ -20,8 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.BorderGray
-import com.medsy.designsystem.ui.theme.OffWhiteBg
 import com.medsy.presentation.search.SearchFilterChipUi
 
 @Composable
@@ -45,13 +43,15 @@ private fun SearchFilterChip(
     chip: SearchFilterChipUi,
     onClick: () -> Unit,
 ) {
-    val backgroundColor = if (chip.isSelected) MaterialTheme.colorScheme.primary else OffWhiteBg
+    val backgroundColor =
+        if (chip.isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
     val contentColor = if (chip.isSelected) {
         MaterialTheme.colorScheme.onPrimary
     } else {
         MaterialTheme.colorScheme.onSurface
     }
-    val borderColor = if (chip.isSelected) MaterialTheme.colorScheme.primary else BorderGray
+    val borderColor =
+        if (chip.isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
 
     Row(
         modifier = Modifier

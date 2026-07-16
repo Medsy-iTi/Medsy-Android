@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.BorderGray
-import com.medsy.designsystem.ui.theme.SecondaryText
 
 @Composable
 fun ProductDetailRow(
@@ -23,7 +21,7 @@ fun ProductDetailRow(
     label: String,
     value: String,
     modifier: Modifier = Modifier,
-    valueColor: Color = SecondaryText,
+    valueColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     showDivider: Boolean = true,
 ) {
     Row(
@@ -53,6 +51,6 @@ fun ProductDetailRow(
         )
     }
     if (showDivider) {
-        HorizontalDivider(color = BorderGray)
+        HorizontalDivider(color = MaterialTheme.colorScheme.outline)
     }
 }
