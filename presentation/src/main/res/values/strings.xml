@@ -82,6 +82,17 @@
     <string name="home_card_search_desc">Search for any medicine you need easily</string>
     <string name="home_card_upload_title">Upload prescription</string>
     <string name="home_card_upload_desc">Upload prescription image and we will review it</string>
+    <string name="home_banner_image_desc_one">Banner showing medicine search feature</string>
+    <string name="home_banner_image_desc_two">Banner showing prescription upload feature</string>
+    <string name="home_banner_image_desc_three">Banner showing doctor consultation feature</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">Categories</string>
+    <string name="categories_search_hint">Search categories…</string>
+    <string name="cat_baby_care">Baby Care</string>
+    <string name="cat_skin_care">Skin Care</string>
+    <string name="cat_hair_care">Hair Care</string>
+    <string name="cat_daily_essentials">Daily Essentials</string>
     <string name="home_section_categories">Shop by category</string>
     <string name="home_view_all">View all</string>
     <string name="home_cat_medicine">Medicine</string>

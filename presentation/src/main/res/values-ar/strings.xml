@@ -19,9 +19,17 @@
     <string name="home_cat_vitamins">فيتامينات</string>
     <string name="home_cat_personal_care">عناية شخصية</string>
     <string name="home_cat_medical_devices">أجهزة طبية</string>
-    <string name="home_cat_more">المزيد</string>
-    <string name="home_banner_fast_delivery">توصيل سريع</string>
-    <string name="home_banner_to_door">إلى باب منزلك</string>
+    <string name="home_banner_image_desc_one">بانر يعرض ميزة البحث عن الدواء</string>
+    <string name="home_banner_image_desc_two">بانر يعرض ميزة رفع الروشتة</string>
+    <string name="home_banner_image_desc_three">بانر يعرض ميزة استشارة الطبيب</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">الفئات</string>
+    <string name="categories_search_hint">ابحث في الفئات…</string>
+    <string name="cat_baby_care">العناية بالأطفال</string>
+    <string name="cat_skin_care">العناية بالبشرة</string>
+    <string name="cat_hair_care">العناية بالشعر</string>
+    <string name="cat_daily_essentials">المستلزمات اليومية</string>
 
     <!-- App -->
     <string name="app_name">ميدسي</string>
