@@ -2,6 +2,7 @@ package com.medsy.data.remote.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.CancellationException
 import retrofit2.Response
 import java.io.IOException
 
@@ -60,6 +61,10 @@ suspend fun <T> safeApiCall(
                 )
             )
         }
+
+    } catch (e: CancellationException) {
+
+        throw e
 
     } catch (e: IOException) {
 

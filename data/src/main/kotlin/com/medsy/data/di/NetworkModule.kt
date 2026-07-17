@@ -51,10 +51,20 @@ object NetworkModule {
                 chain.proceed(request)
             }
             .apply {
+                if (BuildConfig.ACCESS_TOKEN.isNotBlank()) {
+                    addInterceptor { chain ->
+                        val authenticatedRequest = chain.request()
+                            .newBuilder()
+                            .header("Authorization", "Bearer ${BuildConfig.ACCESS_TOKEN}")
+                            .build()
+                        chain.proceed(authenticatedRequest)
+                    }
+                }
+
                 if (BuildConfig.DEBUG) {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.BODY
+                            level = HttpLoggingInterceptor.Level.HEADERS
                             redactHeader("Authorization")
                             redactHeader("Cookie")
                             redactHeader("Set-Cookie")
