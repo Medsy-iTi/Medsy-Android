@@ -31,7 +31,6 @@ import com.medsy.presentation.home.CategoryUi
 @Composable
 fun CategoryGridCard(
     category: CategoryUi,
-    productCount: Int,
     onClick: () -> Unit
 ) {
     val colors = MaterialTheme.extendedColors
@@ -74,15 +73,6 @@ fun CategoryGridCard(
             textAlign = TextAlign.Center,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis
-        )
-
-        Spacer(modifier = Modifier.height(2.dp))
-
-        Text(
-            text = "$productCount Products",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 12.sp
         )
     }
 }

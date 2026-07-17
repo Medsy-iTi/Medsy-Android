@@ -142,10 +142,8 @@ fun CategoriesScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(state.filteredCategories) { category ->
-                    val deterministicCount = (category.id.hashCode() % 300 + 300) % 300 + 50
                     CategoryGridCard(
                         category = category,
-                        productCount = deterministicCount,
                         onClick = { onIntent(CategoriesUIIntent.OnCategoryClick(category.id)) }
                     )
                 }
