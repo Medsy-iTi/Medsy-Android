@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class OtpViewModel @Inject constructor(
@@ -40,7 +41,7 @@ class OtpViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(countdown = 300) }
             while (_state.value.countdown > 0) {
-                delay(1000)
+                delay(1000.milliseconds)
                 _state.update { it.copy(countdown = it.countdown - 1) }
             }
         }
@@ -48,10 +49,9 @@ class OtpViewModel @Inject constructor(
 
     fun onIntent(intent: OtpIntent) {
         when (intent) {
-            is OtpIntent.CodeChanged -> _state.update { it.copy(code = intent.value, errorMessage = null) }
+            is OtpIntent.CodeChanged -> _state.update { it.copy(code = intent.value, hasError = false) }
             OtpIntent.Submit -> submit()
             OtpIntent.Resend -> {
-                // TODO: Integrate resend API when available from backend
                 startTimer()
             }
             OtpIntent.Tick -> { /* handled by loop */ }
@@ -61,16 +61,15 @@ class OtpViewModel @Inject constructor(
     private fun submit() {
         if (_state.value.isLoading) return
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null) }
+            _state.update { it.copy(isLoading = true, hasError = false) }
             when (val result = verifyOtpUseCase(_state.value.email, _state.value.code)) {
                 is DomainResult.Success -> {
                     _state.update { it.copy(isLoading = false) }
                     _effect.send(OtpEffect.NavigateHome)
                 }
                 is DomainResult.Error -> {
-                    val message = (result.error as? DomainError.Api)?.message
-                        ?: "Invalid code."
-                    _state.update { it.copy(isLoading = false, errorMessage = message) }
+                    _state.update { it.copy(isLoading = false, hasError = true) }
+                    _effect.send(OtpEffect.ShowError(com.medsy.presentation.R.string.auth_invalid_code))
                 }
             }
         }

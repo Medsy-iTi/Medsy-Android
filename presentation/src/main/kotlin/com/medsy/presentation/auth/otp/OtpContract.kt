@@ -5,7 +5,7 @@ data class OtpState(
     val code: String = "",
     val countdown: Int = 300, // 5 minutes
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val hasError: Boolean = false
 )
 
 sealed interface OtpIntent {
@@ -17,4 +17,5 @@ sealed interface OtpIntent {
 
 sealed interface OtpEffect {
     data object NavigateHome : OtpEffect
+    data class ShowError(val messageRes: Int) : OtpEffect
 }

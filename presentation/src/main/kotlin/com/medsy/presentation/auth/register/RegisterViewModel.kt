@@ -27,18 +27,18 @@ class RegisterViewModel @Inject constructor(
     private val _effect = Channel<RegisterEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
-    fun onIntent(intent: RegisterIntent) {
+    fun onIntent(intent: RegisterUIIntent) {
         when (intent) {
-            is RegisterIntent.EmailChanged     -> _state.update { it.copy(email = intent.value, emailErrorRes = null) }
-            is RegisterIntent.PhoneChanged     -> _state.update { it.copy(phoneNumber = intent.value, phoneErrorRes = null) }
-            is RegisterIntent.FirstNameChanged -> _state.update { it.copy(firstName = intent.value, firstNameErrorRes = null) }
-            is RegisterIntent.LastNameChanged  -> _state.update { it.copy(lastName = intent.value, lastNameErrorRes = null) }
-            is RegisterIntent.PasswordChanged  -> _state.update { it.copy(password = intent.value, passwordErrorRes = null) }
-            is RegisterIntent.DobChanged       -> _state.update { it.copy(dob = intent.value) }
-            is RegisterIntent.RoleChanged      -> _state.update { it.copy(role = intent.value) }
-            is RegisterIntent.AddressChanged   -> _state.update { it.copy(homeAddress = intent.value) }
-            is RegisterIntent.PharmacyIdChanged -> _state.update { it.copy(pharmacyId = intent.value) }
-            RegisterIntent.Submit              -> submit()
+            is RegisterUIIntent.EmailChanged     -> _state.update { it.copy(email = intent.value, emailErrorRes = null) }
+            is RegisterUIIntent.PhoneChanged     -> _state.update { it.copy(phoneNumber = intent.value, phoneErrorRes = null) }
+            is RegisterUIIntent.FirstNameChanged -> _state.update { it.copy(firstName = intent.value, firstNameErrorRes = null) }
+            is RegisterUIIntent.LastNameChanged  -> _state.update { it.copy(lastName = intent.value, lastNameErrorRes = null) }
+            is RegisterUIIntent.PasswordChanged  -> _state.update { it.copy(password = intent.value, passwordErrorRes = null) }
+            is RegisterUIIntent.DobChanged       -> _state.update { it.copy(dob = intent.value) }
+            is RegisterUIIntent.RoleChanged      -> _state.update { it.copy(role = intent.value) }
+            is RegisterUIIntent.AddressChanged   -> _state.update { it.copy(homeAddress = intent.value) }
+            is RegisterUIIntent.PharmacyIdChanged -> _state.update { it.copy(pharmacyId = intent.value) }
+            RegisterUIIntent.Submit              -> submit()
         }
     }
 

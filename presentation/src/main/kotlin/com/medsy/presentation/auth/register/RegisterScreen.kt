@@ -75,7 +75,7 @@ fun RegisterRoot(
 @Composable
 fun RegisterScreen(
     state: RegisterState,
-    onIntent: (RegisterIntent) -> Unit,
+    onIntent: (RegisterUIIntent) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSignIn: () -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -109,7 +109,7 @@ fun RegisterScreen(
 
             AuthTextField(
                 value = state.firstName,
-                onValueChange = { onIntent(RegisterIntent.FirstNameChanged(it)) },
+                onValueChange = { onIntent(RegisterUIIntent.FirstNameChanged(it)) },
                 labelRes = R.string.auth_first_name,
                 leadingIcon = Icons.Filled.Person,
                 errorRes = state.firstNameErrorRes,
@@ -118,7 +118,7 @@ fun RegisterScreen(
 
             AuthTextField(
                 value = state.lastName,
-                onValueChange = { onIntent(RegisterIntent.LastNameChanged(it)) },
+                onValueChange = { onIntent(RegisterUIIntent.LastNameChanged(it)) },
                 labelRes = R.string.auth_last_name,
                 leadingIcon = Icons.Filled.Person,
                 errorRes = state.lastNameErrorRes,
@@ -128,7 +128,7 @@ fun RegisterScreen(
 
             AuthTextField(
                 value = state.phoneNumber,
-                onValueChange = { onIntent(RegisterIntent.PhoneChanged(it)) },
+                onValueChange = { onIntent(RegisterUIIntent.PhoneChanged(it)) },
                 labelRes = R.string.auth_phone,
                 leadingIcon = Icons.Filled.Phone,
                 errorRes = state.phoneErrorRes,
@@ -138,7 +138,7 @@ fun RegisterScreen(
 
             AuthTextField(
                 value = state.email,
-                onValueChange = { onIntent(RegisterIntent.EmailChanged(it)) },
+                onValueChange = { onIntent(RegisterUIIntent.EmailChanged(it)) },
                 labelRes = R.string.auth_email,
                 leadingIcon = Icons.Filled.Email,
                 errorRes = state.emailErrorRes,
@@ -148,7 +148,7 @@ fun RegisterScreen(
 
             PasswordField(
                 value = state.password,
-                onValueChange = { onIntent(RegisterIntent.PasswordChanged(it)) },
+                onValueChange = { onIntent(RegisterUIIntent.PasswordChanged(it)) },
                 labelRes = R.string.auth_password,
                 isVisible = passwordVisible,
                 onToggleVisibility = { passwordVisible = !passwordVisible },
@@ -157,7 +157,7 @@ fun RegisterScreen(
             )
 
             MedsyButton(
-                onClick = { onIntent(RegisterIntent.Submit) },
+                onClick = { onIntent(RegisterUIIntent.Submit) },
                 modifier = Modifier.padding(top = 24.dp),
                 isLoading = state.isLoading,
             ) {

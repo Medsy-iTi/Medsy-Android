@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -59,10 +60,10 @@ import com.medsy.designsystem.ui.theme.ErrorRed
 import com.medsy.designsystem.ui.theme.LightGreen
 import com.medsy.designsystem.ui.theme.SecondaryText
 import com.medsy.presentation.R
+import com.medsy.designsystem.components.showError
 
 private const val OTP_LENGTH = 6
 
-// ─── Root ─────────────────────────────────────────────────────────────────────
 
 @Composable
 fun OtpRoot(
@@ -75,33 +76,32 @@ fun OtpRoot(
 
     LaunchedEffect(email) { viewModel.setEmail(email) }
 
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OtpEffect.NavigateHome -> onNavigateHome()
+                is OtpEffect.ShowError -> snackbarHostState.showError(context.getString(effect.messageRes))
             }
         }
     }
 
-    OtpScreen(state = state, onIntent = viewModel::onIntent, onNavigateBack = onNavigateBack)
+    OtpScreen(state = state, onIntent = viewModel::onIntent, onNavigateBack = onNavigateBack, snackbarHostState = snackbarHostState)
 }
 
-// ─── Screen ───────────────────────────────────────────────────────────────────
 
 @Composable
 fun OtpScreen(
     state: OtpState,
     onIntent: (OtpIntent) -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(state.errorMessage) {
-        state.errorMessage?.let { snackbarHostState.showSnackbar(it) }
-    }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { com.medsy.designsystem.components.MedsySnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
@@ -160,7 +160,7 @@ fun OtpScreen(
             // OTP digit boxes
             OtpInputField(
                 code = state.code,
-                hasError = state.errorMessage != null,
+                hasError = state.hasError,
                 onCodeChanged = { if (it.length <= OTP_LENGTH) onIntent(OtpIntent.CodeChanged(it)) }
             )
 
