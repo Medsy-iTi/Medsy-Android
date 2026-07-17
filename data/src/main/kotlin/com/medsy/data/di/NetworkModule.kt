@@ -2,6 +2,8 @@ package com.medsy.data.di
 
 import com.medsy.data.BuildConfig
 import com.medsy.data.remote.api.ApiService
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,10 +23,20 @@ object NetworkModule {
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .apply {
+                if (BuildConfig.ACCESS_TOKEN.isNotBlank()) {
+                    addInterceptor { chain ->
+                        val authenticatedRequest = chain.request()
+                            .newBuilder()
+                            .header("Authorization", "Bearer ${BuildConfig.ACCESS_TOKEN}")
+                            .build()
+                        chain.proceed(authenticatedRequest)
+                    }
+                }
+
                 if (BuildConfig.DEBUG) {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.BODY
+                            level = HttpLoggingInterceptor.Level.HEADERS
                             redactHeader("Authorization")
                             redactHeader("Cookie")
                             redactHeader("Set-Cookie")
@@ -37,11 +49,20 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideMoshi(): Moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+    ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.yourdomain.com/")
+            .baseUrl(BuildConfig.API_BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 
