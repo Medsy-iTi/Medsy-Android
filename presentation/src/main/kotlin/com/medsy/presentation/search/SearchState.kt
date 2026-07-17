@@ -5,13 +5,31 @@ import com.medsy.presentation.R
 data class SearchState(
     val query: String = "",
     val isLoading: Boolean = false,
-    val filters: List<SearchFilterChipUi> = defaultSearchFilterChips(),
+    val isLoadMore: Boolean = false,
     val products: List<SearchProductUi> = emptyList(),
     val favoriteProductIds: Set<String> = emptySet(),
+    val selectedSort: SortOption = SortOption.NAME_ASC,
+    val isPriceBottomSheetOpen: Boolean = false,
+    val isSortBottomSheetOpen: Boolean = false,
+    val currentPage: Int = 0,
+    val totalPages: Int = 0,
+    val isLastPage: Boolean = true,
+    val errorMessage: Int? = null,
 ) {
     val resultsCount: Int get() = products.size
     val isEmpty: Boolean get() = !isLoading && products.isEmpty()
+
+    val filters: List<SearchFilterChipUi>
+        get() = listOf(
+            SearchFilterChipUi(
+                id = SearchFilterId.SORT.name,
+                labelRes = selectedSort.labelResId,
+                isSelected = true,
+                hasLeadingIcon = true
+            )
+        )
 }
+
 data class SearchFilterChipUi(
     val id: String,
     val labelRes: Int,
@@ -19,35 +37,29 @@ data class SearchFilterChipUi(
     val hasLeadingIcon: Boolean = false,
 )
 
-enum class SearchFilterId { FILTER, TYPE, PRICE, MOST_RELEVANT }
+enum class SearchFilterId { SORT, PRICE }
 
-fun defaultSearchFilterChips(selected: SearchFilterId = SearchFilterId.MOST_RELEVANT) = listOf(
-    SearchFilterChipUi(
-        id = SearchFilterId.FILTER.name,
-        labelRes = R.string.search_filter_chip_filter,
-        isSelected = selected == SearchFilterId.FILTER,
-        hasLeadingIcon = true,
-    ),
-    SearchFilterChipUi(
-        id = SearchFilterId.TYPE.name,
-        labelRes = R.string.search_filter_chip_type,
-        isSelected = selected == SearchFilterId.TYPE,
-    ),
-    SearchFilterChipUi(
-        id = SearchFilterId.PRICE.name,
-        labelRes = R.string.search_filter_chip_price,
-        isSelected = selected == SearchFilterId.PRICE,
-    ),
-    SearchFilterChipUi(
-        id = SearchFilterId.MOST_RELEVANT.name,
-        labelRes = R.string.search_filter_chip_most_relevant,
-        isSelected = selected == SearchFilterId.MOST_RELEVANT,
-    ),
-)
+enum class PriceFilterOption(val minPrice: Double?, val maxPrice: Double?, val labelResId: Int) {
+    ALL(null, null, R.string.search_price_all),
+    UNDER_50(null, 50.0, R.string.search_price_under_50),
+    FROM_50_TO_100(50.0, 100.0, R.string.search_price_50_to_100),
+    FROM_100_TO_200(100.0, 200.0, R.string.search_price_100_to_200),
+    OVER_200(200.0, null, R.string.search_price_over_200)
+}
+
+enum class SortOption(val apiValue: String, val labelResId: Int) {
+    NAME_ASC("name,asc", R.string.search_sort_name_asc),
+    NAME_DESC("name,desc", R.string.search_sort_name_desc),
+    PRICE_ASC("price,asc", R.string.search_sort_price_asc),
+    PRICE_DESC("price,desc", R.string.search_sort_price_desc),
+    SCIENTIFIC_NAME_ASC("scientificName,asc", R.string.search_sort_scientific_name_asc),
+    COMPANY_ASC("company,asc", R.string.search_sort_company_asc)
+}
 
 data class SearchProductUi(
     val id: String,
     val name: String,
     val subtitle: String,
     val priceEgp: Int,
+    val imageUrl: String?
 )

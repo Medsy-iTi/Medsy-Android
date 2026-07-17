@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,7 +30,7 @@ fun SearchFilterChips(
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
-        modifier = modifier,
+        modifier = modifier.wrapContentWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(chips, key = { it.id }) { chip ->
@@ -37,7 +38,6 @@ fun SearchFilterChips(
         }
     }
 }
-
 @Composable
 private fun SearchFilterChip(
     chip: SearchFilterChipUi,
