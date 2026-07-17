@@ -15,8 +15,9 @@ val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(FileInputStream(localPropertiesFile))
 }
-val baseUrl = localProperties.getProperty("BASE_URL")
-    ?: "https://medsy-api-dev.com/"
+val baseUrl = localProperties.getProperty("BASE_URL") ?: "\"https://medsy-api-dev.com/\""
+val accessToken = localProperties.getProperty("ACCESS_TOKEN") ?: "\"\""
+
 android {
     namespace = "com.medsy.data"
     compileSdk = 37
@@ -25,16 +26,8 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-
-        defaultConfig {
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"$baseUrl\""
-            )
-            }
-
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        buildConfigField("String", "ACCESS_TOKEN", "\"\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
