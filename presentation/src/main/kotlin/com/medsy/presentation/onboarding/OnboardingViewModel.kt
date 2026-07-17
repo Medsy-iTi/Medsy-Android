@@ -15,12 +15,16 @@ import com.medsy.presentation.onboarding.model.OnboardingPage
 import com.medsy.presentation.R
 import com.medsy.designsystem.R as DesignR
 
+import com.medsy.domain.common.preferences.usecase.CompleteOnboardingUseCase
+
 sealed interface OnboardingUIEffect {
     data object NavigateToLogin : OnboardingUIEffect
 }
 
 @HiltViewModel
-class OnboardingViewModel @Inject constructor() : ViewModel() {
+class OnboardingViewModel @Inject constructor(
+    private val completeOnboardingUseCase: CompleteOnboardingUseCase
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -64,6 +68,7 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
             OnboardingUIIntent.OnSkipClick,
             OnboardingUIIntent.OnGetStartedClick -> {
                 viewModelScope.launch {
+                    completeOnboardingUseCase()
                     _effect.send(OnboardingUIEffect.NavigateToLogin)
                 }
             }

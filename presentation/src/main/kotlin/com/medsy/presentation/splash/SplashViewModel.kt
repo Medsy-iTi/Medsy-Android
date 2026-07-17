@@ -12,9 +12,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import com.medsy.domain.common.preferences.usecase.ObserveUserPreferencesUseCase
+import com.medsy.domain.common.preferences.model.ThemeMode
+import com.medsy.domain.common.preferences.model.UserPreferences
+
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val observeSessionUseCase: ObserveSessionUseCase
+    private val observeSessionUseCase: ObserveSessionUseCase,
+    private val observeUserPreferencesUseCase: ObserveUserPreferencesUseCase
 ) : ViewModel() {
     private val _effect = Channel<SplashEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
@@ -24,9 +29,20 @@ class SplashViewModel @Inject constructor(
             // Run session check and minimum splash duration in parallel,
             // then navigate only after both complete.
             val sessionDeferred = async { observeSessionUseCase().firstOrNull() }
+            val preferencesDeferred = async { observeUserPreferencesUseCase().firstOrNull() }
+            
             delay(SplashConstants.MIN_SPLASH_DURATION_MS)
+            
             val session = sessionDeferred.await()
-            _effect.send(if (session != null) SplashEffect.ToHome else SplashEffect.ToOnboarding)
+            val preferences = preferencesDeferred.await() ?: UserPreferences(ThemeMode.System, false)
+            
+            val targetEffect = when {
+                session != null -> SplashEffect.ToHome
+                preferences.isOnboardingCompleted -> SplashEffect.ToLogin
+                else -> SplashEffect.ToOnboarding
+            }
+            
+            _effect.send(targetEffect)
         }
     }
 }
@@ -34,4 +50,5 @@ class SplashViewModel @Inject constructor(
 sealed interface SplashEffect {
     data object ToHome : SplashEffect
     data object ToOnboarding : SplashEffect
+    data object ToLogin : SplashEffect
 }

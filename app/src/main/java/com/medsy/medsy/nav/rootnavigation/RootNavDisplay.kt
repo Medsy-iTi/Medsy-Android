@@ -69,6 +69,12 @@ fun RootNavDisplay() {
                             clear()
                             navigateSingleTop(Route.NestedNav)
                         }
+                    },
+                    openLogin = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.Login)
+                        }
                     }
                 )
             }

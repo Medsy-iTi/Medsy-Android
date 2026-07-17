@@ -5,10 +5,10 @@ import androidx.compose.ui.unit.dp
 object LoginConstants {
     val ScreenPaddingHorizontal = 24.dp
     val ScreenPaddingVertical = 24.dp
-    val TopSpacer = 40.dp
+    val TopSpacer = 8.dp
     val LogoWidth = 140.dp
     val SpacerLogoText = 16.dp
-    val SpacerTextForm = 48.dp
+    val SpacerTextForm = 24.dp
     val SpacerInput = 16.dp
     val SpacerInputButton = 24.dp
     val SpacerOr = 24.dp
