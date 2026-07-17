@@ -22,8 +22,8 @@
     <string name="login_forgot_password">Forgot password?</string>
     <string name="login_button">Log in</string>
     <string name="login_or">or</string>
-    <string name="login_google">Log in with Google</string>
-    <string name="login_facebook">Log in with Facebook</string>
+    <string name="login_google">Google</string>
+    <string name="login_facebook">Facebook</string>
     <string name="login_no_account">Don\'t have an account? </string>
     <string name="login_signup"> Sign up</string>
     <string name="login_no_account_full">Don’t have an account? %1$s</string>
@@ -67,6 +67,14 @@
     <string name="error_password_mismatch">Passwords do not match</string>
     <string name="error_terms_not_accepted">You must accept the Terms &amp; Conditions to continue</string>
     <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_network">No internet connection. Please check your network.</string>
+    <string name="error_conflict">This data is already registered. Please use different details.</string>
+    <string name="error_phone_exists">This phone number is already registered. Please use a different number.</string>
+    <string name="error_email_exists">This email address is already registered. Please use a different email.</string>
+    <string name="error_unauthorized">User name or password is incorrect.</string>
+    <string name="error_forbidden">You don\'t have permission to perform this action.</string>
+    <string name="error_not_found">The requested resource was not found.</string>
+    <string name="error_server">Server error. Please try again later.</string>
 
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>
@@ -168,4 +176,29 @@
     <string name="product_details_dispensing_method_value">Dispensed after pharmacist review</string>
     <string name="product_details_add_to_cart">Add to Cart</string>
     <string name="product_details_consult_pharmacist">Consult Pharmacist</string>
+    <!-- Auth Strings -->
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_confirm_password">Confirm Password</string>
+    <string name="auth_first_name">First Name</string>
+    <string name="auth_last_name">Last Name</string>
+    <string name="auth_phone">Phone Number</string>
+    <string name="auth_dob">Date of Birth</string>
+    <string name="auth_address">Home Address</string>
+    <string name="auth_login_button">Log in</string>
+    <string name="auth_create_account">Create an account</string>
+    <string name="auth_register_button">Register</string>
+    <string name="auth_otp_code">OTP Code</string>
+    <string name="auth_verify_otp">Verify</string>
+    <string name="auth_resend_otp">Resend OTP</string>
+    <string name="auth_resend_cooldown">Resend OTP in %s</string>
+    <string name="auth_invalid_code">Invalid or expired code</string>
+    <string name="auth_welcome_title">Welcome to Medsy</string>
+    <string name="auth_already_have_account">Already have an account? Log in</string>
+    <string name="auth_error_required_field">This field is required</string>
+    <string name="auth_error_password_min_6">Password must be at least 6 characters</string>
+
+    <!-- OTP -->
+    <string name="otp_title">Verify your email</string>
+    <string name="otp_subtitle">We sent a 6-digit code to %s. Enter it below to confirm your account.</string>
 </resources>
