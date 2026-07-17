@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 data class ProductDto(
     @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String,
-    @Json(name = "arabicName") val arabicName: String,
+    @Json(name = "arabicName") val arabicName: String?,
     @Json(name = "scientificName") val scientificName: String,
     @Json(name = "price") val price: Double,
     @Json(name = "imageUrl") val imageUrl: String,

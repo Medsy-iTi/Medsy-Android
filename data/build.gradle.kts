@@ -35,6 +35,7 @@ android {
             )
             }
 
+        buildConfigField("String", "ACCESS_TOKEN", "\"\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
