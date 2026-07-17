@@ -71,7 +71,7 @@ fun CategoryGridCard(
             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
-            maxLines = 3,
+            maxLines =4 ,
             overflow = TextOverflow.Ellipsis
         )
     }
