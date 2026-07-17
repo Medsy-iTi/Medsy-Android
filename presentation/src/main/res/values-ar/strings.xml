@@ -38,6 +38,7 @@
     <!-- Categories Screen -->
     <string name="categories_title">الفئات</string>
     <string name="categories_search_hint">ابحث في الفئات…</string>
+    <string name="currency_egp">جنيه</string>
 
     <!-- Onboarding -->
     <string name="onboarding_title_1">اطلب أدويتك</string>
@@ -221,4 +222,5 @@
     <!-- OTP -->
     <string name="otp_title">تحقق من بريدك الإلكتروني</string>
     <string name="otp_subtitle">أرسلنا رمزاً مكوناً من 6 أرقام إلى %s. أدخله أدناه لتأكيد حسابك.</string>
+    <string name="product_add_to_cart">أضف للسلة</string>
 </resources>

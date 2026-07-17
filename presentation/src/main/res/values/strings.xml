@@ -102,6 +102,7 @@
     <!-- Categories Screen -->
     <string name="categories_title">Categories</string>
     <string name="categories_search_hint">Search categories…</string>
+    <string name="currency_egp">EGP</string>
 
     <string name="home_section_categories">Shop by category</string>
     <string name="home_view_all">View all</string>
@@ -228,4 +229,5 @@
     <!-- OTP -->
     <string name="otp_title">Verify your email</string>
     <string name="otp_subtitle">We sent a 6-digit code to %s. Enter it below to confirm your account.</string>
+    <string name="product_add_to_cart">Add to Cart</string>
 </resources>
