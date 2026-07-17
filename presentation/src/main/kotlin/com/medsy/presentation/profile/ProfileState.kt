@@ -4,9 +4,10 @@ import com.medsy.domain.common.preferences.model.ThemeMode
 
 data class ProfileState(
     val name: String = "",
-    val image: String? = null,
     val phoneNumber: String = "",
-    val isVerified: Boolean = false,
+    val isLoading: Boolean = true,
+    val hasError: Boolean = false,
+    val errorMessage: String? = null,
     val themeMode: ThemeMode = ThemeMode.System,
     val activeSheet: ProfileSheet? = null,
 )
