@@ -2,6 +2,7 @@ package com.medsy.data.search.repository
 
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.network.ApiError
+import com.medsy.data.remote.network.ApiException
 import com.medsy.data.remote.network.ApiResult
 import com.medsy.data.remote.network.safeApiCall
 import com.medsy.data.search.mapper.toDomain
@@ -29,26 +30,19 @@ class SearchRepositoryImpl @Inject constructor(
                 is ApiResult.Success -> {
                     val data = apiResult.data
                     if (data != null) {
-                        // تحويل الـ DTO إلى Domain Model
                         Result.success(data.toDomain())
                     } else {
-                        Result.failure(Exception("Empty response data"))
+                        Result.failure(ApiException(ApiError.EmptyResponse))
                     }
                 }
                 is ApiResult.Error -> {
-                    val errorMessage = when (val error = apiResult.error) {
-                        is ApiError.Server -> error.message
-                        is ApiError.Unknown -> error.message ?: "Unknown server error"
-                        is ApiError.NoInternet -> "No internet connection"
-                        is ApiError.EmptyResponse -> "Empty response from server"
-                    }
-                    Result.failure(Exception(errorMessage))
+                    Result.failure(ApiException(apiResult.error))
                 }
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(ApiException(ApiError.Unknown(e.message)))
         }
     }
 }

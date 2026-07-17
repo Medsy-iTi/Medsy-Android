@@ -4,6 +4,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
 import java.io.IOException
+import kotlin.coroutines.cancellation.CancellationException
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -67,10 +68,16 @@ suspend fun <T> safeApiCall(
             ApiError.NoInternet
         )
 
-    } catch (e: Exception) {
+    }
+    catch (e: CancellationException) {
+        throw e
+    }
+    catch (e: Exception) {
         android.util.Log.e("NetworkError", "General Exception: ${e.localizedMessage}", e)
         ApiResult.Error(
             ApiError.Unknown(e.message)
         )
     }
+
+
 }
