@@ -145,7 +145,26 @@
     <string name="profile_logout_confirmation_message">Are you sure you want to log out?</string>
     <string name="profile_logout_cancel">Cancel</string>
     <string name="profile_personal_details_title">Personal Details</string>
-    <string name="profile_personal_details_placeholder">Personal details will be available here soon.</string>
+    <string name="profile_load_error">We couldn’t load your profile.</string>
+    <string name="profile_loading">Loading profile</string>
+    <string name="profile_retry">Retry</string>
+    <string name="profile_personal_details_edit">Edit</string>
+    <string name="profile_personal_details_editable">Editable</string>
+    <string name="profile_personal_details_cancel">Cancel</string>
+    <string name="profile_personal_details_confirm">Confirm</string>
+    <string name="profile_personal_details_save">Save Changes</string>
+    <string name="profile_personal_details_customer_id">Customer ID</string>
+    <string name="profile_personal_details_first_name">First name</string>
+    <string name="profile_personal_details_last_name">Last name</string>
+    <string name="profile_personal_details_email">Email</string>
+    <string name="profile_personal_details_phone">Phone number</string>
+    <string name="profile_personal_details_home_address">Home address</string>
+    <string name="profile_personal_details_dob">Date of birth</string>
+    <string name="profile_personal_details_select_dob">Select date of birth</string>
+    <string name="profile_personal_details_not_provided">Not provided</string>
+    <string name="profile_personal_details_load_error">We couldn’t load your personal details.</string>
+    <string name="profile_personal_details_save_success">Your personal details were updated.</string>
+    <string name="profile_personal_details_save_error">We couldn’t save your changes. Please try again.</string>
 
     <!--  Search  -->
     <string name="search_results_title">Search Results</string>
