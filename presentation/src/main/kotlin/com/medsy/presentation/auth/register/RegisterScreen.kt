@@ -74,7 +74,7 @@ fun RegisterRoot(
 
 @Composable
 fun RegisterScreen(
-    state: RegisterState,
+    state: RegisterUIState,
     onIntent: (RegisterUIIntent) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSignIn: () -> Unit,
