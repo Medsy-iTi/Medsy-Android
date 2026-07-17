@@ -29,5 +29,10 @@ interface ApiService {
     suspend fun updateCurrentCustomer(
         @Body request: UpdateCustomerProfileRequestDto,
     ): Response<ApiResponse<CustomerDto>>
-
+    @GET("api/v1/products")
+    suspend fun getProducts(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: List<String>?
+    ): Response<ApiResponse<ProductsPageDto>>
 }
