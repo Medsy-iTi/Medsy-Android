@@ -101,7 +101,10 @@ class HomeViewModel @Inject constructor(
             HomeUIIntent.OnAddressClick -> sendEffect(HomeUIEffect.NavigateToAddressSelection)
             HomeUIIntent.OnPromoClick -> {}
             HomeUIIntent.OnViewAllCategoriesClick -> sendEffect(HomeUIEffect.NavigateToCategories)
-            is HomeUIIntent.OnCategoryClick -> sendEffect(HomeUIEffect.NavigateToCategory(intent.categoryId))
+            is HomeUIIntent.OnCategoryClick -> {
+                val categoryName = _state.value.categories.find { it.id == intent.categoryId }?.name ?: ""
+                sendEffect(HomeUIEffect.NavigateToCategory(intent.categoryId, categoryName))
+            }
         }
     }
 

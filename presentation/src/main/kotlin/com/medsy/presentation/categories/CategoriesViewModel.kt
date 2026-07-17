@@ -84,8 +84,15 @@ class CategoriesViewModel @Inject constructor(
                 }
             }
 
-            is CategoriesUIIntent.OnCategoryClick ->
-                sendEffect(CategoriesUIEffect.NavigateToCategory(intent.categoryId))
+            is CategoriesUIIntent.OnCategoryClick -> {
+                val category = allCategories.find { it.id == intent.categoryId }
+                sendEffect(
+                    CategoriesUIEffect.NavigateToCategory(
+                        categoryId = intent.categoryId.toInt(),
+                        categoryName = category?.name ?: ""
+                    )
+                )
+            }
         }
     }
 

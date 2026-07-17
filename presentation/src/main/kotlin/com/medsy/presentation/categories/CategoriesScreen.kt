@@ -45,7 +45,7 @@ import com.medsy.presentation.categories.components.CategoryGridCard
 @Composable
 fun CategoriesRoot(
     onBackClick: () -> Unit,
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (Int, String) -> Unit,
     viewModel: CategoriesViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -54,7 +54,10 @@ fun CategoriesRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CategoriesUIEffect.NavigateBack -> onBackClick()
-                is CategoriesUIEffect.NavigateToCategory -> onCategoryClick(effect.categoryId)
+                is CategoriesUIEffect.NavigateToCategory -> onCategoryClick(
+                    effect.categoryId,
+                    effect.categoryName
+                )
             }
         }
     }
