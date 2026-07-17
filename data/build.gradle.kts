@@ -1,6 +1,8 @@
 import java.util.Properties
 import java.io.FileInputStream
 
+import com.android.build.gradle.internal.tasks.AarMetadataReader.Companion.load
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
@@ -23,8 +25,7 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
-        buildConfigField("String", "BASE_URL", baseUrl)
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

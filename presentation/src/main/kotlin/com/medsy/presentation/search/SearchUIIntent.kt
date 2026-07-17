@@ -8,4 +8,15 @@ sealed interface SearchUIIntent {
     data class ProductClicked(val productId: String) : SearchUIIntent
     data class FavoriteClicked(val productId: String) : SearchUIIntent
     data class AddToCartClicked(val productId: String) : SearchUIIntent
+
+    // Bottom Sheets
+    data class SortOptionSelected(val option: SortOption) : SearchUIIntent
+    data class PriceFilterOptionSelected(val option: PriceFilterOption) : SearchUIIntent
+    data object DismissBottomSheet : SearchUIIntent
+
+    // Pagination
+    data object LoadNextPage : SearchUIIntent
+
+    // Error retry
+    data object RetryClicked : SearchUIIntent
 }
