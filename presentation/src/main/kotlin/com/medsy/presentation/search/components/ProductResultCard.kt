@@ -65,10 +65,10 @@ fun ProductResultCard(
             contentDescription = name,
             modifier = Modifier
                 .size(72.dp)
-                .clip(RoundedCornerShape(12.dp)) // نفس الزوايا
+                .clip(RoundedCornerShape(12.dp))
                 .background(LightGreen),
             contentScale = ContentScale.Crop,
-            error = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent), // تأكد من وجود الأيقونة
+            error = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent),
             placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)
         )
 
