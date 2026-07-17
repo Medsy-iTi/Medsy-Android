@@ -21,7 +21,7 @@ class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(RegisterState())
+    private val _state = MutableStateFlow(RegisterUIState())
     val state = _state.asStateFlow()
 
     private val _effect = Channel<RegisterEffect>(Channel.BUFFERED)
