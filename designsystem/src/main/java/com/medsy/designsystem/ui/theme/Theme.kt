@@ -10,6 +10,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -27,6 +28,8 @@ private val DarkColorScheme = darkColorScheme(
     surfaceVariant = PrimaryText,
     onSurfaceVariant = SecondaryText,
     error = ErrorRed,
+    errorContainer = Color(0xFF450A0A),
+    onErrorContainer = Color(0xFFFCA5A5),
     outline = BorderGreen
 )
 
@@ -43,6 +46,8 @@ private val LightColorScheme = lightColorScheme(
     surfaceVariant = NeutralWhite,
     onSurfaceVariant = SecondaryText,
     error = ErrorRed,
+    errorContainer = Color(0xFFFEF2F2),
+    onErrorContainer = ErrorRed,
     outline = BorderGreen
 )
 
