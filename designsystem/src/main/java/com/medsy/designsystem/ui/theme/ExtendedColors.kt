@@ -21,14 +21,6 @@ data class ExtendedColors(
     val neutralContainer: Color,
     val neutralContent: Color,
 
-    val categoryBabyCareBg: Color,
-    val categoryBabyCareIcon: Color,
-    val categorySkinCareBg: Color,
-    val categorySkinCareIcon: Color,
-    val categoryHairCareBg: Color,
-    val categoryHairCareIcon: Color,
-    val categoryDailyEssentialsBg: Color,
-    val categoryDailyEssentialsIcon: Color,
     val categoryMoreBg: Color,
     val categoryMoreIcon: Color,
 )
@@ -52,15 +44,8 @@ internal val lightExtendedColors = ExtendedColors(
     purpleContent = Color(0xFF8B5CF6),
     neutralContainer = Color(0xFFF3F4F6),
     neutralContent = Color(0xFF6B7280),
-  
-    categoryBabyCareBg = Color(0xFFE0F2FE),
-    categoryBabyCareIcon = Color(0xFF0EA5E9),
-    categorySkinCareBg = Color(0xFFDCFCE7),
-    categorySkinCareIcon = Color(0xFF22C55E),
-    categoryHairCareBg = Color(0xFFFEF9C3),
-    categoryHairCareIcon = Color(0xFFEAB308),
-    categoryDailyEssentialsBg = Color(0xFFF3F4F6),
-    categoryDailyEssentialsIcon = Color(0xFF6B7280),
+
+
     categoryMoreBg = Color(0xFFF3F4F6),
     categoryMoreIcon = Color(0xFF6B7280),
 )
@@ -76,15 +61,8 @@ internal val darkExtendedColors = ExtendedColors(
     purpleContent = Color(0xFF8B5CF6),
     neutralContainer = Color(0xFFF3F4F6),
     neutralContent = Color(0xFF6B7280),
-  
-    categoryBabyCareBg = Color(0xFFE0F2FE),
-    categoryBabyCareIcon = Color(0xFF0EA5E9),
-    categorySkinCareBg = Color(0xFFDCFCE7),
-    categorySkinCareIcon = Color(0xFF22C55E),
-    categoryHairCareBg = Color(0xFFFEF9C3),
-    categoryHairCareIcon = Color(0xFFEAB308),
-    categoryDailyEssentialsBg = Color(0xFFF3F4F6),
-    categoryDailyEssentialsIcon = Color(0xFF6B7280),
+
+
     categoryMoreBg = Color(0xFFF3F4F6),
     categoryMoreIcon = Color(0xFF6B7280),
 )
