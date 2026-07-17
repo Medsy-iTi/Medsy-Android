@@ -66,8 +66,8 @@ fun CategoriesSection(
                 val cat = categories[index]
 
                 val icon = Icons.Default.MedicalServices
-                val bgCol = colors.blueContainer
-                val iconCol = colors.blueContent
+                val bgCol = MaterialTheme.colorScheme.tertiary
+                val iconCol = MaterialTheme.colorScheme.primary
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

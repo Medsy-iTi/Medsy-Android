@@ -37,8 +37,8 @@ fun CategoryGridCard(
     val colors = MaterialTheme.extendedColors
 
     val icon = Icons.Default.MedicalServices
-    val bgColor = colors.blueContainer
-    val iconColor = colors.blueContent
+    val bgColor = MaterialTheme.colorScheme.tertiary
+    val iconColor = MaterialTheme.colorScheme.primary
 
     Column(
         modifier = Modifier
