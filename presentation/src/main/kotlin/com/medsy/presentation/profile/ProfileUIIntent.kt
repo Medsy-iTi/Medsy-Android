@@ -4,6 +4,7 @@ import com.medsy.domain.common.preferences.model.AppLanguage
 import com.medsy.domain.common.preferences.model.ThemeMode
 
 sealed interface ProfileUIIntent {
+    data object RetryProfileLoad : ProfileUIIntent
     data object PersonalDetailsClicked : ProfileUIIntent
     data object LanguageClicked : ProfileUIIntent
     data object AppearanceClicked : ProfileUIIntent

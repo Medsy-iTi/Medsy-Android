@@ -1,15 +1,12 @@
 package com.medsy.domain.profile.usecase
 
 import com.medsy.domain.profile.model.Profile
+import com.medsy.domain.profile.repository.ProfileRepository
 import javax.inject.Inject
 
-class GetProfileUseCase @Inject constructor() {
+class GetProfileUseCase @Inject constructor(
+    private val profileRepository: ProfileRepository,
+) {
 
-    operator fun invoke(): Profile = Profile(
-        name = "Mahmoud ELDemerdash",
-        image = null,
-        email = "mahmoudeldemerdash5@gmail.com",
-        phoneNumber = "+20 109 766 2212",
-        age = 24,
-    )
+    suspend operator fun invoke(): Result<Profile> = profileRepository.getCurrentProfile()
 }
