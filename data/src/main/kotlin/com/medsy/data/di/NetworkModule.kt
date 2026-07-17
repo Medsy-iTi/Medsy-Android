@@ -13,6 +13,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.Locale
+
 import com.medsy.data.remote.auth.api.AuthApi
 import com.medsy.data.remote.auth.AuthInterceptor
 import com.medsy.data.remote.auth.TokenAuthenticator
@@ -21,6 +23,15 @@ import com.medsy.data.remote.auth.TokenAuthenticator
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
+
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -28,13 +39,41 @@ object NetworkModule {
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
+
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("Accept-Language",
+                        Locale.getDefault().language)
+                    .build()
+                chain.proceed(request)
+            }
+
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader(
+                        "Accept-Language",
+                        Locale.getDefault().language
+                    )
+                    .build()
+                chain.proceed(request)
+            }
             .apply {
+                if (BuildConfig.ACCESS_TOKEN.isNotBlank()) {
+                    addInterceptor { chain ->
+                        val authenticatedRequest = chain.request()
+                            .newBuilder()
+                            .header("Authorization", "Bearer ${BuildConfig.ACCESS_TOKEN}")
+                            .build()
+                        chain.proceed(authenticatedRequest)
+                    }
+                }
+
                 if (BuildConfig.DEBUG) {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.BODY
+                            level = HttpLoggingInterceptor.Level.HEADERS
                             redactHeader("Authorization")
                             redactHeader("Cookie")
                             redactHeader("Set-Cookie")
@@ -45,11 +84,6 @@ object NetworkModule {
             .build()
     }
 
-    @Provides
-    @Singleton
-    fun provideMoshi(): Moshi = Moshi.Builder()
-        .addLast(KotlinJsonAdapterFactory())
-        .build()
 
     @Provides
     @Singleton
@@ -72,4 +106,5 @@ object NetworkModule {
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
     }
+
 }

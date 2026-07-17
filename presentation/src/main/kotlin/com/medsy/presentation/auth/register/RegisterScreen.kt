@@ -3,6 +3,7 @@ package com.medsy.presentation.auth.register
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -56,13 +57,13 @@ fun RegisterRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is RegisterEffect.NavigateToOtp -> onNavigateToOtp(effect.email)
-                is RegisterEffect.ShowError     -> snackbarHostState.showError(
+
+                is RegisterEffect.ShowError -> snackbarHostState.showError(
                     message = context.getString(effect.messageRes)
                 )
             }
         }
     }
-
     RegisterScreen(
         state = state,
         onIntent = viewModel::onIntent,
@@ -74,7 +75,7 @@ fun RegisterRoot(
 
 @Composable
 fun RegisterScreen(
-    state: RegisterState,
+    state: RegisterUIState,
     onIntent: (RegisterUIIntent) -> Unit,
     onNavigateBack: () -> Unit,
     onNavigateToSignIn: () -> Unit,
@@ -102,11 +103,7 @@ fun RegisterScreen(
                 modifier = Modifier.padding(top = 8.dp),
             )
 
-            SectionTitle(
-                textRes = R.string.auth_first_name,
-                modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
-            )
-
+            Spacer(modifier = Modifier.size(40.dp))
             AuthTextField(
                 value = state.firstName,
                 onValueChange = { onIntent(RegisterUIIntent.FirstNameChanged(it)) },

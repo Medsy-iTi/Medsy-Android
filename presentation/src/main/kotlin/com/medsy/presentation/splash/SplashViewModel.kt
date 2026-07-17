@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 import com.medsy.domain.common.preferences.usecase.ObserveUserPreferencesUseCase
+import com.medsy.domain.common.preferences.model.ThemeMode
+import com.medsy.domain.common.preferences.model.UserPreferences
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
@@ -27,17 +29,18 @@ class SplashViewModel @Inject constructor(
             // Run session check, user preferences, and minimum splash duration in parallel
             val sessionDeferred = async { observeSessionUseCase().firstOrNull() }
             val preferencesDeferred = async { observeUserPreferencesUseCase().firstOrNull() }
+            
             delay(SplashConstants.MIN_SPLASH_DURATION_MS)
             
             val session = sessionDeferred.await()
-            val preferences = preferencesDeferred.await()
-            val hasCompletedOnboarding = preferences?.hasCompletedOnboarding == true
-
+            val preferences = preferencesDeferred.await() ?: UserPreferences(ThemeMode.System, false)
+            
             val targetEffect = when {
                 session != null -> SplashEffect.ToHome
-                hasCompletedOnboarding -> SplashEffect.ToLogin
+                preferences.isOnboardingCompleted -> SplashEffect.ToLogin
                 else -> SplashEffect.ToOnboarding
             }
+            
             _effect.send(targetEffect)
         }
     }
@@ -45,6 +48,6 @@ class SplashViewModel @Inject constructor(
 
 sealed interface SplashEffect {
     data object ToHome : SplashEffect
-    data object ToLogin : SplashEffect
     data object ToOnboarding : SplashEffect
+    data object ToLogin : SplashEffect
 }

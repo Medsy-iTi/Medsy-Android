@@ -64,16 +64,16 @@ fun RootNavDisplay() {
                             navigateSingleTop(Route.Onboarding)
                         }
                     },
-                    openLogin = {
-                        rootBackStack.apply {
-                            clear()
-                            navigateSingleTop(Route.Login)
-                        }
-                    },
                     openHome = {
                         rootBackStack.apply {
                             clear()
                             navigateSingleTop(Route.NestedNav)
+                        }
+                    },
+                    openLogin = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.Login)
                         }
                     }
                 )

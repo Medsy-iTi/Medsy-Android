@@ -27,19 +27,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.medsy.designsystem.ui.theme.LightGreen
 import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.presentation.R
 
-/**
- * A single product row in the search results list.
- * The product image uses a placeholder icon for now since the `data`/`domain` layers
- * don't yet expose real product images — swap the placeholder Box for an image loader
- * (e.g. Coil's AsyncImage) once product photos are available from the backend.
- */
 @Composable
 fun ProductResultCard(
     name: String,
@@ -47,6 +45,7 @@ fun ProductResultCard(
     priceEgp: Int,
     isFavorite: Boolean,
     onClick: () -> Unit,
+    imageUrl: String?,
     onFavoriteClick: () -> Unit,
     onAddToCartClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -61,19 +60,17 @@ fun ProductResultCard(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = name,
             modifier = Modifier
                 .size(72.dp)
-                .background(LightGreen, RoundedCornerShape(12.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Medication,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(40.dp),
-            )
-        }
+                .clip(RoundedCornerShape(12.dp))
+                .background(LightGreen),
+            contentScale = ContentScale.Crop,
+            error = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent),
+            placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)
+        )
 
         Spacer(modifier = Modifier.size(12.dp))
 

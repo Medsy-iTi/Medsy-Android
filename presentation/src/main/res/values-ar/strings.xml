@@ -27,12 +27,8 @@
     <string name="home_card_upload_desc">ارفع صورة الروشتة وسنقوم بمراجعتها</string>
     <string name="home_section_categories">تسوق من الفئات</string>
     <string name="home_view_all">عرض الكل</string>
-    <string name="home_cat_medicine">أدوية</string>
-    <string name="home_cat_vitamins">فيتامينات</string>
-    <string name="home_cat_personal_care">عناية شخصية</string>
-    <string name="home_cat_medical_devices">أجهزة طبية</string>
 
-    <string name="home_cat_more">المزيد</string>
+    <string name="home_cat_more">المزيد</string>>
     <string name="home_banner_fast_delivery">توصيل سريع</string>
     <string name="home_banner_to_door">إلى باب منزلك</string>
     <string name="home_banner_image_desc_one">بانر يعرض ميزة البحث عن الدواء</string>
@@ -42,10 +38,6 @@
     <!-- Categories Screen -->
     <string name="categories_title">الفئات</string>
     <string name="categories_search_hint">ابحث في الفئات…</string>
-    <string name="cat_baby_care">العناية بالأطفال</string>
-    <string name="cat_skin_care">العناية بالبشرة</string>
-    <string name="cat_hair_care">العناية بالشعر</string>
-    <string name="cat_daily_essentials">المستلزمات اليومية</string>
 
     <!-- Onboarding -->
     <string name="onboarding_title_1">اطلب أدويتك</string>
@@ -140,7 +132,26 @@
     <string name="profile_logout_confirmation_message">هل أنت متأكد من أنك تريد تسجيل الخروج؟</string>
     <string name="profile_logout_cancel">إلغاء</string>
     <string name="profile_personal_details_title">البيانات الشخصية</string>
-    <string name="profile_personal_details_placeholder">ستتوفر تفاصيل البيانات الشخصية هنا قريبًا.</string>
+    <string name="profile_load_error">تعذر تحميل ملفك الشخصي.</string>
+    <string name="profile_loading">جارٍ تحميل الملف الشخصي</string>
+    <string name="profile_retry">إعادة المحاولة</string>
+    <string name="profile_personal_details_edit">تعديل</string>
+    <string name="profile_personal_details_editable">قابل للتعديل</string>
+    <string name="profile_personal_details_cancel">إلغاء</string>
+    <string name="profile_personal_details_confirm">تأكيد</string>
+    <string name="profile_personal_details_save">حفظ التغييرات</string>
+    <string name="profile_personal_details_customer_id">رقم العميل</string>
+    <string name="profile_personal_details_first_name">الاسم الأول</string>
+    <string name="profile_personal_details_last_name">اسم العائلة</string>
+    <string name="profile_personal_details_email">البريد الإلكتروني</string>
+    <string name="profile_personal_details_phone">رقم الهاتف</string>
+    <string name="profile_personal_details_home_address">عنوان المنزل</string>
+    <string name="profile_personal_details_dob">تاريخ الميلاد</string>
+    <string name="profile_personal_details_select_dob">اختيار تاريخ الميلاد</string>
+    <string name="profile_personal_details_not_provided">غير متوفر</string>
+    <string name="profile_personal_details_load_error">تعذر تحميل بياناتك الشخصية.</string>
+    <string name="profile_personal_details_save_success">تم تحديث بياناتك الشخصية.</string>
+    <string name="profile_personal_details_save_error">تعذر حفظ التغييرات. يرجى المحاولة مرة أخرى.</string>
 
     <!--  Search  -->
     <string name="search_results_title">نتائج البحث</string>
@@ -157,6 +168,20 @@
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
     <string name="search_empty_title">لا توجد نتائج</string>
     <string name="search_empty_subtitle">جرّب كلمة بحث مختلفة</string>
+    <string name="search_sort_title">ترتيب حسب</string>
+    <string name="search_sort_name_asc">الاسم (أ - ي)</string>
+    <string name="search_sort_name_desc">الاسم (ي - أ)</string>
+    <string name="search_sort_price_asc">السعر: من الأقل للأعلى</string>
+    <string name="search_sort_price_desc">السعر: من الأعلى للأقل</string>
+    <string name="search_sort_scientific_name_asc">الاسم العلمي</string>
+    <string name="search_sort_company_asc">الشركة المصنعة</string>
+    <string name="search_price_title">نطاق السعر</string>
+    <string name="search_price_all">كل الأسعار</string>
+    <string name="search_price_under_50">أقل من ٥٠ جنيه</string>
+    <string name="search_price_50_to_100">٥٠ - ١٠٠ جنيه</string>
+    <string name="search_price_100_to_200">١٠٠ - ٢٠٠ جنيه</string>
+    <string name="search_price_over_200">أكثر من ٢٠٠ جنيه</string>
+    <string name="search_error_retry">إعادة المحاولة</string>
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">مشاركة</string>

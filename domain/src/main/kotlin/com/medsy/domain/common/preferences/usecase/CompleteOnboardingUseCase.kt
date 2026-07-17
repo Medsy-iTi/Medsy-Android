@@ -7,6 +7,6 @@ class CompleteOnboardingUseCase @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository
 ) {
     suspend operator fun invoke() {
-        userPreferencesRepository.setOnboardingCompleted(true)
+        userPreferencesRepository.setOnboardingCompleted()
     }
 }

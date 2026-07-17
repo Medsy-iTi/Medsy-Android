@@ -291,8 +291,7 @@ private fun OtpInputField(
                     val bgColor by animateColorAsState(
                         targetValue = when {
                             hasError -> ErrorRed.copy(alpha = 0.06f)
-                            char != null -> LightGreen
-                            else -> MaterialTheme.colorScheme.surface
+                            else -> androidx.compose.ui.graphics.Color.Transparent
                         },
                         animationSpec = tween(200),
                         label = "otp_bg_$index"

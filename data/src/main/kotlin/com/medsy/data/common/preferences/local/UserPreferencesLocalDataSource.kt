@@ -2,6 +2,7 @@ package com.medsy.data.common.preferences.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -18,16 +19,16 @@ class UserPreferencesLocalDataSource @Inject constructor(
 ) {
     private companion object {
         val THEME_MODE_KEY = stringPreferencesKey("theme_mode")
-        val ONBOARDING_COMPLETED_KEY = androidx.datastore.preferences.core.booleanPreferencesKey("onboarding_completed")
+        val IS_ONBOARDING_COMPLETED_KEY = booleanPreferencesKey("is_onboarding_completed")
     }
 
     val themeMode: Flow<String?> = dataStore.data
         .catch { emit(emptyPreferences()) }
         .map { preferences -> preferences[THEME_MODE_KEY] }
 
-    val onboardingCompleted: Flow<Boolean> = dataStore.data
+    val isOnboardingCompleted: Flow<Boolean> = dataStore.data
         .catch { emit(emptyPreferences()) }
-        .map { preferences -> preferences[ONBOARDING_COMPLETED_KEY] ?: false }
+        .map { preferences -> preferences[IS_ONBOARDING_COMPLETED_KEY] ?: false }
 
     suspend fun setThemeMode(themeMode: String) {
         try {
@@ -39,15 +40,13 @@ class UserPreferencesLocalDataSource @Inject constructor(
         }
     }
 
-    suspend fun setOnboardingCompleted(completed: Boolean) {
+    suspend fun setOnboardingCompleted() {
         try {
             dataStore.edit { preferences ->
-                preferences[ONBOARDING_COMPLETED_KEY] = completed
+                preferences[IS_ONBOARDING_COMPLETED_KEY] = true
             }
         } catch (_: IOException) {
-            // Handle error
+            // Keep the last successfully stored preference when storage is unavailable.
         }
     }
-
-
 }
