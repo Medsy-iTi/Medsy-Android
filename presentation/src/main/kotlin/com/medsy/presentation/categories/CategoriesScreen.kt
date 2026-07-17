@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -22,21 +23,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.medsy.designsystem.components.MedsySearchBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.size
+import com.medsy.designsystem.ui.theme.OffWhiteBg
 import com.medsy.presentation.R
 import com.medsy.presentation.categories.components.CategoriesTopBar
 import com.medsy.presentation.categories.components.CategoryGridCard
 
-private val categoryProductCount = mapOf(
-    "1" to 350,
-    "2" to 120,
-    "3" to 280,
-    "4" to 45,
-    "5" to 95,
-    "6" to 160,
-    "7" to 110,
-    "8" to 210,
-)
 
 @Composable
 fun CategoriesRoot(
@@ -79,31 +83,75 @@ fun CategoriesScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            MedsySearchBar(
-                onSearchClick = { /* categories search is read-only tap */ },
-                hint = stringResource(R.string.categories_search_hint)
+            OutlinedTextField(
+                value = state.searchQuery,
+                onValueChange = { onIntent(CategoriesUIIntent.OnSearchQueryChange(it)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                placeholder = {
+                    androidx.compose.material3.Text(
+                        text = stringResource(R.string.categories_search_hint),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
+                shape = RoundedCornerShape(28.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedContainerColor = OffWhiteBg,
+                    unfocusedContainerColor = OffWhiteBg,
+                    cursorColor = MaterialTheme.colorScheme.primary
+                ),
+                singleLine = true
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(state.filteredCategories) { category ->
-                CategoryGridCard(
-                    category = category,
-                    productCount = categoryProductCount[category.id] ?: 0,
-                    onClick = { onIntent(CategoriesUIIntent.OnCategoryClick(category.id)) }
+        if (state.filteredCategories.isEmpty() && !state.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.no_data))
+                val progress by animateLottieCompositionAsState(
+                    composition,
+                    iterations = LottieConstants.IterateForever
+                )
+                LottieAnimation(
+                    composition = composition,
+                    progress = { progress },
+                    modifier = Modifier.size(250.dp)
                 )
             }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(state.filteredCategories) { category ->
+                    val deterministicCount = (category.id.hashCode() % 300 + 300) % 300 + 50
+                    CategoryGridCard(
+                        category = category,
+                        productCount = deterministicCount,
+                        onClick = { onIntent(CategoriesUIIntent.OnCategoryClick(category.id)) }
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+            }
         }
     }
 }

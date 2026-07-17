@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
-import com.medsy.presentation.home.toCategoryIconType
-import android.util.Log
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,8 +40,7 @@ class CategoriesViewModel @Inject constructor(
                     allCategories = domainCategories.map {
                         CategoryUi(
                             id = it.id.toString(),
-                            name = it.name,
-                            iconType = it.name.toCategoryIconType()
+                            name = it.name
                         )
                     }
                     _state.update {
