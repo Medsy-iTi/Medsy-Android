@@ -53,6 +53,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsyButton
@@ -83,7 +84,7 @@ fun OtpRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OtpEffect.NavigateHome -> onNavigateHome()
-                is OtpEffect.ShowError -> snackbarHostState.showError(context.getString(effect.messageRes))
+                is OtpEffect.ShowError -> snackbarHostState.showError(ContextCompat.getString(context, effect.messageRes))
             }
         }
     }

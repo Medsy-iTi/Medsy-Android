@@ -72,7 +72,7 @@ fun LoginRoot(
             when (effect) {
                 is LoginEffect.NavigateHome -> openHome()
                 is LoginEffect.ShowError    -> snackbarHostState.showError(
-                    message = context.getString(effect.messageRes)
+                    message = androidx.core.content.ContextCompat.getString(context, effect.messageRes)
                 )
             }
         }
