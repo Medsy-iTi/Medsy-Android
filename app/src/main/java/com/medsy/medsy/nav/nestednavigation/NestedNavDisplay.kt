@@ -34,6 +34,7 @@ fun NestedNavDisplay(
     openLogin: () -> Unit,
     openSearch: () -> Unit,
     openCategories: () -> Unit,
+    openPrescription: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -101,7 +102,7 @@ fun NestedNavDisplay(
                         onSearchClick = { openSearch() },
                         onNotificationClick = { /* Handle notification click */ },
                         onAddressClick = { /* Handle address click */ },
-                        onUploadPrescriptionClick = { /* Handle upload prescription click */ },
+                        onUploadPrescriptionClick = openPrescription,
                         onViewAllCategoriesClick = { openCategories() },
                         onCategoryClick = { categoryId -> openCategories() }
                     )
