@@ -1,113 +1,98 @@
 package com.medsy.presentation.auth.register
 
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.auth.model.RegisterParams
+import com.medsy.domain.auth.usecase.RegisterUseCase
+import com.medsy.domain.common.DomainResult
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.toMessageRes
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
+    private val registerUseCase: RegisterUseCase,
+) : ViewModel() {
 
-class RegisterViewModel : ViewModel() {
+    private val _state = MutableStateFlow(RegisterState())
+    val state = _state.asStateFlow()
 
-    private val _state = MutableStateFlow(RegisterUIState())
-    val state: StateFlow<RegisterUIState> = _state
-
-    private val _effect = Channel<RegisterUIEffect>(Channel.BUFFERED)
+    private val _effect = Channel<RegisterEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
     fun onIntent(intent: RegisterUIIntent) {
         when (intent) {
-            is RegisterUIIntent.FullNameChanged ->
-                _state.update { it.copy(fullName = intent.value, fullNameError = null) }
-
-            is RegisterUIIntent.PhoneNumberChanged ->
-                _state.update { it.copy(phoneNumber = intent.value, phoneNumberError = null) }
-
-            is RegisterUIIntent.EmailChanged ->
-                _state.update { it.copy(email = intent.value, emailError = null) }
-
-            is RegisterUIIntent.PasswordChanged ->
-                _state.update { it.copy(password = intent.value, passwordError = null) }
-
-            is RegisterUIIntent.ConfirmPasswordChanged ->
-                _state.update { it.copy(confirmPassword = intent.value, confirmPasswordError = null) }
-
-            RegisterUIIntent.TogglePasswordVisibility ->
-                _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
-
-            RegisterUIIntent.ToggleConfirmPasswordVisibility ->
-                _state.update { it.copy(isConfirmPasswordVisible = !it.isConfirmPasswordVisible) }
-
-            is RegisterUIIntent.TermsAcceptedChanged ->
-                _state.update { it.copy(isTermsAccepted = intent.accepted, termsError = null) }
-
-            RegisterUIIntent.BackClicked -> sendEffect(RegisterUIEffect.NavigateBack)
-
-            RegisterUIIntent.SignInClicked -> sendEffect(RegisterUIEffect.NavigateToSignIn)
-
-            RegisterUIIntent.SubmitClicked -> submit()
+            is RegisterUIIntent.EmailChanged     -> _state.update { it.copy(email = intent.value, emailErrorRes = null) }
+            is RegisterUIIntent.PhoneChanged     -> _state.update { it.copy(phoneNumber = intent.value, phoneErrorRes = null) }
+            is RegisterUIIntent.FirstNameChanged -> _state.update { it.copy(firstName = intent.value, firstNameErrorRes = null) }
+            is RegisterUIIntent.LastNameChanged  -> _state.update { it.copy(lastName = intent.value, lastNameErrorRes = null) }
+            is RegisterUIIntent.PasswordChanged  -> _state.update { it.copy(password = intent.value, passwordErrorRes = null) }
+            is RegisterUIIntent.DobChanged       -> _state.update { it.copy(dob = intent.value) }
+            is RegisterUIIntent.RoleChanged      -> _state.update { it.copy(role = intent.value) }
+            is RegisterUIIntent.AddressChanged   -> _state.update { it.copy(homeAddress = intent.value) }
+            is RegisterUIIntent.PharmacyIdChanged -> _state.update { it.copy(pharmacyId = intent.value) }
+            RegisterUIIntent.Submit              -> submit()
         }
     }
 
-    private fun submit() {
-        if (!validate()) return
+    private fun submit() = viewModelScope.launch {
+        val s = _state.value
 
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-
-            delay(1200)
-
-            _state.update { it.copy(isLoading = false) }
-            sendEffect(RegisterUIEffect.ShowMessage(R.string.success_account_created))
-            sendEffect(RegisterUIEffect.NavigateToHome)
-        }
-    }
-
-    private fun validate(): Boolean {
-        val current = _state.value
-
-        val fullNameError = if (current.fullName.isBlank()) R.string.error_name_required else null
-        val phoneError = if (!isValidPhone(current.phoneNumber)) R.string.error_phone_invalid else null
-        val emailError = if (!isValidEmail(current.email)) R.string.error_email_invalid else null
-        val passwordError = if (current.password.length < 8) R.string.error_password_too_short else null
-        val confirmError = if (current.password != current.confirmPassword) {
-            R.string.error_password_mismatch
-        } else null
-        val termsError = if (!current.isTermsAccepted) R.string.error_terms_not_accepted else null
-
-        _state.update {
-            it.copy(
-                fullNameError = fullNameError,
-                phoneNumberError = phoneError,
-                emailError = emailError,
-                passwordError = passwordError,
-                confirmPasswordError = confirmError,
-                termsError = termsError,
-            )
+        val emailError     = if (s.email.isBlank()) R.string.auth_error_required_field else null
+        val phoneError     = if (s.phoneNumber.isBlank()) R.string.auth_error_required_field else null
+        val firstNameError = if (s.firstName.isBlank()) R.string.auth_error_required_field else null
+        val lastNameError  = if (s.lastName.isBlank()) R.string.auth_error_required_field else null
+        val passwordError  = when {
+            s.password.isBlank()  -> R.string.auth_error_required_field
+            s.password.length < 6 -> R.string.auth_error_password_min_6
+            else                  -> null
         }
 
-        return listOf(fullNameError, phoneError, emailError, passwordError, confirmError, termsError)
-            .all { it == null }
-    }
+        if (emailError != null || phoneError != null || firstNameError != null ||
+            lastNameError != null || passwordError != null
+        ) {
+            _state.update {
+                it.copy(
+                    emailErrorRes     = emailError,
+                    phoneErrorRes     = phoneError,
+                    firstNameErrorRes = firstNameError,
+                    lastNameErrorRes  = lastNameError,
+                    passwordErrorRes  = passwordError,
+                )
+            }
+            return@launch
+        }
 
-    private fun isValidEmail(email: String): Boolean =
-        Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        _state.update { it.copy(isLoading = true) }
 
-    private fun isValidPhone(phone: String): Boolean =
-        phone.length in 8..15 && phone.all { it.isDigit() || it == '+' }
+        val params = RegisterParams(
+            email       = s.email,
+            phoneNumber = s.phoneNumber,
+            firstName   = s.firstName,
+            lastName    = s.lastName,
+            password    = s.password,
+            role        = s.role,
+            homeAddress = s.homeAddress.takeIf { it.isNotBlank() },
+            dob         = s.dob,
+            pharmacyId  = s.pharmacyId,
+        )
 
-    private fun sendEffect(effect: RegisterUIEffect) {
-        viewModelScope.launch { _effect.send(effect) }
-    }
-
-    private inline fun MutableStateFlow<RegisterUIState>.update(
-        block: (RegisterUIState) -> RegisterUIState,
-    ) {
-        value = block(value)
+        when (val result = registerUseCase(params)) {
+            is DomainResult.Success -> {
+                _state.update { it.copy(isLoading = false) }
+                _effect.send(RegisterEffect.NavigateToOtp(s.email))
+            }
+            is DomainResult.Error -> {
+                _state.update { it.copy(isLoading = false) }
+                _effect.send(RegisterEffect.ShowError(result.error.toMessageRes()))
+            }
+        }
     }
 }

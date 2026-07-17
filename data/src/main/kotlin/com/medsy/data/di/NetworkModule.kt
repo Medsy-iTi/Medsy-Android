@@ -13,6 +13,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import com.medsy.data.remote.auth.api.AuthApi
+import com.medsy.data.remote.auth.AuthInterceptor
+import com.medsy.data.remote.auth.TokenAuthenticator
 import java.util.Locale
 
 @Module
@@ -21,12 +24,19 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator
+    ): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("Accept-Language",
-                        Locale.getDefault().language)
+                    .addHeader(
+                        "Accept-Language",
+                        Locale.getDefault().language
+                    )
                     .build()
                 chain.proceed(request)
             }
@@ -47,25 +57,30 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi {
-        return Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-    }
+    fun provideMoshi(): Moshi = Moshi.Builder()
+        .addLast(KotlinJsonAdapterFactory())
+        .build()
 
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/api/v1/")
-            .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-    }
+        @Provides
+        @Singleton
+        fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(BuildConfig.BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .build()
+        }
 
-    @Provides
-    @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
+        @Provides
+        @Singleton
+        fun provideApiService(retrofit: Retrofit): ApiService {
+            return retrofit.create(ApiService::class.java)
+        }
+
+        @Provides
+        @Singleton
+        fun provideAuthApi(retrofit: Retrofit): AuthApi {
+            return retrofit.create(AuthApi::class.java)
+        }
+
     }
-}
