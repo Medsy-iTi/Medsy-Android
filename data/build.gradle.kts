@@ -12,7 +12,7 @@ val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(FileInputStream(localPropertiesFile))
 }
-val baseUrl = localProperties.getProperty("BASE_URL") ?: "\"https://medsy-api-dev.com/\""
+val baseUrl = localProperties.getProperty("BASE_URL")
 
 android {
     namespace = "com.medsy.data"
