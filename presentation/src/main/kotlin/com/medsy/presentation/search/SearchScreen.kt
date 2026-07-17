@@ -137,7 +137,7 @@ fun SearchScreen(
 
         SearchResultsHeader(
             resultsCount = state.resultsCount,
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+            modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
         )
 
         Box(
