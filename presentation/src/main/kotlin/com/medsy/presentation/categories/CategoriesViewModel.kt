@@ -2,8 +2,6 @@ package com.medsy.presentation.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.medsy.presentation.R
-import com.medsy.presentation.home.CategoryIconType
 import com.medsy.presentation.home.CategoryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -13,10 +11,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
+import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class CategoriesViewModel @Inject constructor() : ViewModel() {
+class CategoriesViewModel @Inject constructor(
+    private val getCategoriesUseCase: GetCategoriesUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(CategoriesUIState())
     val state: StateFlow<CategoriesUIState> = _state.asStateFlow()
@@ -24,23 +26,47 @@ class CategoriesViewModel @Inject constructor() : ViewModel() {
     private val _effect = Channel<CategoriesUIEffect>()
     val effect = _effect.receiveAsFlow()
 
-    private val allCategories = listOf(
-        CategoryUi("1", R.string.home_cat_medicine, CategoryIconType.MEDICINE),
-        CategoryUi("2", R.string.home_cat_vitamins, CategoryIconType.VITAMINS),
-        CategoryUi("3", R.string.home_cat_personal_care, CategoryIconType.PERSONAL_CARE),
-        CategoryUi("4", R.string.home_cat_medical_devices, CategoryIconType.MEDICAL_DEVICES),
-        CategoryUi("5", R.string.cat_baby_care, CategoryIconType.BABY_CARE),
-        CategoryUi("6", R.string.cat_skin_care, CategoryIconType.SKIN_CARE),
-        CategoryUi("7", R.string.cat_hair_care, CategoryIconType.HAIR_CARE),
-        CategoryUi("8", R.string.cat_daily_essentials, CategoryIconType.DAILY_ESSENTIALS),
-    )
+    private var allCategories = listOf<CategoryUi>()
 
     init {
-        _state.update {
-            it.copy(
-                categories = allCategories,
-                filteredCategories = allCategories
-            )
+        fetchCategories()
+    }
+
+    private fun fetchCategories() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            getCategoriesUseCase(page = 0, size = 100).collectLatest { result ->
+                result.onSuccess { domainCategories ->
+                    allCategories = domainCategories.map {
+                        CategoryUi(
+                            id = it.id.toString(),
+                            name = it.name
+                        )
+                    }
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            categories = allCategories,
+                            filteredCategories = filterCategories(it.searchQuery)
+                        )
+                    }
+                }.onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            error = error.message
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun filterCategories(query: String): List<CategoryUi> {
+        return if (query.isBlank()) {
+            allCategories
+        } else {
+            allCategories.filter { it.name.contains(query, ignoreCase = true) }
         }
     }
 
@@ -50,18 +76,10 @@ class CategoriesViewModel @Inject constructor() : ViewModel() {
 
             is CategoriesUIIntent.OnSearchQueryChange -> {
                 val query = intent.query
-                val filtered = if (query.isBlank()) {
-                    allCategories
-                } else {
-                    allCategories.filter { cat ->
-                        // filtering is done in the UI via stringResource, so we keep all and let UI filter
-                        true
-                    }
-                }
                 _state.update {
                     it.copy(
                         searchQuery = query,
-                        filteredCategories = filtered
+                        filteredCategories = filterCategories(query)
                     )
                 }
             }

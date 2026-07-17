@@ -11,11 +11,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.medsy.domain.categories.usecase.GetCategoriesUseCase
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
-import kotlin.math.exp
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val getCategoriesUseCase: GetCategoriesUseCase
+) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
 
@@ -26,9 +29,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
         _state.update {
             it.copy(
-                notificationCount = 1,
-                deliveryAddress = "شارع النيل، المعادي",
-                banners = listOf(
+                notificationCount = 1, deliveryAddress = "شارع النيل، المعادي", banners = listOf(
                     PromoBannerUi(
                         id = "1",
                         titleRes = R.string.home_promo_title_one,
@@ -53,23 +54,35 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                         imageRes = R.drawable.banner3,
                         imageContentDescRes = R.string.home_banner_image_desc_three
                     ),
-                ),
-                categories = listOf(
-                    CategoryUi("1", R.string.home_cat_medicine, CategoryIconType.MEDICINE),
-                    CategoryUi("2", R.string.home_cat_vitamins, CategoryIconType.VITAMINS),
-                    CategoryUi(
-                        "3",
-                        R.string.home_cat_personal_care,
-                        CategoryIconType.PERSONAL_CARE
-                    ),
-                    CategoryUi(
-                        "4",
-                        R.string.home_cat_medical_devices,
-                        CategoryIconType.MEDICAL_DEVICES
-                    ),
-                    CategoryUi("5", R.string.home_cat_more, CategoryIconType.MORE)
-                )
+                ), categories = emptyList()
             )
+        }
+        fetchCategories()
+    }
+
+    private fun fetchCategories() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            getCategoriesUseCase(page = 0, size = 20).collectLatest { result ->
+                result.onSuccess { domainCategories ->
+                    val uiCategories = domainCategories.take(7).map {
+                        CategoryUi(
+                            id = it.id.toString(), name = it.name
+                        )
+                    }
+                    _state.update {
+                        it.copy(
+                            isLoading = false, categories = uiCategories
+                        )
+                    }
+                }.onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false, error = error.message
+                        )
+                    }
+                }
+            }
         }
     }
 

@@ -16,6 +16,7 @@ if (localPropertiesFile.exists()) {
     localProperties.load(FileInputStream(localPropertiesFile))
 }
 val baseUrl = localProperties.getProperty("BASE_URL") ?: "\"https://medsy-api-dev.com/\""
+val accessToken = localProperties.getProperty("ACCESS_TOKEN") ?: "\"\""
 
 android {
     namespace = "com.medsy.data"

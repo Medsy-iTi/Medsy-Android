@@ -21,18 +21,5 @@ data class PromoBannerUi(
 
 data class CategoryUi(
     val id: String,
-    val nameRes: Int,
-    val iconType: CategoryIconType
+    val name: String
 )
-
-enum class CategoryIconType {
-    MEDICINE,
-    VITAMINS,
-    PERSONAL_CARE,
-    MEDICAL_DEVICES,
-    BABY_CARE,
-    SKIN_CARE,
-    HAIR_CARE,
-    DAILY_ESSENTIALS,
-    MORE
-}

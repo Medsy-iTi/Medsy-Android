@@ -13,6 +13,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.Locale
+
 import com.medsy.data.remote.auth.api.AuthApi
 import com.medsy.data.remote.auth.AuthInterceptor
 import com.medsy.data.remote.auth.TokenAuthenticator
@@ -37,8 +39,26 @@ object NetworkModule {
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
+
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("Accept-Language",
+                        Locale.getDefault().language)
+                    .build()
+                chain.proceed(request)
+            }
+
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader(
+                        "Accept-Language",
+                        Locale.getDefault().language
+                    )
+                    .build()
+                chain.proceed(request)
+            }
             .apply {
                 if (BuildConfig.ACCESS_TOKEN.isNotBlank()) {
                     addInterceptor { chain ->
