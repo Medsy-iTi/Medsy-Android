@@ -13,8 +13,10 @@ import com.medsy.domain.profile.usecase.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,26 +30,48 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())
-    val state = _state.asStateFlow()
+    val state = _state
+        .onStart { loadProfile() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = ProfileState(),
+        )
 
     private val _effect = Channel<ProfileUIEffect>(capacity = Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
     init {
-        loadProfile()
         observeUserPreferences()
     }
 
-    private fun loadProfile() {
-        val profile = getProfileUseCase()
-
-        _state.update { state ->
-            state.copy(
-                name = profile.name,
-                image = profile.image,
-                phoneNumber = profile.phoneNumber,
+    private suspend fun loadProfile() {
+        _state.update {
+            it.copy(
+                isLoading = true,
+                hasError = false,
+                errorMessage = null,
             )
         }
+        getProfileUseCase()
+            .onSuccess { profile ->
+                _state.update { state ->
+                    state.copy(
+                        name = profile.fullName,
+                        phoneNumber = profile.phoneNumber,
+                        isLoading = false,
+                    )
+                }
+            }
+            .onFailure { error ->
+                _state.update { state ->
+                    state.copy(
+                        isLoading = false,
+                        hasError = true,
+                        errorMessage = error.message,
+                    )
+                }
+            }
     }
 
     private fun observeUserPreferences() {
@@ -73,15 +97,22 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun logout() {
-        _state.update { it.copy(activeSheet = null) }
+        _state.update { it.copy(isLogoutLoading = true) }
         viewModelScope.launch {
+            android.util.Log.d("ProfileViewModel", "Starting API logout request...")
             logoutUseCase()
+            android.util.Log.d("ProfileViewModel", "API logout finished. Session cleared locally.")
+            _state.update { it.copy(isLogoutLoading = false, activeSheet = null) }
             _effect.send(ProfileUIEffect.NavigateToLogin)
         }
     }
 
     fun onIntent(intent: ProfileUIIntent) {
         when (intent) {
+            ProfileUIIntent.RetryProfileLoad -> {
+                viewModelScope.launch { loadProfile() }
+            }
+
             ProfileUIIntent.PersonalDetailsClicked -> {
                 sendEffect(ProfileUIEffect.NavigateToPersonalDetails)
             }

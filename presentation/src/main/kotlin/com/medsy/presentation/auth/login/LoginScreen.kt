@@ -3,20 +3,27 @@ package com.medsy.presentation.auth.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -43,6 +51,10 @@ import com.medsy.presentation.auth.login.components.LoginOrDivider
 import com.medsy.presentation.auth.login.components.LoginPasswordInput
 import com.medsy.presentation.auth.login.components.LoginPhoneInput
 import com.medsy.presentation.auth.login.components.LoginSocialButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showError
 import com.medsy.designsystem.R as DesignR
 
 @Composable
@@ -52,52 +64,60 @@ fun LoginRoot(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                LoginUIEffect.NavigateToSignup -> openSignup()
-                LoginUIEffect.NavigateToHome -> openHome()
+                is LoginEffect.NavigateHome -> openHome()
+                is LoginEffect.ShowError    -> snackbarHostState.showError(
+                    message = androidx.core.content.ContextCompat.getString(context, effect.messageRes)
+                )
             }
         }
     }
 
     LoginScreen(
         state = state,
-        onIntent = viewModel::onIntent
+        onIntent = viewModel::onIntent,
+        openSignup = openSignup,
+        snackbarHostState = snackbarHostState,
     )
 }
 
 @Composable
 fun LoginScreen(
     state: LoginState,
-    onIntent: (LoginUIIntent) -> Unit,
+    onIntent: (LoginIntent) -> Unit,
+    openSignup: () -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-    var phone by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
     val isDarkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(
-                horizontal = LoginConstants.ScreenPaddingHorizontal,
-                vertical = LoginConstants.ScreenPaddingVertical
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
+        ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .statusBarsPadding()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .padding(
+                    horizontal = LoginConstants.ScreenPaddingHorizontal,
+                    vertical = LoginConstants.ScreenPaddingVertical
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
         Spacer(modifier = Modifier.height(LoginConstants.TopSpacer))
 
-        val logoRes = if (isDarkTheme) {
-            DesignR.drawable.ic_logo_transparent_dark
-        } else {
-            DesignR.drawable.ic_logo_transparent
-        }
+        val logoRes = DesignR.drawable.ic_logo_transparent
 
         // Logo
         Image(
@@ -129,20 +149,30 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerTextForm))
 
-        // Phone Input
-        LoginPhoneInput(
-            phone = phone,
-            onPhoneChange = { phone = it }
+        com.medsy.designsystem.components.MedsyTextField(
+            value = state.email,
+            onValueChange = { onIntent(LoginIntent.EmailChanged(it)) },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(stringResource(R.string.auth_email)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Email,
+                    contentDescription = null
+                )
+            },
+            singleLine = true,
+            errorRes = state.emailErrorRes
         )
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerInput))
 
         // Password Input
         LoginPasswordInput(
-            password = password,
-            onPasswordChange = { password = it },
+            password = state.password,
+            onPasswordChange = { onIntent(LoginIntent.PasswordChanged(it)) },
             passwordVisible = passwordVisible,
-            onTogglePasswordVisibility = { passwordVisible = !passwordVisible }
+            onTogglePasswordVisibility = { passwordVisible = !passwordVisible },
+            errorRes = state.passwordErrorRes
         )
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerInput))
@@ -166,15 +196,23 @@ fun LoginScreen(
 
         // Login Button
         MedsyButton(
-            onClick = { onIntent(LoginUIIntent.OnLoginClick) }
+            onClick = { onIntent(LoginIntent.Submit) },
+            isLoading = state.isLoading
         ) {
-            Text(
-                text = stringResource(R.string.login_button),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = NeutralWhite
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
-            )
+            } else {
+                Text(
+                    text = stringResource(R.string.login_button),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = NeutralWhite
+                    )
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(LoginConstants.SpacerOr))
@@ -228,7 +266,11 @@ fun LoginScreen(
             style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onBackground),
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .clickable { onIntent(LoginUIIntent.OnSignupClick) }
+                .clickable { openSignup() }
         )
-    }
+        } // end Column
+        } // end Scaffold
+
+        MedsySnackbarHost(hostState = snackbarHostState)
+    } // end Box
 }

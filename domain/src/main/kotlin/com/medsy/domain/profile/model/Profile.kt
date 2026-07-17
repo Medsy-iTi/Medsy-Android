@@ -1,9 +1,16 @@
 package com.medsy.domain.profile.model
 
 data class Profile(
-    val name: String,
-    val image: String?,
+    val id: Long?,
     val email: String,
+    val firstName: String,
+    val lastName: String,
+    val homeAddress: String?,
+    val dob: String?,
     val phoneNumber: String,
-    val age: Int,
-)
+) {
+    val fullName: String
+        get() = listOf(firstName, lastName)
+            .filter(String::isNotBlank)
+            .joinToString(separator = " ")
+}

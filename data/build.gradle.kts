@@ -1,8 +1,21 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+import com.android.build.gradle.internal.tasks.AarMetadataReader.Companion.load
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.secrets)
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+val baseUrl = localProperties.getProperty("BASE_URL") ?: "\"https://medsy-api-dev.com/\""
 
 android {
     namespace = "com.medsy.data"
@@ -12,6 +25,8 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        buildConfigField("String", "ACCESS_TOKEN", "\"\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -38,11 +53,15 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
     implementation(libs.moshi.kotlin)
+    ksp(libs.moshi.codegen)
 
 
     // OkHttp
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
+
+    // Security
+    implementation(libs.androidx.security.crypto)
 
     //Hilt
     implementation(libs.hilt.android)

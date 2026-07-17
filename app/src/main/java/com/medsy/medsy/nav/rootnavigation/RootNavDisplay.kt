@@ -16,6 +16,7 @@ import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
+import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
@@ -64,9 +65,16 @@ fun RootNavDisplay() {
                             clear()
                             navigateSingleTop(Route.Onboarding)
                         }
+                    },
+                    openHome = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.NestedNav)
+                        }
                     }
                 )
             }
+
             entry<Route.Onboarding> {
                 OnboardingRoot(
                     openLogin = {
@@ -94,7 +102,19 @@ fun RootNavDisplay() {
                 RegisterRoot(
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToSignIn = { rootBackStack.navigateSingleTop(Route.Login) },
-                    onNavigateToHome = { rootBackStack.navigateSingleTop(Route.NestedNav) }
+                    onNavigateToOtp = { email -> rootBackStack.navigateSingleTop(Route.Otp(email)) }
+                )
+            }
+            entry<Route.Otp> { route ->
+                OtpRoot(
+                    email = route.email,
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateHome = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.NestedNav)
+                        }
+                    }
                 )
             }
             entry<Route.NestedNav> {

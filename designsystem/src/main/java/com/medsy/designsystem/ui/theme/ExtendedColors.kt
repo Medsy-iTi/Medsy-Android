@@ -8,8 +8,9 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class ExtendedColors(
+    val success: Color,
+    val onSuccess: Color,
     // Category Colors
-
     val blueContainer: Color,
     val blueContent: Color,
     val orangeContainer: Color,
@@ -58,6 +59,8 @@ val MaterialTheme.extendedColors: ExtendedColors
     get() = LocalExtendedColors.current
 
 internal val lightExtendedColors = ExtendedColors(
+    success = SuccessGreen,
+    onSuccess = Color.White,
     blueContainer = Color(0xFFE0E7FF),
     blueContent = Color(0xFF3B82F6),
     orangeContainer = Color(0xFFFFEDD5),
@@ -68,7 +71,7 @@ internal val lightExtendedColors = ExtendedColors(
     purpleContent = Color(0xFF8B5CF6),
     neutralContainer = Color(0xFFF3F4F6),
     neutralContent = Color(0xFF6B7280),
-  
+
     categoryBabyCareBg = Color(0xFFE0F2FE),
     categoryBabyCareIcon = Color(0xFF0EA5E9),
     categorySkinCareBg = Color(0xFFDCFCE7),
@@ -97,6 +100,8 @@ internal val lightExtendedColors = ExtendedColors(
 )
 
 internal val darkExtendedColors = ExtendedColors(
+    success = SuccessGreen,
+    onSuccess = Color.White,
     blueContainer = Color(0xFFE0E7FF),
     blueContent = Color(0xFF3B82F6),
     orangeContainer = Color(0xFFFFEDD5),
@@ -107,7 +112,7 @@ internal val darkExtendedColors = ExtendedColors(
     purpleContent = Color(0xFF8B5CF6),
     neutralContainer = Color(0xFFF3F4F6),
     neutralContent = Color(0xFF6B7280),
-  
+
     categoryBabyCareBg = Color(0xFFE0F2FE),
     categoryBabyCareIcon = Color(0xFF0EA5E9),
     categorySkinCareBg = Color(0xFFDCFCE7),
