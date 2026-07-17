@@ -23,14 +23,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.medsy.presentation.R
 
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.size
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileLogoutBottomSheet(
     onDismissRequest: () -> Unit,
     onLogoutClick: () -> Unit,
+    isLoading: Boolean = false,
 ) {
     ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = { if (!isLoading) onDismissRequest() },
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 2.dp,
@@ -61,6 +65,7 @@ fun ProfileLogoutBottomSheet(
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = onLogoutClick,
+                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
@@ -70,14 +75,22 @@ fun ProfileLogoutBottomSheet(
                     contentColor = MaterialTheme.colorScheme.onError,
                 ),
             ) {
-                Text(
-                    text = stringResource(R.string.profile_logout),
-                    fontWeight = FontWeight.SemiBold,
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.onError
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.profile_logout),
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedButton(
                 onClick = onDismissRequest,
+                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

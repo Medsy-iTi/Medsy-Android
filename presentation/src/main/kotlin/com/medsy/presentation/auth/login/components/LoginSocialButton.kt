@@ -58,8 +58,7 @@ fun LoginSocialButton(
                 
                 Text(
                     text = text,
-                    modifier = Modifier.width(LoginConstants.SocialButtonTextWidth), 
-                    textAlign = TextAlign.Start,
+                    textAlign = TextAlign.Center,
                     maxLines = 1,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
