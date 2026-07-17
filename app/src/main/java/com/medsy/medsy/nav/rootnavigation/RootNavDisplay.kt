@@ -20,6 +20,7 @@ import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
+import com.medsy.presentation.products.ProductsRoot
 import com.medsy.presentation.profile.personaldetails.PersonalDetailsRoot
 import com.medsy.presentation.search.SearchRoot
 import com.medsy.presentation.settings.SettingsRoot
@@ -139,6 +140,9 @@ fun RootNavDisplay() {
                     },
                     openCategories = {
                         rootBackStack.navigateSingleTop(Route.Categories)
+                    },
+                    openProducts = { categoryId, categoryName ->
+                        rootBackStack.navigateSingleTop(Route.Products(categoryId, categoryName))
                     }
                 )
             }
@@ -181,7 +185,19 @@ fun RootNavDisplay() {
             entry<Route.Categories> {
                 CategoriesRoot(
                     onBackClick = { rootBackStack.removeLastOrNull() },
-                    onCategoryClick = { categoryId -> /* Handle category click */ }
+                    onCategoryClick = { categoryId, categoryName ->
+                        rootBackStack.navigateSingleTop(Route.Products(categoryId, categoryName))
+                    }
+                )
+            }
+            entry<Route.Products> { route ->
+                ProductsRoot(
+                    categoryId = route.categoryId,
+                    categoryName = route.categoryName,
+                    onBackClick = { rootBackStack.removeLastOrNull() },
+                    onProductClick = { productId ->
+                        rootBackStack.navigateSingleTop(Route.ProductDetails(productId.toString()))
+                    }
                 )
             }
         }
