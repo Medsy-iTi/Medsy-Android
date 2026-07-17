@@ -97,9 +97,12 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun logout() {
-        _state.update { it.copy(activeSheet = null) }
+        _state.update { it.copy(isLogoutLoading = true) }
         viewModelScope.launch {
+            android.util.Log.d("ProfileViewModel", "Starting API logout request...")
             logoutUseCase()
+            android.util.Log.d("ProfileViewModel", "API logout finished. Session cleared locally.")
+            _state.update { it.copy(isLogoutLoading = false, activeSheet = null) }
             _effect.send(ProfileUIEffect.NavigateToLogin)
         }
     }

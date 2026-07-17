@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -32,14 +34,23 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun SplashRoot(
     openOnboarding: () -> Unit,
+    openHome: () -> Unit,
+    viewModel: SplashViewModel = hiltViewModel()
 ) {
-    SplashScreen(
-        onFinished = openOnboarding
-    )
+    LaunchedEffect(viewModel) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                SplashEffect.ToHome -> openHome()
+                SplashEffect.ToOnboarding -> openOnboarding()
+            }
+        }
+    }
+
+    SplashScreen()
 }
 
 @Composable
-fun SplashScreen(onFinished: () -> Unit) {
+fun SplashScreen() {
 
     val logoAlpha = remember { Animatable(0f) }
     val textAlpha = remember { Animatable(0f) }
@@ -83,8 +94,6 @@ fun SplashScreen(onFinished: () -> Unit) {
         textOffsetJob.join()
 
         delay(SplashConstants.HOLD_DURATION.milliseconds)
-
-        onFinished()
     }
 
     val isDarkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
@@ -100,11 +109,7 @@ fun SplashScreen(onFinished: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            val logoRes = if (isDarkTheme) {
-                DesignR.drawable.ic_logo_transparent_dark
-            } else {
-                DesignR.drawable.ic_logo_transparent
-            }
+            val logoRes = DesignR.drawable.ic_logo_transparent
 
             Image(
                 painter = painterResource(id = logoRes),

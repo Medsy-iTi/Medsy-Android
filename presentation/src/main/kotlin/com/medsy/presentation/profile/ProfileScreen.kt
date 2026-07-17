@@ -304,6 +304,7 @@ fun ProfileScreen(
         ProfileSheet.Logout -> ProfileLogoutBottomSheet(
             onDismissRequest = { onIntent(ProfileUIIntent.SheetDismissed) },
             onLogoutClick = { onIntent(ProfileUIIntent.LogoutConfirmed) },
+            isLoading = state.isLogoutLoading,
         )
 
         null -> Unit

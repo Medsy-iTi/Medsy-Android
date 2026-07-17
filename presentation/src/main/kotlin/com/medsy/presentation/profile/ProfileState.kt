@@ -10,6 +10,7 @@ data class ProfileState(
     val errorMessage: String? = null,
     val themeMode: ThemeMode = ThemeMode.System,
     val activeSheet: ProfileSheet? = null,
+    val isLogoutLoading: Boolean = false,
 )
 
 enum class ProfileSheet {

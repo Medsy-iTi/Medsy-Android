@@ -22,31 +22,22 @@ fun AuthTextField(
     value: String,
     onValueChange: (String) -> Unit,
     labelRes: Int,
-    leadingIcon: ImageVector,
+    leadingIcon: ImageVector? = null,
     modifier: Modifier = Modifier,
     errorRes: Int? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        MedsyTextField(
+    MedsyTextField(
             value = value,
             onValueChange = onValueChange,
             placeholder = { Text(stringResource(labelRes)) },
-            leadingIcon = { Icon(imageVector = leadingIcon, contentDescription = null) },
+            leadingIcon = if (leadingIcon != null) { { Icon(imageVector = leadingIcon, contentDescription = null) } } else null,
             trailingIcon = trailingIcon,
             visualTransformation = visualTransformation,
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            errorRes = errorRes,
+            modifier = modifier
         )
-
-        if (errorRes != null) {
-            Text(
-                text = stringResource(errorRes),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(start = 8.dp, top = 4.dp),
-            )
-        }
-    }
 }
