@@ -117,11 +117,7 @@ fun LoginScreen(
         ) {
         Spacer(modifier = Modifier.height(LoginConstants.TopSpacer))
 
-        val logoRes = if (isDarkTheme) {
-            DesignR.drawable.ic_logo_transparent_dark
-        } else {
-            DesignR.drawable.ic_logo_transparent
-        }
+        val logoRes = DesignR.drawable.ic_logo_transparent
 
         // Logo
         Image(

@@ -16,10 +16,11 @@ import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
-
 import com.medsy.presentation.auth.otp.OtpRoot
+import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
+import com.medsy.presentation.profile.personaldetails.PersonalDetailsRoot
 import com.medsy.presentation.search.SearchRoot
 import com.medsy.presentation.settings.SettingsRoot
 import com.medsy.presentation.splash.SplashRoot
@@ -124,11 +125,20 @@ fun RootNavDisplay() {
                             Route.ProductDetails(id = "temporary-product-id")
                         )
                     },
-                    openSettings = {
-                        rootBackStack.navigateSingleTop(Route.Settings)
-                    },
                     openSearch = {
                         rootBackStack.navigateSingleTop(Route.SearchNav)
+                    },
+                    openPersonalDetails = {
+                        rootBackStack.navigateSingleTop(Route.PersonalDetails)
+                    },
+                    openLogin = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.Login)
+                        }
+                    },
+                    openCategories = {
+                        rootBackStack.navigateSingleTop(Route.Categories)
                     }
                 )
             }
@@ -153,6 +163,11 @@ fun RootNavDisplay() {
                     onNext = { rootBackStack.removeLastOrNull() }
                 )
             }
+            entry<Route.PersonalDetails> {
+                PersonalDetailsRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() }
+                )
+            }
             entry<Route.SearchNav> {
                 SearchRoot(
                     onNext = {
@@ -161,6 +176,12 @@ fun RootNavDisplay() {
                         )
                     },
                     onBack = { rootBackStack.removeLastOrNull() },
+                )
+            }
+            entry<Route.Categories> {
+                CategoriesRoot(
+                    onBackClick = { rootBackStack.removeLastOrNull() },
+                    onCategoryClick = { categoryId -> /* Handle category click */ }
                 )
             }
         }

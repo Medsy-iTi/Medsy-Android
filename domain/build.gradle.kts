@@ -13,6 +13,7 @@ kotlin {
 }
 
 dependencies {
-    implementation("javax.inject:javax.inject:1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation(libs.javax.inject)
+    implementation(libs.kotlinx.coroutines.core)
+
 }

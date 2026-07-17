@@ -22,8 +22,8 @@
     <string name="login_forgot_password">Forgot password?</string>
     <string name="login_button">Log in</string>
     <string name="login_or">or</string>
-    <string name="login_google">Log in with Google</string>
-    <string name="login_facebook">Log in with Facebook</string>
+    <string name="login_google">Google</string>
+    <string name="login_facebook">Facebook</string>
     <string name="login_no_account">Don\'t have an account? </string>
     <string name="login_signup"> Sign up</string>
     <string name="login_no_account_full">Don’t have an account? %1$s</string>
@@ -81,15 +81,31 @@
     <string name="home_delivery_to">Delivery to</string>
     <string name="home_address_mock">El Nile St, Maadi</string>
     <string name="home_search_hint">Search by medicine name</string>
-    <string name="home_promo_title">Your health matters to us</string>
-    <string name="home_promo_subtitle">Discount up to 30%</string>
-    <string name="home_promo_desc">On selected items</string>
-    <string name="home_promo_button">Shop now</string>
+    <string name="home_promo_title_one">Find any medicine</string>
+    <string name="home_promo_title_two">Upload your prescription</string>
+    <string name="home_promo_title_three">Consult a doctor</string>
+    <string name="home_promo_subtitle_one">Fast search with smart results</string>
+    <string name="home_promo_subtitle_two">We’ll handle the rest</string>
+    <string name="home_promo_subtitle_three">Get advice anytime</string>
+    <string name="home_promo_extratext_one">See alternatives if unavailable</string>
+    <string name="home_promo_extratext_two">No more confusion with doctor handwriting</string>
+    <string name="home_promo_extratext_three">Talk to certified doctors instantly</string>
     <string name="home_section_order">Order made easy</string>
     <string name="home_card_search_title">Search medicine</string>
     <string name="home_card_search_desc">Search for any medicine you need easily</string>
     <string name="home_card_upload_title">Upload prescription</string>
     <string name="home_card_upload_desc">Upload prescription image and we will review it</string>
+    <string name="home_banner_image_desc_one">Banner showing medicine search feature</string>
+    <string name="home_banner_image_desc_two">Banner showing prescription upload feature</string>
+    <string name="home_banner_image_desc_three">Banner showing doctor consultation feature</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_title">Categories</string>
+    <string name="categories_search_hint">Search categories…</string>
+    <string name="cat_baby_care">Baby Care</string>
+    <string name="cat_skin_care">Skin Care</string>
+    <string name="cat_hair_care">Hair Care</string>
+    <string name="cat_daily_essentials">Daily Essentials</string>
     <string name="home_section_categories">Shop by category</string>
     <string name="home_view_all">View all</string>
     <string name="home_cat_medicine">Medicine</string>
@@ -100,6 +116,36 @@
     <string name="home_banner_fast_delivery">Fast delivery</string>
     <string name="home_banner_to_door">to your doorstep</string>
 
+
+    <!-- Profile -->
+    <string name="profile_title">My Profile</string>
+    <string name="profile_avatar_content_description">Profile picture</string>
+    <string name="profile_section_account">Account</string>
+    <string name="profile_personal_details">Personal Details</string>
+    <string name="profile_personal_details_subtitle">Edit your name and basic information</string>
+    <string name="profile_notifications">Notifications</string>
+    <string name="profile_notifications_subtitle">Manage order and offer notifications</string>
+    <string name="profile_section_preferences">Preferences</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_language_arabic">Arabic</string>
+    <string name="profile_language_english">English</string>
+    <string name="profile_appearance">Appearance</string>
+    <string name="profile_appearance_system_default">System default</string>
+    <string name="profile_appearance_light">Light</string>
+    <string name="profile_appearance_dark">Dark</string>
+    <string name="profile_section_support">Support &amp; Help</string>
+    <string name="profile_help_center">Help Center</string>
+    <string name="profile_help_center_subtitle">Frequently asked questions and support</string>
+    <string name="profile_contact_us">Contact Us</string>
+    <string name="profile_terms">Terms &amp; Conditions</string>
+    <string name="profile_section_more">More</string>
+    <string name="profile_about">About Medsy</string>
+    <string name="profile_privacy">Privacy Policy</string>
+    <string name="profile_logout">Log out</string>
+    <string name="profile_logout_confirmation_message">Are you sure you want to log out?</string>
+    <string name="profile_logout_cancel">Cancel</string>
+    <string name="profile_personal_details_title">Personal Details</string>
+    <string name="profile_personal_details_placeholder">Personal details will be available here soon.</string>
 
     <!--  Search  -->
     <string name="search_results_title">Search Results</string>

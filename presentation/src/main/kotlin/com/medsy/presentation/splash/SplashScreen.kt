@@ -109,11 +109,7 @@ fun SplashScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            val logoRes = if (isDarkTheme) {
-                DesignR.drawable.ic_logo_transparent_dark
-            } else {
-                DesignR.drawable.ic_logo_transparent
-            }
+            val logoRes = DesignR.drawable.ic_logo_transparent
 
             Image(
                 painter = painterResource(id = logoRes),

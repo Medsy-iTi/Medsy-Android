@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+
+    <!-- App -->
+    <string name="app_name">ميدسي</string>
+    <string name="app_name_prefix">ميد</string>
+    <string name="app_name_suffix">سي</string>
+    <string name="medsy_logo_content_desc">شعار ميدسي</string>
+
     <string name="home_delivery_to">التوصيل إلى</string>
     <string name="home_address_mock">شارع النيل، المعادي</string>
     <string name="home_search_hint">ابحث باسم الدواء</string>
-    <string name="home_promo_title">صحتك تهمنا</string>
-    <string name="home_promo_subtitle">خصم حتى 30%</string>
-    <string name="home_promo_desc">على مجموعة مختارة</string>
-    <string name="home_promo_button">تسوق الآن</string>
+    <string name="home_promo_title_one">ابحث عن أي دواء</string>
+    <string name="home_promo_title_two">ارفع وصفتك الطبية</string>
+    <string name="home_promo_title_three">استشر طبيبًا</string>
+    <string name="home_promo_subtitle_one">بحث سريع بنتائج ذكية</string>
+    <string name="home_promo_subtitle_two">وسنتولى الباقي</string>
+    <string name="home_promo_subtitle_three">احصل على استشارة في أي وقت</string>
+    <string name="home_promo_extratext_one">اطّلع على البدائل إذا لم يكن الدواء متوفرًا</string>
+    <string name="home_promo_extratext_two">لا مزيد من الحيرة بسبب خط الأطباء</string>
+    <string name="home_promo_extratext_three">تحدث مع أطباء معتمدين فورًا</string>
     <string name="home_section_order">سهلنا الطلب عليك</string>
     <string name="home_card_search_title">ابحث عن دواء</string>
     <string name="home_card_search_desc">ابحث عن أي دواء تحتاجه بسهولة</string>
@@ -19,15 +31,21 @@
     <string name="home_cat_vitamins">فيتامينات</string>
     <string name="home_cat_personal_care">عناية شخصية</string>
     <string name="home_cat_medical_devices">أجهزة طبية</string>
+
     <string name="home_cat_more">المزيد</string>
     <string name="home_banner_fast_delivery">توصيل سريع</string>
     <string name="home_banner_to_door">إلى باب منزلك</string>
+    <string name="home_banner_image_desc_one">بانر يعرض ميزة البحث عن الدواء</string>
+    <string name="home_banner_image_desc_two">بانر يعرض ميزة رفع الروشتة</string>
+    <string name="home_banner_image_desc_three">بانر يعرض ميزة استشارة الطبيب</string>
 
-    <!-- App -->
-    <string name="app_name">ميدسي</string>
-    <string name="app_name_prefix">ميد</string>
-    <string name="app_name_suffix">سي</string>
-    <string name="medsy_logo_content_desc">شعار ميدسي</string>
+    <!-- Categories Screen -->
+    <string name="categories_title">الفئات</string>
+    <string name="categories_search_hint">ابحث في الفئات…</string>
+    <string name="cat_baby_care">العناية بالأطفال</string>
+    <string name="cat_skin_care">العناية بالبشرة</string>
+    <string name="cat_hair_care">العناية بالشعر</string>
+    <string name="cat_daily_essentials">المستلزمات اليومية</string>
 
     <!-- Onboarding -->
     <string name="onboarding_title_1">اطلب أدويتك</string>
@@ -44,8 +62,8 @@
     <string name="login_forgot_password">نسيت كلمة المرور؟</string>
     <string name="login_button">تسجيل الدخول</string>
     <string name="login_or">أو</string>
-    <string name="login_google">تسجيل الدخول بواسطة Google</string>
-    <string name="login_facebook">تسجيل الدخول بواسطة Facebook</string>
+    <string name="login_google">جوجل</string>
+    <string name="login_facebook">فيسبوك</string>
     <string name="login_no_account">ليس لديك حساب؟ </string>
     <string name="login_signup"> إنشاء حساب</string>
     <string name="login_no_account_full">ليس لديك حساب؟ %1$s</string>
@@ -55,8 +73,7 @@
     <string name="action_next">التالي</string>
     <string name="action_get_started">ابدأ الآن</string>
 
-
-
+    <!-- Register -->
     <string name="create_account_title">إنشاء حساب</string>
     <string name="create_account_subtitle">قم بإعداد حسابك بكل سهولة</string>
     <string name="create_account_section_personal_info">المعلومات الشخصية</string>
@@ -95,6 +112,35 @@
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
 
+    <!-- الملف الشخصي -->
+    <string name="profile_title">حسابي</string>
+    <string name="profile_avatar_content_description">الصورة الشخصية</string>
+    <string name="profile_section_account">الحساب</string>
+    <string name="profile_personal_details">البيانات الشخصية</string>
+    <string name="profile_personal_details_subtitle">تعديل الاسم والبيانات الأساسية</string>
+    <string name="profile_notifications">الإشعارات</string>
+    <string name="profile_notifications_subtitle">إدارة إشعارات الطلبات والعروض</string>
+    <string name="profile_section_preferences">التفضيلات</string>
+    <string name="profile_language">اللغة</string>
+    <string name="profile_language_arabic">العربية</string>
+    <string name="profile_language_english">الإنجليزية</string>
+    <string name="profile_appearance">المظهر</string>
+    <string name="profile_appearance_system_default">حسب إعدادات الجهاز</string>
+    <string name="profile_appearance_light">الوضع الفاتح</string>
+    <string name="profile_appearance_dark">الوضع الداكن</string>
+    <string name="profile_section_support">الدعم والمساعدة</string>
+    <string name="profile_help_center">مركز المساعدة</string>
+    <string name="profile_help_center_subtitle">الأسئلة الشائعة والدعم</string>
+    <string name="profile_contact_us">تواصل معنا</string>
+    <string name="profile_terms">الشروط والأحكام</string>
+    <string name="profile_section_more">المزيد</string>
+    <string name="profile_about">عن Medsy</string>
+    <string name="profile_privacy">سياسة الخصوصية</string>
+    <string name="profile_logout">تسجيل الخروج</string>
+    <string name="profile_logout_confirmation_message">هل أنت متأكد من أنك تريد تسجيل الخروج؟</string>
+    <string name="profile_logout_cancel">إلغاء</string>
+    <string name="profile_personal_details_title">البيانات الشخصية</string>
+    <string name="profile_personal_details_placeholder">ستتوفر تفاصيل البيانات الشخصية هنا قريبًا.</string>
 
     <!--  Search  -->
     <string name="search_results_title">نتائج البحث</string>

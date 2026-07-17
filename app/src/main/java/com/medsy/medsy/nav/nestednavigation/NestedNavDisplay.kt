@@ -30,8 +30,10 @@ import kotlinx.serialization.modules.polymorphic
 fun NestedNavDisplay(
     navigateBack: () -> Unit,
     openProductDetails: () -> Unit,
-    openSettings: () -> Unit,
+    openPersonalDetails: () -> Unit,
+    openLogin: () -> Unit,
     openSearch: () -> Unit,
+    openCategories: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -100,15 +102,18 @@ fun NestedNavDisplay(
                         onNotificationClick = { /* Handle notification click */ },
                         onAddressClick = { /* Handle address click */ },
                         onUploadPrescriptionClick = { /* Handle upload prescription click */ },
-                        onViewAllCategoriesClick = { /* Handle view all categories click */ },
-                        onCategoryClick = { categoryName -> /* Handle category click */ }
+                        onViewAllCategoriesClick = { openCategories() },
+                        onCategoryClick = { categoryId -> openCategories() }
                     )
                 }
                 entry<Route.NestedNav.Cart> {
                     CartRoot(onNext = openProductDetails)
                 }
                 entry<Route.NestedNav.Profile> {
-                    ProfileRoot(onNext = openSettings)
+                    ProfileRoot(
+                        onNavigateToPersonalDetails = openPersonalDetails,
+                        onNavigateToLogin = openLogin,
+                    )
                 }
             }
         )
