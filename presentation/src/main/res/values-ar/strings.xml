@@ -54,8 +54,8 @@
     <string name="login_forgot_password">نسيت كلمة المرور؟</string>
     <string name="login_button">تسجيل الدخول</string>
     <string name="login_or">أو</string>
-    <string name="login_google">تسجيل الدخول بواسطة Google</string>
-    <string name="login_facebook">تسجيل الدخول بواسطة Facebook</string>
+    <string name="login_google">جوجل</string>
+    <string name="login_facebook">فيسبوك</string>
     <string name="login_no_account">ليس لديك حساب؟ </string>
     <string name="login_signup"> إنشاء حساب</string>
     <string name="login_no_account_full">ليس لديك حساب؟ %1$s</string>
@@ -93,6 +93,14 @@
     <string name="error_password_mismatch">كلمتا المرور غير متطابقتين</string>
     <string name="error_terms_not_accepted">يجب الموافقة على الشروط والأحكام للمتابعة</string>
     <string name="error_generic">حدث خطأ ما، يرجى المحاولة مرة أخرى.</string>
+    <string name="error_network">لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة.</string>
+    <string name="error_conflict">هذه البيانات مسجلة بالفعل. يرجى استخدام بيانات مختلفة.</string>
+    <string name="error_phone_exists">رقم الهاتف مسجل بالفعل. يرجى استخدام رقم آخر.</string>
+    <string name="error_email_exists">البريد الإلكتروني مسجل بالفعل. يرجى استخدام بريد آخر.</string>
+    <string name="error_unauthorized">اسم المستخدم أو كلمة المرور غير صحيحة.</string>
+    <string name="error_forbidden">ليس لديك صلاحية لتنفيذ هذا الإجراء.</string>
+    <string name="error_not_found">المورد المطلوب غير موجود.</string>
+    <string name="error_server">خطأ في الخادم. يرجى المحاولة لاحقاً.</string>
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
 
@@ -155,4 +163,29 @@
     <string name="product_details_dispensing_method_value">تصرف بعد مراجعة الصيدلي</string>
     <string name="product_details_add_to_cart">أضف إلى السلة</string>
     <string name="product_details_consult_pharmacist">استشارة صيدلي</string>
+    <!-- Auth Strings -->
+    <string name="auth_email">البريد الإلكتروني</string>
+    <string name="auth_password">كلمة المرور</string>
+    <string name="auth_confirm_password">تأكيد كلمة المرور</string>
+    <string name="auth_first_name">الاسم الأول</string>
+    <string name="auth_last_name">الاسم الأخير</string>
+    <string name="auth_phone">رقم الهاتف</string>
+    <string name="auth_dob">تاريخ الميلاد</string>
+    <string name="auth_address">عنوان السكن</string>
+    <string name="auth_login_button">تسجيل الدخول</string>
+    <string name="auth_create_account">إنشاء حساب</string>
+    <string name="auth_register_button">تسجيل</string>
+    <string name="auth_otp_code">رمز التحقق (OTP)</string>
+    <string name="auth_verify_otp">تأكيد</string>
+    <string name="auth_resend_otp">إعادة إرسال الرمز</string>
+    <string name="auth_resend_cooldown">إعادة الإرسال خلال %s</string>
+    <string name="auth_invalid_code">الرمز غير صحيح أو منتهي الصلاحية</string>
+    <string name="auth_welcome_title">مرحباً بك في Medsy</string>
+    <string name="auth_already_have_account">لديك حساب بالفعل؟ تسجيل الدخول</string>
+    <string name="auth_error_required_field">هذا الحقل مطلوب</string>
+    <string name="auth_error_password_min_6">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل</string>
+
+    <!-- OTP -->
+    <string name="otp_title">تحقق من بريدك الإلكتروني</string>
+    <string name="otp_subtitle">أرسلنا رمزاً مكوناً من 6 أرقام إلى %s. أدخله أدناه لتأكيد حسابك.</string>
 </resources>

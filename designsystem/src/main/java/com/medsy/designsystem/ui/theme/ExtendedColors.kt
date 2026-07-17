@@ -8,8 +8,9 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class ExtendedColors(
+    val success: Color,
+    val onSuccess: Color,
     // Category Colors
-
     val blueContainer: Color,
     val blueContent: Color,
     val orangeContainer: Color,
@@ -34,6 +35,8 @@ val MaterialTheme.extendedColors: ExtendedColors
     get() = LocalExtendedColors.current
 
 internal val lightExtendedColors = ExtendedColors(
+    success = SuccessGreen,
+    onSuccess = Color.White,
     blueContainer = Color(0xFFE0E7FF),
     blueContent = Color(0xFF3B82F6),
     orangeContainer = Color(0xFFFFEDD5),
@@ -51,6 +54,8 @@ internal val lightExtendedColors = ExtendedColors(
 )
 
 internal val darkExtendedColors = ExtendedColors(
+    success = SuccessGreen,
+    onSuccess = Color.White,
     blueContainer = Color(0xFFE0E7FF),
     blueContent = Color(0xFF3B82F6),
     orangeContainer = Color(0xFFFFEDD5),

@@ -93,20 +93,7 @@ fun ProfileScreen(
             .background(MaterialTheme.colorScheme.background),
     )
     {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.01f),
-                            MaterialTheme.colorScheme.background.copy(alpha = 0f),
-                        ),
-                    )
-                ),
-        )
+
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -288,6 +275,7 @@ fun ProfileScreen(
         ProfileSheet.Logout -> ProfileLogoutBottomSheet(
             onDismissRequest = { onIntent(ProfileUIIntent.SheetDismissed) },
             onLogoutClick = { onIntent(ProfileUIIntent.LogoutConfirmed) },
+            isLoading = state.isLogoutLoading,
         )
 
         null -> Unit

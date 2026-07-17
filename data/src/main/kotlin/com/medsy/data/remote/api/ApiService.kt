@@ -14,3 +14,4 @@ interface ApiService {
         @Query("sort") sort: String
     ): Response<ApiResponse<CategoriesDataDto>>
 }
+}
