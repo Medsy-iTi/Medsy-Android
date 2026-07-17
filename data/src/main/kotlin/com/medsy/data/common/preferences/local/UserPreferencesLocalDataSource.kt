@@ -18,11 +18,16 @@ class UserPreferencesLocalDataSource @Inject constructor(
 ) {
     private companion object {
         val THEME_MODE_KEY = stringPreferencesKey("theme_mode")
+        val ONBOARDING_COMPLETED_KEY = androidx.datastore.preferences.core.booleanPreferencesKey("onboarding_completed")
     }
 
     val themeMode: Flow<String?> = dataStore.data
         .catch { emit(emptyPreferences()) }
         .map { preferences -> preferences[THEME_MODE_KEY] }
+
+    val onboardingCompleted: Flow<Boolean> = dataStore.data
+        .catch { emit(emptyPreferences()) }
+        .map { preferences -> preferences[ONBOARDING_COMPLETED_KEY] ?: false }
 
     suspend fun setThemeMode(themeMode: String) {
         try {
@@ -31,6 +36,16 @@ class UserPreferencesLocalDataSource @Inject constructor(
             }
         } catch (_: IOException) {
             // Keep the last successfully stored preference when storage is unavailable.
+        }
+    }
+
+    suspend fun setOnboardingCompleted(completed: Boolean) {
+        try {
+            dataStore.edit { preferences ->
+                preferences[ONBOARDING_COMPLETED_KEY] = completed
+            }
+        } catch (_: IOException) {
+            // Handle error
         }
     }
 

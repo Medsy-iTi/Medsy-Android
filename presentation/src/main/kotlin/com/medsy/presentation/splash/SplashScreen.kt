@@ -34,6 +34,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun SplashRoot(
     openOnboarding: () -> Unit,
+    openLogin: () -> Unit,
     openHome: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
@@ -41,6 +42,7 @@ fun SplashRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 SplashEffect.ToHome -> openHome()
+                SplashEffect.ToLogin -> openLogin()
                 SplashEffect.ToOnboarding -> openOnboarding()
             }
         }

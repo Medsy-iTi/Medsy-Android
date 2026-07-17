@@ -19,8 +19,12 @@ sealed interface OnboardingUIEffect {
     data object NavigateToLogin : OnboardingUIEffect
 }
 
+import com.medsy.domain.common.preferences.usecase.CompleteOnboardingUseCase
+
 @HiltViewModel
-class OnboardingViewModel @Inject constructor() : ViewModel() {
+class OnboardingViewModel @Inject constructor(
+    private val completeOnboardingUseCase: CompleteOnboardingUseCase
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -64,6 +68,7 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
             OnboardingUIIntent.OnSkipClick,
             OnboardingUIIntent.OnGetStartedClick -> {
                 viewModelScope.launch {
+                    completeOnboardingUseCase()
                     _effect.send(OnboardingUIEffect.NavigateToLogin)
                 }
             }
