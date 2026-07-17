@@ -5,6 +5,7 @@ import com.medsy.data.profile.remote.dto.CustomerDto
 import com.medsy.data.profile.remote.dto.UpdateCustomerProfileRequestDto
 import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.network.ApiResponse
+import com.medsy.data.search.remote.ProductsPageDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
