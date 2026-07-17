@@ -48,6 +48,7 @@ internal val lightExtendedColors = ExtendedColors(
     neutralContainer = Color(0xFFF3F4F6),
     neutralContent = Color(0xFF6B7280),
 
+
     categoryMoreBg = Color(0xFFF3F4F6),
     categoryMoreIcon = Color(0xFF6B7280),
 )
