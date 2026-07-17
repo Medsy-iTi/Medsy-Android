@@ -1,5 +1,7 @@
-import com.android.build.gradle.internal.tasks.AarMetadataReader.Companion.load
 import java.util.Properties
+import java.io.FileInputStream
+
+import com.android.build.gradle.internal.tasks.AarMetadataReader.Companion.load
 
 plugins {
     alias(libs.plugins.android.library)
@@ -10,9 +12,9 @@ plugins {
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.inputStream().use { localProperties.load(it) }
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
-val baseUrl = localProperties.getProperty("BASE_URL") ?: "https://api.yourdomain.com/"
+val baseUrl = localProperties.getProperty("BASE_URL") ?: "\"https://medsy-api-dev.com/\""
 
 android {
     namespace = "com.medsy.data"
@@ -49,11 +51,15 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
     implementation(libs.moshi.kotlin)
+    ksp(libs.moshi.codegen)
 
 
     // OkHttp
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
+
+    // Security
+    implementation(libs.androidx.security.crypto)
 
     //Hilt
     implementation(libs.hilt.android)
