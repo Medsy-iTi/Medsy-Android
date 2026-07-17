@@ -1,4 +1,4 @@
-package com.medsy.data.remote.model.categories
+package com.medsy.data.remote.dtos.categories
 
 import com.squareup.moshi.JsonClass
 
