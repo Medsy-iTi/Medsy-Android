@@ -154,6 +154,20 @@
     <string name="search_added_to_cart">Added to cart</string>
     <string name="search_empty_title">No results found</string>
     <string name="search_empty_subtitle">Try a different search term</string>
+    <string name="search_sort_title">Sort By</string>
+    <string name="search_sort_name_asc">Name (A - Z)</string>
+    <string name="search_sort_name_desc">Name (Z - A)</string>
+    <string name="search_sort_price_asc">Price: Low to High</string>
+    <string name="search_sort_price_desc">Price: High to Low</string>
+    <string name="search_sort_scientific_name_asc">Scientific Name</string>
+    <string name="search_sort_company_asc">Company</string>
+    <string name="search_price_title">Price Range</string>
+    <string name="search_price_all">All Prices</string>
+    <string name="search_price_under_50">Under 50 EGP</string>
+    <string name="search_price_50_to_100">50 - 100 EGP</string>
+    <string name="search_price_100_to_200">100 - 200 EGP</string>
+    <string name="search_price_over_200">Over 200 EGP</string>
+    <string name="search_error_retry">Retry</string>
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">Share</string>

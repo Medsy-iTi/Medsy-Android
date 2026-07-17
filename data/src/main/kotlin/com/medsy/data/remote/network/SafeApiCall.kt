@@ -62,13 +62,13 @@ suspend fun <T> safeApiCall(
         }
 
     } catch (e: IOException) {
-
+        android.util.Log.e("NetworkError", "IOException: ${e.localizedMessage}", e)
         ApiResult.Error(
             ApiError.NoInternet
         )
 
     } catch (e: Exception) {
-
+        android.util.Log.e("NetworkError", "General Exception: ${e.localizedMessage}", e)
         ApiResult.Error(
             ApiError.Unknown(e.message)
         )

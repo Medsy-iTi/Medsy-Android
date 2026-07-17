@@ -1,8 +1,18 @@
+import com.android.build.gradle.internal.tasks.AarMetadataReader.Companion.load
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+val baseUrl = localProperties.getProperty("BASE_URL") ?: "https://api.yourdomain.com/"
 
 android {
     namespace = "com.medsy.data"
@@ -12,6 +22,7 @@ android {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

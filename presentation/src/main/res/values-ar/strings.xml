@@ -149,6 +149,20 @@
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
     <string name="search_empty_title">لا توجد نتائج</string>
     <string name="search_empty_subtitle">جرّب كلمة بحث مختلفة</string>
+    <string name="search_sort_title">ترتيب حسب</string>
+    <string name="search_sort_name_asc">الاسم (أ - ي)</string>
+    <string name="search_sort_name_desc">الاسم (ي - أ)</string>
+    <string name="search_sort_price_asc">السعر: من الأقل للأعلى</string>
+    <string name="search_sort_price_desc">السعر: من الأعلى للأقل</string>
+    <string name="search_sort_scientific_name_asc">الاسم العلمي</string>
+    <string name="search_sort_company_asc">الشركة المصنعة</string>
+    <string name="search_price_title">نطاق السعر</string>
+    <string name="search_price_all">كل الأسعار</string>
+    <string name="search_price_under_50">أقل من ٥٠ جنيه</string>
+    <string name="search_price_50_to_100">٥٠ - ١٠٠ جنيه</string>
+    <string name="search_price_100_to_200">١٠٠ - ٢٠٠ جنيه</string>
+    <string name="search_price_over_200">أكثر من ٢٠٠ جنيه</string>
+    <string name="search_error_retry">إعادة المحاولة</string>
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">مشاركة</string>
