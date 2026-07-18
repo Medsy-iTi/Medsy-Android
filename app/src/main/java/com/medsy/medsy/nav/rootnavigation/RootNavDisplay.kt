@@ -18,7 +18,9 @@ import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.categories.CategoriesRoot
+import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
+import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.products.ProductsRoot
 import com.medsy.presentation.profile.personaldetails.PersonalDetailsRoot
@@ -69,6 +71,12 @@ fun RootNavDisplay() {
                         rootBackStack.apply {
                             clear()
                             navigateSingleTop(Route.NestedNav)
+                        }
+                    },
+                    openLogin = {
+                        rootBackStack.apply {
+                            clear()
+                            navigateSingleTop(Route.Login)
                         }
                     }
                 )
@@ -143,6 +151,9 @@ fun RootNavDisplay() {
                     },
                     openProducts = { categoryId, categoryName ->
                         rootBackStack.navigateSingleTop(Route.Products(categoryId, categoryName))
+                    },
+                    openPrescription = {
+                        rootBackStack.navigateSingleTop(Route.Prescription)
                     }
                 )
             }
@@ -197,6 +208,26 @@ fun RootNavDisplay() {
                     onBackClick = { rootBackStack.removeLastOrNull() },
                     onProductClick = { productId ->
                         rootBackStack.navigateSingleTop(Route.ProductDetails(productId.toString()))
+                    }
+                )
+            }
+            entry<Route.Prescription> {
+                PrescriptionRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateHome = {
+                        rootBackStack.popIfCurrentIs<Route.Prescription>()
+                    },
+                    onNavigateCart = {
+                        rootBackStack.navigateSingleTop(Route.NestedNav.Cart)
+                    },
+                )
+            }
+            entry<Route.NestedNav.Cart> {
+                CartRoot(
+                    onNext = {
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = "temporary-product-id")
+                        )
                     }
                 )
             }

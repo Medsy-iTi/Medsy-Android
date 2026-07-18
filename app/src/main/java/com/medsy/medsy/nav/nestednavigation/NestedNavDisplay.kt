@@ -35,6 +35,7 @@ fun NestedNavDisplay(
     openSearch: () -> Unit,
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
+    openPrescription: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
