@@ -1,6 +1,7 @@
 package com.medsy.data.remote.api
 
 
+import com.medsy.data.productdetails.remote.ProductDetailsDto
 import com.medsy.data.profile.remote.dto.CustomerDto
 import com.medsy.data.profile.remote.dto.UpdateCustomerProfileRequestDto
 import com.medsy.data.remote.dtos.categories.CategoriesDataDto
@@ -10,6 +11,7 @@ import com.medsy.data.search.remote.ProductsPageDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -46,4 +48,10 @@ interface ApiService {
         @Query("size") size: Int,
         @Query("sort") sort: List<String>?
     ): Response<ApiResponse<ProductsPageDto>>
+
+    @GET("api/v1/products/{id}")
+    suspend fun getProductById(
+        @Path("id") id: Int,
+        @Header("lang") language: String
+    ): Response<ApiResponse<ProductDetailsDto>>
 }

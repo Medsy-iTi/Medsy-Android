@@ -11,5 +11,6 @@ data class Product(
     val manufacturer: String,
     val type: String,
     val category: String,
+    val route: String = "",
     val isFavorite: Boolean = false,
 )

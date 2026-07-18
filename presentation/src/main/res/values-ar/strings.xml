@@ -196,6 +196,9 @@
     <string name="product_details_label_dispensing_method">طريقة الصرف</string>
     <string name="product_details_dispensing_method_value">تصرف بعد مراجعة الصيدلي</string>
     <string name="product_details_add_to_cart">أضف إلى السلة</string>
+    <string name="product_details_label_usage_method">طريقة الاستخدام</string>
+    <string name="product_details_error_load">تعذر تحميل المنتج. يرجى المحاولة مرة أخرى.</string>
+    <string name="product_details_error_retry">إعادة المحاولة</string>
     <string name="product_details_consult_pharmacist">استشارة صيدلي</string>
     <!-- Prescription reading -->
     <string name="prescription_upload_title">ارفع الروشتة</string>
@@ -292,6 +295,9 @@
     <!-- OTP -->
     <string name="otp_title">تحقق من بريدك الإلكتروني</string>
     <string name="otp_subtitle">أرسلنا رمزاً مكوناً من 6 أرقام إلى %s. أدخله أدناه لتأكيد حسابك.</string>
+
+
+
     <string name="product_add_to_cart">أضف للسلة</string>
 
     <!--  Errors  -->
@@ -301,4 +307,11 @@
     <string name="error_empty_response">لم يُرجع الخادم البيانات المطلوبة.</string>
     <string name="error_payload_too_large">الملف المرفوع كبير جدًا.</string>
     <string name="error_too_many_requests">طلبات كثيرة جدًا. يرجى الانتظار ثم المحاولة مرة أخرى.</string>
+
+
+
+    <string name="error_no_internet">لا يوجد اتصال بالإنترنت، يرجى التحقق من الشبكة.</string>
+    <string name="error_server_message">خطأ في السيرفر: %1$s</string>
+    <string name="error_unknown">حدث خطأ غير متوقع، يرجى المحاولة لاحقاً.</string>
+    <string name="error_invalid_id">رقم المنتج غير صحيح.</string>
 </resources>
