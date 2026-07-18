@@ -29,7 +29,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.presentation.R
 
 @Composable
@@ -64,7 +63,7 @@ fun ProductImageCarousel(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(NeutralWhite),
+                        .background(MaterialTheme.colorScheme.surface),
                     contentAlignment = Alignment.Center,
                 ) {
                     AsyncImage(
@@ -84,7 +83,7 @@ fun ProductImageCarousel(
                     .align(Alignment.TopEnd)
                     .padding(top = 8.dp, end = 16.dp)
                     .clip(CircleShape)
-                    .background(NeutralWhite)
+                    .background(MaterialTheme.colorScheme.surface)
                     .size(40.dp),
             ) {
                 Icon(

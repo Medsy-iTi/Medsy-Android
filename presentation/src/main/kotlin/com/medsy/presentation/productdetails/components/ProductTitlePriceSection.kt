@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.SecondaryText
 import com.medsy.presentation.R
 
 @Composable
@@ -35,7 +34,7 @@ fun ProductTitlePriceSection(
         Text(
             text = stringResource(R.string.product_details_pack_info_format, strength, packInfo),
             style = MaterialTheme.typography.bodyMedium,
-            color = SecondaryText,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp),
         )
         Text(

@@ -36,7 +36,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.size
-import com.medsy.designsystem.ui.theme.OffWhiteBg
 import com.medsy.presentation.R
 import com.medsy.presentation.categories.components.CategoriesTopBar
 import com.medsy.presentation.categories.components.CategoryGridCard
@@ -109,8 +108,8 @@ fun CategoriesScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                    focusedContainerColor = OffWhiteBg,
-                    unfocusedContainerColor = OffWhiteBg,
+                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                     cursorColor = MaterialTheme.colorScheme.primary
                 ),
                 singleLine = true

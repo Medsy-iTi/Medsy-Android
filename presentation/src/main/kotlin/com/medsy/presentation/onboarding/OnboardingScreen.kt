@@ -21,8 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.medsy.designsystem.ui.theme.NeutralWhite
-import com.medsy.designsystem.ui.theme.SecondaryText
 import com.medsy.presentation.R
 import com.medsy.presentation.onboarding.components.OnboardingIndicator
 import com.medsy.presentation.onboarding.components.OnboardingNextButton

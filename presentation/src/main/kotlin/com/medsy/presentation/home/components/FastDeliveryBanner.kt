@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.LightGreen
 import com.medsy.presentation.R
 
 @Composable
@@ -22,13 +21,13 @@ fun FastDeliveryBanner() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(LightGreen, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(12.dp))
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Moped,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier
                 .size(32.dp)
                 .align(Alignment.CenterStart)
@@ -41,12 +40,12 @@ fun FastDeliveryBanner() {
             Text(
                 text = stringResource(R.string.home_banner_fast_delivery),
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
             Text(
                 text = stringResource(R.string.home_banner_to_door),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
     }

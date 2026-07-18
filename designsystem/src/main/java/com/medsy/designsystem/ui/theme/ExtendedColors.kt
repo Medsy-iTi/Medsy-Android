@@ -3,6 +3,7 @@ package com.medsy.designsystem.ui.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
@@ -10,7 +11,22 @@ import androidx.compose.ui.graphics.Color
 data class ExtendedColors(
     val success: Color,
     val onSuccess: Color,
+    val successContainer: Color,
+    val onSuccessContainer: Color,
+
+    val warning: Color,
+    val onWarning: Color,
+    val warningContainer: Color,
+    val onWarningContainer: Color,
+
+    val info: Color,
+    val onInfo: Color,
+    val infoContainer: Color,
+    val onInfoContainer: Color,
+
     // Category Colors
+    val categoryContainerBg: Color,
+    val onCategoryContainer: Color,
     val blueContainer: Color,
     val blueContent: Color,
     val orangeContainer: Color,
@@ -48,11 +64,28 @@ internal val LocalExtendedColors = staticCompositionLocalOf {
 
 val MaterialTheme.extendedColors: ExtendedColors
     @Composable
+    @ReadOnlyComposable
     get() = LocalExtendedColors.current
 
 internal val lightExtendedColors = ExtendedColors(
-    success = SuccessGreen,
-    onSuccess = Color.White,
+
+    success = Color(0xFF166534),
+    onSuccess = Color(0xFFFFFFFF),
+    successContainer = Color(0xFFDCFCE7),
+    onSuccessContainer = Color(0xFF14532D),
+
+    warning = Color(0xFF9A5800),
+    onWarning = Color(0xFFFFFFFF),
+    warningContainer = Color(0xFFFFEDD5),
+    onWarningContainer = Color(0xFF7C2D12),
+
+    info = Color(0xFF1D4ED8),
+    onInfo = Color(0xFFFFFFFF),
+    infoContainer = Color(0xFFDBEAFE),
+    onInfoContainer = Color(0xFF1E3A8A),
+    categoryContainerBg = Color(0xFFE6FFEE),
+    onCategoryContainer = MedsyBrandGreen,
+
     blueContainer = Color(0xFFE0E7FF),
     blueContent = Color(0xFF3B82F6),
     orangeContainer = Color(0xFFFFEDD5),
@@ -63,8 +96,6 @@ internal val lightExtendedColors = ExtendedColors(
     purpleContent = Color(0xFF8B5CF6),
     neutralContainer = Color(0xFFF3F4F6),
     neutralContent = Color(0xFF6B7280),
-
-
     categoryMoreBg = Color(0xFFF3F4F6),
     categoryMoreIcon = Color(0xFF6B7280),
     prescriptionPrimary = Color(0xFF0D8653),
@@ -85,8 +116,23 @@ internal val lightExtendedColors = ExtendedColors(
 )
 
 internal val darkExtendedColors = ExtendedColors(
-    success = SuccessGreen,
-    onSuccess = Color.White,
+    success = Color(0xFF78E29A),
+    onSuccess = Color(0xFF00391C),
+    successContainer = Color(0xFF0F4D2D),
+    onSuccessContainer = Color(0xFFA7F3C2),
+
+    warning = Color(0xFFFFB86C),
+    onWarning = Color(0xFF4A2800),
+    warningContainer = Color(0xFF5D3A0A),
+    onWarningContainer = Color(0xFFFFE0B2),
+
+    info = Color(0xFFAFC6FF),
+    onInfo = Color(0xFF082F73),
+    infoContainer = Color(0xFF163E86),
+    onInfoContainer = Color(0xFFDCE6FF),
+    categoryContainerBg = Color(0xFF1D7A4D),
+    onCategoryContainer = Color(0xFFE6FFEE),
+
     blueContainer = Color(0xFFE0E7FF),
     blueContent = Color(0xFF3B82F6),
     orangeContainer = Color(0xFFFFEDD5),
@@ -97,7 +143,6 @@ internal val darkExtendedColors = ExtendedColors(
     purpleContent = Color(0xFF8B5CF6),
     neutralContainer = Color(0xFFF3F4F6),
     neutralContent = Color(0xFF6B7280),
-
 
     categoryMoreBg = Color(0xFFF3F4F6),
     categoryMoreIcon = Color(0xFF6B7280),

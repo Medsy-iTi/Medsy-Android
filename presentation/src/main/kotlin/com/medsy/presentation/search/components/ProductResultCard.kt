@@ -34,8 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.medsy.designsystem.ui.theme.LightGreen
-import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.presentation.R
 
 @Composable
@@ -54,7 +52,7 @@ fun ProductResultCard(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 100.dp)
-            .background(NeutralWhite, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
             .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(16.dp),
@@ -66,7 +64,7 @@ fun ProductResultCard(
             modifier = Modifier
                 .size(72.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .background(LightGreen),
+                .background(MaterialTheme.colorScheme.primaryContainer),
             contentScale = ContentScale.Crop,
             error = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent),
             placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)

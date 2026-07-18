@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.medsy.designsystem.components.MedsyButton
-import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.presentation.R
 import com.medsy.presentation.onboarding.OnboardingConstants
 import kotlinx.coroutines.launch
@@ -56,14 +55,14 @@ fun OnboardingNextButton(
                     stringResource(R.string.action_next),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = NeutralWhite
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             )
             Spacer(modifier = Modifier.width(OnboardingConstants.SpacerSmall))
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = NeutralWhite
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

@@ -1,70 +1,148 @@
 package com.medsy.designsystem.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryGreen,
-    onPrimary = NeutralWhite,
-    secondary = DarkGreen,
-    onSecondary = NeutralWhite,
-    tertiary = LightGreen,
-    background = PrimaryText, // Dark background
-    onBackground = NeutralWhite,
-    surface = PrimaryText, // Dark surface
-    onSurface = NeutralWhite,
-    surfaceVariant = PrimaryText,
-    onSurfaceVariant = SecondaryText,
-    error = ErrorRed,
-    errorContainer = Color(0xFF450A0A),
-    onErrorContainer = Color(0xFFFCA5A5),
-    outline = BorderGreen
+
+private val lightScheme = lightColorScheme(
+    primary = MedsyBrandGreen,
+    onPrimary = onPrimaryLight,
+    primaryContainer = primaryContainerLight,
+    onPrimaryContainer = onPrimaryContainerLight,
+    inversePrimary = inversePrimaryLight,
+
+    secondary = secondaryLight,
+    onSecondary = onSecondaryLight,
+    secondaryContainer = secondaryContainerLight,
+    onSecondaryContainer = onSecondaryContainerLight,
+
+    tertiary = tertiaryLight,
+    onTertiary = onTertiaryLight,
+    tertiaryContainer = tertiaryContainerLight,
+    onTertiaryContainer = onTertiaryContainerLight,
+
+    background = backgroundLight,
+    onBackground = onBackgroundLight,
+
+    surface = surfaceLight,
+    onSurface = onSurfaceLight,
+    surfaceVariant = surfaceVariantLight,
+    onSurfaceVariant = onSurfaceVariantLight,
+    surfaceTint = surfaceTintLight,
+
+    inverseSurface = inverseSurfaceLight,
+    inverseOnSurface = inverseOnSurfaceLight,
+
+    error = errorLight,
+    onError = onErrorLight,
+    errorContainer = errorContainerLight,
+    onErrorContainer = onErrorContainerLight,
+
+    outline = outlineLight,
+    outlineVariant = outlineVariantLight,
+    scrim = scrim,
+
+    surfaceBright = surfaceBrightLight,
+    surfaceDim = surfaceDimLight,
+    surfaceContainerLowest = surfaceContainerLowestLight,
+    surfaceContainerLow = surfaceContainerLowLight,
+    surfaceContainer = surfaceContainerLight,
+    surfaceContainerHigh = surfaceContainerHighLight,
+    surfaceContainerHighest = surfaceContainerHighestLight,
+
+    primaryFixed = primaryFixed,
+    primaryFixedDim = primaryFixedDim,
+    onPrimaryFixed = onPrimaryFixed,
+    onPrimaryFixedVariant = onPrimaryFixedVariant,
+
+    secondaryFixed = secondaryFixed,
+    secondaryFixedDim = secondaryFixedDim,
+    onSecondaryFixed = onSecondaryFixed,
+    onSecondaryFixedVariant = onSecondaryFixedVariant,
+
+    tertiaryFixed = tertiaryFixed,
+    tertiaryFixedDim = tertiaryFixedDim,
+    onTertiaryFixed = onTertiaryFixed,
+    onTertiaryFixedVariant = onTertiaryFixedVariant,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = PrimaryGreen,
-    onPrimary = NeutralWhite,
-    secondary = DarkGreen,
-    onSecondary = NeutralWhite,
-    tertiary = LightGreen,
-    background = OffWhiteBg,
-    onBackground = PrimaryText,
-    surface = NeutralWhite,
-    onSurface = PrimaryText,
-    surfaceVariant = NeutralWhite,
-    onSurfaceVariant = SecondaryText,
-    error = ErrorRed,
-    errorContainer = Color(0xFFFEF2F2),
-    onErrorContainer = ErrorRed,
-    outline = BorderGreen
+private val darkScheme = darkColorScheme(
+    primary = MedsyBrandGreen,
+    onPrimary = onPrimaryDark,
+    primaryContainer = primaryContainerDark,
+    onPrimaryContainer = onPrimaryContainerDark,
+    inversePrimary = inversePrimaryDark,
+
+    secondary = secondaryDark,
+    onSecondary = onSecondaryDark,
+    secondaryContainer = secondaryContainerDark,
+    onSecondaryContainer = onSecondaryContainerDark,
+
+    tertiary = tertiaryDark,
+    onTertiary = onTertiaryDark,
+    tertiaryContainer = tertiaryContainerDark,
+    onTertiaryContainer = onTertiaryContainerDark,
+
+    background = backgroundDark,
+    onBackground = onBackgroundDark,
+
+    surface = surfaceDark,
+    onSurface = onSurfaceDark,
+    surfaceVariant = surfaceVariantDark,
+    onSurfaceVariant = onSurfaceVariantDark,
+    surfaceTint = surfaceTintDark,
+
+    inverseSurface = inverseSurfaceDark,
+    inverseOnSurface = inverseOnSurfaceDark,
+
+    error = errorDark,
+    onError = onErrorDark,
+    errorContainer = errorContainerDark,
+    onErrorContainer = onErrorContainerDark,
+
+    outline = outlineDark,
+    outlineVariant = outlineVariantDark,
+    scrim = scrim,
+
+    surfaceBright = surfaceBrightDark,
+    surfaceDim = surfaceDimDark,
+    surfaceContainerLowest = surfaceContainerLowestDark,
+    surfaceContainerLow = surfaceContainerLowDark,
+    surfaceContainer = surfaceContainerDark,
+    surfaceContainerHigh = surfaceContainerHighDark,
+    surfaceContainerHighest = surfaceContainerHighestDark,
+
+    primaryFixed = primaryFixed,
+    primaryFixedDim = primaryFixedDim,
+    onPrimaryFixed = onPrimaryFixed,
+    onPrimaryFixedVariant = onPrimaryFixedVariant,
+
+    secondaryFixed = secondaryFixed,
+    secondaryFixedDim = secondaryFixedDim,
+    onSecondaryFixed = onSecondaryFixed,
+    onSecondaryFixedVariant = onSecondaryFixedVariant,
+
+    tertiaryFixed = tertiaryFixed,
+    tertiaryFixedDim = tertiaryFixedDim,
+    onTertiaryFixed = onTertiaryFixed,
+    onTertiaryFixedVariant = onTertiaryFixedVariant,
 )
 
 @Composable
 fun MedsyTheme(
-    darkTheme: Boolean = false, // Force light mode to maintain Medsy brand identity
-    dynamicColor: Boolean = false,
+    darkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val colorScheme = when (darkTheme) {
+        true -> darkScheme
+        false -> lightScheme
     }
 
     val view = LocalView.current

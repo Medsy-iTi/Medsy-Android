@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import com.medsy.designsystem.ui.theme.BorderGreen
 import com.medsy.presentation.onboarding.OnboardingConstants
 
 @Composable
@@ -48,7 +47,11 @@ fun OnboardingIndicator(
                     .width(width)
                     .clip(CircleShape)
                     .background(
-                        if (isSelected) MaterialTheme.colorScheme.primary else BorderGreen
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.outlineVariant
+                        }
                     )
             )
         }
