@@ -53,4 +53,7 @@ sealed interface Route : NavKey {
 
     @Serializable
     data object Categories : Route
+
+    @Serializable
+    data object Prescription : Route
 }

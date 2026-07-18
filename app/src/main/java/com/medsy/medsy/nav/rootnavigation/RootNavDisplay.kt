@@ -18,7 +18,9 @@ import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.categories.CategoriesRoot
+import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
+import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.profile.personaldetails.PersonalDetailsRoot
 import com.medsy.presentation.search.SearchRoot
@@ -145,6 +147,9 @@ fun RootNavDisplay() {
                     },
                     openCategories = {
                         rootBackStack.navigateSingleTop(Route.Categories)
+                    },
+                    openPrescription = {
+                        rootBackStack.navigateSingleTop(Route.Prescription)
                     }
                 )
             }
@@ -188,6 +193,26 @@ fun RootNavDisplay() {
                 CategoriesRoot(
                     onBackClick = { rootBackStack.removeLastOrNull() },
                     onCategoryClick = { categoryId -> /* Handle category click */ }
+                )
+            }
+            entry<Route.Prescription> {
+                PrescriptionRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateHome = {
+                        rootBackStack.popIfCurrentIs<Route.Prescription>()
+                    },
+                    onNavigateCart = {
+                        rootBackStack.navigateSingleTop(Route.NestedNav.Cart)
+                    },
+                )
+            }
+            entry<Route.NestedNav.Cart> {
+                CartRoot(
+                    onNext = {
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = "temporary-product-id")
+                        )
+                    }
                 )
             }
         }
