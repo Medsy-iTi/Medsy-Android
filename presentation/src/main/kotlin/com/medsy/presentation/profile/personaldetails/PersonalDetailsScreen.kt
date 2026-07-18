@@ -50,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,16 +71,14 @@ fun PersonalDetailsRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
     val saveSuccessMessage = stringResource(R.string.profile_personal_details_save_success)
-    val saveFailureMessage = stringResource(R.string.profile_personal_details_save_error)
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             val message = when (effect) {
                 PersonalDetailsUIEffect.SaveSucceeded -> saveSuccessMessage
-                is PersonalDetailsUIEffect.SaveFailed -> effect.message
-                    ?.takeIf(String::isNotBlank)
-                    ?: saveFailureMessage
+                is PersonalDetailsUIEffect.SaveFailed -> context.getString(effect.messageRes)
             }
             snackbarHostState.showSnackbar(message)
         }
@@ -171,7 +170,7 @@ fun PersonalDetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                message = state.loadErrorMessage,
+                messageRes = state.loadErrorMessageRes,
                 onRetry = { onIntent(PersonalDetailsUIIntent.Retry) },
             )
 
@@ -525,13 +524,13 @@ private fun LoadingContent(
 
 @Composable
 private fun ErrorContent(
-    message: String?,
+    messageRes: Int?,
     modifier: Modifier = Modifier,
     onRetry: () -> Unit,
 ) {
-    val displayedMessage = message
-        ?.takeIf(String::isNotBlank)
-        ?: stringResource(R.string.profile_personal_details_load_error)
+    val displayedMessage = stringResource(
+        messageRes ?: R.string.profile_personal_details_load_error
+    )
 
     Column(
         modifier = modifier.padding(24.dp),

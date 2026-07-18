@@ -2,6 +2,8 @@ package com.medsy.presentation.prescription
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
 import com.medsy.domain.prescription.model.Medicine
 import com.medsy.domain.prescription.model.PrescriptionCartRequest
 import com.medsy.domain.prescription.model.PrescriptionExtractionOutcome
@@ -16,7 +18,6 @@ import com.medsy.domain.prescription.usecase.PreparePrescriptionCaptureUseCase
 import com.medsy.domain.prescription.usecase.SearchPrescriptionMedicinesUseCase
 import com.medsy.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class PrescriptionViewModel @Inject constructor(
@@ -94,7 +96,7 @@ class PrescriptionViewModel @Inject constructor(
                     _state.update { it.copy(isPreparingImage = false) }
                     sendEffect(PrescriptionUIEffect.LaunchCamera(image.uri))
                 }
-                .onFailure { showMediaError() }
+                .onError { showMediaError() }
         }
     }
 
@@ -118,7 +120,7 @@ class PrescriptionViewModel @Inject constructor(
             _state.update { it.copy(isPreparingImage = true) }
             importImage(uri)
                 .onSuccess(::replaceCurrentImage)
-                .onFailure { showMediaError() }
+                .onError { showMediaError() }
         }
     }
 
@@ -184,7 +186,7 @@ class PrescriptionViewModel @Inject constructor(
                             _state.update { it.copy(step = PrescriptionStep.NO_MEDICINES) }
                     }
                 }
-                .onFailure {
+                .onError {
                     _state.update { it.copy(step = PrescriptionStep.UPLOAD_ERROR) }
                 }
         }
@@ -258,7 +260,7 @@ class PrescriptionViewModel @Inject constructor(
                         )
                     }
                 }
-                .onFailure {
+                .onError {
                     _state.update { it.copy(picker = it.picker.copy(isLoading = false)) }
                     sendEffect(PrescriptionUIEffect.ShowMessage(R.string.prescription_error_generic))
                 }
@@ -348,7 +350,7 @@ class PrescriptionViewModel @Inject constructor(
                         )
                     }
                 }
-                .onFailure {
+                .onError {
                     _state.update { it.copy(isSubmitting = false) }
                     sendEffect(PrescriptionUIEffect.ShowMessage(R.string.prescription_error_generic))
                 }
@@ -358,11 +360,7 @@ class PrescriptionViewModel @Inject constructor(
     private fun handleBack() {
         when (_state.value.step) {
             PrescriptionStep.SOURCE_SELECTION -> {
-                if (_state.value.image == null) {
-                    sendEffect(PrescriptionUIEffect.NavigateBack)
-                } else {
-                    _state.update { it.copy(step = PrescriptionStep.IMAGE_PREVIEW) }
-                }
+                sendEffect(PrescriptionUIEffect.NavigateBack)
             }
 
             PrescriptionStep.IMAGE_PREVIEW -> _state.update {
@@ -378,7 +376,7 @@ class PrescriptionViewModel @Inject constructor(
             PrescriptionStep.UPLOAD_ERROR,
             PrescriptionStep.UNREADABLE,
             PrescriptionStep.NO_MEDICINES,
-            -> _state.update { it.copy(step = PrescriptionStep.IMAGE_PREVIEW) }
+                -> _state.update { it.copy(step = PrescriptionStep.IMAGE_PREVIEW) }
 
             PrescriptionStep.MEDICINE_PICKER -> _state.update {
                 it.copy(step = it.picker.returnStep)

@@ -104,9 +104,9 @@ fun ProductsScreen(
         Box(modifier = Modifier.fillMaxSize()) {
             if (state.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (state.error != null) {
+            } else if (state.errorMessageRes != null) {
                 Text(
-                    text = state.error,
+                    text = stringResource(state.errorMessageRes),
                     modifier = Modifier.align(Alignment.Center),
                     color = MaterialTheme.colorScheme.error
                 )

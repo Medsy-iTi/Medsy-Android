@@ -2,7 +2,7 @@ package com.medsy.presentation.home
 
 data class HomeUIState(
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val errorMessageRes: Int? = null,
     val notificationCount: Int = 0,
     val deliveryAddress: String = "",
     val banners: List<PromoBannerUi> = emptyList(),

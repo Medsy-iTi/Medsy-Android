@@ -32,9 +32,10 @@ feature, bring only that feature's touched files into compliance.
 7. **Never create or run tests, compile, build, install, or launch unless explicitly asked.** Do not
    run Gradle compile/build/assemble tasks, Android Studio sync, `installDebug`, an emulator, or the
    app unless the user's current task explicitly requests that action.
-8. **Do not invent `MedResult`.** The project does not have `MedResult`, a shared typed error model,
-   or a safe-call utility yet. Do not create a feature-specific replacement or claim a shared
-   contract exists.
+8. **Use the established Medsy result contract.** Cross-layer fallible operations use
+   `MedsyResult<D, E>`, `EmptyMedsyResult<E>`, and the `MedsyError` families from
+   `domain/common`. Do not introduce `ApiResult`, `DomainResult`, Kotlin `Result`, exceptions as
+   normal control flow, or a feature-specific result wrapper.
 9. **No sensitive medical data in source or logs.** Never log passwords, OTPs, tokens,
    prescriptions, addresses, or medicine-request bodies. OkHttp BODY logging remains debug-only and
    authentication/cookie headers remain redacted.
@@ -65,8 +66,8 @@ feature, bring only that feature's touched files into compliance.
 
 Known scaffold state:
 
-- `ApiService` is empty and the Retrofit base URL is a placeholder.
-- `MedResult`, shared error types, and shared API safe-call helpers do not exist.
+- Shared REST result and error handling is established through `MedsyResult`, `MedsyError`,
+  `ApiResponse`, and `safeRestCall`.
 - `:domain` and most of `:data` are still scaffolds.
 - Several screens and routes are placeholders, including AI chat and onboarding. Their existence
   does not make them approved production scope.
@@ -286,23 +287,69 @@ Current shared networking lives in `:data`:
 - Base URLs and environment configuration belong in build configuration, not feature source files.
 - Never add a second Retrofit/OkHttp singleton for an ordinary Medsy API feature.
 
-### Current result-contract status
+### Established result contract
 
-There is **no** `MedResult`, `MedError`, `EmptyResult`, or shared safe-call helper yet. Therefore:
+The project-wide result contracts live in `domain/common`:
 
-- Do not reference those types in new code or documentation.
-- Do not create a result wrapper or error hierarchy inside one feature.
-- Do not expose Retrofit `Response`, DTOs, Moshi types, status-code handling, or network exceptions
-  to presentation.
-- When an API feature is assigned before the shared result contract exists, stop and agree on that
-  feature's repository failure contract with the maintainer before implementation.
-- When a shared Medsy result/error contract is introduced, it must be a dedicated cross-feature task
-  in `:domain`/`:data`, document cancellation behavior and mappings, migrate affected consumers
-  deliberately, and update this section.
+- `MedsyResult<D, E : MedsyError>` represents either `Success<D>` or `Error<E>`.
+- `EmptyMedsyResult<E>` is the alias for `MedsyResult<Unit, E>` used when success has no meaningful
+  payload.
+- Use only the shared `map`, `fold`, `onSuccess`, `onError`, and `asEmptyDataResult` utilities.
+- Do not add another result wrapper, compatibility alias, or exception wrapper. In particular, do
+  not return `ApiResult`, `DomainResult`, or Kotlin `Result` from repositories, use cases, Flows, or
+  ViewModels.
+- `MedsyResult.kt` defines generic result behavior and should not change merely because a new error
+  case is added.
 
-Regardless of the future wrapper, coroutine cancellation must never be converted into a normal
-failure. Rethrow `CancellationException` and preserve cancellation with `ensureActive()` around
-broad exception handling.
+`MedsyError` is the shared typed error contract:
+
+- `MedsyError.Remote` covers transport, HTTP, serialization, empty-response, and unknown REST
+  failures.
+- `MedsyError.Validation` covers reusable domain validation failures.
+- `MedsyError.Local` covers media/file and other local failures.
+- Repository contracts use the narrowest applicable error family. A use case that combines
+  validation with repository failures may widen its error type to `MedsyError`.
+- Add a new error to `MedsyError.kt`, create it only in the layer where it originates, and add a
+  presentation mapping only when it can reach the user. Do not edit `MedsyResult.kt` for a new
+  error case.
+
+### REST boundary
+
+Retrofit envelopes and failure conversion stay in `data/remote/network`:
+
+- Every Retrofit service uses the shared `ApiResponse<T>` backend envelope. Do not create a
+  feature-specific response envelope for the same `{ success, message, data }` structure.
+- Use `safeRestCall` when a successful response requires non-null data.
+- Use `safeEmptyRestCall` when the documented successful response has no meaningful data.
+- `safeRestCall` owns generic REST concerns only: transport failures, timeouts, Moshi conversion,
+  error-envelope parsing, HTTP status/message preservation, empty successful responses, and
+  unexpected-failure logging.
+- Do not classify endpoint business semantics such as invalid credentials, duplicate registration,
+  or invalid OTP inside the generic safe-call implementation. Perform feature-specific
+  classification at the repository/use-case or presentation mapping boundary.
+- Coroutine cancellation is never a normal failure. Always rethrow `CancellationException`; use
+  `ensureActive()` when broad exception handling could otherwise consume cancellation.
+- Preserve backend error text only as `MedsyError.Remote.Http.serverMessage` for diagnostics and
+  controlled feature classification. Never display it directly or place it in UI state/effects.
+- Do not create `MedsyException` or convert typed result failures back into exceptions.
+
+Repositories transform successful DTOs with `map` and propagate existing typed errors unchanged.
+They must not expose Retrofit `Response`, DTOs, Moshi types, status-code handling, or network
+exceptions outside `:data`.
+
+### Presentation boundary
+
+- Convert `MedsyError` to localized presentation output through the existing mapper in
+  `presentation/common/util/ErrorMapper.kt`.
+- ViewModels expose `@StringRes` IDs or feature-specific UI error types. They never expose raw
+  backend messages, exception messages, `Throwable`, or Android `Context`.
+- Resolve resource IDs with `stringResource()` at the Compose boundary. Do not make the domain/data
+  mapper composable and do not pass `Context` into a ViewModel.
+- Keep endpoint-specific mappings explicit: login `400` maps to invalid credentials, OTP
+  verification `400` maps to invalid OTP, and duplicate registration email/phone failures map to
+  their localized messages.
+- Add every new user-facing error string to both `values/strings.xml` and
+  `values-ar/strings.xml`.
 
 DTO rules:
 
@@ -474,7 +521,8 @@ around them.
 - [ ] Work stayed inside the target feature plus explicitly required shared integration points.
 - [ ] Module dependencies and the full UI-to-data call chain are respected.
 - [ ] No DTO, Retrofit, Android, or Compose types leaked into the wrong layer.
-- [ ] No new result wrapper was introduced while `MedResult` remains undefined.
+- [ ] Fallible contracts use the established `MedsyResult`/`MedsyError` types; no parallel result
+  wrapper, returned Kotlin `Result`, or exception-based normal flow was introduced.
 - [ ] MVI state/intents/effects are lean and exhaustive; no new placeholder `TODO()` remains.
 - [ ] Feature UI uses `:designsystem`, supports light/dark, and contains no hardcoded colors.
 - [ ] App fonts and all UI tokens come from the Medsy theme/design system; any exception received

@@ -2,7 +2,11 @@ package com.medsy.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.categories.usecase.GetCategoriesUseCase
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +15,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -62,7 +65,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchCategories() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getCategoriesUseCase(page = 0, size = 20).collectLatest { result ->
                 result.onSuccess { domainCategories ->
                     val uiCategories = domainCategories.take(7).map {
@@ -72,13 +75,16 @@ class HomeViewModel @Inject constructor(
                     }
                     _state.update {
                         it.copy(
-                            isLoading = false, categories = uiCategories
+                            isLoading = false,
+                            errorMessageRes = null,
+                            categories = uiCategories,
                         )
                     }
-                }.onFailure { error ->
+                }.onError { error ->
                     _state.update {
                         it.copy(
-                            isLoading = false, error = error.message
+                            isLoading = false,
+                            errorMessageRes = error.toMessageRes(),
                         )
                     }
                 }

@@ -1,5 +1,7 @@
 package com.medsy.domain.prescription.usecase
 
+import com.medsy.domain.common.MedsyError
+import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.prescription.model.PrescriptionImage
 import com.medsy.domain.prescription.model.PrescriptionExtractionOutcome
 import com.medsy.domain.prescription.repository.PrescriptionRepository
@@ -10,5 +12,6 @@ class ExtractPrescriptionUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         image: PrescriptionImage,
-    ): Result<PrescriptionExtractionOutcome> = repository.extractPrescription(image)
+    ): MedsyResult<PrescriptionExtractionOutcome, MedsyError.Local> =
+        repository.extractPrescription(image)
 }

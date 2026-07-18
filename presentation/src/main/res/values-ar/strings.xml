@@ -293,4 +293,12 @@
     <string name="otp_title">تحقق من بريدك الإلكتروني</string>
     <string name="otp_subtitle">أرسلنا رمزاً مكوناً من 6 أرقام إلى %s. أدخله أدناه لتأكيد حسابك.</string>
     <string name="product_add_to_cart">أضف للسلة</string>
+
+    <!--  Errors  -->
+    <string name="error_bad_request">الطلب غير صالح. يرجى التحقق من البيانات والمحاولة مرة أخرى.</string>
+    <string name="error_request_timeout">انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.</string>
+    <string name="error_serialization">تعذر معالجة استجابة الخادم. يرجى المحاولة مرة أخرى.</string>
+    <string name="error_empty_response">لم يُرجع الخادم البيانات المطلوبة.</string>
+    <string name="error_payload_too_large">الملف المرفوع كبير جدًا.</string>
+    <string name="error_too_many_requests">طلبات كثيرة جدًا. يرجى الانتظار ثم المحاولة مرة أخرى.</string>
 </resources>

@@ -2,6 +2,10 @@ package com.medsy.presentation.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.categories.usecase.GetCategoriesUseCase
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
+import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.home.CategoryUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +16,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
-import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +37,7 @@ class CategoriesViewModel @Inject constructor(
 
     private fun fetchCategories() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getCategoriesUseCase(page = 0, size = 100).collectLatest { result ->
                 result.onSuccess { domainCategories ->
                     allCategories = domainCategories.map {
@@ -46,15 +49,16 @@ class CategoriesViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
+                            errorMessageRes = null,
                             categories = allCategories,
                             filteredCategories = filterCategories(it.searchQuery)
                         )
                     }
-                }.onFailure { error ->
+                }.onError { error ->
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message
+                            errorMessageRes = error.toMessageRes(),
                         )
                     }
                 }
