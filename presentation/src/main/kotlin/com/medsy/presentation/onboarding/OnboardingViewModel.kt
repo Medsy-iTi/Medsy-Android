@@ -2,6 +2,7 @@ package com.medsy.presentation.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.common.preferences.usecase.CompleteOnboardingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +20,11 @@ sealed interface OnboardingUIEffect {
     data object NavigateToLogin : OnboardingUIEffect
 }
 
+
 @HiltViewModel
-class OnboardingViewModel @Inject constructor() : ViewModel() {
+class OnboardingViewModel @Inject constructor(
+    private val completeOnboardingUseCase: CompleteOnboardingUseCase
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -64,6 +68,7 @@ class OnboardingViewModel @Inject constructor() : ViewModel() {
             OnboardingUIIntent.OnSkipClick,
             OnboardingUIIntent.OnGetStartedClick -> {
                 viewModelScope.launch {
+                    completeOnboardingUseCase()
                     _effect.send(OnboardingUIEffect.NavigateToLogin)
                 }
             }

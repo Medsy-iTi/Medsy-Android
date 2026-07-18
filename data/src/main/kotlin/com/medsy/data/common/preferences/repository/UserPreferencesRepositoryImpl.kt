@@ -18,12 +18,22 @@ class UserPreferencesRepositoryImpl @Inject constructor(
         const val THEME_MODE_DARK = "dark"
     }
 
-    override val preferences: Flow<UserPreferences> = localDataSource.themeMode.map { storedMode ->
-        UserPreferences(themeMode = storedMode.toThemeMode())
+    override val preferences: Flow<UserPreferences> = kotlinx.coroutines.flow.combine(
+        localDataSource.themeMode,
+        localDataSource.isOnboardingCompleted
+    ) { storedMode, isOnboardingCompleted ->
+        UserPreferences(
+            themeMode = storedMode.toThemeMode(),
+            isOnboardingCompleted = isOnboardingCompleted
+        )
     }
 
     override suspend fun setThemeMode(themeMode: ThemeMode) {
         localDataSource.setThemeMode(themeMode.toStorageValue())
+    }
+
+    override suspend fun setOnboardingCompleted() {
+        localDataSource.setOnboardingCompleted()
     }
 
     private fun String?.toThemeMode(): ThemeMode = when (this) {
