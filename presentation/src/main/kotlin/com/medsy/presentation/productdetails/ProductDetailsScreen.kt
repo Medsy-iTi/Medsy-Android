@@ -10,6 +10,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,10 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.medsy.presentation.R
 import com.medsy.presentation.productdetails.components.PharmacistNoticeCard
 import com.medsy.presentation.productdetails.components.ProductBottomActions
@@ -32,31 +34,24 @@ import com.medsy.presentation.productdetails.components.ProductTitlePriceSection
 import com.medsy.presentation.productdetails.components.ProductTopBar
 import kotlinx.coroutines.flow.collectLatest
 
+
 @Composable
 fun ProductDetailsRoot(
+    productId: String,
     onNavigateBack: () -> Unit,
     onNavigateToCart: () -> Unit,
     onNavigateToPharmacistChat: () -> Unit,
     viewModel: ProductDetailsViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                ProductDetailsUIEffect.NavigateBack -> onNavigateBack()
-                ProductDetailsUIEffect.NavigateToCart -> onNavigateToCart()
-                ProductDetailsUIEffect.NavigateToPharmacistChat -> onNavigateToPharmacistChat()
-                ProductDetailsUIEffect.OpenShareSheet -> { /* trigger platform share sheet */ }
-                is ProductDetailsUIEffect.ShowMessage -> { /* handled below when hosted with Scaffold */ }
-            }
-        }
+    LaunchedEffect(productId) {
+        viewModel.init(productId)
     }
 
     ProductDetailsScreen(
         onNavigateBack = onNavigateBack,
         onNavigateToCart = onNavigateToCart,
         onNavigateToPharmacistChat = onNavigateToPharmacistChat,
+        viewModel = viewModel,
     )
 }
 
@@ -65,7 +60,7 @@ fun ProductDetailsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToCart: () -> Unit,
     onNavigateToPharmacistChat: () -> Unit,
-    viewModel: ProductDetailsViewModel = viewModel(),
+    viewModel: ProductDetailsViewModel,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,12 +97,27 @@ fun ProductDetailsContent(
     onIntent: (ProductDetailsUIIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (state.isLoading || state.product == null) {
+    if (state.isLoading) {
         Box(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
             CircularProgressIndicator()
+        }
+        return
+    }
+
+    if (state.errorMessage != null || state.product == null) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(text = state.errorMessage ?: stringResource(R.string.product_details_error_load))
+                TextButton(onClick = { onIntent(ProductDetailsUIIntent.RetryClicked) }) {
+                    Text(text = stringResource(R.string.product_details_error_retry))
+                }
+            }
         }
         return
     }
@@ -131,7 +141,7 @@ fun ProductDetailsContent(
                 isFavorite = state.isFavorite,
                 onPageChanged = { onIntent(ProductDetailsUIIntent.ImagePageChanged(it)) },
                 onFavoriteClick = { onIntent(ProductDetailsUIIntent.FavoriteClicked) },
-                placeholder = painterResource(id = R.drawable.panadaol_img)
+                placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)
             )
 
             ProductTitlePriceSection(
@@ -151,9 +161,8 @@ fun ProductDetailsContent(
 
             ProductDetailsList(
                 manufacturer = product.manufacturer,
-                type = product.type,
                 category = product.category,
-                modifier = Modifier.padding(top = 8.dp),
+                usage = product.route,
             )
         }
 

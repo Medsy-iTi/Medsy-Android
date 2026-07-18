@@ -54,8 +54,8 @@ fun ProductResultCard(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 100.dp)
-            .background(NeutralWhite, RoundedCornerShape(16.dp))
-            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -66,7 +66,7 @@ fun ProductResultCard(
             modifier = Modifier
                 .size(72.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .background(LightGreen),
+                .background(MaterialTheme.colorScheme.surfaceVariant),
             contentScale = ContentScale.Crop,
             error = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent),
             placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)
@@ -112,8 +112,7 @@ fun ProductResultCard(
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = stringResource(R.string.search_favorite_desc),
-                    tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                    tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,                )
             }
 
             Box(
@@ -126,7 +125,7 @@ fun ProductResultCard(
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = stringResource(R.string.search_add_to_cart_desc),
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(16.dp),
                 )
             }
