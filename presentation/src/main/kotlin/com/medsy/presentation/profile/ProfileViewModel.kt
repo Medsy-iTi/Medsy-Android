@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.common.MedsyResult
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
 import com.medsy.domain.common.preferences.model.AppLanguage
 import com.medsy.domain.common.preferences.model.ThemeMode
 import com.medsy.domain.common.preferences.usecase.ObserveUserPreferencesUseCase
 import com.medsy.domain.common.preferences.usecase.SetThemeModeUseCase
 import com.medsy.domain.profile.usecase.GetProfileUseCase
 import com.medsy.domain.profile.usecase.LogoutUseCase
+import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +54,7 @@ class ProfileViewModel @Inject constructor(
             it.copy(
                 isLoading = true,
                 hasError = false,
-                errorMessage = null,
+                errorMessageRes = null,
             )
         }
         getProfileUseCase()
@@ -63,12 +67,12 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
-            .onFailure { error ->
+            .onError { error ->
                 _state.update { state ->
                     state.copy(
                         isLoading = false,
                         hasError = true,
-                        errorMessage = error.message,
+                        errorMessageRes = error.toMessageRes(),
                     )
                 }
             }
@@ -99,10 +103,17 @@ class ProfileViewModel @Inject constructor(
     private fun logout() {
         _state.update { it.copy(isLogoutLoading = true) }
         viewModelScope.launch {
-            android.util.Log.d("ProfileViewModel", "Starting API logout request...")
-            logoutUseCase()
-            android.util.Log.d("ProfileViewModel", "API logout finished. Session cleared locally.")
-            _state.update { it.copy(isLogoutLoading = false, activeSheet = null) }
+            val errorMessageRes = when (val result = logoutUseCase()) {
+                is MedsyResult.Success -> null
+                is MedsyResult.Error -> result.error.toMessageRes()
+            }
+            _state.update {
+                it.copy(
+                    isLogoutLoading = false,
+                    activeSheet = null,
+                    errorMessageRes = errorMessageRes,
+                )
+            }
             _effect.send(ProfileUIEffect.NavigateToLogin)
         }
     }

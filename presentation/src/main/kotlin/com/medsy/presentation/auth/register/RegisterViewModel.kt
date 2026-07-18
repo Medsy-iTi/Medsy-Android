@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.auth.model.RegisterParams
 import com.medsy.domain.auth.usecase.RegisterUseCase
-import com.medsy.domain.common.DomainResult
+import com.medsy.domain.common.MedsyResult
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -85,11 +85,11 @@ class RegisterViewModel @Inject constructor(
         )
 
         when (val result = registerUseCase(params)) {
-            is DomainResult.Success -> {
+            is MedsyResult.Success -> {
                 _state.update { it.copy(isLoading = false) }
                 _effect.send(RegisterEffect.NavigateToOtp(s.email))
             }
-            is DomainResult.Error -> {
+            is MedsyResult.Error -> {
                 _state.update { it.copy(isLoading = false) }
                 _effect.send(RegisterEffect.ShowError(result.error.toMessageRes()))
             }

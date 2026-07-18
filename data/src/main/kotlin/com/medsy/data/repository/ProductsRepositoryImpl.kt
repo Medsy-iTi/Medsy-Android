@@ -2,7 +2,9 @@ package com.medsy.data.repository
 
 import com.medsy.data.remote.datasource.products.ProductsRemoteDataSource
 import com.medsy.data.remote.mapper.toDomain
-import com.medsy.data.remote.network.ApiResult
+import com.medsy.domain.common.MedsyError
+import com.medsy.domain.common.MedsyResult
+import com.medsy.domain.common.map
 import com.medsy.domain.products.model.Product
 import com.medsy.domain.products.repository.ProductsRepository
 import kotlinx.coroutines.flow.Flow
@@ -17,17 +19,10 @@ class ProductsRepositoryImpl @Inject constructor(
         page: Int,
         size: Int,
         sort: String
-    ): Flow<Result<List<Product>>> = flow {
-        when (val response =
-            productsRemoteDataSource.getProductsByCategory(categoryId, page, size, sort)) {
-            is ApiResult.Success -> {
-                val domainProducts = response.data?.content?.map { it.toDomain() } ?: emptyList()
-                emit(Result.success(domainProducts))
-            }
-
-            is ApiResult.Error -> {
-                emit(Result.failure(Exception(response.error.toString())))
-            }
-        }
+    ): Flow<MedsyResult<List<Product>, MedsyError.Remote>> = flow {
+        emit(
+            productsRemoteDataSource.getProductsByCategory(categoryId, page, size, sort)
+                .map { response -> response.content.map { it.toDomain() } }
+        )
     }
 }

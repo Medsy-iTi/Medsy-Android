@@ -2,6 +2,9 @@ package com.medsy.data.prescription.repository
 
 import com.medsy.data.prescription.local.PrescriptionImageStorage
 import com.medsy.data.prescription.mock.MockPrescriptionScenario
+import com.medsy.domain.common.EmptyMedsyResult
+import com.medsy.domain.common.MedsyError
+import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.prescription.model.Medicine
 import com.medsy.domain.prescription.model.PrescriptionCartRequest
 import com.medsy.domain.prescription.model.PrescriptionExtractionOutcome
@@ -9,7 +12,6 @@ import com.medsy.domain.prescription.model.PrescriptionImage
 import com.medsy.domain.prescription.model.PrescriptionMedicine
 import com.medsy.domain.prescription.model.RecognitionStatus
 import com.medsy.domain.prescription.repository.PrescriptionRepository
-import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CancellationException
@@ -21,13 +23,17 @@ class MockPrescriptionRepository @Inject constructor(
     private val scenario: MockPrescriptionScenario,
 ) : PrescriptionRepository {
 
-    override suspend fun prepareCameraImage(): Result<PrescriptionImage> =
+    override suspend fun prepareCameraImage(): MedsyResult<PrescriptionImage, MedsyError.Local> =
         imageOperation { imageStorage.prepareCameraImage() }
 
-    override suspend fun importGalleryImage(sourceUri: String): Result<PrescriptionImage> =
+    override suspend fun importGalleryImage(
+        sourceUri: String,
+    ): MedsyResult<PrescriptionImage, MedsyError.Local> =
         imageOperation { imageStorage.importGalleryImage(sourceUri) }
 
-    override suspend fun deleteImage(image: PrescriptionImage): Result<Unit> =
+    override suspend fun deleteImage(
+        image: PrescriptionImage,
+    ): EmptyMedsyResult<MedsyError.Local> =
         imageOperation {
             imageStorage.delete(image)
             Unit
@@ -35,25 +41,29 @@ class MockPrescriptionRepository @Inject constructor(
 
     override suspend fun extractPrescription(
         image: PrescriptionImage,
-    ): Result<PrescriptionExtractionOutcome> {
+    ): MedsyResult<PrescriptionExtractionOutcome, MedsyError.Local> {
         delay(EXTRACTION_DELAY_MILLIS)
         return when (scenario) {
-            MockPrescriptionScenario.SUCCESS -> Result.success(
+            MockPrescriptionScenario.SUCCESS -> MedsyResult.Success(
                 PrescriptionExtractionOutcome.MedicinesDetected(mockExtractedMedicines()),
             )
 
-            MockPrescriptionScenario.UPLOAD_FAILURE -> Result.failure(IOException())
-            MockPrescriptionScenario.UNREADABLE -> Result.success(
+            MockPrescriptionScenario.UPLOAD_FAILURE ->
+                MedsyResult.Error(MedsyError.Local.UNKNOWN)
+
+            MockPrescriptionScenario.UNREADABLE -> MedsyResult.Success(
                 PrescriptionExtractionOutcome.Unreadable,
             )
 
-            MockPrescriptionScenario.NO_MEDICINES -> Result.success(
+            MockPrescriptionScenario.NO_MEDICINES -> MedsyResult.Success(
                 PrescriptionExtractionOutcome.NoMedicines,
             )
         }
     }
 
-    override suspend fun searchMedicines(query: String): Result<List<Medicine>> {
+    override suspend fun searchMedicines(
+        query: String,
+    ): MedsyResult<List<Medicine>, MedsyError.Local> {
         val normalized = query.trim()
         val medicines = if (normalized.isEmpty()) {
             medicineCatalog
@@ -63,12 +73,12 @@ class MockPrescriptionRepository @Inject constructor(
                 it.packDescription.contains(normalized, ignoreCase = true)
             }
         }
-        return Result.success(medicines)
+        return MedsyResult.Success(medicines)
     }
 
     override suspend fun addPrescriptionToCart(
         request: PrescriptionCartRequest,
-    ): Result<Unit> = Result.success(Unit)
+    ): EmptyMedsyResult<MedsyError.Local> = MedsyResult.Success(Unit)
 
     private fun mockExtractedMedicines() = listOf(
         PrescriptionMedicine(medicineCatalog[0], recognitionStatus = RecognitionStatus.RECOGNIZED),
@@ -77,12 +87,14 @@ class MockPrescriptionRepository @Inject constructor(
         PrescriptionMedicine(medicineCatalog[3], recognitionStatus = RecognitionStatus.RECOGNIZED),
     )
 
-    private inline fun <T> imageOperation(block: () -> T): Result<T> = try {
-        Result.success(block())
+    private inline fun <T> imageOperation(
+        block: () -> T,
+    ): MedsyResult<T, MedsyError.Local> = try {
+        MedsyResult.Success(block())
     } catch (exception: CancellationException) {
         throw exception
     } catch (exception: Exception) {
-        Result.failure(exception)
+        MedsyResult.Error(MedsyError.Local.MEDIA)
     }
 
     private companion object {

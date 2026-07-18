@@ -3,7 +3,10 @@ package com.medsy.presentation.products
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
 import com.medsy.domain.products.usecase.GetProductsByCategoryUseCase
+import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +70,7 @@ class ProductsViewModel @Inject constructor(
 
     private fun fetchProducts(categoryId: Int) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getProductsByCategoryUseCase(categoryId).collectLatest { result ->
                 result.onSuccess { domainProducts ->
                     val uiProducts = domainProducts.map {
@@ -82,15 +85,16 @@ class ProductsViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
+                            errorMessageRes = null,
                             products = uiProducts,
                             filteredProducts = filterProducts(uiProducts, it.searchQuery)
                         )
                     }
-                }.onFailure { error ->
+                }.onError { error ->
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message
+                            errorMessageRes = error.toMessageRes(),
                         )
                     }
                 }

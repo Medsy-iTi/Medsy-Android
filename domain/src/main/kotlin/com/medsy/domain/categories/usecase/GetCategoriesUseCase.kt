@@ -4,6 +4,8 @@ import com.medsy.domain.categories.model.Category
 import com.medsy.domain.categories.model.CategorySortField
 import com.medsy.domain.categories.model.SortOrder
 import com.medsy.domain.categories.repository.CategoriesRepository
+import com.medsy.domain.common.MedsyError
+import com.medsy.domain.common.MedsyResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -15,7 +17,7 @@ class GetCategoriesUseCase @Inject constructor(
         size: Int,
         sortField: CategorySortField = CategorySortField.NAME,
         sortOrder: SortOrder = SortOrder.ASC
-    ): Flow<Result<List<Category>>> {
+    ): Flow<MedsyResult<List<Category>, MedsyError.Remote>> {
         return categoriesRepository.getCategories(page, size, sortField, sortOrder)
     }
 }

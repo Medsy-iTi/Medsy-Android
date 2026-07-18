@@ -1,6 +1,8 @@
 package com.medsy.domain.products.repository
 
 import com.medsy.domain.products.model.Product
+import com.medsy.domain.common.MedsyError
+import com.medsy.domain.common.MedsyResult
 import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository {
@@ -9,5 +11,5 @@ interface ProductsRepository {
         page: Int,
         size: Int,
         sort: String
-    ): Flow<Result<List<Product>>>
+    ): Flow<MedsyResult<List<Product>, MedsyError.Remote>>
 }

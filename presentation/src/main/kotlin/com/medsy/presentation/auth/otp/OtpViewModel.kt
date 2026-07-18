@@ -3,8 +3,8 @@ package com.medsy.presentation.auth.otp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.auth.usecase.VerifyOtpUseCase
-import com.medsy.domain.common.DomainError
-import com.medsy.domain.common.DomainResult
+import com.medsy.domain.common.MedsyResult
+import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -49,12 +49,20 @@ class OtpViewModel @Inject constructor(
 
     fun onIntent(intent: OtpIntent) {
         when (intent) {
-            is OtpIntent.CodeChanged -> _state.update { it.copy(code = intent.value, hasError = false) }
+            is OtpIntent.CodeChanged -> _state.update {
+                it.copy(
+                    code = intent.value,
+                    hasError = false
+                )
+            }
+
             OtpIntent.Submit -> submit()
             OtpIntent.Resend -> {
                 startTimer()
             }
-            OtpIntent.Tick -> { /* handled by loop */ }
+
+            OtpIntent.Tick -> { /* handled by loop */
+            }
         }
     }
 
@@ -63,13 +71,14 @@ class OtpViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, hasError = false) }
             when (val result = verifyOtpUseCase(_state.value.email, _state.value.code)) {
-                is DomainResult.Success -> {
+                is MedsyResult.Success -> {
                     _state.update { it.copy(isLoading = false) }
                     _effect.send(OtpEffect.NavigateHome)
                 }
-                is DomainResult.Error -> {
+
+                is MedsyResult.Error -> {
                     _state.update { it.copy(isLoading = false, hasError = true) }
-                    _effect.send(OtpEffect.ShowError(com.medsy.presentation.R.string.auth_invalid_code))
+                    _effect.send(OtpEffect.ShowError(result.error.toMessageRes()))
                 }
             }
         }

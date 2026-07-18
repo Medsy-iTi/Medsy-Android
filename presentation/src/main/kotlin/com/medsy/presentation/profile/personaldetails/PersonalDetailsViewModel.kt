@@ -2,8 +2,11 @@ package com.medsy.presentation.profile.personaldetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
 import com.medsy.domain.profile.usecase.GetProfileUseCase
 import com.medsy.domain.profile.usecase.UpdateProfileUseCase
+import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,7 +73,7 @@ class PersonalDetailsViewModel @Inject constructor(
             it.copy(
                 isLoading = true,
                 hasLoadError = false,
-                loadErrorMessage = null,
+                loadErrorMessageRes = null,
                 isEditing = false,
             )
         }
@@ -85,12 +88,12 @@ class PersonalDetailsViewModel @Inject constructor(
                     )
                 }
             }
-            .onFailure { error ->
+            .onError { error ->
                 _state.update {
                     it.copy(
                         isLoading = false,
                         hasLoadError = true,
-                        loadErrorMessage = error.message,
+                        loadErrorMessageRes = error.toMessageRes(),
                     )
                 }
             }
@@ -122,9 +125,9 @@ class PersonalDetailsViewModel @Inject constructor(
                     )
                 }
                 _effect.send(PersonalDetailsUIEffect.SaveSucceeded)
-            }.onFailure { error ->
+            }.onError { error ->
                 _state.update { it.copy(isSaving = false) }
-                _effect.send(PersonalDetailsUIEffect.SaveFailed(error.message))
+                _effect.send(PersonalDetailsUIEffect.SaveFailed(error.toMessageRes()))
             }
         }
     }

@@ -6,7 +6,7 @@ data class PersonalDetailsState(
     val profile: Profile? = null,
     val isLoading: Boolean = true,
     val hasLoadError: Boolean = false,
-    val loadErrorMessage: String? = null,
+    val loadErrorMessageRes: Int? = null,
     val isEditing: Boolean = false,
     val isSaving: Boolean = false,
     val draftHomeAddress: String = "",

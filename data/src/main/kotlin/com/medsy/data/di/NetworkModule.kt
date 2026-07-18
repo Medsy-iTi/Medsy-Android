@@ -2,6 +2,9 @@ package com.medsy.data.di
 
 import com.medsy.data.BuildConfig
 import com.medsy.data.remote.api.ApiService
+import com.medsy.data.remote.auth.AuthInterceptor
+import com.medsy.data.remote.auth.TokenAuthenticator
+import com.medsy.data.remote.auth.api.AuthApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -14,10 +17,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.Locale
-
-import com.medsy.data.remote.auth.api.AuthApi
-import com.medsy.data.remote.auth.AuthInterceptor
-import com.medsy.data.remote.auth.TokenAuthenticator
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -54,16 +53,6 @@ object NetworkModule {
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
             .apply {
-                if (BuildConfig.ACCESS_TOKEN.isNotBlank()) {
-                    addInterceptor { chain ->
-                        val authenticatedRequest = chain.request()
-                            .newBuilder()
-                            .header("Authorization", "Bearer ${BuildConfig.ACCESS_TOKEN}")
-                            .build()
-                        chain.proceed(authenticatedRequest)
-                    }
-                }
-
                 if (BuildConfig.DEBUG) {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {

@@ -2,9 +2,11 @@ package com.medsy.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.common.fold
 import com.medsy.domain.search.model.SearchProduct
 import com.medsy.domain.search.usecase.SearchProductsUseCase
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -158,9 +160,14 @@ class SearchViewModel @Inject constructor(
                     }
                     updateProductsUiList()
                 },
-                onFailure = {error->
-                    android.util.Log.e("API_DEBUG", "Error: ${error.message}")
-                    _state.update { it.copy(isLoading = false, isLoadMore = false, errorMessage = R.string.search_empty_subtitle) }
+                onError = { error ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isLoadMore = false,
+                            errorMessage = error.toMessageRes(),
+                        )
+                    }
                 }
             )
         }

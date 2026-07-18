@@ -138,7 +138,7 @@ fun ProfileScreen(
                     when {
                         state.isLoading -> ProfileLoadingCard()
                         state.hasError -> ProfileLoadErrorCard(
-                            message = state.errorMessage,
+                            message = state.errorMessageRes?.let { stringResource(it) },
                             onRetry = { onIntent(ProfileUIIntent.RetryProfileLoad) },
                         )
 

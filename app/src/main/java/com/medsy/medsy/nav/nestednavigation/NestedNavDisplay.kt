@@ -99,17 +99,17 @@ fun NestedNavDisplay(
             },
             entryProvider = entryProvider {
                 entry<Route.NestedNav.Home> {
-                HomeRoot(
-                    onSearchClick = { openSearch() },
-                    onNotificationClick = { /* Handle notification click */ },
-                    onAddressClick = { /* Handle address click */ },
-                    onUploadPrescriptionClick = { /* Handle upload prescription click */ },
-                    onViewAllCategoriesClick = { openCategories() },
-                    onCategoryClick = { categoryId, categoryName ->
-                        openProducts(categoryId, categoryName)
-                    }
-                )
-            }
+                    HomeRoot(
+                        onSearchClick = { openSearch() },
+                        onNotificationClick = { /* Handle notification click */ },
+                        onAddressClick = { /* Handle address click */ },
+                        onUploadPrescriptionClick = { openPrescription() },
+                        onViewAllCategoriesClick = { openCategories() },
+                        onCategoryClick = { categoryId, categoryName ->
+                            openProducts(categoryId, categoryName)
+                        }
+                    )
+                }
                 entry<Route.NestedNav.Cart> {
                     CartRoot(onNext = openProductDetails)
                 }

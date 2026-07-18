@@ -4,7 +4,7 @@ data class ProductsUIState(
     val categoryId: Int = -1,
     val categoryName: String = "",
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val errorMessageRes: Int? = null,
     val products: List<ProductUi> = emptyList(),
     val filteredProducts: List<ProductUi> = emptyList(),
     val searchQuery: String = ""

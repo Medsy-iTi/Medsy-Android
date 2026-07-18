@@ -1,7 +1,8 @@
 package com.medsy.data.remote.datasource.products
 
 import com.medsy.data.remote.dtos.products.ProductsDataDto
-import com.medsy.data.remote.network.ApiResult
+import com.medsy.domain.common.MedsyError
+import com.medsy.domain.common.MedsyResult
 
 interface ProductsRemoteDataSource {
     suspend fun getProductsByCategory(
@@ -9,5 +10,5 @@ interface ProductsRemoteDataSource {
         page: Int,
         size: Int,
         sort: String
-    ): ApiResult<ProductsDataDto>
+    ): MedsyResult<ProductsDataDto, MedsyError.Remote>
 }

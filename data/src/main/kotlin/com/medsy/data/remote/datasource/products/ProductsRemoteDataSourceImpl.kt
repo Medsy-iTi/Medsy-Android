@@ -2,8 +2,9 @@ package com.medsy.data.remote.datasource.products
 
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.dtos.products.ProductsDataDto
-import com.medsy.data.remote.network.ApiResult
 import com.medsy.data.remote.network.safeApiCall
+import com.medsy.domain.common.MedsyError
+import com.medsy.domain.common.MedsyResult
 import javax.inject.Inject
 
 class ProductsRemoteDataSourceImpl @Inject constructor(
@@ -14,7 +15,7 @@ class ProductsRemoteDataSourceImpl @Inject constructor(
         page: Int,
         size: Int,
         sort: String
-    ): ApiResult<ProductsDataDto> {
+    ): MedsyResult<ProductsDataDto, MedsyError.Remote> {
         return safeApiCall { apiService.getProductsByCategory(categoryId, page, size, sort) }
     }
 }
