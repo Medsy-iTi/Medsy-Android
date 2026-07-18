@@ -18,7 +18,7 @@ private const val TAG = "SafeRestCall"
 private val errorAdapter = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
-    .adapter(MedsyApiErrorResponse::class.java)
+    .adapter(ApiErrorResponse::class.java)
 
 suspend fun <T> safeApiCall(
     apiCall: suspend () -> Response<ApiResponse<T>>,

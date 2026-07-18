@@ -10,7 +10,7 @@ data class ApiResponse<T>(
 )
 
 @JsonClass(generateAdapter = true)
-internal data class MedsyApiErrorResponse(
+internal data class ApiErrorResponse(
     val success: Boolean? = null,
     val message: String? = null,
 )
