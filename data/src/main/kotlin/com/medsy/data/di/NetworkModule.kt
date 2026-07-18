@@ -39,26 +39,20 @@ object NetworkModule {
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
-
             .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Accept-Language",
-                        Locale.getDefault().language)
+                val original = chain.request()
+                val url = original.url.newBuilder()
+                    .addQueryParameter("lang", Locale.getDefault().language)
+                    .build()
+
+                val request = original.newBuilder()
+                    .url(url)
+                    .addHeader("Accept-Language", Locale.getDefault().language)
                     .build()
                 chain.proceed(request)
             }
-
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
-            .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader(
-                        "Accept-Language",
-                        Locale.getDefault().language
-                    )
-                    .build()
-                chain.proceed(request)
-            }
             .apply {
                 if (BuildConfig.ACCESS_TOKEN.isNotBlank()) {
                     addInterceptor { chain ->

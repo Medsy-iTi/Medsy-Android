@@ -6,5 +6,5 @@ sealed interface HomeUIEffect {
     object NavigateToAddressSelection : HomeUIEffect
     object NavigateToUploadPrescription : HomeUIEffect
     object NavigateToCategories : HomeUIEffect
-    data class NavigateToCategory(val categoryId: String) : HomeUIEffect
+    data class NavigateToCategory(val categoryId: String, val categoryName: String) : HomeUIEffect
 }

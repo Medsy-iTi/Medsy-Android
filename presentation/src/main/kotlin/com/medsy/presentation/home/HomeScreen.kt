@@ -22,7 +22,7 @@ fun HomeRoot(
     onAddressClick: () -> Unit,
     onUploadPrescriptionClick: () -> Unit,
     onViewAllCategoriesClick: () -> Unit,
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (Int, String) -> Unit,
 
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -32,7 +32,10 @@ fun HomeRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is HomeUIEffect.NavigateToSearch -> onSearchClick()
-                is HomeUIEffect.NavigateToCategory -> onCategoryClick(effect.categoryId)
+                is HomeUIEffect.NavigateToCategory -> onCategoryClick(
+                    effect.categoryId.toInt(),
+                    effect.categoryName
+                )
                 is HomeUIEffect.NavigateToNotifications -> onNotificationClick()
                 is HomeUIEffect.NavigateToAddressSelection -> onAddressClick()
                 is HomeUIEffect.NavigateToUploadPrescription -> onUploadPrescriptionClick()
