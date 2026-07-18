@@ -109,6 +109,7 @@ fun NestedNavDisplay(
                     }
                 )
             }
+
                 entry<Route.NestedNav.Cart> {
                     CartRoot(onNext = openProductDetails)
                 }

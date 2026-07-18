@@ -59,7 +59,7 @@ fun OnboardingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeutralWhite)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Skip Button
         Row(
@@ -76,7 +76,7 @@ fun OnboardingScreen(
                 text = stringResource(R.string.action_skip),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Medium,
-                    color = SecondaryText
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 ),
                 modifier = Modifier.clickable { onIntent(OnboardingUIIntent.OnSkipClick) }
             )

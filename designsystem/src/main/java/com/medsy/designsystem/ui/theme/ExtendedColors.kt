@@ -24,6 +24,22 @@ data class ExtendedColors(
 
     val categoryMoreBg: Color,
     val categoryMoreIcon: Color,
+
+    val prescriptionPrimary: Color,
+    val prescriptionTitle: Color,
+    val prescriptionSupporting: Color,
+    val prescriptionSuccessContainer: Color,
+    val prescriptionSuccessSoft: Color,
+    val prescriptionSuccessContent: Color,
+    val prescriptionWarningContainer: Color,
+    val prescriptionWarningContent: Color,
+    val prescriptionWarningBorder: Color,
+    val prescriptionErrorContainer: Color,
+    val prescriptionErrorContent: Color,
+    val prescriptionDisabledContainer: Color,
+    val prescriptionGalleryContainer: Color,
+    val prescriptionGalleryContent: Color,
+    val prescriptionScanBorder: Color,
 )
 
 internal val LocalExtendedColors = staticCompositionLocalOf {
@@ -51,6 +67,21 @@ internal val lightExtendedColors = ExtendedColors(
 
     categoryMoreBg = Color(0xFFF3F4F6),
     categoryMoreIcon = Color(0xFF6B7280),
+    prescriptionPrimary = Color(0xFF0D8653),
+    prescriptionTitle = Color(0xFF0D1F17),
+    prescriptionSupporting = Color(0xFF6A7D75),
+    prescriptionSuccessContainer = Color(0xFFEEF7F2),
+    prescriptionSuccessSoft = Color(0xFFE5F4ED),
+    prescriptionSuccessContent = Color(0xFF0A6B42),
+    prescriptionWarningContainer = Color(0xFFFFFBEB),
+    prescriptionWarningContent = Color(0xFF92400E),
+    prescriptionWarningBorder = Color(0xFFFDE68A),
+    prescriptionErrorContainer = Color(0xFFFEF2F2),
+    prescriptionErrorContent = Color(0xFFEF4444),
+    prescriptionDisabledContainer = Color(0xFFF1F6F3),
+    prescriptionGalleryContainer = Color(0xFFEFF3FF),
+    prescriptionGalleryContent = Color(0xFF4F7EF8),
+    prescriptionScanBorder = Color(0xFFB3DFC8),
 )
 
 internal val darkExtendedColors = ExtendedColors(
@@ -70,4 +101,19 @@ internal val darkExtendedColors = ExtendedColors(
 
     categoryMoreBg = Color(0xFFF3F4F6),
     categoryMoreIcon = Color(0xFF6B7280),
+    prescriptionPrimary = Color(0xFF22C55E),
+    prescriptionTitle = Color(0xFFF7FAF8),
+    prescriptionSupporting = Color(0xFF9CAFA7),
+    prescriptionSuccessContainer = Color(0xFF123526),
+    prescriptionSuccessSoft = Color(0xFF173F2E),
+    prescriptionSuccessContent = Color(0xFF86EFAC),
+    prescriptionWarningContainer = Color(0xFF422006),
+    prescriptionWarningContent = Color(0xFFFDE68A),
+    prescriptionWarningBorder = Color(0xFF854D0E),
+    prescriptionErrorContainer = Color(0xFF450A0A),
+    prescriptionErrorContent = Color(0xFFFCA5A5),
+    prescriptionDisabledContainer = Color(0xFF24332C),
+    prescriptionGalleryContainer = Color(0xFF172554),
+    prescriptionGalleryContent = Color(0xFF93C5FD),
+    prescriptionScanBorder = Color(0xFF365047),
 )
