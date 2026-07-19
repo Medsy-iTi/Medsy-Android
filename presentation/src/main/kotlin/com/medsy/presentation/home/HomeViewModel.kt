@@ -3,6 +3,7 @@ package com.medsy.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
+import com.medsy.domain.profile.usecase.GetProfileUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.presentation.R
@@ -22,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getCategoriesUseCase: GetCategoriesUseCase
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val getProfileUseCase: GetProfileUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
@@ -65,6 +67,13 @@ class HomeViewModel @Inject constructor(
             )
         }
         fetchCategories()
+        preloadProfile()
+    }
+
+    private fun preloadProfile() {
+        viewModelScope.launch {
+            getProfileUseCase()
+        }
     }
 
     private fun fetchCategories() {

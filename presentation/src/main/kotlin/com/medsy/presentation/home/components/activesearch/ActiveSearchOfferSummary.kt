@@ -100,6 +100,7 @@ fun ActiveSearchOfferSummary(
         ) {
             Text(
                 text = stringResource(R.string.home_search_status_view_offer),
+                style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp
             )
