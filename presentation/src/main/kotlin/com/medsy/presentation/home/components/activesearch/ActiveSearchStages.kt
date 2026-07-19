@@ -1,8 +1,7 @@
 package com.medsy.presentation.home.components.activesearch
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -67,9 +67,38 @@ fun ActiveSearchStages(currentStage: Int) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
                     modifier = Modifier
-                        .size(24.dp), // Fixed box so expanding circle doesn't shift layout
+                        .size(32.dp), // Increased slightly to accommodate ring
                     contentAlignment = Alignment.Center
                 ) {
+                    // Pulsating ring for the active state
+                    if (isCurrent) {
+                        val infiniteTransition = rememberInfiniteTransition(label = "pulse")
+                        val ringScale by infiniteTransition.animateFloat(
+                            initialValue = 1f,
+                            targetValue = 1.6f,
+                            animationSpec = infiniteRepeatable(
+                                animation = tween(1000, easing = LinearOutSlowInEasing),
+                                repeatMode = RepeatMode.Restart
+                            ),
+                            label = "ringScale"
+                        )
+                        val ringAlpha by infiniteTransition.animateFloat(
+                            initialValue = 0.5f,
+                            targetValue = 0f,
+                            animationSpec = infiniteRepeatable(
+                                animation = tween(1000, easing = LinearOutSlowInEasing),
+                                repeatMode = RepeatMode.Restart
+                            ),
+                            label = "ringAlpha"
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(circleSize)
+                                .scale(ringScale)
+                                .border(2.dp, animatedColor.copy(alpha = ringAlpha), CircleShape)
+                        )
+                    }
+
                     Box(
                         modifier = Modifier
                             .size(circleSize)
@@ -77,7 +106,8 @@ fun ActiveSearchStages(currentStage: Int) {
                                 width = 2.dp,
                                 color = animatedColor,
                                 shape = CircleShape
-                            ),
+                            )
+                            .background(MaterialTheme.colorScheme.surface, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Box(
@@ -97,7 +127,7 @@ fun ActiveSearchStages(currentStage: Int) {
                 Box(
                     modifier = Modifier
                         .weight(0.5f)
-                        .padding(top = 48.dp) // Aligned with the center of the 24.dp box
+                        .padding(top = 54.dp) // Adjusted for the 32.dp box height
                         .height(2.dp)
                         .background(animatedLineColor)
                 )

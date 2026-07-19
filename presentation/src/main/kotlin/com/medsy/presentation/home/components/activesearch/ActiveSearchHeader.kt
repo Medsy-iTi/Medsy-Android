@@ -1,5 +1,6 @@
 package com.medsy.presentation.home.components.activesearch
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,9 +13,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,9 +67,22 @@ fun ActiveSearchHeader(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top
     ) {
+        val isSearching = status is ActiveSearchStatus.Searching
+        val infiniteTransition = rememberInfiniteTransition(label = "icon_anim")
+        val scale by infiniteTransition.animateFloat(
+            initialValue = 1f,
+            targetValue = if (isSearching) 1.15f else 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(800, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "icon_scale"
+        )
+
         Box(
             modifier = Modifier
                 .size(48.dp)
+                .scale(scale)
                 .clip(RoundedCornerShape(12.dp))
                 .background(iconBgColor),
             contentAlignment = Alignment.Center
