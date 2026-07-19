@@ -162,15 +162,15 @@ fun RootNavDisplay() {
                     onNext = { rootBackStack.removeLastOrNull() }
                 )
             }
-            entry<Route.ProductDetails> {
+            entry<Route.ProductDetails> { route ->
                 ProductDetailsRoot(
+                    productId = route.id,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToCart = {
-                        rootBackStack.navigateSingleTop(Route.NestedNav)
                     },
                     onNavigateToPharmacistChat = {
-
-                    }
+                        rootBackStack.navigateSingleTop(Route.AiChat(/* required params here */))
+                    },
                 )
             }
             entry<Route.Settings> {
@@ -185,9 +185,9 @@ fun RootNavDisplay() {
             }
             entry<Route.SearchNav> {
                 SearchRoot(
-                    onNext = {
+                    onNext = { productId ->
                         rootBackStack.navigateSingleTop(
-                            Route.ProductDetails(id = "temporary-product-id")
+                            Route.ProductDetails(id = productId)
                         )
                     },
                     onBack = { rootBackStack.removeLastOrNull() },

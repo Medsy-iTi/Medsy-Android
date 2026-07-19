@@ -200,8 +200,9 @@
     <string name="product_details_label_manufacturer">Manufacturer</string>
     <string name="product_details_label_type">Type</string>
     <string name="product_details_label_category">Drug Category</string>
-    <string name="product_details_label_dispensing_method">Dispensing Method</string>
-    <string name="product_details_dispensing_method_value">Dispensed after pharmacist review</string>
+    <string name="product_details_label_usage_method">Usage Method</string>
+    <string name="product_details_error_load">Couldn&#8217;t load product. Please try again.</string>
+    <string name="product_details_error_retry">Retry</string>
     <string name="product_details_add_to_cart">Add to Cart</string>
     <string name="product_details_consult_pharmacist">Consult Pharmacist</string>
     <!-- Prescription reading -->
@@ -299,6 +300,9 @@
     <!-- OTP -->
     <string name="otp_title">Verify your email</string>
     <string name="otp_subtitle">We sent a 6-digit code to %s. Enter it below to confirm your account.</string>
+
+    <string name="product_details_label_dispensing_method">Dispensing Method</string>
+    <string name="product_details_dispensing_method_value">Not available</string>
     <string name="product_add_to_cart">Add to Cart</string>
 
     <!--  Errors  -->
@@ -308,4 +312,8 @@
     <string name="error_empty_response">The server didn\'t return the requested data.</string>
     <string name="error_payload_too_large">The uploaded file is too large.</string>
     <string name="error_too_many_requests">Too many requests. Please wait and try again.</string>
+    <string name="error_no_internet">No internet connection, please check your network.</string>
+    <string name="error_server_message">Server error: %1$s</string>
+    <string name="error_unknown">An unexpected error occurred, please try again later.</string>
+    <string name="error_invalid_id">Invalid product ID.</string>
 </resources>

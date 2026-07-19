@@ -18,14 +18,14 @@ import com.medsy.presentation.R
 @Composable
 fun ProductDetailsList(
     manufacturer: String,
-    type: String,
     category: String,
+    usage: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 8.dp),
+            .padding(horizontal = 20.dp),
     ) {
         ProductDetailRow(
             icon = Icons.Filled.Science,
@@ -33,20 +33,14 @@ fun ProductDetailsList(
             value = manufacturer,
         )
         ProductDetailRow(
-            icon = Icons.Filled.MedicalServices,
-            label = stringResource(R.string.product_details_label_type),
-            value = type,
-        )
-        ProductDetailRow(
             icon = Icons.Filled.Category,
             label = stringResource(R.string.product_details_label_category),
             value = category,
         )
         ProductDetailRow(
-            icon = Icons.Filled.Lock,
-            label = stringResource(R.string.product_details_label_dispensing_method),
-            value = stringResource(R.string.product_details_dispensing_method_value),
-            valueColor = MaterialTheme.colorScheme.error,
+            icon = Icons.Filled.MedicalServices,
+            label = stringResource(R.string.product_details_label_usage_method),
+            value = usage,
             showDivider = false,
         )
     }

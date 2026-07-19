@@ -8,4 +8,5 @@ data class ProductDetailsUIState(
     val selectedImageIndex: Int = 0,
     val isFavorite: Boolean = false,
     val isAddingToCart: Boolean = false,
+    val errorMessage: String? = null,
 )
