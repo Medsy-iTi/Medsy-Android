@@ -3,6 +3,7 @@ package com.medsy.presentation.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -61,6 +62,24 @@ fun HomeScreen(
 ) {
     val scrollState = rememberScrollState()
 
+    if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ModalBottomSheet(
+            onDismissRequest = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+        ) {
+            ActiveSearchCard(
+                status = state.activeSearchStatus,
+                onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
+                onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
+                onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) },
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -75,22 +94,6 @@ fun HomeScreen(
                 onAddressClick = { onIntent(HomeUIIntent.OnAddressClick) },
                 onNotificationClick = { onIntent(HomeUIIntent.OnNotificationClick) }
             )
-        if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
-            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            ModalBottomSheet(
-                onDismissRequest = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
-                sheetState = sheetState,
-                containerColor = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-            ) {
-                ActiveSearchCard(
-                    status = state.activeSearchStatus,
-                    onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
-                    onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
-                    onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) },
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
