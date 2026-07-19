@@ -11,6 +11,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import com.medsy.designsystem.components.MedsySearchBar
 import com.medsy.presentation.R
 import com.medsy.presentation.home.components.*
@@ -50,6 +53,7 @@ fun HomeRoot(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     state: HomeUIState,
@@ -71,6 +75,22 @@ fun HomeScreen(
                 onAddressClick = { onIntent(HomeUIIntent.OnAddressClick) },
                 onNotificationClick = { onIntent(HomeUIIntent.OnNotificationClick) }
             )
+        if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            ModalBottomSheet(
+                onDismissRequest = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
+                sheetState = sheetState,
+                containerColor = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+            ) {
+                ActiveSearchCard(
+                    status = state.activeSearchStatus,
+                    onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
+                    onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
+                    onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) },
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -94,7 +114,7 @@ fun HomeScreen(
 
         Box(modifier = Modifier.padding(horizontal = 16.dp)) {
             OrderCardsSection(
-                onSearchMedicineClick = { onIntent(HomeUIIntent.OnSearchMedicineClick) },
+                onSearchMedicineClick = { onIntent(HomeUIIntent.OnStartSearchSimulation) },
                 onUploadPrescriptionClick = { onIntent(HomeUIIntent.OnUploadPrescriptionClick) }
             )
         }

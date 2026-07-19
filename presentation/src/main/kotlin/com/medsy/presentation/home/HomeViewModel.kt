@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -27,6 +29,8 @@ class HomeViewModel @Inject constructor(
 
     private val _effect = Channel<HomeUIEffect>()
     val effect = _effect.receiveAsFlow()
+
+    private var searchSimulationJob: Job? = null
 
     init {
 
@@ -99,7 +103,9 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeUIIntent.OnSearchMedicineClick -> {
-                sendEffect(HomeUIEffect.NavigateToSearch)
+                // Now handled by the intent below or directly starting simulation.
+                // Let's change the intent triggered from UI. Wait, we changed UI to emit OnStartSearchSimulation
+                // But let's handle OnStartSearchSimulation here.
             }
 
             HomeUIIntent.OnUploadPrescriptionClick -> sendEffect(HomeUIEffect.NavigateToUploadPrescription)
@@ -111,7 +117,68 @@ class HomeViewModel @Inject constructor(
                 val categoryName = _state.value.categories.find { it.id == intent.categoryId }?.name ?: ""
                 sendEffect(HomeUIEffect.NavigateToCategory(intent.categoryId, categoryName))
             }
+            HomeUIIntent.OnStartSearchSimulation -> startSearchSimulation()
+            HomeUIIntent.OnCancelSearchSimulation -> cancelSearchSimulation()
+            HomeUIIntent.OnViewOffersClick -> {
+                cancelSearchSimulation()
+                // Navigation to offers could go here
+            }
+            HomeUIIntent.OnSearchWiderRangeClick -> startSearchSimulation()
         }
+    }
+
+    private fun startSearchSimulation() {
+        searchSimulationJob?.cancel()
+        searchSimulationJob = viewModelScope.launch {
+            var elapsed = 0
+            // Stage 1
+            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 1, elapsedTime = elapsed)) }
+            repeat(3) {
+                delay(1000)
+                elapsed++
+                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 1, elapsedTime = elapsed)) }
+            }
+            
+            // Stage 2
+            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 2, elapsedTime = elapsed)) }
+            repeat(5) {
+                delay(1000)
+                elapsed++
+                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 2, elapsedTime = elapsed)) }
+            }
+            
+            // Stage 3
+            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 3, elapsedTime = elapsed)) }
+            repeat(6) {
+                delay(1000)
+                elapsed++
+                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 3, elapsedTime = elapsed)) }
+            }
+            
+            // First Offer
+            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(elapsedTime = elapsed, minPrice = 48)) }
+            repeat(3) {
+                delay(1000)
+                elapsed++
+                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(elapsedTime = elapsed, minPrice = 48)) }
+            }
+            
+            // Multiple Offers
+            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(elapsedTime = elapsed, minPrice = 36, totalOffers = 3)) }
+            repeat(3) {
+                delay(1000)
+                elapsed++
+                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(elapsedTime = elapsed, minPrice = 36, totalOffers = 3)) }
+            }
+            
+            // Search ended
+            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.SearchEndedNoOffers) }
+        }
+    }
+
+    private fun cancelSearchSimulation() {
+        searchSimulationJob?.cancel()
+        _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Idle) }
     }
 
     private fun sendEffect(effect: HomeUIEffect) {
