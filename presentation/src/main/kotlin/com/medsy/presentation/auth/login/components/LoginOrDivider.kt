@@ -14,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.BorderGreen
-import com.medsy.designsystem.ui.theme.SecondaryText
 import com.medsy.presentation.R
 import com.medsy.presentation.auth.login.LoginConstants
 
@@ -28,19 +26,19 @@ fun LoginOrDivider() {
     ) {
         HorizontalDivider(
             modifier = Modifier.width(LoginConstants.DividerWidth),
-            color = BorderGreen
+            color = MaterialTheme.colorScheme.outlineVariant
         )
         Text(
             text = stringResource(R.string.login_or),
             style = MaterialTheme.typography.bodyMedium.copy(
-                color = SecondaryText,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Medium
             ),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         HorizontalDivider(
             modifier = Modifier.width(LoginConstants.DividerWidth),
-            color = BorderGreen
+            color = MaterialTheme.colorScheme.outlineVariant
         )
     }
 }

@@ -20,7 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.medsy.designsystem.ui.theme.SecondaryText
 import com.medsy.presentation.onboarding.OnboardingConstants
 import com.medsy.presentation.onboarding.model.OnboardingPage
 import kotlin.math.absoluteValue
@@ -68,7 +67,7 @@ fun OnboardingPageItem(
         Text(
             text = stringResource(id = onboardingPage.descriptionRes),
             style = MaterialTheme.typography.bodyLarge.copy(
-                color = SecondaryText
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = OnboardingConstants.ContentPaddingHorizontal)

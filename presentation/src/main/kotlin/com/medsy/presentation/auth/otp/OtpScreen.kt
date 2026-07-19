@@ -57,9 +57,6 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsyButton
-import com.medsy.designsystem.ui.theme.ErrorRed
-import com.medsy.designsystem.ui.theme.LightGreen
-import com.medsy.designsystem.ui.theme.SecondaryText
 import com.medsy.presentation.R
 import com.medsy.designsystem.components.showError
 
@@ -152,7 +149,7 @@ fun OtpScreen(
                 text = stringResource(R.string.otp_subtitle, state.email),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
-                color = SecondaryText,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
 
@@ -195,7 +192,7 @@ fun OtpScreen(
                 Text(
                     text = stringResource(R.string.auth_resend_cooldown, formatCountdown(state.countdown)),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = SecondaryText,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
             } else {
@@ -234,7 +231,7 @@ private fun OtpEmailIllustration() {
             .size(110.dp)
             .scale(scale)
             .clip(CircleShape)
-            .background(LightGreen)
+            .background(MaterialTheme.colorScheme.primaryContainer)
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -279,7 +276,7 @@ private fun OtpInputField(
 
                     val borderColor by animateColorAsState(
                         targetValue = when {
-                            hasError -> ErrorRed
+                            hasError -> MaterialTheme.colorScheme.error
                             isFocused -> MaterialTheme.colorScheme.primary
                             char != null -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                             else -> MaterialTheme.colorScheme.outline
@@ -290,7 +287,7 @@ private fun OtpInputField(
 
                     val bgColor by animateColorAsState(
                         targetValue = when {
-                            hasError -> ErrorRed.copy(alpha = 0.06f)
+                            hasError -> MaterialTheme.colorScheme.errorContainer
                             else -> androidx.compose.ui.graphics.Color.Transparent
                         },
                         animationSpec = tween(200),

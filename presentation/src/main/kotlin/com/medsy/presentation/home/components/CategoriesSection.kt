@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.width
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.home.CategoryUi
@@ -66,8 +66,8 @@ fun CategoriesSection(
                 val cat = categories[index]
 
                 val icon = Icons.Default.MedicalServices
-                val bgCol = MaterialTheme.colorScheme.tertiary
-                val iconCol = MaterialTheme.colorScheme.primary
+                val bgCol = MaterialTheme.extendedColors.categoryContainerBg
+                val iconCol = MaterialTheme.extendedColors.onCategoryContainer
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

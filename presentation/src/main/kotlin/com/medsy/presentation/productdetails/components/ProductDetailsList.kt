@@ -8,11 +8,11 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Science
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.ErrorRed
 import com.medsy.presentation.R
 
 @Composable

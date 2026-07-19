@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -14,7 +15,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.medsy.designsystem.components.MedsyTextField
-import com.medsy.designsystem.ui.theme.SecondaryText
 import com.medsy.presentation.R
 
 @Composable
@@ -33,7 +33,7 @@ fun LoginPasswordInput(
             Icon(
                 imageVector = Icons.Outlined.Lock,
                 contentDescription = null,
-                tint = SecondaryText
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         trailingIcon = {
@@ -41,7 +41,7 @@ fun LoginPasswordInput(
                 Icon(
                     imageVector = if (passwordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
                     contentDescription = null,
-                    tint = SecondaryText
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         },

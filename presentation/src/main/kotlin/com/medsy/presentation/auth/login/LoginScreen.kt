@@ -44,8 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsyButton
-import com.medsy.designsystem.ui.theme.NeutralWhite
-import com.medsy.designsystem.ui.theme.PrimaryText
 import com.medsy.presentation.R
 import com.medsy.presentation.auth.login.components.LoginOrDivider
 import com.medsy.presentation.auth.login.components.LoginPasswordInput
@@ -209,7 +207,7 @@ fun LoginScreen(
                     text = stringResource(R.string.login_button),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = NeutralWhite
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 )
             }

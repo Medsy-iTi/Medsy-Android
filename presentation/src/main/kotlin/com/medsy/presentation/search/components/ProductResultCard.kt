@@ -34,8 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.medsy.designsystem.ui.theme.LightGreen
-import com.medsy.designsystem.ui.theme.NeutralWhite
 import com.medsy.presentation.R
 
 @Composable

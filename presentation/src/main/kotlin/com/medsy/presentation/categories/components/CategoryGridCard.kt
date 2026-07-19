@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.home.CategoryUi
 
@@ -33,11 +32,10 @@ fun CategoryGridCard(
     category: CategoryUi,
     onClick: () -> Unit
 ) {
-    val colors = MaterialTheme.extendedColors
 
     val icon = Icons.Default.MedicalServices
-    val bgColor = MaterialTheme.colorScheme.tertiary
-    val iconColor = MaterialTheme.colorScheme.primary
+    val bgColor = MaterialTheme.extendedColors.categoryContainerBg
+    val iconColor = MaterialTheme.extendedColors.onCategoryContainer
 
     Column(
         modifier = Modifier
@@ -71,7 +69,7 @@ fun CategoryGridCard(
             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
-            maxLines =4 ,
+            maxLines = 4,
             overflow = TextOverflow.Ellipsis
         )
     }
