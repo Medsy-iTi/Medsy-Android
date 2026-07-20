@@ -24,7 +24,7 @@ enum class MedicinePickerMode {
 
 data class MedicinePickerState(
     val mode: MedicinePickerMode = MedicinePickerMode.ADD,
-    val targetMedicineId: String? = null,
+    val targetMedicineId: Int? = null,
     val returnStep: PrescriptionStep = PrescriptionStep.MEDICINE_REVIEW,
     val query: String = "",
     val results: List<Medicine> = emptyList(),
@@ -32,6 +32,7 @@ data class MedicinePickerState(
 )
 
 data class PrescriptionState(
+    val isAttachmentOnly: Boolean = false,
     val step: PrescriptionStep = PrescriptionStep.SOURCE_SELECTION,
     val image: PrescriptionImage? = null,
     val medicines: List<PrescriptionMedicine> = emptyList(),
@@ -39,6 +40,7 @@ data class PrescriptionState(
     val isPreparingImage: Boolean = false,
     val isPrescriptionExpanded: Boolean = false,
     val isSubmitting: Boolean = false,
+    val isPartialSubmission: Boolean = false,
 ) {
     val recognizedCount: Int
         get() = medicines.count { it.recognitionStatus == RecognitionStatus.RECOGNIZED }
@@ -49,6 +51,6 @@ data class PrescriptionState(
     val canSubmit: Boolean
         get() = medicines.isNotEmpty() && needsReviewCount == 0 && !isSubmitting
 
-    val totalEgp: Int
+    val totalPriceEgp: Int
         get() = medicines.sumOf { it.medicine.unitPriceEgp * it.quantity }
 }
