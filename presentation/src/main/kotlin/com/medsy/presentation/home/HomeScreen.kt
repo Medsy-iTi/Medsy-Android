@@ -13,8 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
 import com.medsy.designsystem.components.MedsySearchBar
 import com.medsy.presentation.R
 import com.medsy.presentation.home.components.*
@@ -62,24 +60,6 @@ fun HomeScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
-        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-        ModalBottomSheet(
-            onDismissRequest = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
-            sheetState = sheetState,
-            containerColor = MaterialTheme.colorScheme.surface,
-            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-        ) {
-            ActiveSearchCard(
-                status = state.activeSearchStatus,
-                onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
-                onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
-                onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) },
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -114,6 +94,22 @@ fun HomeScreen(
         )
 
         Spacer(modifier = Modifier.height(18.dp))
+
+        if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                ActiveSearchCard(
+                    status = state.activeSearchStatus,
+                    onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
+                    onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
+                    onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) }
+                )
+            }
+            Spacer(modifier = Modifier.height(18.dp))
+        }
 
         Box(modifier = Modifier.padding(horizontal = 16.dp)) {
             OrderCardsSection(
