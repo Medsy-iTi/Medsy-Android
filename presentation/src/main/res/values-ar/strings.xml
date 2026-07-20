@@ -196,6 +196,7 @@
     <string name="product_details_label_dispensing_method">طريقة الصرف</string>
     <string name="product_details_dispensing_method_value">تصرف بعد مراجعة الصيدلي</string>
     <string name="product_details_add_to_cart">أضف إلى السلة</string>
+    <string name="product_details_added_to_cart">تمت الإضافة إلى السلة</string>
     <string name="product_details_label_usage_method">طريقة الاستخدام</string>
     <string name="product_details_error_load">تعذر تحميل المنتج. يرجى المحاولة مرة أخرى.</string>
     <string name="product_details_error_retry">إعادة المحاولة</string>
@@ -204,6 +205,8 @@
     <string name="prescription_upload_title">ارفع الروشتة</string>
     <string name="prescription_upload_heading">ارفع روشتتك</string>
     <string name="prescription_upload_description">ارفع صورة واضحة للروشتة وسنساعدك في استخراج الأدوية وإضافتها إلى السلة.</string>
+    <string name="prescription_attachment_heading">أضف روشتة إلى السلة</string>
+    <string name="prescription_attachment_description">التقط أو اختر صورة واضحة لحفظها بخصوصية مع هذه السلة.</string>
     <string name="prescription_take_photo">التقاط صورة</string>
     <string name="prescription_take_photo_description">صوّر الروشتة مباشرةً بالكاميرا</string>
     <string name="prescription_choose_gallery">اختيار من المعرض</string>
@@ -219,6 +222,7 @@
     <string name="prescription_change_image">تغيير الصورة</string>
     <string name="prescription_delete">حذف</string>
     <string name="prescription_review_image">مراجعة الصورة</string>
+    <string name="prescription_attach_to_cart">إرفاق بالسلة</string>
     <string name="prescription_reading_title">جاري قراءة الروشتة</string>
     <string name="prescription_read_prescription_title">قراءة الروشتة</string>
     <string name="prescription_extracting_heading">نحاول التعرف على الأدوية</string>
@@ -263,9 +267,12 @@
     <string name="prescription_no_medicines_description">جرب التقاط صورة أوضح أو أضف الأدوية يدويًا.</string>
     <string name="prescription_confirmation_title">تمت الإضافة إلى السلة!</string>
     <string name="prescription_confirmation_description">يمكنك مراجعة الكميات وإعداد طلبك من السلة الآن.</string>
+    <string name="prescription_partial_title">تمت إضافة بعض الأدوية</string>
+    <string name="prescription_partial_description">راجع السلة قبل المحاولة مرة أخرى لتجنب زيادة الكميات مرتين.</string>
+    <string name="prescription_partial_cart">تم تحديث جزء من السلة. يرجى مراجعتها قبل إعادة المحاولة.</string>
     <string name="prescription_cart_summary">ملخص السلة</string>
     <string name="prescription_medicine_with_quantity">%1$s × %2$d</string>
-    <string name="prescription_total">الإجمالي</string>
+    <string name="prescription_total">إجمالي السعر</string>
     <string name="prescription_view_cart">عرض السلة وإرسال الطلب</string>
     <string name="prescription_return_home">العودة للرئيسية</string>
     <string name="prescription_media_error">تعذر فتح الصورة المختارة. يرجى تجربة صورة أخرى.</string>
@@ -297,8 +304,8 @@
     <string name="otp_subtitle">أرسلنا رمزاً مكوناً من 6 أرقام إلى %s. أدخله أدناه لتأكيد حسابك.</string>
 
 
-
     <string name="product_add_to_cart">أضف للسلة</string>
+    <string name="products_added_to_cart">تمت الإضافة إلى السلة</string>
 
     <!--  Errors  -->
     <string name="error_bad_request">الطلب غير صالح. يرجى التحقق من البيانات والمحاولة مرة أخرى.</string>
@@ -309,9 +316,37 @@
     <string name="error_too_many_requests">طلبات كثيرة جدًا. يرجى الانتظار ثم المحاولة مرة أخرى.</string>
 
 
-
     <string name="error_no_internet">لا يوجد اتصال بالإنترنت، يرجى التحقق من الشبكة.</string>
     <string name="error_server_message">خطأ في السيرفر: %1$s</string>
     <string name="error_unknown">حدث خطأ غير متوقع، يرجى المحاولة لاحقاً.</string>
     <string name="error_invalid_id">رقم المنتج غير صحيح.</string>
+
+    <!-- Cart -->
+    <string name="cart_title">سلة الطلب</string>
+    <string name="cart_clear_description">إفراغ السلة</string>
+    <string name="cart_empty">لا توجد أدوية في السلة حتى الآن.</string>
+    <string name="cart_remove_item_description">إزالة الدواء</string>
+    <string name="cart_decrease_quantity">تقليل الكمية</string>
+    <string name="cart_increase_quantity">زيادة الكمية</string>
+    <string name="cart_add_prescription">إضافة روشتة</string>
+    <string name="cart_prescription_attached">تم إرفاق الروشتة</string>
+    <string name="cart_replace_prescription">استبدال الروشتة</string>
+    <string name="cart_remove_prescription">إزالة الروشتة</string>
+    <string name="cart_prescription_removed">تمت إزالة الروشتة</string>
+    <string name="cart_local_only">محفوظة بخصوصية على هذا الجهاز ولم تُرسل بعد.</string>
+    <string name="cart_add_note">إضافة ملاحظة للصيدلي</string>
+    <string name="cart_edit_note">تعديل ملاحظة الصيدلي</string>
+    <string name="cart_note_title">ملاحظة للصيدلي</string>
+    <string name="cart_note_hint">أضف أي تفاصيل يجب أن يراجعها الصيدلي</string>
+    <string name="cart_note_saved">تم حفظ الملاحظة</string>
+    <string name="cart_save">حفظ</string>
+    <string name="cart_cancel">إلغاء</string>
+    <string name="cart_total_price">إجمالي السعر</string>
+    <string name="cart_price_egp">%1$s جنيه</string>
+    <string name="cart_continue">متابعة الطلب</string>
+    <string name="cart_retry">إعادة المحاولة</string>
+    <string name="cart_clear_title">إفراغ سلة الطلب؟</string>
+    <string name="cart_clear_message">سيؤدي ذلك إلى إزالة جميع الأدوية والروشتة وملاحظة الصيدلي.</string>
+    <string name="cart_clear_confirm">إفراغ</string>
+    <string name="cart_cleared">تم إفراغ السلة</string>
 </resources>
