@@ -51,6 +51,7 @@ import java.util.regex.Pattern
 fun ProductListCard(
     product: ProductUi,
     onClick: () -> Unit,
+    onAddToCart: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val strength = remember(product.name) {
@@ -167,7 +168,7 @@ fun ProductListCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { /* TODO: Add to cart */ },
+                        onClick = onAddToCart,
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.onPrimary,
