@@ -39,10 +39,10 @@ fun ActiveSearchStages(currentStage: Int) {
             val isCurrent = currentStage == stageNum
 
             val targetColor = if (isCurrentOrPast) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-            val animatedColor by animateColorAsState(targetValue = targetColor, animationSpec = tween(400), label = "color")
+            val animatedColor by animateColorAsState(targetValue = targetColor, animationSpec = tween(400))
             
-            val circleSize by animateDpAsState(targetValue = if (isCurrent) 20.dp else 16.dp, animationSpec = tween(400), label = "size")
-            val innerCircleSize by animateDpAsState(targetValue = if (isCurrentOrPast) 10.dp else 0.dp, animationSpec = tween(400), label = "innerSize")
+            val circleSize by animateDpAsState(targetValue = if (isCurrent) 20.dp else 16.dp, animationSpec = tween(400))
+            val innerCircleSize by animateDpAsState(targetValue = if (isCurrentOrPast) 10.dp else 0.dp, animationSpec = tween(400))
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,15 +70,14 @@ fun ActiveSearchStages(currentStage: Int) {
                     contentAlignment = Alignment.Center
                 ) {
                     if (isCurrent) {
-                        val infiniteTransition = rememberInfiniteTransition(label = "pulse")
+                        val infiniteTransition = rememberInfiniteTransition()
                         val ringScale by infiniteTransition.animateFloat(
                             initialValue = 1f,
                             targetValue = 1.6f,
                             animationSpec = infiniteRepeatable(
                                 animation = tween(1000, easing = LinearOutSlowInEasing),
                                 repeatMode = RepeatMode.Restart
-                            ),
-                            label = "ringScale"
+                            )
                         )
                         val ringAlpha by infiniteTransition.animateFloat(
                             initialValue = 0.5f,
@@ -86,8 +85,7 @@ fun ActiveSearchStages(currentStage: Int) {
                             animationSpec = infiniteRepeatable(
                                 animation = tween(1000, easing = LinearOutSlowInEasing),
                                 repeatMode = RepeatMode.Restart
-                            ),
-                            label = "ringAlpha"
+                            )
                         )
                         Box(
                             modifier = Modifier
@@ -120,7 +118,7 @@ fun ActiveSearchStages(currentStage: Int) {
             
             if (index < stages.size - 1) {
                 val lineColor = if (currentStage > stageNum) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
-                val animatedLineColor by animateColorAsState(targetValue = lineColor, animationSpec = tween(400), label = "lineColor")
+                val animatedLineColor by animateColorAsState(targetValue = lineColor, animationSpec = tween(400))
                 
                 Box(
                     modifier = Modifier

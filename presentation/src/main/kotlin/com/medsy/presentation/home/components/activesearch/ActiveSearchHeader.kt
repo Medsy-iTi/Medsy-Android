@@ -68,15 +68,14 @@ fun ActiveSearchHeader(
         verticalAlignment = Alignment.Top
     ) {
         val isSearching = status is ActiveSearchStatus.Searching
-        val infiniteTransition = rememberInfiniteTransition(label = "icon_anim")
+        val infiniteTransition = rememberInfiniteTransition()
         val scale by infiniteTransition.animateFloat(
             initialValue = 1f,
             targetValue = if (isSearching) 1.15f else 1f,
             animationSpec = infiniteRepeatable(
                 animation = tween(800, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse
-            ),
-            label = "icon_scale"
+            )
         )
 
         Box(
