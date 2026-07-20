@@ -66,11 +66,9 @@ fun ActiveSearchStages(currentStage: Int) {
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Box(
-                    modifier = Modifier
-                        .size(32.dp), // Increased slightly to accommodate ring
+                    modifier = Modifier.size(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Pulsating ring for the active state
                     if (isCurrent) {
                         val infiniteTransition = rememberInfiniteTransition(label = "pulse")
                         val ringScale by infiniteTransition.animateFloat(
@@ -127,7 +125,7 @@ fun ActiveSearchStages(currentStage: Int) {
                 Box(
                     modifier = Modifier
                         .weight(0.5f)
-                        .padding(top = 54.dp) // Adjusted for the 32.dp box height
+                        .padding(top = 54.dp)
                         .height(2.dp)
                         .background(animatedLineColor)
                 )
