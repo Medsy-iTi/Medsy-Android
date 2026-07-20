@@ -8,13 +8,21 @@ import com.medsy.domain.common.map
 import com.medsy.domain.profile.model.Profile
 import com.medsy.domain.profile.repository.ProfileRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ProfileRepositoryImpl @Inject constructor(
     private val remoteDataSource: ProfileRemoteDataSource,
 ) : ProfileRepository {
 
-    override suspend fun getCurrentProfile(): MedsyResult<Profile, MedsyError.Remote> =
-        remoteDataSource.getCurrentProfile().map { it.toDomain() }
+    private var cachedProfile: Profile? = null
+
+    override suspend fun getCurrentProfile(): MedsyResult<Profile, MedsyError.Remote> {
+        cachedProfile?.let { return MedsyResult.Success(it) }
+        return remoteDataSource.getCurrentProfile().map { 
+            it.toDomain().also { profile -> cachedProfile = profile }
+        }
+    }
 
     override suspend fun updateCurrentProfile(
         homeAddress: String?,
@@ -22,5 +30,7 @@ class ProfileRepositoryImpl @Inject constructor(
     ): MedsyResult<Profile, MedsyError.Remote> = remoteDataSource.updateCurrentProfile(
         homeAddress = homeAddress,
         dob = dob,
-    ).map { it.toDomain() }
+    ).map { 
+        it.toDomain().also { profile -> cachedProfile = profile }
+    }
 }

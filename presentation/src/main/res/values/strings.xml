@@ -316,4 +316,39 @@
     <string name="error_server_message">Server error: %1$s</string>
     <string name="error_unknown">An unexpected error occurred, please try again later.</string>
     <string name="error_invalid_id">Invalid product ID.</string>
+
+    <!-- Active Search Status -->
+    <string name="home_search_status_searching_title">Searching for your medicines</string>
+    <string name="home_search_status_searching_desc">Matching your request with nearby pharmacies</string>
+    <string name="home_search_status_time">Search time</string>
+    <string name="home_search_status_stage_1">Stage 1</string>
+    <string name="home_search_status_stage_1_desc">Nearby pharmacies</string>
+    <string name="home_search_status_stage_2">Stage 2</string>
+    <string name="home_search_status_stage_2_desc">Wider range</string>
+    <string name="home_search_status_stage_3">Stage 3</string>
+    <string name="home_search_status_stage_3_desc">All areas</string>
+    <string name="home_search_status_notification_note">We will notify you as soon as a suitable offer arrives</string>
+    <string name="home_search_status_first_offer_title">First offer arrived!</string>
+    <string name="home_search_status_first_offer_desc">We are still receiving more offers</string>
+    <string name="home_search_status_multiple_offers_title">Multiple offers arrived</string>
+    <string name="home_search_status_multiple_offers_desc">You can now compare available offers</string>
+    <string name="home_search_status_available_medicines">Available medicines</string>
+    <string name="home_search_status_medicine_count_format">%1$d / %2$d medicines</string>
+    <string name="home_search_status_starting_from">From</string>
+    <string name="home_search_status_price_format">%1$d EGP</string>
+    <string name="home_search_status_view_offer">View Offer</string>
+    <string name="home_search_status_compare_offers">Compare Offers</string>
+    <string name="home_search_status_continue_and_compare">Continue and compare offers</string>
+    <string name="home_search_status_view_details">View request details</string>
+    <string name="home_search_status_auto_stop_note">Search will stop automatically when you choose an offer</string>
+    <string name="home_search_status_ended_title">Search time ended</string>
+    <string name="home_search_status_ended_desc">No suitable offer received yet</string>
+    <string name="home_search_status_search_wider">Search in a wider range</string>
+    <string name="home_search_status_cancel">Cancel request</string>
+    <string name="home_search_status_offers_available_format">%1$d offers available — you can compare</string>
+
+    <plurals name="home_search_status_medicines">
+        <item quantity="one">medicine</item>
+        <item quantity="other">medicines</item>
+    </plurals>
 </resources>
