@@ -68,6 +68,7 @@ class HomeViewModel @Inject constructor(
         }
         fetchCategories()
         preloadProfile()
+        startSearchSimulation()
     }
 
     private fun preloadProfile() {
