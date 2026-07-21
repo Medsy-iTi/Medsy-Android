@@ -65,7 +65,7 @@ fun ProfileMenuSection(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface,
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             border = BorderStroke(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.outline.copy(alpha = 0.72f),

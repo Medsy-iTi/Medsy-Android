@@ -44,6 +44,16 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
     ),
+    headlineMedium = TextStyle(
+        fontFamily = CairoFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 26.sp,
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = CairoFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+    ),
     titleLarge = TextStyle(
         fontFamily = CairoFontFamily,
         fontWeight = FontWeight.SemiBold,
