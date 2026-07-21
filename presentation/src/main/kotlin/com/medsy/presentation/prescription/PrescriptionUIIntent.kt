@@ -12,14 +12,14 @@ sealed interface PrescriptionUIIntent {
     data object RetryExtractionClicked : PrescriptionUIIntent
     data object ChooseAnotherImageClicked : PrescriptionUIIntent
     data object TogglePrescriptionImageClicked : PrescriptionUIIntent
-    data class ConfirmMedicineClicked(val medicineId: String) : PrescriptionUIIntent
-    data class EditMedicineClicked(val medicineId: String) : PrescriptionUIIntent
-    data class DeleteMedicineClicked(val medicineId: String) : PrescriptionUIIntent
-    data class IncreaseQuantityClicked(val medicineId: String) : PrescriptionUIIntent
-    data class DecreaseQuantityClicked(val medicineId: String) : PrescriptionUIIntent
+    data class ConfirmMedicineClicked(val medicineId: Int) : PrescriptionUIIntent
+    data class EditMedicineClicked(val medicineId: Int) : PrescriptionUIIntent
+    data class DeleteMedicineClicked(val medicineId: Int) : PrescriptionUIIntent
+    data class IncreaseQuantityClicked(val medicineId: Int) : PrescriptionUIIntent
+    data class DecreaseQuantityClicked(val medicineId: Int) : PrescriptionUIIntent
     data object AddMedicineManuallyClicked : PrescriptionUIIntent
     data class MedicineQueryChanged(val query: String) : PrescriptionUIIntent
-    data class MedicineSelected(val medicineId: String) : PrescriptionUIIntent
+    data class MedicineSelected(val medicineId: Int) : PrescriptionUIIntent
     data object AddToCartClicked : PrescriptionUIIntent
     data object ViewCartClicked : PrescriptionUIIntent
     data object ReturnHomeClicked : PrescriptionUIIntent

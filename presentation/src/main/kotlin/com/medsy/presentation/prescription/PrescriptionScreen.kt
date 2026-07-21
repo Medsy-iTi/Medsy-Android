@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.prescription.components.MedicinePickerScreen
@@ -33,14 +34,20 @@ import com.medsy.presentation.prescription.components.PrescriptionUploadErrorScr
 
 @Composable
 fun PrescriptionRoot(
+    attachmentOnly: Boolean,
     onNavigateBack: () -> Unit,
     onNavigateHome: () -> Unit,
     onNavigateCart: () -> Unit,
+    onPrescriptionAttached: () -> Unit,
     viewModel: PrescriptionViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+
+    LaunchedEffect(attachmentOnly) {
+        viewModel.init(attachmentOnly)
+    }
 
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
@@ -64,8 +71,11 @@ fun PrescriptionRoot(
                 PrescriptionUIEffect.NavigateBack -> onNavigateBack()
                 PrescriptionUIEffect.NavigateHome -> onNavigateHome()
                 PrescriptionUIEffect.NavigateCart -> onNavigateCart()
+                PrescriptionUIEffect.PrescriptionAttached -> onPrescriptionAttached()
                 is PrescriptionUIEffect.ShowMessage ->
-                    snackbarHostState.showSnackbar(context.getString(effect.messageRes))
+                    snackbarHostState.showSnackbar(
+                        ContextCompat.getString(context, effect.messageRes)
+                    )
             }
         }
     }

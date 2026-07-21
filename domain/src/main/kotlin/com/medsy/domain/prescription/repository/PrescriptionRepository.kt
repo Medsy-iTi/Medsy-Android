@@ -3,8 +3,6 @@ package com.medsy.domain.prescription.repository
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
-import com.medsy.domain.prescription.model.Medicine
-import com.medsy.domain.prescription.model.PrescriptionCartRequest
 import com.medsy.domain.prescription.model.PrescriptionExtractionOutcome
 import com.medsy.domain.prescription.model.PrescriptionImage
 
@@ -17,10 +15,4 @@ interface PrescriptionRepository {
     suspend fun extractPrescription(
         image: PrescriptionImage,
     ): MedsyResult<PrescriptionExtractionOutcome, MedsyError.Local>
-    suspend fun searchMedicines(
-        query: String,
-    ): MedsyResult<List<Medicine>, MedsyError.Local>
-    suspend fun addPrescriptionToCart(
-        request: PrescriptionCartRequest,
-    ): EmptyMedsyResult<MedsyError.Local>
 }

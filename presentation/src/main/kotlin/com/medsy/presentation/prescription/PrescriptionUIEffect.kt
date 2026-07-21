@@ -6,5 +6,6 @@ sealed interface PrescriptionUIEffect {
     data object NavigateBack : PrescriptionUIEffect
     data object NavigateHome : PrescriptionUIEffect
     data object NavigateCart : PrescriptionUIEffect
+    data object PrescriptionAttached : PrescriptionUIEffect
     data class ShowMessage(val messageRes: Int) : PrescriptionUIEffect
 }

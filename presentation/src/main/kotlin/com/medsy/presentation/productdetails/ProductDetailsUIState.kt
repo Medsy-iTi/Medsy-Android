@@ -1,5 +1,6 @@
 package com.medsy.presentation.productdetails
 
+import androidx.annotation.StringRes
 import com.medsy.presentation.productdetails.model.Product
 
 data class ProductDetailsUIState(
@@ -8,5 +9,5 @@ data class ProductDetailsUIState(
     val selectedImageIndex: Int = 0,
     val isFavorite: Boolean = false,
     val isAddingToCart: Boolean = false,
-    val errorMessage: String? = null,
+    @StringRes val errorMessageRes: Int? = null,
 )
