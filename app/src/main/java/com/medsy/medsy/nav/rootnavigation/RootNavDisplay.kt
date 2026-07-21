@@ -137,8 +137,10 @@ fun RootNavDisplay() {
                     openSearch = {
                         rootBackStack.navigateSingleTop(Route.SearchNav)
                     },
-                    openPersonalDetails = {
-                        rootBackStack.navigateSingleTop(Route.PersonalDetails)
+                    openPersonalDetails = { startInEditMode ->
+                        rootBackStack.navigateSingleTop(
+                            Route.PersonalDetails(startInEditMode = startInEditMode)
+                        )
                     },
                     openLogin = {
                         rootBackStack.apply {
@@ -178,8 +180,9 @@ fun RootNavDisplay() {
                     onNext = { rootBackStack.removeLastOrNull() }
                 )
             }
-            entry<Route.PersonalDetails> {
+            entry<Route.PersonalDetails> { route ->
                 PersonalDetailsRoot(
+                    startInEditMode = route.startInEditMode,
                     onNavigateBack = { rootBackStack.removeLastOrNull() }
                 )
             }

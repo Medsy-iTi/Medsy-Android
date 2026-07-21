@@ -160,6 +160,24 @@
     <string name="profile_personal_details_load_error">We couldn’t load your personal details.</string>
     <string name="profile_personal_details_save_success">Your personal details were updated.</string>
     <string name="profile_personal_details_save_error">We couldn’t save your changes. Please try again.</string>
+    <string name="profile_personal_details_name_required">This name is required.</string>
+    <string name="profile_personal_details_choose_map_location">Choose location on map</string>
+    <string name="profile_personal_details_change_map_location">Change map location</string>
+    <string name="profile_location_disclaimer_title">Add your delivery location</string>
+    <string name="profile_location_disclaimer_message">Choose your location on the map to help nearby pharmacies serve you accurately.</string>
+    <string name="profile_location_disclaimer_action">Open personal details</string>
+    <string name="profile_location_picker_title">Select location</string>
+    <string name="profile_location_confirm">Confirm location</string>
+    <string name="profile_location_use_current">Use current location</string>
+    <string name="profile_location_permission_denied">Location permission was not granted. You can still choose a location manually on the map.</string>
+    <string name="profile_location_unavailable">Your current location is unavailable. You can still choose a location manually on the map.</string>
+    <string name="profile_location_maps_unavailable">Google Maps is unavailable on this device.</string>
+    <string name="profile_location_selected_marker">Selected delivery location</string>
+    <string name="profile_location_card_title">Map location</string>
+    <string name="profile_location_card_selected">Location selected</string>
+    <string name="profile_location_card_not_selected">Location not selected</string>
+    <string name="profile_location_card_empty_message">No map location has been added yet.</string>
+    <string name="profile_location_card_edit_hint">The map pin is stored separately from your written home address.</string>
 
     <!--  Search  -->
     <string name="search_results_title">Search Results</string>

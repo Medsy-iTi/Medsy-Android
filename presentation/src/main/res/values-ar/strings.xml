@@ -153,6 +153,24 @@
     <string name="profile_personal_details_load_error">تعذر تحميل بياناتك الشخصية.</string>
     <string name="profile_personal_details_save_success">تم تحديث بياناتك الشخصية.</string>
     <string name="profile_personal_details_save_error">تعذر حفظ التغييرات. يرجى المحاولة مرة أخرى.</string>
+    <string name="profile_personal_details_name_required">هذا الاسم مطلوب.</string>
+    <string name="profile_personal_details_choose_map_location">اختيار الموقع على الخريطة</string>
+    <string name="profile_personal_details_change_map_location">تغيير الموقع على الخريطة</string>
+    <string name="profile_location_disclaimer_title">أضف موقع التوصيل</string>
+    <string name="profile_location_disclaimer_message">حدّد موقعك على الخريطة لمساعدة الصيدليات القريبة على خدمتك بدقة.</string>
+    <string name="profile_location_disclaimer_action">فتح البيانات الشخصية</string>
+    <string name="profile_location_picker_title">اختيار الموقع</string>
+    <string name="profile_location_confirm">تأكيد الموقع</string>
+    <string name="profile_location_use_current">استخدام الموقع الحالي</string>
+    <string name="profile_location_permission_denied">لم يتم السماح بالوصول إلى الموقع. لا يزال بإمكانك اختيار الموقع يدويًا على الخريطة.</string>
+    <string name="profile_location_unavailable">تعذر تحديد موقعك الحالي. لا يزال بإمكانك اختيار الموقع يدويًا على الخريطة.</string>
+    <string name="profile_location_maps_unavailable">خرائط Google غير متاحة على هذا الجهاز.</string>
+    <string name="profile_location_selected_marker">موقع التوصيل المحدد</string>
+    <string name="profile_location_card_title">الموقع على الخريطة</string>
+    <string name="profile_location_card_selected">تم تحديد الموقع</string>
+    <string name="profile_location_card_not_selected">لم يتم تحديد الموقع</string>
+    <string name="profile_location_card_empty_message">لم تتم إضافة موقع على الخريطة بعد.</string>
+    <string name="profile_location_card_edit_hint">يتم حفظ الموقع على الخريطة بشكل منفصل عن عنوان المنزل المكتوب.</string>
 
     <!--  Search  -->
     <string name="search_results_title">نتائج البحث</string>

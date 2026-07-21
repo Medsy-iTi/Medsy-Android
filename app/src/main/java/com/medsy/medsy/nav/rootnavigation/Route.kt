@@ -46,7 +46,9 @@ sealed interface Route : NavKey {
     data object Settings : Route
 
     @Serializable
-    data object PersonalDetails : Route
+    data class PersonalDetails(
+        val startInEditMode: Boolean = false,
+    ) : Route
 
     @Serializable
     data object SearchNav : Route
