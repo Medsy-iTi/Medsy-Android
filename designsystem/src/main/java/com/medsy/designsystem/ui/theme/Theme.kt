@@ -137,7 +137,7 @@ private val darkScheme = darkColorScheme(
 
 @Composable
 fun MedsyTheme(
-    darkTheme: Boolean,
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when (darkTheme) {

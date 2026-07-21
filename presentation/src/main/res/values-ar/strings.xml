@@ -353,4 +353,18 @@
         <item quantity="many">دواءً</item>
         <item quantity="other">أدوية</item>
     </plurals>
+    <!-- Pharmacy profile -->
+    <string name="pharmacy_profile_title">ملف الصيدلية</string>
+    <string name="pharmacy_profile_verified">صيدلية موثقة</string>
+    <string name="pharmacy_profile_contact_title">معلومات التواصل</string>
+    <string name="pharmacy_profile_phone">رقم الهاتف</string>
+    <string name="pharmacy_profile_address">العنوان</string>
+    <string name="pharmacy_profile_call">الاتصال بالصيدلية</string>
+    <string name="pharmacy_profile_location">موقع الصيدلية</string>
+    <string name="pharmacy_profile_directions">الاتجاهات</string>
+    <string name="pharmacy_profile_location_unavailable">موقع الصيدلية غير متاح حاليًا.</string>
+    <string name="pharmacy_profile_map_description">خريطة تعرض موقع %1$s</string>
+    <string name="pharmacy_profile_not_available">غير متاح</string>
+    <string name="pharmacy_profile_retry">إعادة المحاولة</string>
+    <string name="pharmacy_profile_invalid_id">رقم الصيدلية غير صالح.</string>
 </resources>

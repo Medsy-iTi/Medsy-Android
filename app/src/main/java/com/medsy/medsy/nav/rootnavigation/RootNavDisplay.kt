@@ -6,7 +6,10 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -15,11 +18,12 @@ import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
-import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.auth.otp.OtpRoot
-import com.medsy.presentation.categories.CategoriesRoot
+import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.cart.CartRoot
+import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
+import com.medsy.presentation.pharmacyprofile.PharmacyProfileRoot
 import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.products.ProductsRoot
@@ -30,12 +34,13 @@ import com.medsy.presentation.splash.SplashRoot
 
 @Composable
 fun RootNavDisplay() {
-    val rootBackStack = rememberNavBackStack(Route.Splash)
+    val context = LocalContext.current
+    val rootBackStack: NavBackStack<NavKey> = rememberNavBackStack(Route.PharmacyProfile())
 
     NavDisplay(
         modifier = Modifier.fillMaxSize(),
         backStack = rootBackStack,
-        onBack = { rootBackStack.removeLastOrNull() },
+        onBack = { rootBackStack.onBack(context) },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
@@ -171,6 +176,14 @@ fun RootNavDisplay() {
                     onNavigateToPharmacistChat = {
                         rootBackStack.navigateSingleTop(Route.AiChat(/* required params here */))
                     },
+                )
+            }
+            entry<Route.PharmacyProfile> { route ->
+                PharmacyProfileRoot(
+                    pharmacyId = route.pharmacyId,
+                    onNavigateBack = { rootBackStack.onBack(context) },
+                    onDialPhone = context::openDialer,
+                    onOpenDirections = context::openDirections,
                 )
             }
             entry<Route.Settings> {
