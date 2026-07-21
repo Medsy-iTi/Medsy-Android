@@ -365,7 +365,7 @@
     <string name="offers_missing_medicines">يحتوي على أدوية غير متوفرة</string>
     <string name="offers_combined_coverage">تغطية كاملة للطلب</string>
     <string name="offers_from_egp">من\n%1$d</string>
-    <string name="offers_price_note">الأسعار ثابتة من Medsy. الصيدليات يمكنها فقط تطبيق خصم وإضافة رسوم التوصيل.</string>
+    <string name="offers_price_note">الأسعار نهائية من Medsy ومطابقة لأسعار الصيدلية</string>
     <string name="offers_pharmacy_title_format">صيدلية %1$s</string>
     <string name="offers_manager_format">%1$s (المدير)</string>
     <string name="offers_requested_medicines">الأدوية المطلوبة</string>

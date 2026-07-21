@@ -134,12 +134,12 @@ fun AvailableOffersScreen(
                             .fillMaxWidth()
                             .padding(16.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.primaryContainer)
                             .border(
                                 width = 1.dp,
                                 color = MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(8.dp)
                             )
+                            .background(Color.Transparent)
                             .padding(16.dp),
                         contentAlignment = Alignment.CenterStart
                     ) {
@@ -149,14 +149,14 @@ fun AvailableOffersScreen(
                             Icon(
                                 imageVector = Icons.Default.Info,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = stringResource(R.string.offers_price_note),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Start
                             )
                         }

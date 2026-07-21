@@ -140,7 +140,7 @@ fun OrderConfirmationScreen(
             Image(
                 painter = painterResource(id = R.drawable.ic_complete),
                 contentDescription = null,
-                modifier = Modifier.size(140.dp)
+                modifier = Modifier.size(180.dp)
             )
             
             Spacer(modifier = Modifier.height(24.dp))
@@ -296,7 +296,7 @@ fun OrderConfirmationScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = androidx.compose.material.icons.Icons.Default.Schedule,
+                    imageVector = Icons.Default.Schedule,
                     contentDescription = null,
                     tint = Color(0xFF00A86B),
                     modifier = Modifier.size(24.dp)
