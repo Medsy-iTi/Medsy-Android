@@ -20,6 +20,7 @@ import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
+import com.medsy.presentation.orders.details.OrderDetailsRoot
 import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.products.ProductsRoot
@@ -30,7 +31,7 @@ import com.medsy.presentation.splash.SplashRoot
 
 @Composable
 fun RootNavDisplay() {
-    val rootBackStack = rememberNavBackStack(Route.Splash)
+    val rootBackStack = rememberNavBackStack(Route.NestedNav)
 
     NavDisplay(
         modifier = Modifier.fillMaxSize(),
@@ -154,7 +155,11 @@ fun RootNavDisplay() {
                     },
                     openPrescription = {
                         rootBackStack.navigateSingleTop(Route.Prescription)
+                    },
+                    openOrderDetails = { orderId ->
+                        rootBackStack.navigateSingleTop(Route.OrderDetails(orderId))
                     }
+
                 )
             }
             entry<Route.AiChat> {
@@ -162,6 +167,19 @@ fun RootNavDisplay() {
                     onNext = { rootBackStack.removeLastOrNull() }
                 )
             }
+            entry<Route.OrderDetails> { route ->
+                OrderDetailsRoot(
+                    orderId = route.orderId,
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateToPharmacyProfile = {
+                        /* TODO: navigate to Pharmacy Profile (M-26) once that screen/route exists */
+                    },
+                    onReorder = {
+                        /* TODO: reorder behavior is owned by M-27 */
+                    },
+                )
+            }
+
             entry<Route.ProductDetails> { route ->
                 ProductDetailsRoot(
                     productId = route.id,

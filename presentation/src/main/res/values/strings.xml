@@ -369,4 +369,19 @@
     <string name="orders_product_image_desc">Product image</string>
     <string name="orders_empty_state">No orders found</string>
 
+    <!--   Order Details (M-25)   -->
+    <string name="order_details_title_format">Order #%1$s</string>
+    <string name="order_details_fulfillment_pickup">Pickup</string>
+    <string name="order_details_fulfillment_delivery">Delivery</string>
+    <string name="order_details_pharmacy_label">Pharmacy</string>
+    <string name="order_details_alternative_to_format">Alternative to %1$s</string>
+    <string name="order_details_qty_x_price_format">%1$d x %2$d EGP</string>
+    <string name="order_details_items_title">Items</string>
+    <string name="order_details_summary_title">Order Summary</string>
+    <string name="order_details_items_subtotal">Items subtotal</string>
+    <string name="order_details_delivery_fee">Delivery fee</string>
+    <string name="order_details_final_total">Total</string>
+    <string name="order_details_reorder">Reorder</string>
+    <string name="order_details_error_load">We couldn\'t load this order\'s details.</string>
+
 </resources>

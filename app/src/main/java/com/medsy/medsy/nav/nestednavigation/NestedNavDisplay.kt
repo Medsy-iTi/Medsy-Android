@@ -37,7 +37,8 @@ fun NestedNavDisplay(
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
     openPrescription: () -> Unit,
-) {
+    openOrderDetails: (String) -> Unit,
+    ) {
 
     val nestedBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -117,7 +118,7 @@ fun NestedNavDisplay(
                 }
                 entry<Route.NestedNav.Orders> {
                     OrdersRoot(
-                        onOrderClick = { /* TODO: navigate to order details once that screen exists */ },
+                        onOrderClick = openOrderDetails,
                     )
                 }
 

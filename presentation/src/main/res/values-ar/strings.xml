@@ -370,4 +370,20 @@
     <string name="orders_products_count_format">%1$d منتجات</string>
     <string name="orders_product_image_desc">صورة المنتج</string>
     <string name="orders_empty_state">لا توجد طلبات</string>
+
+
+    <!--   Order Details (M-25)   -->
+    <string name="order_details_title_format">طلب #%1$s</string>
+    <string name="order_details_fulfillment_pickup">استلام من الصيدلية</string>
+    <string name="order_details_fulfillment_delivery">توصيل</string>
+    <string name="order_details_pharmacy_label">الصيدلية</string>
+    <string name="order_details_alternative_to_format">بديل عن %1$s</string>
+    <string name="order_details_qty_x_price_format">%1$d × %2$d جنيه</string>
+    <string name="order_details_items_title">الأصناف</string>
+    <string name="order_details_summary_title">ملخص الطلب</string>
+    <string name="order_details_items_subtotal">إجمالي الأصناف</string>
+    <string name="order_details_delivery_fee">رسوم التوصيل</string>
+    <string name="order_details_final_total">الإجمالي</string>
+    <string name="order_details_reorder">إعادة الطلب</string>
+    <string name="order_details_error_load">تعذر تحميل تفاصيل هذا الطلب.</string>
 </resources>
