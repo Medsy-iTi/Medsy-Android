@@ -95,14 +95,14 @@ fun OrderReviewScreen(
                             .fillMaxWidth()
                             .height(56.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF00A86B)
+                            containerColor = MaterialTheme.colorScheme.primary
                         ),
                         shape = RoundedCornerShape(12.dp),
                         enabled = !state.isConfirmingOrder
                     ) {
                         if (state.isConfirmingOrder) {
                             CircularProgressIndicator(
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier.size(24.dp)
                             )
                         } else {
@@ -110,7 +110,7 @@ fun OrderReviewScreen(
                                 text = stringResource(R.string.offers_confirm_order),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         }
                     }
@@ -154,7 +154,6 @@ fun OrderReviewScreen(
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
                         
-                        // Delivery Address Card
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -179,7 +178,7 @@ fun OrderReviewScreen(
                                     textAlign = TextAlign.Start
                                 )
                                 Text(
-                                    text = "أمام برج النيل، الدور 3، شقة 12", // Mock specific address details
+                                    text = "أمام برج النيل، الدور 3، شقة 12",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     textAlign = TextAlign.Start
@@ -189,7 +188,7 @@ fun OrderReviewScreen(
                             Spacer(modifier = Modifier.width(16.dp))
                             
                             Button(
-                                onClick = { /* Edit address */ },
+                                onClick = { },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -207,7 +206,6 @@ fun OrderReviewScreen(
                         
                         Spacer(modifier = Modifier.height(24.dp))
                         
-                        // Delivery Details
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically

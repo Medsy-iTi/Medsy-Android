@@ -59,42 +59,15 @@ fun PriceSummarySection(
                     text = total.toString(),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = androidx.compose.ui.graphics.Color(0xFF00A86B)
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Text(
                     text = " ${stringResource(R.string.currency_egp)}",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = androidx.compose.ui.graphics.Color(0xFF00A86B)
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun PriceRow(label: String, price: Int) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Row {
-            Text(
-                text = price.toString(),
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Text(
-                text = " ${stringResource(R.string.currency_egp)}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
     }
 }

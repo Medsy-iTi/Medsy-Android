@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import com.medsy.designsystem.ui.theme.extendedColors
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -54,7 +54,6 @@ fun OfferCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Right Side (in RTL): Pharmacy Name & Subtitle
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.Start
@@ -79,7 +78,6 @@ fun OfferCard(
             
             Spacer(modifier = Modifier.width(16.dp))
             
-            // Left Side (in RTL): Badge on top, Price on bottom
             Column(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceBetween
@@ -122,33 +120,5 @@ private fun getOfferSubtitle(type: OfferType): String {
         OfferType.FULL -> stringResource(R.string.offers_best_price)
         OfferType.PARTIAL -> stringResource(R.string.offers_missing_medicines)
         OfferType.COMBINED -> stringResource(R.string.offers_combined_coverage)
-    }
-}
-
-@Composable
-private fun Badge(type: OfferType) {
-    val backgroundColor = when (type) {
-        OfferType.FULL -> Color(0xFF00A86B) // Green
-        OfferType.PARTIAL -> Color(0xFFD97706) // Orange/Amber
-        OfferType.COMBINED -> Color(0xFF7C3AED) // Purple
-    }
-    val textRes = when (type) {
-        OfferType.FULL -> R.string.offers_badge_full
-        OfferType.PARTIAL -> R.string.offers_badge_partial
-        OfferType.COMBINED -> R.string.offers_badge_combined
-    }
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(backgroundColor)
-            .padding(horizontal = 10.dp, vertical = 6.dp)
-    ) {
-        Text(
-            text = stringResource(textRes),
-            style = MaterialTheme.typography.labelMedium,
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
     }
 }

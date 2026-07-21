@@ -121,7 +121,6 @@ fun OfferDetailsScreen(
                     contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
                 ) {
                     item {
-                        // Pharmacy Header Card
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()

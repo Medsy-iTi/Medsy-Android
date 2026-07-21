@@ -93,7 +93,7 @@ fun OrderConfirmationScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF00A86B)
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
@@ -101,7 +101,7 @@ fun OrderConfirmationScreen(
                         text = stringResource(R.string.offers_track_order),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
                 
@@ -178,7 +178,6 @@ fun OrderConfirmationScreen(
             
             Spacer(modifier = Modifier.height(48.dp))
             
-            // Order Details Card
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -186,7 +185,6 @@ fun OrderConfirmationScreen(
                     .padding(24.dp)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    // Pharmacy Row (RTL aligned)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -196,13 +194,13 @@ fun OrderConfirmationScreen(
                             modifier = Modifier
                                 .size(44.dp)
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color(0xFF00A86B).copy(alpha = 0.1f)),
+                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Storefront,
                                 contentDescription = null,
-                                tint = Color(0xFF00A86B)
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                         Spacer(modifier = Modifier.width(12.dp))
@@ -223,7 +221,6 @@ fun OrderConfirmationScreen(
                     
                     Spacer(modifier = Modifier.height(24.dp))
                     
-                    // Delivery To
                     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                         Text(
                             text = stringResource(R.string.offers_delivery_to),
@@ -247,7 +244,6 @@ fun OrderConfirmationScreen(
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     Spacer(modifier = Modifier.height(16.dp))
                     
-                    // Estimated Time
                     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                         Text(
                             text = stringResource(R.string.offers_estimated_time),
@@ -266,7 +262,6 @@ fun OrderConfirmationScreen(
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     Spacer(modifier = Modifier.height(16.dp))
                     
-                    // Payment Method
                     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                         Text(
                             text = stringResource(R.string.offers_payment_method),
@@ -285,20 +280,19 @@ fun OrderConfirmationScreen(
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Notification Note
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .border(1.dp, Color(0xFF00A86B).copy(alpha = 0.3f), RoundedCornerShape(12.dp))
-                    .background(Color(0xFF00A86B).copy(alpha = 0.08f))
+                    .border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.08f))
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Default.Schedule,
                     contentDescription = null,
-                    tint = Color(0xFF00A86B),
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))

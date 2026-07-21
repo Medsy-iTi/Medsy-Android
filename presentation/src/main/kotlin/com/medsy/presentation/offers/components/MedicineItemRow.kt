@@ -23,7 +23,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import coil3.compose.AsyncImage
+import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.offers.model.OfferMedicine
 
@@ -54,12 +54,10 @@ fun MedicineItemRow(
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Image (Far Right in RTL)
         BoxWithImage(imageUrl = medicine.imageUrl)
         
         Spacer(modifier = Modifier.width(12.dp))
         
-        // Medicine details (Middle/Right in RTL)
         Column(
             horizontalAlignment = Alignment.Start
         ) {
@@ -81,7 +79,6 @@ fun MedicineItemRow(
         
         Spacer(modifier = Modifier.weight(1f))
         
-        // Price and availability (Left side in RTL)
         if (isSingleLinePrice) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -111,14 +108,14 @@ fun MedicineItemRow(
                         Text(
                             text = stringResource(R.string.offers_available),
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color(0xFF00A86B),
+                            color = MaterialTheme.extendedColors.badgeSuccess,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
                             contentDescription = null,
-                            tint = Color(0xFF00A86B),
+                            tint = MaterialTheme.extendedColors.badgeSuccess,
                             modifier = Modifier.size(14.dp)
                         )
                     }
@@ -141,30 +138,5 @@ fun MedicineItemRow(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun BoxWithImage(imageUrl: String?) {
-    if (imageUrl.isNullOrEmpty()) {
-        Image(
-            painter = painterResource(R.drawable.person), // Assuming this exists
-            contentDescription = null,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.White),
-            contentScale = ContentScale.Fit
-        )
-    } else {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = null,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.White),
-            contentScale = ContentScale.Fit
-        )
     }
 }
