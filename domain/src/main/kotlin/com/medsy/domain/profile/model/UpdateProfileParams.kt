@@ -1,6 +1,6 @@
-package com.medsy.data.profile.remote.dto
+package com.medsy.domain.profile.model
 
-data class UpdateCustomerProfileRequestDto(
+data class UpdateProfileParams(
     val firstName: String,
     val lastName: String,
     val homeAddress: String?,

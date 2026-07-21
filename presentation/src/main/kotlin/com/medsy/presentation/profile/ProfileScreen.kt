@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -40,12 +42,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.domain.common.preferences.model.AppLanguage
 import com.medsy.domain.common.preferences.model.ThemeMode
 import com.medsy.presentation.R
 import com.medsy.presentation.profile.components.ProfileHeaderCard
 import com.medsy.presentation.profile.components.ProfileLoadErrorCard
+import com.medsy.presentation.profile.components.ProfileLocationDisclaimer
 import com.medsy.presentation.profile.components.ProfileLoadingCard
 import com.medsy.presentation.profile.components.ProfileLogoutBottomSheet
 import com.medsy.presentation.profile.components.ProfileMenuItem
@@ -55,16 +61,29 @@ import com.medsy.presentation.profile.components.ProfileSelectionOption
 
 @Composable
 fun ProfileRoot(
-    onNavigateToPersonalDetails: () -> Unit,
+    onNavigateToPersonalDetails: (startInEditMode: Boolean) -> Unit,
     onNavigateToLogin: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.onIntent(ProfileUIIntent.ScreenResumed)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                ProfileUIEffect.NavigateToPersonalDetails -> onNavigateToPersonalDetails()
+                is ProfileUIEffect.NavigateToPersonalDetails -> {
+                    onNavigateToPersonalDetails(effect.startInEditMode)
+                }
                 ProfileUIEffect.NavigateToLogin -> onNavigateToLogin()
             }
         }
@@ -135,21 +154,36 @@ fun ProfileScreen(
                     )
                 }
                 item {
-                    when {
-                        state.isLoading -> ProfileLoadingCard()
-                        state.hasError -> ProfileLoadErrorCard(
-                            message = state.errorMessageRes?.let { stringResource(it) },
-                            onRetry = { onIntent(ProfileUIIntent.RetryProfileLoad) },
-                        )
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        when {
+                            state.isLoading -> ProfileLoadingCard()
+                            state.hasError -> ProfileLoadErrorCard(
+                                message = state.errorMessageRes?.let { stringResource(it) },
+                                onRetry = { onIntent(ProfileUIIntent.RetryProfileLoad) },
+                            )
 
-                        else -> ProfileHeaderCard(
-                            name = state.name.ifBlank {
-                                stringResource(R.string.profile_personal_details_not_provided)
-                            },
-                            phoneNumber = state.phoneNumber.ifBlank {
-                                stringResource(R.string.profile_personal_details_not_provided)
-                            },
-                        )
+                            else -> {
+                                ProfileHeaderCard(
+                                    name = state.name.ifBlank {
+                                        stringResource(
+                                            R.string.profile_personal_details_not_provided
+                                        )
+                                    },
+                                    phoneNumber = state.phoneNumber.ifBlank {
+                                        stringResource(
+                                            R.string.profile_personal_details_not_provided
+                                        )
+                                    },
+                                )
+                                if (!state.hasSavedLocation) {
+                                    ProfileLocationDisclaimer(
+                                        onClick = {
+                                            onIntent(ProfileUIIntent.AddAddressClicked)
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 
