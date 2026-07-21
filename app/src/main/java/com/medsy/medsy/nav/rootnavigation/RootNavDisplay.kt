@@ -158,6 +158,9 @@ fun RootNavDisplay() {
                     },
                     openPrescription = {
                         rootBackStack.navigateSingleTop(Route.Prescription)
+                    },
+                    openOffers = {
+                        rootBackStack.navigateSingleTop(Route.AvailableOffers)
                     }
                 )
             }

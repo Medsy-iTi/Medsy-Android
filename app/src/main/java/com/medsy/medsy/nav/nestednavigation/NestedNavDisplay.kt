@@ -36,6 +36,7 @@ fun NestedNavDisplay(
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
     openPrescription: () -> Unit,
+    openOffers: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -107,7 +108,8 @@ fun NestedNavDisplay(
                         onViewAllCategoriesClick = { openCategories() },
                         onCategoryClick = { categoryId, categoryName ->
                             openProducts(categoryId, categoryName)
-                        }
+                        },
+                        onViewOffersClick = { openOffers() }
                     )
                 }
                 entry<Route.NestedNav.Cart> {
