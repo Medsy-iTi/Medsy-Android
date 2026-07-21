@@ -356,10 +356,11 @@
 
     <!-- Offers Flow -->
     <string name="offers_available_title">العروض المتاحة</string>
+    <string name="offers_details_title">تفاصيل العرض</string>
     <string name="offers_available_subtitle_format">%1$d عروض متاحة لطلبك</string>
     <string name="offers_badge_full">عرض كامل</string>
     <string name="offers_badge_partial">عرض جزئي</string>
-    <string name="offers_badge_combined">عرض من صيدليتين</string>
+    <string name="offers_badge_combined">عرض مركب</string>
     <string name="offers_best_price">أفضل سعر</string>
     <string name="offers_missing_medicines">يحتوي على أدوية غير متوفرة</string>
     <string name="offers_combined_coverage">تغطية كاملة للطلب</string>

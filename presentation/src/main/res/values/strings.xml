@@ -354,6 +354,7 @@
 
     <!-- Offers Flow -->
     <string name="offers_available_title">Available Offers</string>
+    <string name="offers_details_title">Offer Details</string>
     <string name="offers_available_subtitle_format">%1$d offers available for your request</string>
     <string name="offers_badge_full">Full offer</string>
     <string name="offers_badge_partial">Partial offer</string>

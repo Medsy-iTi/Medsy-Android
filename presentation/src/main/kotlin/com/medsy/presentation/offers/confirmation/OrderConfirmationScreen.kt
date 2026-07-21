@@ -18,7 +18,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,7 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
 import com.medsy.presentation.offers.OffersState
@@ -91,13 +93,15 @@ fun OrderConfirmationScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
+                        containerColor = Color(0xFF00A86B)
+                    ),
+                    shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.offers_track_order),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
                 }
                 
@@ -133,12 +137,10 @@ fun OrderConfirmationScreen(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
             
-            // Assuming ic_complete is a drawable resource. If it's not, we'll need to handle it.
-            // But user mentioned: "you can found screen ic_complete for last screen"
             Image(
-                painter = painterResource(id = R.drawable.ic_complete), // Fallback if doesn't exist, we'll see
+                painter = painterResource(id = R.drawable.ic_complete),
                 contentDescription = null,
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size(140.dp)
             )
             
             Spacer(modifier = Modifier.height(24.dp))
@@ -163,14 +165,14 @@ fun OrderConfirmationScreen(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFF1E293B)) // Dark surface
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(horizontal = 24.dp, vertical = 8.dp)
             ) {
                 Text(
                     text = state.orderId ?: "#MS-250721-001",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             
@@ -184,23 +186,27 @@ fun OrderConfirmationScreen(
                     .padding(24.dp)
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    // Pharmacy
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    // Pharmacy Row (RTL aligned)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
                         Box(
                             modifier = Modifier
-                                .size(48.dp)
+                                .size(44.dp)
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color(0xFF0D3B2E)),
+                                .background(Color(0xFF00A86B).copy(alpha = 0.1f)),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Storefront,
                                 contentDescription = null,
-                                tint = Color(0xFF34D399)
+                                tint = Color(0xFF00A86B)
                             )
                         }
-                        
-                        Column(horizontalAlignment = Alignment.End) {
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(horizontalAlignment = Alignment.Start) {
                             Text(
                                 text = stringResource(R.string.offers_pharmacy_title_format, offer?.pharmacyName.orEmpty()),
                                 style = MaterialTheme.typography.titleMedium,
@@ -218,7 +224,7 @@ fun OrderConfirmationScreen(
                     Spacer(modifier = Modifier.height(24.dp))
                     
                     // Delivery To
-                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                         Text(
                             text = stringResource(R.string.offers_delivery_to),
                             style = MaterialTheme.typography.bodyMedium,
@@ -242,7 +248,7 @@ fun OrderConfirmationScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     // Estimated Time
-                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                         Text(
                             text = stringResource(R.string.offers_estimated_time),
                             style = MaterialTheme.typography.bodyMedium,
@@ -261,7 +267,7 @@ fun OrderConfirmationScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     // Payment Method
-                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                         Text(
                             text = stringResource(R.string.offers_payment_method),
                             style = MaterialTheme.typography.bodyMedium,
@@ -283,22 +289,23 @@ fun OrderConfirmationScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFF0D3B2E))
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(1.dp, Color(0xFF00A86B).copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                    .background(Color(0xFF00A86B).copy(alpha = 0.08f))
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Default.Info,
+                    imageVector = androidx.compose.material.icons.Icons.Default.Schedule,
                     contentDescription = null,
-                    tint = Color(0xFF34D399),
+                    tint = Color(0xFF00A86B),
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = stringResource(R.string.offers_notification_note),
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF34D399),
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.weight(1f)
                 )

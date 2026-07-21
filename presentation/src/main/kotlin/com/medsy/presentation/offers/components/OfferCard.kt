@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.medsy.presentation.R
 import com.medsy.presentation.offers.model.OfferType
 import com.medsy.presentation.offers.model.PharmacyOffer
@@ -43,7 +45,7 @@ fun OfferCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
     ) {
         Row(
             modifier = Modifier
@@ -52,43 +54,64 @@ fun OfferCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Price Section
+            // Left Side (in RTL): Badge on top, Price on bottom
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = stringResource(R.string.offers_from_egp, offer.price),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center
-                )
+                Badge(type = offer.type)
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(
+                            text = "من",
+                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = stringResource(R.string.currency_egp),
+                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = offer.price.toString(),
+                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 32.sp),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
-            
+
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Pharmacy Details Section
+            // Right Side (in RTL): Pharmacy Name & Subtitle
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = stringResource(R.string.offers_pharmacy_title_format, offer.pharmacyName),
-                    style = MaterialTheme.typography.titleMedium,
+                    text = if (offer.type == OfferType.COMBINED) {
+                        "عرض من صيدليتين"
+                    } else {
+                        stringResource(R.string.offers_pharmacy_title_format, offer.pharmacyName)
+                    },
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = getOfferSubtitle(offer.type),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
-            Spacer(modifier = Modifier.width(16.dp))
-            
-            // Badge Section
-            Badge(type = offer.type)
         }
     }
 }
@@ -105,14 +128,9 @@ private fun getOfferSubtitle(type: OfferType): String {
 @Composable
 private fun Badge(type: OfferType) {
     val backgroundColor = when (type) {
-        OfferType.FULL -> Color(0xFF0D3B2E) // Dark Green
-        OfferType.PARTIAL -> Color(0xFF4A3414) // Dark Orange
-        OfferType.COMBINED -> Color(0xFF2A1C3D) // Dark Purple
-    }
-    val textColor = when (type) {
-        OfferType.FULL -> Color(0xFF34D399) // Light Green
-        OfferType.PARTIAL -> Color(0xFFFBBF24) // Light Orange
-        OfferType.COMBINED -> Color(0xFFA78BFA) // Light Purple
+        OfferType.FULL -> Color(0xFF00A86B) // Green
+        OfferType.PARTIAL -> Color(0xFFD97706) // Orange/Amber
+        OfferType.COMBINED -> Color(0xFF7C3AED) // Purple
     }
     val textRes = when (type) {
         OfferType.FULL -> R.string.offers_badge_full
@@ -124,12 +142,12 @@ private fun Badge(type: OfferType) {
         modifier = Modifier
             .clip(RoundedCornerShape(6.dp))
             .background(backgroundColor)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp)
     ) {
         Text(
             text = stringResource(textRes),
-            style = MaterialTheme.typography.labelSmall,
-            color = textColor,
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.White,
             fontWeight = FontWeight.Bold
         )
     }

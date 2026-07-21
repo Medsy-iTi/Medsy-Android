@@ -1,6 +1,8 @@
 package com.medsy.presentation.offers.review
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
 import com.medsy.presentation.offers.OffersState
@@ -92,20 +95,22 @@ fun OrderReviewScreen(
                             .fillMaxWidth()
                             .height(56.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
+                            containerColor = Color(0xFF00A86B)
                         ),
+                        shape = RoundedCornerShape(12.dp),
                         enabled = !state.isConfirmingOrder
                     ) {
                         if (state.isConfirmingOrder) {
                             CircularProgressIndicator(
-                                color = MaterialTheme.colorScheme.onPrimary,
+                                color = Color.White,
                                 modifier = Modifier.size(24.dp)
                             )
                         } else {
                             Text(
                                 text = stringResource(R.string.offers_confirm_order),
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
                             )
                         }
                     }
@@ -123,25 +128,7 @@ fun OrderReviewScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
                 ) {
-                    item {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = stringResource(R.string.offers_pharmacy_title_format, offer.pharmacyName),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = stringResource(R.string.offers_manager_format, offer.managerName),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Spacer(modifier = Modifier.height(24.dp))
-                        }
-                    }
+
 
                     item {
                         Text(
@@ -154,7 +141,7 @@ fun OrderReviewScreen(
                     }
 
                     items(offer.medicines) { medicine ->
-                        MedicineItemRow(medicine = medicine)
+                        MedicineItemRow(medicine = medicine, isSingleLinePrice = true)
                     }
 
                     item {
@@ -176,11 +163,36 @@ fun OrderReviewScreen(
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            
+                            Spacer(modifier = Modifier.width(16.dp))
+                            
+                            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
+                                Text(
+                                    text = stringResource(R.string.home_address_mock),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    textAlign = TextAlign.Start
+                                )
+                                Text(
+                                    text = "أمام برج النيل، الدور 3، شقة 12", // Mock specific address details
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Start
+                                )
+                            }
+                            
+                            Spacer(modifier = Modifier.width(16.dp))
+                            
                             Button(
                                 onClick = { /* Edit address */ },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF0D3B2E),
-                                    contentColor = Color(0xFF34D399)
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                                 ),
                                 shape = RoundedCornerShape(8.dp),
                                 contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -191,31 +203,6 @@ fun OrderReviewScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                             }
-                            
-                            Spacer(modifier = Modifier.width(16.dp))
-                            
-                            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.End) {
-                                Text(
-                                    text = stringResource(R.string.home_address_mock),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    textAlign = TextAlign.End
-                                )
-                                Text(
-                                    text = "أمام برج النيل، الدور 3، شقة 12", // Mock specific address details
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    textAlign = TextAlign.End
-                                )
-                            }
-                            
-                            Spacer(modifier = Modifier.width(16.dp))
-                            
-                            Icon(
-                                imageVector = Icons.Default.LocationOn,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
                         }
                         
                         Spacer(modifier = Modifier.height(24.dp))
@@ -225,21 +212,7 @@ fun OrderReviewScreen(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = state.deliveryFee.toString(),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = " ${stringResource(R.string.currency_egp)}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            
-                            Spacer(modifier = Modifier.weight(1f))
-                            
-                            Column(horizontalAlignment = Alignment.End) {
+                            Column(horizontalAlignment = Alignment.Start) {
                                 Text(
                                     text = stringResource(R.string.offers_delivery_details),
                                     style = MaterialTheme.typography.bodyLarge,
@@ -252,6 +225,20 @@ fun OrderReviewScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
+                            
+                            Spacer(modifier = Modifier.weight(1f))
+                            
+                            Text(
+                                text = state.deliveryFee.toString(),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                            Text(
+                                text = " ${stringResource(R.string.currency_egp)}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                         
                         Spacer(modifier = Modifier.height(32.dp))

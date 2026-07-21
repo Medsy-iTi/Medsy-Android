@@ -129,7 +129,8 @@ class OffersViewModel @Inject constructor() : ViewModel() {
             _state.update { 
                 it.copy(
                     isLoading = false,
-                    availableOffers = mockOffers
+                    availableOffers = mockOffers,
+                    selectedOffer = it.selectedOffer ?: mockOffers.first()
                 ) 
             }
         }

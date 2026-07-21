@@ -34,6 +34,11 @@ val Typography = Typography(
         fontWeight = FontWeight.ExtraBold,
         fontSize = 48.sp,
     ),
+    displaySmall = TextStyle(
+        fontFamily = CairoFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp,
+    ),
     headlineLarge = TextStyle(
         fontFamily = CairoFontFamily,
         fontWeight = FontWeight.Bold,

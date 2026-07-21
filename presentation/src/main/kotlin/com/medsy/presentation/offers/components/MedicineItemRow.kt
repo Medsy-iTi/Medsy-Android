@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import coil3.compose.AsyncImage
 import com.medsy.presentation.R
 import com.medsy.presentation.offers.model.OfferMedicine
@@ -33,7 +34,8 @@ import com.medsy.presentation.offers.model.OfferMedicine
 @Composable
 fun MedicineItemRow(
     medicine: OfferMedicine,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSingleLinePrice: Boolean = false
 ) {
     Row(
         modifier = modifier
@@ -41,46 +43,14 @@ fun MedicineItemRow(
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Price and availability
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = medicine.price.toString(),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Text(
-                text = stringResource(R.string.currency_egp),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            
-            if (medicine.isAvailable) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = Color(0xFF10B981), // Emerald 500
-                        modifier = Modifier.size(12.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = stringResource(R.string.offers_available),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFF10B981)
-                    )
-                }
-            }
-        }
+        // Image (Far Right in RTL)
+        BoxWithImage(imageUrl = medicine.imageUrl)
         
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         
-        // Medicine details
+        // Medicine details (Middle/Right in RTL)
         Column(
-            modifier = Modifier.weight(1f),
-            horizontalAlignment = Alignment.End
+            horizontalAlignment = Alignment.Start
         ) {
             Text(
                 text = medicine.name,
@@ -88,6 +58,7 @@ fun MedicineItemRow(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = medicine.packageInfo,
                 style = MaterialTheme.typography.bodyMedium,
@@ -95,10 +66,68 @@ fun MedicineItemRow(
             )
         }
         
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.weight(1f))
         
-        // Image
-        BoxWithImage(imageUrl = medicine.imageUrl)
+        // Price and availability (Left side in RTL)
+        if (isSingleLinePrice) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "${medicine.price} ${stringResource(R.string.currency_egp)}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        } else {
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = "${medicine.price} ${stringResource(R.string.currency_egp)}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                
+                Spacer(modifier = Modifier.height(4.dp))
+
+                if (medicine.isAvailable) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = stringResource(R.string.offers_available),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFF00A86B),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = Color(0xFF00A86B),
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+                } else {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "غير متوفر",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            imageVector = Icons.Default.Cancel,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -106,7 +135,7 @@ fun MedicineItemRow(
 private fun BoxWithImage(imageUrl: String?) {
     if (imageUrl.isNullOrEmpty()) {
         Image(
-            painter = painterResource(R.drawable.med_placeholder), // Assuming this exists
+            painter = painterResource(R.drawable.person), // Assuming this exists
             contentDescription = null,
             modifier = Modifier
                 .size(48.dp)
