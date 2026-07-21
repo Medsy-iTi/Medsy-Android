@@ -353,4 +353,21 @@
         <item quantity="many">دواءً</item>
         <item quantity="other">أدوية</item>
     </plurals>
+
+
+    <!--  My Orders  -->
+    <string name="orders_title">طلباتي</string>
+    <string name="order_number_format">#%1$s</string>
+    <string name="orders_filter_all">الكل</string>
+    <string name="orders_filter_active">الجارية</string>
+    <string name="orders_filter_finished">المنتهية</string>
+    <string name="orders_filter_cancelled">ملغاة</string>
+    <string name="orders_status_confirmed">تم تأكيد الطلب</string>
+    <string name="orders_status_delivered">تم التسليم</string>
+    <string name="orders_status_cancelled">ملغي</string>
+    <string name="orders_from_pharmacy_format">من %1$s</string>
+    <string name="orders_cancelled_note">تم إلغاء الطلب</string>
+    <string name="orders_products_count_format">%1$d منتجات</string>
+    <string name="orders_product_image_desc">صورة المنتج</string>
+    <string name="orders_empty_state">لا توجد طلبات</string>
 </resources>

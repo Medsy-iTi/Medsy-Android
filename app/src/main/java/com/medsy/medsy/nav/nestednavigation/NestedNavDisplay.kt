@@ -21,6 +21,7 @@ import com.medsy.medsy.nav.rootnavigation.Route
 import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.home.HomeRoot
+import com.medsy.presentation.orders.OrdersRoot
 import com.medsy.presentation.profile.ProfileRoot
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -44,6 +45,7 @@ fun NestedNavDisplay(
                 polymorphic(NavKey::class) {
                     subclass(Route.NestedNav.Home::class, Route.NestedNav.Home.serializer())
                     subclass(Route.NestedNav.Cart::class, Route.NestedNav.Cart.serializer())
+                    subclass(Route.NestedNav.Orders::class, Route.NestedNav.Orders.serializer())
                     subclass(Route.NestedNav.Profile::class, Route.NestedNav.Profile.serializer())
                 }
             }
@@ -113,6 +115,12 @@ fun NestedNavDisplay(
                 entry<Route.NestedNav.Cart> {
                     CartRoot(onNext = openProductDetails)
                 }
+                entry<Route.NestedNav.Orders> {
+                    OrdersRoot(
+                        onOrderClick = { /* TODO: navigate to order details once that screen exists */ },
+                    )
+                }
+
                 entry<Route.NestedNav.Profile> {
                     ProfileRoot(
                         onNavigateToPersonalDetails = openPersonalDetails,
