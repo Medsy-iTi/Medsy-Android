@@ -353,4 +353,43 @@
         <item quantity="many">دواءً</item>
         <item quantity="other">أدوية</item>
     </plurals>
+
+    <!-- Offers Flow -->
+    <string name="offers_available_title">العروض المتاحة</string>
+    <string name="offers_available_subtitle_format">%1$d عروض متاحة لطلبك</string>
+    <string name="offers_badge_full">عرض كامل</string>
+    <string name="offers_badge_partial">عرض جزئي</string>
+    <string name="offers_badge_combined">عرض من صيدليتين</string>
+    <string name="offers_best_price">أفضل سعر</string>
+    <string name="offers_missing_medicines">يحتوي على أدوية غير متوفرة</string>
+    <string name="offers_combined_coverage">تغطية كاملة للطلب</string>
+    <string name="offers_from_egp">من\n%1$d</string>
+    <string name="offers_price_note">الأسعار ثابتة من Medsy. الصيدليات يمكنها فقط تطبيق خصم وإضافة رسوم التوصيل.</string>
+    <string name="offers_pharmacy_title_format">صيدلية %1$s</string>
+    <string name="offers_manager_format">%1$s (المدير)</string>
+    <string name="offers_requested_medicines">الأدوية المطلوبة</string>
+    <string name="offers_available">متوفر</string>
+    <string name="offers_pharmacist_comment">تعليق من الصيدلي</string>
+    <string name="offers_view_prescription">عرض الروشتة</string>
+    <string name="offers_choose_offer">اختار هذا العرض</string>
+    
+    <string name="offers_order_review_title">مراجعة الطلب</string>
+    <string name="offers_delivery_address">عنوان التوصيل</string>
+    <string name="offers_delivery_details">تفاصيل التوصيل</string>
+    <string name="offers_home_delivery">توصيل للمنزل</string>
+    <string name="offers_delivery_fee">رسوم التوصيل</string>
+    <string name="offers_total_medicines_price">إجمالي سعر الأدوية</string>
+    <string name="offers_total">الإجمالي</string>
+    <string name="offers_confirm_order">تأكيد الطلب</string>
+    
+    <string name="offers_success_title">تم تأكيد طلبك بنجاح!</string>
+    <string name="offers_order_number">رقم الطلب</string>
+    <string name="offers_delivery_to">التوصيل إلى</string>
+    <string name="offers_estimated_time">وقت التجهيز المتوقع</string>
+    <string name="offers_payment_method">طريقة الدفع</string>
+    <string name="offers_cash_on_delivery">كاش عند الاستلام</string>
+    <string name="offers_notification_note">سيتم إشعارك عند بدء تجهيز الطلب\nيمكنك متابعة حالة الطلب من الصفحة الرئيسية</string>
+    <string name="offers_track_order">تتبع الطلب</string>
+    <string name="offers_back_to_home">العودة إلى الرئيسية</string>
+    <string name="offers_edit_address">تعديل</string>
 </resources>
