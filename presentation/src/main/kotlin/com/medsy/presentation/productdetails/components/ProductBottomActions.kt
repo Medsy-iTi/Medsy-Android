@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material3.ButtonDefaults
@@ -78,7 +79,7 @@ fun ProductBottomActions(
                 style = MaterialTheme.typography.titleMedium,
             )
             Icon(
-                imageVector = Icons.Outlined.Chat,
+                imageVector = Icons.AutoMirrored.Outlined.Chat,
                 contentDescription = null,
                 modifier = Modifier.padding(start = 8.dp),
             )

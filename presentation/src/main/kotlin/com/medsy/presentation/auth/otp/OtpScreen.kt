@@ -231,14 +231,14 @@ private fun OtpEmailIllustration() {
             .size(110.dp)
             .scale(scale)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primaryContainer)
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.08f))
     ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(84.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
         ) {
             Icon(
                 imageVector = Icons.Outlined.Email,

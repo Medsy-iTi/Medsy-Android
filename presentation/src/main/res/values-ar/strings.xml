@@ -349,4 +349,42 @@
     <string name="cart_clear_message">سيؤدي ذلك إلى إزالة جميع الأدوية والروشتة وملاحظة الصيدلي.</string>
     <string name="cart_clear_confirm">إفراغ</string>
     <string name="cart_cleared">تم إفراغ السلة</string>
+    <!-- Active Search Status -->
+    <string name="home_search_status_searching_title">جاري البحث عن أدويتك</string>
+    <string name="home_search_status_searching_desc">نطابق طلبك مع الصيدليات القريبة</string>
+    <string name="home_search_status_time">وقت البحث</string>
+    <string name="home_search_status_stage_1">المرحلة ١</string>
+    <string name="home_search_status_stage_1_desc">صيدليات قريبة</string>
+    <string name="home_search_status_stage_2">المرحلة ٢</string>
+    <string name="home_search_status_stage_2_desc">نطاق أوسع</string>
+    <string name="home_search_status_stage_3">المرحلة ٣</string>
+    <string name="home_search_status_stage_3_desc">جميع المناطق</string>
+    <string name="home_search_status_notification_note">سأرسل لك إشعارًا فور وصول عرض مناسب</string>
+    <string name="home_search_status_first_offer_title">وصل أول عرض!</string>
+    <string name="home_search_status_first_offer_desc">ما زلنا نستقبل عروضًا إضافية</string>
+    <string name="home_search_status_multiple_offers_title">وصلت عدة عروض</string>
+    <string name="home_search_status_multiple_offers_desc">يمكنك الآن مقارنة العروض المتاحة</string>
+    <string name="home_search_status_available_medicines">الأدوية المتاحة</string>
+    <string name="home_search_status_medicine_count_format">%1$d / %2$d دواء</string>
+    <string name="home_search_status_starting_from">من</string>
+    <string name="home_search_status_price_format">%1$d جنيه</string>
+    <string name="home_search_status_view_offer">عرض العرض</string>
+    <string name="home_search_status_compare_offers">مقارنة العروض</string>
+    <string name="home_search_status_continue_and_compare">متابعة ومقارنة العروض</string>
+    <string name="home_search_status_view_details">عرض تفاصيل الطلب</string>
+    <string name="home_search_status_auto_stop_note">سيتوقف البحث تلقائيًا عند اختيارك عرضًا</string>
+    <string name="home_search_status_ended_title">انتهى وقت البحث</string>
+    <string name="home_search_status_ended_desc">لم نتلق عرضًا مناسبًا حتى الآن</string>
+    <string name="home_search_status_search_wider">البحث في نطاق أوسع</string>
+    <string name="home_search_status_cancel">إلغاء الطلب</string>
+    <string name="home_search_status_offers_available_format">%1$d عروض متاحة — يمكنك المقارنة</string>
+
+    <plurals name="home_search_status_medicines">
+        <item quantity="zero">أدوية</item>
+        <item quantity="one">دواء</item>
+        <item quantity="two">دواءان</item>
+        <item quantity="few">أدوية</item>
+        <item quantity="many">دواءً</item>
+        <item quantity="other">أدوية</item>
+    </plurals>
 </resources>

@@ -3,6 +3,7 @@ package com.medsy.presentation.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.ExperimentalMaterial3Api
 import com.medsy.designsystem.components.MedsySearchBar
 import com.medsy.presentation.R
 import com.medsy.presentation.home.components.*
@@ -50,6 +52,7 @@ fun HomeRoot(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     state: HomeUIState,
@@ -92,9 +95,25 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(18.dp))
 
+        if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                ActiveSearchCard(
+                    status = state.activeSearchStatus,
+                    onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
+                    onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
+                    onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) }
+                )
+            }
+            Spacer(modifier = Modifier.height(18.dp))
+        }
+
         Box(modifier = Modifier.padding(horizontal = 16.dp)) {
             OrderCardsSection(
-                onSearchMedicineClick = { onIntent(HomeUIIntent.OnSearchMedicineClick) },
+                onSearchMedicineClick = { onIntent(HomeUIIntent.OnStartSearchSimulation) },
                 onUploadPrescriptionClick = { onIntent(HomeUIIntent.OnUploadPrescriptionClick) }
             )
         }

@@ -1,0 +1,49 @@
+package com.medsy.presentation.home.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.medsy.presentation.home.ActiveSearchStatus
+import com.medsy.presentation.home.components.activesearch.ActiveSearchContent
+import com.medsy.presentation.home.components.activesearch.ActiveSearchHeader
+import com.medsy.presentation.home.components.activesearch.ActiveSearchTimer
+
+@Composable
+fun ActiveSearchCard(
+    status: ActiveSearchStatus,
+    onCancelClick: () -> Unit,
+    onViewOffersClick: () -> Unit,
+    onSearchWiderRangeClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (status is ActiveSearchStatus.Idle) return
+
+    val isEnded = status is ActiveSearchStatus.SearchEndedNoOffers
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 8.dp)
+    ) {
+        ActiveSearchHeader(status = status, onCancelClick = onCancelClick)
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        if (!isEnded) {
+            ActiveSearchTimer(status = status)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        
+        ActiveSearchContent(
+            status = status,
+            onViewOffersClick = onViewOffersClick,
+            onSearchWiderRangeClick = onSearchWiderRangeClick,
+            onCancelClick = onCancelClick
+        )
+    }
+}

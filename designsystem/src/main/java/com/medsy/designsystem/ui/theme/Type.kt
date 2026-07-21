@@ -68,5 +68,15 @@ val Typography = Typography(
         fontFamily = CairoFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
+    ),
+    labelLarge = TextStyle(
+        fontFamily = CairoFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+    ),
+    labelSmall = TextStyle(
+        fontFamily = CairoFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 11.sp,
     )
 )
