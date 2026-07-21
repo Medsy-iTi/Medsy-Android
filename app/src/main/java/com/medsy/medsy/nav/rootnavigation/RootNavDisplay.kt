@@ -31,7 +31,7 @@ import com.medsy.presentation.splash.SplashRoot
 
 @Composable
 fun RootNavDisplay() {
-    val rootBackStack = rememberNavBackStack(Route.NestedNav)
+    val rootBackStack = rememberNavBackStack(Route.Splash)
 
     NavDisplay(
         modifier = Modifier.fillMaxSize(),

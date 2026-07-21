@@ -2,6 +2,7 @@ package com.medsy.presentation.orders
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.orders.usecase.GetOrdersUseCase
 import com.medsy.presentation.orders.model.OrderProductThumbnail
 import com.medsy.presentation.orders.model.OrderStatus
 import com.medsy.presentation.orders.model.OrderSummary
@@ -18,8 +19,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class OrdersViewModel @Inject constructor() : ViewModel() {
-
+class OrdersViewModel @Inject constructor(
+    private val getOrdersUseCase: GetOrdersUseCase
+) : ViewModel() {
     private var hasLoadedInitialData = false
 
     private val _state = MutableStateFlow(OrdersUIState())
@@ -50,66 +52,47 @@ class OrdersViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    // TODO: replace with a real GetOrdersUseCase once the orders endpoint exists.
     private fun loadOrders() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            delay(300)
 
-            val orders = listOf(
-                OrderSummary(
-                    id = "1258",
-                    dateLabel = "Today",
-                    status = OrderStatus.Confirmed,
-                    pharmacyName = "Al Rahma Pharmacy",
-                    total = 180,
-                    productCount = 3,
-                    productThumbnails = listOf(
-                        OrderProductThumbnail("1", "https://example.com/images/product_1.png"),
-                        OrderProductThumbnail("2", "https://example.com/images/panadol.png"),
-                        OrderProductThumbnail("3", "https://example.com/images/panadol.png"),
-                    ),
-                ),
-                OrderSummary(
-                    id = "1230",
-                    dateLabel = "Yesterday",
-                    status = OrderStatus.Delivered,
-                    pharmacyName = "Al Shifa Pharmacy",
-                    total = 125,
-                    productCount = 2,
-                    productThumbnails = listOf(
-                        OrderProductThumbnail("4", "https://example.com/images/panadol.png"),
-                        OrderProductThumbnail("5", "https://example.com/images/panadol.png"),
-                    ),
-                ),
-                OrderSummary(
-                    id = "1205",
-                    dateLabel = "May 12",
-                    status = OrderStatus.Delivered,
-                    pharmacyName = "El Ezaby Pharmacy",
-                    total = 240,
-                    productCount = 4,
-                    productThumbnails = listOf(
-                        OrderProductThumbnail("6", "https://example.com/images/product_2.png"),
-                        OrderProductThumbnail("7", "https://example.com/images/panadol.png"),
-                        OrderProductThumbnail("8", "https://example.com/images/panadol.png"),
-                    ),
-                ),
-                OrderSummary(
-                    id = "1180",
-                    dateLabel = "May 9",
-                    status = OrderStatus.Cancelled,
-                    pharmacyName = null,
-                    total = 0,
-                    productCount = 2,
-                    productThumbnails = listOf(
-                        OrderProductThumbnail("9", "https://example.com/images/product_3.png"),
-                        OrderProductThumbnail("10", "https://example.com/images/product_4.png"),
-                    ),
-                ),
-            )
+            try {
+                val domainOrders = getOrdersUseCase()
 
-            _state.update { it.copy(isLoading = false, orders = orders) }
+                val uiOrders = domainOrders.map { domainOrder ->
+
+                    val presentationStatus = when (domainOrder.status) {
+                        com.medsy.domain.orders.model.OrderStatus.Confirmed -> OrderStatus.Confirmed
+                        com.medsy.domain.orders.model.OrderStatus.Delivered -> OrderStatus.Delivered
+                        com.medsy.domain.orders.model.OrderStatus.Cancelled -> OrderStatus.Cancelled
+                        com.medsy.domain.orders.model.OrderStatus.Pending -> OrderStatus.Confirmed
+                    }
+
+                    OrderSummary(
+                        id = domainOrder.id,
+                        dateLabel = domainOrder.dateLabel,
+                        status = presentationStatus,
+                        pharmacyName = domainOrder.pharmacyName,
+                        total = domainOrder.total,
+                        productCount = domainOrder.productCount,
+                        productThumbnails = domainOrder.productThumbnails.map { thumb ->
+                            OrderProductThumbnail(
+                                productId = thumb.productId,
+                                imageUrl = thumb.imageUrl
+                            )
+                        }
+                    )
+                }
+
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        orders = uiOrders
+                    )
+                }
+            } catch (e: Exception) {
+                _state.update { it.copy(isLoading = false) }
+            }
         }
     }
 
