@@ -1,9 +1,20 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.secrets)
+}
+
+val medsyLocalProperties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
+
+require(!medsyLocalProperties.getProperty("MAPS_API_KEY").isNullOrBlank()) {
+    "MAPS_API_KEY must be configured in the gitignored local.properties file."
 }
 
 android {
