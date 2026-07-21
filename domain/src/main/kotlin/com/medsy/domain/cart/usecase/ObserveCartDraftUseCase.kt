@@ -1,0 +1,12 @@
+package com.medsy.domain.cart.usecase
+
+import com.medsy.domain.cart.model.CartDraft
+import com.medsy.domain.cart.repository.CartRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class ObserveCartDraftUseCase @Inject constructor(
+    private val repository: CartRepository,
+) {
+    operator fun invoke(): Flow<CartDraft> = repository.draft
+}

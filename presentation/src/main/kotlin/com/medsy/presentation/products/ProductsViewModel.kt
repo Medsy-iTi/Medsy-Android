@@ -3,9 +3,11 @@ package com.medsy.presentation.products
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.domain.products.usecase.GetProductsByCategoryUseCase
+import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -21,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductsViewModel @Inject constructor(
     private val getProductsByCategoryUseCase: GetProductsByCategoryUseCase,
+    private val addCartItem: AddCartItemUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -65,6 +68,22 @@ class ProductsViewModel @Inject constructor(
                     intent.productId
                 )
             )
+
+            is ProductsUIIntent.OnAddToCartClick -> addToCart(intent.productId)
+        }
+    }
+
+    private fun addToCart(productId: Int) {
+        viewModelScope.launch {
+            addCartItem(productId)
+                .onSuccess {
+                    sendEffect(
+                        ProductsUIEffect.ShowMessage(R.string.products_added_to_cart)
+                    )
+                }
+                .onError { error ->
+                    sendEffect(ProductsUIEffect.ShowMessage(error.toMessageRes()))
+                }
         }
     }
 

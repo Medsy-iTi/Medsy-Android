@@ -22,4 +22,14 @@ class SearchRepositoryImpl @Inject constructor(
         safeApiCall {
             apiService.getProducts(page, size, sort)
         }.map { it.toDomain() }
+
+    override suspend fun searchProducts(
+        keyword: String,
+        page: Int,
+        size: Int,
+        sort: List<String>?,
+    ): MedsyResult<SearchProductsPage, MedsyError.Remote> =
+        safeApiCall {
+            apiService.searchProducts(keyword, page, size, sort)
+        }.map { it.toDomain() }
 }
