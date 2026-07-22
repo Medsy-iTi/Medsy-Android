@@ -21,6 +21,7 @@ import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.auth.register.RegisterRoot
+import com.medsy.presentation.cart.cartrequest.CartRequestRoot
 import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.offers.available.AvailableOffersRoot
 import com.medsy.presentation.offers.confirmation.OrderConfirmationRoot
@@ -168,10 +169,16 @@ fun RootNavDisplay() {
                             Route.Prescription(attachmentOnly)
                         )
                     },
+                    openCartRequest = {
+                        rootBackStack.navigateSingleTop(Route.CartRequest)
+                    },
                     requestedDestination = requestedNestedDestination,
                     onRequestedDestinationHandled = {
                         requestedNestedDestination = null
                     },
+                    openProductDetails = {
+                        rootBackStack.navigateSingleTop(Route.ProductDetails(it.toString()))
+                    }
                 )
             }
             entry<Route.AiChat> {
@@ -191,6 +198,15 @@ fun RootNavDisplay() {
             entry<Route.Settings> {
                 SettingsRoot(
                     onNext = { rootBackStack.removeLastOrNull() }
+                )
+            }
+            entry<Route.CartRequest> {
+                CartRequestRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateHome = {
+                        requestedNestedDestination = Route.NestedNav.Home
+                        rootBackStack.popIfCurrentIs<Route.CartRequest>()
+                    },
                 )
             }
             entry<Route.PersonalDetails> { route ->

@@ -58,6 +58,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.location.MedsyLocationPickerScreen
 import com.medsy.domain.profile.model.Profile
 import com.medsy.presentation.R
 import java.time.Instant
@@ -97,7 +98,7 @@ fun PersonalDetailsRoot(
     }
 
     if (state.isMapPickerVisible) {
-        ProfileLocationPickerScreen(
+        MedsyLocationPickerScreen(
             initialLatitude = state.draftLatitude,
             initialLongitude = state.draftLongitude,
             onDismiss = {

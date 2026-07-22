@@ -29,6 +29,7 @@ import com.medsy.presentation.cart.components.CartNoteDialog
 @Composable
 fun CartRoot(
     onAddPrescription: () -> Unit,
+    onOpenCartRequest: () -> Unit,
     viewModel: CartViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -40,6 +41,7 @@ fun CartRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 CartUIEffect.OpenPrescription -> onAddPrescription()
+                CartUIEffect.OpenMakeRequest -> onOpenCartRequest()
                 is CartUIEffect.ShowMessage ->
                     snackbarHostState.showSnackbar(
                         ContextCompat.getString(

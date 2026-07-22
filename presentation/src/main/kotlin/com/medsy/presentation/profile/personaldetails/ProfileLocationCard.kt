@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.medsy.designsystem.components.location.MedsyLocationPreview
 import com.medsy.presentation.R
 
 @Composable
@@ -90,7 +91,7 @@ fun ProfileLocationCard(
             }
 
             if (hasValidLocation) {
-                ProfileLocationPreview(
+                MedsyLocationPreview(
                     latitude = requireNotNull(latitude),
                     longitude = requireNotNull(longitude),
                 )

@@ -1,4 +1,4 @@
-package com.medsy.presentation.profile.personaldetails
+package com.medsy.designsystem.components.location
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +23,7 @@ import com.google.maps.android.compose.rememberMarkerState
 private const val LocationPreviewZoom = 16f
 
 @Composable
-fun ProfileLocationPreview(
+fun MedsyLocationPreview(
     latitude: Double,
     longitude: Double,
     modifier: Modifier = Modifier,

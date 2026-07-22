@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="location_picker_title">اختيار الموقع</string>
+    <string name="location_picker_confirm">تأكيد الموقع</string>
+    <string name="location_picker_use_current">استخدام الموقع الحالي</string>
+    <string name="location_picker_permission_denied">لم يتم السماح بالوصول إلى الموقع. لا يزال بإمكانك اختيار الموقع يدويًا على الخريطة.</string>
+    <string name="location_picker_unavailable">تعذر تحديد موقعك الحالي. لا يزال بإمكانك اختيار الموقع يدويًا على الخريطة.</string>
+    <string name="location_picker_maps_unavailable">خرائط Google غير متاحة على هذا الجهاز.</string>
+    <string name="location_picker_selected_marker">الموقع المحدد</string>
+    <string name="location_picker_back">رجوع</string>
+</resources>

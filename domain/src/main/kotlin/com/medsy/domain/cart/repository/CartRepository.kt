@@ -2,6 +2,7 @@ package com.medsy.domain.cart.repository
 
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartDraft
+import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
@@ -24,6 +25,10 @@ interface CartRepository {
 
     suspend fun removeItem(cartItemId: Long): MedsyResult<Cart, MedsyError.Remote>
     suspend fun clearCart(): EmptyMedsyResult<MedsyError.Remote>
+
+    suspend fun submitProductsRequest(
+        request: ProductsRequest,
+    ): EmptyMedsyResult<MedsyError.Remote>
 
     suspend fun updateNote(note: String): EmptyMedsyResult<MedsyError.Local>
     suspend fun attachPrescription(

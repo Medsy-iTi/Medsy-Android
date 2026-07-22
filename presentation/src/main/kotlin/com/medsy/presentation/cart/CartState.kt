@@ -18,7 +18,8 @@ data class CartState(
     @StringRes val errorMessageRes: Int? = null,
 ) {
     val hasContent: Boolean
-        get() = items.isNotEmpty() ||
-            draft.prescriptionImage != null ||
-            draft.pharmacistNote.isNotBlank()
+        get() = canContinue || draft.pharmacistNote.isNotBlank()
+
+    val canContinue: Boolean
+        get() = items.isNotEmpty() || draft.prescriptionImage != null
 }
