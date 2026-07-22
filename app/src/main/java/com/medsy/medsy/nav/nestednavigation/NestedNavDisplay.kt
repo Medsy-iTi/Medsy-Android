@@ -30,7 +30,6 @@ import kotlinx.serialization.modules.polymorphic
 @Composable
 fun NestedNavDisplay(
     navigateBack: () -> Unit,
-    openProductDetails: () -> Unit,
     openPersonalDetails: (startInEditMode: Boolean) -> Unit,
     openLogin: () -> Unit,
     openSearch: () -> Unit,

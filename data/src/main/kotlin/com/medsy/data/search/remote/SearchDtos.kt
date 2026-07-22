@@ -12,7 +12,7 @@ data class ProductDto(
     @Json(name = "price") val price: Double,
     @Json(name = "imageUrl") val imageUrl: String,
     @Json(name = "categoryId") val categoryId: Int,
-    @Json(name = "categoryName") val categoryName: String,
+    @Json(name = "consumerCategory") val categoryName: String,
     @Json(name = "company") val company: String,
     @Json(name = "route") val route: String
 )
