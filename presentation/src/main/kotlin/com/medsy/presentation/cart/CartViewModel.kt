@@ -94,6 +94,8 @@ class CartViewModel @Inject constructor(
                     noteInput = it.draft.pharmacistNote,
                 )
             }
+
+            CartUIIntent.SubmitCartClicked -> sendEffect(CartUIEffect.OpenCheckout)
         }
     }
 
