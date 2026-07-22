@@ -132,7 +132,7 @@ fun RootNavDisplay() {
             entry<Route.NestedNav> {
                 NestedNavDisplay(
                     navigateBack = {
-                        rootBackStack.popIfCurrentIs<Route.NestedNav>()
+                        rootBackStack.onBack(context)
                     },
                     openProductDetails = {
                         rootBackStack.navigateSingleTop(
