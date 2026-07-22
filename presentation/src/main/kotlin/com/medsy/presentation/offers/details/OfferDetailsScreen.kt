@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import com.medsy.designsystem.ui.theme.extendedColors
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -95,7 +96,7 @@ fun OfferDetailsScreen(
                             .fillMaxWidth()
                             .height(56.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF00A86B)
+                            containerColor = MaterialTheme.extendedColors.badgeSuccess
                         ),
                         shape = RoundedCornerShape(12.dp)
                     ) {
@@ -103,7 +104,7 @@ fun OfferDetailsScreen(
                             text = stringResource(R.string.offers_choose_offer),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.extendedColors.onBadgeSuccess
                         )
                     }
                 }
@@ -139,13 +140,13 @@ fun OfferDetailsScreen(
                                 modifier = Modifier
                                     .size(44.dp)
                                     .clip(RoundedCornerShape(8.dp))
-                                    .background(Color(0xFF00A86B).copy(alpha = 0.1f)),
+                                    .background(MaterialTheme.extendedColors.badgeSuccess.copy(alpha = 0.1f)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Storefront,
                                     contentDescription = null,
-                                    tint = Color(0xFF00A86B)
+                                    tint = MaterialTheme.extendedColors.badgeSuccess
                                 )
                             }
                             Spacer(modifier = Modifier.width(12.dp))
