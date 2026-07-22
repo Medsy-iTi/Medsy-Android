@@ -25,6 +25,7 @@ fun HomeRoot(
     onUploadPrescriptionClick: () -> Unit,
     onViewAllCategoriesClick: () -> Unit,
     onCategoryClick: (Int, String) -> Unit,
+    onViewOffersClick: () -> Unit,
 
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -42,6 +43,7 @@ fun HomeRoot(
                 is HomeUIEffect.NavigateToAddressSelection -> onAddressClick()
                 is HomeUIEffect.NavigateToUploadPrescription -> onUploadPrescriptionClick()
                 is HomeUIEffect.NavigateToCategories -> onViewAllCategoriesClick()
+                is HomeUIEffect.NavigateToOffers -> onViewOffersClick()
             }
         }
     }

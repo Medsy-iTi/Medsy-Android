@@ -434,4 +434,44 @@
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>
     </plurals>
+
+    <!-- Offers Flow -->
+    <string name="offers_available_title">Available Offers</string>
+    <string name="offers_details_title">Offer Details</string>
+    <string name="offers_available_subtitle_format">%1$d offers available for your request</string>
+    <string name="offers_badge_full">Full offer</string>
+    <string name="offers_badge_partial">Partial offer</string>
+    <string name="offers_badge_combined">Combined offer</string>
+    <string name="offers_best_price">Best price</string>
+    <string name="offers_missing_medicines">Missing some medicines</string>
+    <string name="offers_combined_coverage">Full coverage for your request</string>
+    <string name="offers_from_egp">from\n%1$d</string>
+    <string name="offers_price_note">Prices are final from Medsy and match pharmacy prices, only a discount and delivery fee may apply.</string>
+    <string name="offers_pharmacy_title_format">%1$s Pharmacy</string>
+    <string name="offers_manager_format">%1$s (Manager)</string>
+    <string name="offers_requested_medicines">Requested Medicines</string>
+    <string name="offers_available">Available</string>
+    <string name="offers_pharmacist_comment">Pharmacist Comment</string>
+    <string name="offers_view_prescription">View Prescription</string>
+    <string name="offers_choose_offer">Choose this Offer</string>
+    
+    <string name="offers_order_review_title">Order Review</string>
+    <string name="offers_delivery_address">Delivery Address</string>
+    <string name="offers_delivery_details">Delivery Details</string>
+    <string name="offers_home_delivery">Home Delivery</string>
+    <string name="offers_delivery_fee">Delivery Fee</string>
+    <string name="offers_total_medicines_price">Total Medicines Price</string>
+    <string name="offers_total">Total</string>
+    <string name="offers_confirm_order">Confirm Order</string>
+    
+    <string name="offers_success_title">Order Confirmed Successfully!</string>
+    <string name="offers_order_number">Order Number</string>
+    <string name="offers_delivery_to">Delivery To</string>
+    <string name="offers_estimated_time">Estimated Preparation Time</string>
+    <string name="offers_payment_method">Payment Method</string>
+    <string name="offers_cash_on_delivery">Cash on Delivery</string>
+    <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.</string>
+    <string name="offers_track_order">Track Order</string>
+    <string name="offers_back_to_home">Back to Home</string>
+    <string name="offers_edit_address">Edit</string>
 </resources>

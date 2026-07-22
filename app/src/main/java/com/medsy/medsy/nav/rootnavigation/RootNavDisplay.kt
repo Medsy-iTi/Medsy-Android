@@ -23,6 +23,10 @@ import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.cart.cartrequest.CartRequestRoot
 import com.medsy.presentation.categories.CategoriesRoot
+import com.medsy.presentation.offers.available.AvailableOffersRoot
+import com.medsy.presentation.offers.confirmation.OrderConfirmationRoot
+import com.medsy.presentation.offers.details.OfferDetailsRoot
+import com.medsy.presentation.offers.review.OrderReviewRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
@@ -157,6 +161,9 @@ fun RootNavDisplay() {
                     openProducts = { categoryId, categoryName ->
                         rootBackStack.navigateSingleTop(Route.Products(categoryId, categoryName))
                     },
+                    openOffers = {
+                        rootBackStack.navigateSingleTop(Route.AvailableOffers)
+                    },
                     openPrescription = { attachmentOnly ->
                         rootBackStack.navigateSingleTop(
                             Route.Prescription(attachmentOnly)
@@ -250,6 +257,36 @@ fun RootNavDisplay() {
                     onPrescriptionAttached = {
                         rootBackStack.popIfCurrentIs<Route.Prescription>()
                     },
+                )
+            }
+            entry<Route.AvailableOffers> {
+                AvailableOffersRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateToOfferDetails = { rootBackStack.navigateSingleTop(Route.OfferDetails) }
+                )
+            }
+            entry<Route.OfferDetails> {
+                OfferDetailsRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateToOrderReview = { rootBackStack.navigateSingleTop(Route.OrderReview) }
+                )
+            }
+            entry<Route.OrderReview> {
+                OrderReviewRoot(
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateToOrderConfirmation = { rootBackStack.navigateSingleTop(Route.OrderConfirmation) }
+                )
+            }
+            entry<Route.OrderConfirmation> {
+                OrderConfirmationRoot(
+                    onNavigateToTrackOrder = {
+                        rootBackStack.apply {
+                            clear(); navigateSingleTop(
+                            Route.NestedNav
+                        )
+                        }
+                    },
+                    onNavigateToHome = { rootBackStack.apply { clear(); navigateSingleTop(Route.NestedNav) } }
                 )
             }
         }
