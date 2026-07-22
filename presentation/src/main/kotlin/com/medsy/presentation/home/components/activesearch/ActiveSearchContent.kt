@@ -91,8 +91,7 @@ fun ActiveSearchContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
                     .padding(vertical = 12.dp),
                 contentAlignment = Alignment.Center
             ) {

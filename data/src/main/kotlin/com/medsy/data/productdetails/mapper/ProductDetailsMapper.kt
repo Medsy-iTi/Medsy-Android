@@ -7,12 +7,18 @@ fun ProductDetailsDto.toDomain(): ProductDetails {
     return ProductDetails(
         id = id,
         name = name,
-        scientificName = scientificName,
+        productName = productName,
+        strength = strength,
+        packSize = packSize,
+        form = form,
         price = price,
-        imageUrl = imageUrl,
+        scientificName = scientificName,
+        scientificCategory = scientificCategory,
         categoryId = categoryId,
-        categoryName = categoryName,
+        consumerCategory = consumerCategory,
         company = company,
-        route = route
+        route = route,
+        description = description,
+        imageUrl = imageUrl
     )
 }

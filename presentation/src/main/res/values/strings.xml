@@ -371,6 +371,42 @@
     <string name="cart_clear_message">This removes all medicines, the prescription, and the pharmacist note.</string>
     <string name="cart_clear_confirm">Clear</string>
     <string name="cart_cleared">Cart cleared</string>
+    <string name="cart_request_title">Complete request</string>
+    <string name="cart_request_subtitle">A few final details before pharmacies receive your request</string>
+    <string name="cart_request_order_summary">Request summary</string>
+    <plurals name="cart_request_item_count">
+        <item quantity="one">%d medicine</item>
+        <item quantity="other">%d medicines</item>
+    </plurals>
+    <string name="cart_request_prescription_attached">Prescription attached</string>
+    <string name="cart_request_fulfillment_title">How would you like to receive it?</string>
+    <string name="cart_request_fulfillment_description">Choose delivery to your address or pickup from the selected pharmacy later.</string>
+    <string name="cart_request_delivery">Delivery</string>
+    <string name="cart_request_delivery_description">Delivered to your selected location</string>
+    <string name="cart_request_pickup">Pickup</string>
+    <string name="cart_request_pickup_description">Collect it from the pharmacy</string>
+    <string name="cart_request_address_title">Delivery address</string>
+    <string name="cart_request_default_address">Default address</string>
+    <string name="cart_request_default_badge">Default</string>
+    <string name="cart_request_other_address">Use another address</string>
+    <string name="cart_request_profile_address_unavailable">Your default address could not be loaded. Enter an address for this request instead.</string>
+    <string name="cart_request_no_default_address">No default address is saved. Enter an address and confirm its map location for this request.</string>
+    <string name="cart_request_address_label">Address details</string>
+    <string name="cart_request_address_hint">Building, street, area, and a nearby landmark</string>
+    <string name="cart_request_choose_location">Choose location on map</string>
+    <string name="cart_request_change_location">Change map location</string>
+    <string name="cart_request_location_confirmed">Map location confirmed</string>
+    <string name="cart_request_location_required">Confirm the delivery pin on the map</string>
+    <string name="cart_request_payment_title">How would you like to pay?</string>
+    <string name="cart_request_payment_description">Select one payment option for this request.</string>
+    <string name="cart_request_cash">Cash</string>
+    <string name="cart_request_cash_description">Pay when you receive the order</string>
+    <string name="cart_request_visa">Visa</string>
+    <string name="cart_request_visa_description">Pay by card</string>
+    <string name="cart_request_submit">Submit medicine request</string>
+    <string name="cart_request_retry">Retry</string>
+    <string name="cart_request_empty_request">Add at least one medicine or a prescription before submitting.</string>
+    <string name="cart_request_back">Back to cart</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>
     <string name="home_search_status_searching_desc">Matching your request with nearby pharmacies</string>
@@ -405,6 +441,46 @@
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>
     </plurals>
+
+    <!-- Offers Flow -->
+    <string name="offers_available_title">Available Offers</string>
+    <string name="offers_details_title">Offer Details</string>
+    <string name="offers_available_subtitle_format">%1$d offers available for your request</string>
+    <string name="offers_badge_full">Full offer</string>
+    <string name="offers_badge_partial">Partial offer</string>
+    <string name="offers_badge_combined">Combined offer</string>
+    <string name="offers_best_price">Best price</string>
+    <string name="offers_missing_medicines">Missing some medicines</string>
+    <string name="offers_combined_coverage">Full coverage for your request</string>
+    <string name="offers_from_egp">from\n%1$d</string>
+    <string name="offers_price_note">Prices are final from Medsy and match pharmacy prices, only a discount and delivery fee may apply.</string>
+    <string name="offers_pharmacy_title_format">%1$s Pharmacy</string>
+    <string name="offers_manager_format">%1$s (Manager)</string>
+    <string name="offers_requested_medicines">Requested Medicines</string>
+    <string name="offers_available">Available</string>
+    <string name="offers_pharmacist_comment">Pharmacist Comment</string>
+    <string name="offers_view_prescription">View Prescription</string>
+    <string name="offers_choose_offer">Choose this Offer</string>
+
+    <string name="offers_order_review_title">Order Review</string>
+    <string name="offers_delivery_address">Delivery Address</string>
+    <string name="offers_delivery_details">Delivery Details</string>
+    <string name="offers_home_delivery">Home Delivery</string>
+    <string name="offers_delivery_fee">Delivery Fee</string>
+    <string name="offers_total_medicines_price">Total Medicines Price</string>
+    <string name="offers_total">Total</string>
+    <string name="offers_confirm_order">Confirm Order</string>
+
+    <string name="offers_success_title">Order Confirmed Successfully!</string>
+    <string name="offers_order_number">Order Number</string>
+    <string name="offers_delivery_to">Delivery To</string>
+    <string name="offers_estimated_time">Estimated Preparation Time</string>
+    <string name="offers_payment_method">Payment Method</string>
+    <string name="offers_cash_on_delivery">Cash on Delivery</string>
+    <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.</string>
+    <string name="offers_track_order">Track Order</string>
+    <string name="offers_back_to_home">Back to Home</string>
+    <string name="offers_edit_address">Edit</string>
 
 
     <!--  My Orders  -->

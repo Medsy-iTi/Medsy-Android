@@ -131,7 +131,7 @@ class HomeViewModel @Inject constructor(
             HomeUIIntent.OnCancelSearchSimulation -> cancelSearchSimulation()
             HomeUIIntent.OnViewOffersClick -> {
                 cancelSearchSimulation()
-                // Navigation to offers could go here
+                sendEffect(HomeUIEffect.NavigateToOffers)
             }
             HomeUIIntent.OnSearchWiderRangeClick -> startSearchSimulation()
         }
