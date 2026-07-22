@@ -160,6 +160,24 @@
     <string name="profile_personal_details_load_error">We couldn’t load your personal details.</string>
     <string name="profile_personal_details_save_success">Your personal details were updated.</string>
     <string name="profile_personal_details_save_error">We couldn’t save your changes. Please try again.</string>
+    <string name="profile_personal_details_name_required">This name is required.</string>
+    <string name="profile_personal_details_choose_map_location">Choose location on map</string>
+    <string name="profile_personal_details_change_map_location">Change map location</string>
+    <string name="profile_location_disclaimer_title">Add your delivery location</string>
+    <string name="profile_location_disclaimer_message">Choose your location on the map to help nearby pharmacies serve you accurately.</string>
+    <string name="profile_location_disclaimer_action">Open personal details</string>
+    <string name="profile_location_picker_title">Select location</string>
+    <string name="profile_location_confirm">Confirm location</string>
+    <string name="profile_location_use_current">Use current location</string>
+    <string name="profile_location_permission_denied">Location permission was not granted. You can still choose a location manually on the map.</string>
+    <string name="profile_location_unavailable">Your current location is unavailable. You can still choose a location manually on the map.</string>
+    <string name="profile_location_maps_unavailable">Google Maps is unavailable on this device.</string>
+    <string name="profile_location_selected_marker">Selected delivery location</string>
+    <string name="profile_location_card_title">Map location</string>
+    <string name="profile_location_card_selected">Location selected</string>
+    <string name="profile_location_card_not_selected">Location not selected</string>
+    <string name="profile_location_card_empty_message">No map location has been added yet.</string>
+    <string name="profile_location_card_edit_hint">The map pin is stored separately from your written home address.</string>
 
     <!--  Search  -->
     <string name="search_results_title">Search Results</string>
@@ -204,11 +222,14 @@
     <string name="product_details_error_load">Couldn&#8217;t load product. Please try again.</string>
     <string name="product_details_error_retry">Retry</string>
     <string name="product_details_add_to_cart">Add to Cart</string>
+    <string name="product_details_added_to_cart">Added to cart</string>
     <string name="product_details_consult_pharmacist">Consult Pharmacist</string>
     <!-- Prescription reading -->
     <string name="prescription_upload_title">Upload prescription</string>
     <string name="prescription_upload_heading">Upload your prescription</string>
     <string name="prescription_upload_description">Upload a clear prescription image and we will extract the medicines and add them to your cart.</string>
+    <string name="prescription_attachment_heading">Add a prescription to your cart</string>
+    <string name="prescription_attachment_description">Take or select a clear image to save privately with this cart.</string>
     <string name="prescription_take_photo">Take a photo</string>
     <string name="prescription_take_photo_description">Photograph the prescription directly</string>
     <string name="prescription_choose_gallery">Choose from gallery</string>
@@ -224,6 +245,7 @@
     <string name="prescription_change_image">Change image</string>
     <string name="prescription_delete">Delete</string>
     <string name="prescription_review_image">Review image</string>
+    <string name="prescription_attach_to_cart">Attach to cart</string>
     <string name="prescription_reading_title">Reading prescription</string>
     <string name="prescription_read_prescription_title">Read prescription</string>
     <string name="prescription_extracting_heading">Identifying medicines</string>
@@ -268,9 +290,12 @@
     <string name="prescription_no_medicines_description">Try taking a clearer image or add medicines manually.</string>
     <string name="prescription_confirmation_title">Added to cart!</string>
     <string name="prescription_confirmation_description">You can review quantities and prepare your request from the cart.</string>
+    <string name="prescription_partial_title">Some medicines were added</string>
+    <string name="prescription_partial_description">Review your cart before trying again to avoid increasing quantities twice.</string>
+    <string name="prescription_partial_cart">The cart was partially updated. Please review it before retrying.</string>
     <string name="prescription_cart_summary">Cart summary</string>
     <string name="prescription_medicine_with_quantity">%1$s × %2$d</string>
-    <string name="prescription_total">Total</string>
+    <string name="prescription_total">Total price</string>
     <string name="prescription_view_cart">View cart and send request</string>
     <string name="prescription_return_home">Return to home</string>
     <string name="prescription_media_error">The selected image could not be opened. Please try another image.</string>
@@ -304,6 +329,7 @@
     <string name="product_details_label_dispensing_method">Dispensing Method</string>
     <string name="product_details_dispensing_method_value">Not available</string>
     <string name="product_add_to_cart">Add to Cart</string>
+    <string name="products_added_to_cart">Added to cart</string>
 
     <!--  Errors  -->
     <string name="error_bad_request">The request is invalid. Please check your information and try again.</string>
@@ -317,6 +343,34 @@
     <string name="error_unknown">An unexpected error occurred, please try again later.</string>
     <string name="error_invalid_id">Invalid product ID.</string>
 
+    <!-- Cart -->
+    <string name="cart_title">Request cart</string>
+    <string name="cart_clear_description">Clear cart</string>
+    <string name="cart_empty">Your cart has no medicines yet.</string>
+    <string name="cart_remove_item_description">Remove medicine</string>
+    <string name="cart_decrease_quantity">Decrease quantity</string>
+    <string name="cart_increase_quantity">Increase quantity</string>
+    <string name="cart_add_prescription">Add a prescription</string>
+    <string name="cart_prescription_attached">Prescription attached</string>
+    <string name="cart_replace_prescription">Replace prescription</string>
+    <string name="cart_remove_prescription">Remove prescription</string>
+    <string name="cart_prescription_removed">Prescription removed</string>
+    <string name="cart_local_only">Saved privately on this device. It is not sent yet.</string>
+    <string name="cart_add_note">Add a note for the pharmacist</string>
+    <string name="cart_edit_note">Edit pharmacist note</string>
+    <string name="cart_note_title">Note for the pharmacist</string>
+    <string name="cart_note_hint">Add any details the pharmacist should review</string>
+    <string name="cart_note_saved">Note saved</string>
+    <string name="cart_save">Save</string>
+    <string name="cart_cancel">Cancel</string>
+    <string name="cart_total_price">Total price</string>
+    <string name="cart_price_egp">%1$s EGP</string>
+    <string name="cart_continue">Continue request</string>
+    <string name="cart_retry">Retry</string>
+    <string name="cart_clear_title">Clear request cart?</string>
+    <string name="cart_clear_message">This removes all medicines, the prescription, and the pharmacist note.</string>
+    <string name="cart_clear_confirm">Clear</string>
+    <string name="cart_cleared">Cart cleared</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>
     <string name="home_search_status_searching_desc">Matching your request with nearby pharmacies</string>

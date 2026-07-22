@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -27,9 +26,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.domain.prescription.model.Medicine
 import com.medsy.presentation.R
@@ -102,19 +105,17 @@ private fun MedicinePickerCard(medicine: Medicine, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Box(
+        AsyncImage(
+            model = medicine.imageUrl,
+            contentDescription = medicine.name,
             modifier = Modifier
                 .size(56.dp)
-                .background(colors.prescriptionSuccessSoft, RoundedCornerShape(14.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                Icons.Filled.Medication,
-                contentDescription = null,
-                tint = colors.prescriptionPrimary,
-                modifier = Modifier.size(32.dp),
-            )
-        }
+                .clip(RoundedCornerShape(14.dp))
+                .background(colors.prescriptionSuccessSoft),
+            contentScale = ContentScale.Fit,
+            placeholder = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
+            error = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
+        )
         Column(modifier = Modifier.weight(1f)) {
             Text(text = medicine.name, color = colors.prescriptionTitle, fontWeight = FontWeight.Bold)
             Text(

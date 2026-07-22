@@ -5,6 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -35,6 +39,7 @@ import com.medsy.presentation.splash.SplashRoot
 @Composable
 fun RootNavDisplay() {
     val rootBackStack = rememberNavBackStack(Route.Splash)
+    var requestedNestedDestination by remember { mutableStateOf<Route?>(null) }
 
     NavDisplay(
         modifier = Modifier.fillMaxSize(),
@@ -74,6 +79,7 @@ fun RootNavDisplay() {
                     openHome = {
                         rootBackStack.apply {
                             clear()
+                            requestedNestedDestination = null
                             navigateSingleTop(Route.NestedNav)
                         }
                     },
@@ -102,6 +108,7 @@ fun RootNavDisplay() {
                         rootBackStack.navigateSingleTop(Route.Register)
                     },
                     openHome = {
+                        requestedNestedDestination = null
                         rootBackStack.navigateSingleTop(Route.NestedNav)
                     }
                 )
@@ -123,6 +130,7 @@ fun RootNavDisplay() {
                     onNavigateHome = {
                         rootBackStack.apply {
                             clear()
+                            requestedNestedDestination = null
                             navigateSingleTop(Route.NestedNav)
                         }
                     }
@@ -133,16 +141,13 @@ fun RootNavDisplay() {
                     navigateBack = {
                         rootBackStack.popIfCurrentIs<Route.NestedNav>()
                     },
-                    openProductDetails = {
-                        rootBackStack.navigateSingleTop(
-                            Route.ProductDetails(id = "temporary-product-id")
-                        )
-                    },
                     openSearch = {
                         rootBackStack.navigateSingleTop(Route.SearchNav)
                     },
-                    openPersonalDetails = {
-                        rootBackStack.navigateSingleTop(Route.PersonalDetails)
+                    openPersonalDetails = { startInEditMode ->
+                        rootBackStack.navigateSingleTop(
+                            Route.PersonalDetails(startInEditMode = startInEditMode)
+                        )
                     },
                     openLogin = {
                         rootBackStack.apply {
@@ -156,12 +161,18 @@ fun RootNavDisplay() {
                     openProducts = { categoryId, categoryName ->
                         rootBackStack.navigateSingleTop(Route.Products(categoryId, categoryName))
                     },
-                    openPrescription = {
-                        rootBackStack.navigateSingleTop(Route.Prescription)
-                    },
                     openOffers = {
                         rootBackStack.navigateSingleTop(Route.AvailableOffers)
                     }
+                    openPrescription = { attachmentOnly ->
+                        rootBackStack.navigateSingleTop(
+                            Route.Prescription(attachmentOnly)
+                        )
+                    },
+                    requestedDestination = requestedNestedDestination,
+                    onRequestedDestinationHandled = {
+                        requestedNestedDestination = null
+                    },
                 )
             }
             entry<Route.AiChat> {
@@ -173,8 +184,6 @@ fun RootNavDisplay() {
                 ProductDetailsRoot(
                     productId = route.id,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToCart = {
-                    },
                     onNavigateToPharmacistChat = {
                         rootBackStack.navigateSingleTop(Route.AiChat(/* required params here */))
                     },
@@ -185,8 +194,9 @@ fun RootNavDisplay() {
                     onNext = { rootBackStack.removeLastOrNull() }
                 )
             }
-            entry<Route.PersonalDetails> {
+            entry<Route.PersonalDetails> { route ->
                 PersonalDetailsRoot(
+                    startInEditMode = route.startInEditMode,
                     onNavigateBack = { rootBackStack.removeLastOrNull() }
                 )
             }
@@ -218,24 +228,20 @@ fun RootNavDisplay() {
                     }
                 )
             }
-            entry<Route.Prescription> {
+            entry<Route.Prescription> { route ->
                 PrescriptionRoot(
+                    attachmentOnly = route.attachmentOnly,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateHome = {
                         rootBackStack.popIfCurrentIs<Route.Prescription>()
                     },
                     onNavigateCart = {
-                        rootBackStack.navigateSingleTop(Route.NestedNav.Cart)
+                        requestedNestedDestination = Route.NestedNav.Cart
+                        rootBackStack.popIfCurrentIs<Route.Prescription>()
                     },
-                )
-            }
-            entry<Route.NestedNav.Cart> {
-                CartRoot(
-                    onNext = {
-                        rootBackStack.navigateSingleTop(
-                            Route.ProductDetails(id = "temporary-product-id")
-                        )
-                    }
+                    onPrescriptionAttached = {
+                        rootBackStack.popIfCurrentIs<Route.Prescription>()
+                    },
                 )
             }
             entry<Route.AvailableOffers> {

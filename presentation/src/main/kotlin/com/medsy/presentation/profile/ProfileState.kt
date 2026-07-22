@@ -5,6 +5,7 @@ import com.medsy.domain.common.preferences.model.ThemeMode
 data class ProfileState(
     val name: String = "",
     val phoneNumber: String = "",
+    val hasSavedLocation: Boolean = false,
     val isLoading: Boolean = true,
     val hasError: Boolean = false,
     val errorMessageRes: Int? = null,
