@@ -143,14 +143,13 @@ class ProductDetailsViewModel @Inject constructor(
         return Product(
             id = id.toString(),
             name = name,
-            imageUrls = if (imageUrl.isNotBlank()) listOf(imageUrl) else emptyList(),
-            strength = scientificName,
-            packInfo = categoryName,
+            imageUrls = imageUrl?.let { listOf(it) } ?: emptyList(),            strength = strength.orEmpty(),
+            packInfo = packSize.orEmpty(),
             price = price.toInt(),
-            description = "",
+            description = description.orEmpty(),
             manufacturer = company,
-            type = categoryName,
-            category = categoryName,
+            type = form.orEmpty(),
+            category = consumerCategory.orEmpty(),
             route = route,
             isFavorite = false
         )
