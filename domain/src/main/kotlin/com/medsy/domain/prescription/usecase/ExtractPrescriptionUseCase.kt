@@ -12,6 +12,6 @@ class ExtractPrescriptionUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         image: PrescriptionImage,
-    ): MedsyResult<PrescriptionExtractionOutcome, MedsyError.Local> =
+    ): MedsyResult<PrescriptionExtractionOutcome, MedsyError> =
         repository.extractPrescription(image)
 }

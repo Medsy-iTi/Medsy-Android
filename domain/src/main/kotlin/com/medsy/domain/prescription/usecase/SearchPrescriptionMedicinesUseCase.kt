@@ -11,6 +11,6 @@ class SearchPrescriptionMedicinesUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         query: String,
-    ): MedsyResult<List<Medicine>, MedsyError.Local> =
+    ): MedsyResult<List<Medicine>, MedsyError.Remote> =
         repository.searchMedicines(query)
 }

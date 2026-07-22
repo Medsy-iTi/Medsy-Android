@@ -11,6 +11,6 @@ class AddPrescriptionToCartUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         request: PrescriptionCartRequest,
-    ): EmptyMedsyResult<MedsyError.Local> =
+    ): EmptyMedsyResult<MedsyError.Remote> =
         repository.addPrescriptionToCart(request)
 }
