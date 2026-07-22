@@ -1,27 +1,33 @@
 package com.medsy.presentation.pharmacyprofile.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Directions
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.outlined.NearMe
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -35,6 +41,7 @@ import com.medsy.presentation.R
 @Composable
 fun PharmacyLocationCard(
     pharmacyName: String,
+    address: String?,
     latitude: Double?,
     longitude: Double?,
     onDirectionsClick: () -> Unit,
@@ -45,27 +52,53 @@ fun PharmacyLocationCard(
     } else {
         null
     }
+    val canOpenDirections = location != null
 
-    Card(
+    PharmacyProfileCard(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        ),
     ) {
-        Column(modifier = Modifier.padding(18.dp)) {
-            Text(
-                text = stringResource(R.string.pharmacy_profile_location),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Place,
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    text = stringResource(R.string.pharmacy_profile_location),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
 
             if (location == null) {
-                Text(
-                    text = stringResource(R.string.pharmacy_profile_location_unavailable),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            shape = MaterialTheme.shapes.large,
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(R.string.pharmacy_profile_location_unavailable),
+                        modifier = Modifier.padding(24.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             } else {
                 val cameraPositionState = rememberCameraPositionState {
                     position = CameraPosition.fromLatLngZoom(location, 15f)
@@ -75,11 +108,12 @@ fun PharmacyLocationCard(
                     R.string.pharmacy_profile_map_description,
                     pharmacyName,
                 )
+
                 GoogleMap(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(220.dp)
-                        .clip(RoundedCornerShape(16.dp))
+                        .height(150.dp)
+                        .clip(MaterialTheme.shapes.large)
                         .semantics { contentDescription = mapDescription },
                     cameraPositionState = cameraPositionState,
                     uiSettings = remember {
@@ -95,18 +129,52 @@ fun PharmacyLocationCard(
                         title = pharmacyName,
                     )
                 }
-                Spacer(modifier = Modifier.height(12.dp))
-                Button(
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.NearMe,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = if (canOpenDirections) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+                )
+                Text(
+                    text = address.takeUnless { it.isNullOrBlank() }
+                        ?: stringResource(R.string.pharmacy_profile_not_available),
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                )
+                Surface(
                     onClick = onDirectionsClick,
-                    modifier = Modifier.fillMaxWidth(),
+                    enabled = canOpenDirections,
+                    shape = CircleShape,
+                    color = if (canOpenDirections) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.surfaceContainerHighest
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Directions,
-                        contentDescription = null,
-                    )
-                    Text(
-                        text = stringResource(R.string.pharmacy_profile_directions),
-                        modifier = Modifier.padding(start = 8.dp),
+                        contentDescription = stringResource(
+                            R.string.pharmacy_profile_directions_short
+                        ),
+                        modifier = Modifier.padding(10.dp),
+                        tint = if (canOpenDirections) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
                     )
                 }
             }

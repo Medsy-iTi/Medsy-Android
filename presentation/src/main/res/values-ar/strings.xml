@@ -297,7 +297,6 @@
     <string name="otp_subtitle">أرسلنا رمزاً مكوناً من 6 أرقام إلى %s. أدخله أدناه لتأكيد حسابك.</string>
 
 
-
     <string name="product_add_to_cart">أضف للسلة</string>
 
     <!--  Errors  -->
@@ -307,7 +306,6 @@
     <string name="error_empty_response">لم يُرجع الخادم البيانات المطلوبة.</string>
     <string name="error_payload_too_large">الملف المرفوع كبير جدًا.</string>
     <string name="error_too_many_requests">طلبات كثيرة جدًا. يرجى الانتظار ثم المحاولة مرة أخرى.</string>
-
 
 
     <string name="error_no_internet">لا يوجد اتصال بالإنترنت، يرجى التحقق من الشبكة.</string>
@@ -355,7 +353,7 @@
     </plurals>
     <!-- Pharmacy profile -->
     <string name="pharmacy_profile_title">ملف الصيدلية</string>
-    <string name="pharmacy_profile_verified">صيدلية موثقة</string>
+    <string name="pharmacy_profile_verified">موثقة</string>
     <string name="pharmacy_profile_contact_title">معلومات التواصل</string>
     <string name="pharmacy_profile_phone">رقم الهاتف</string>
     <string name="pharmacy_profile_address">العنوان</string>
@@ -367,4 +365,8 @@
     <string name="pharmacy_profile_not_available">غير متاح</string>
     <string name="pharmacy_profile_retry">إعادة المحاولة</string>
     <string name="pharmacy_profile_invalid_id">رقم الصيدلية غير صالح.</string>
+    <string name="pharmacy_profile_call_short">اتصال</string>
+    <string name="pharmacy_profile_address_title">عنوان الصيدلية</string>
+    <string name="pharmacy_profile_directions_short">الاتجاهات</string>
+    <string name="pharmacy_profile_share">مشاركة</string>
 </resources>
