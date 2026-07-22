@@ -80,7 +80,6 @@ internal fun CartContent(
             item {
                 MedsyButton(
                     onClick = {},
-                    enabled = false,
                 ) {
                     Text(stringResource(R.string.cart_continue))
                 }

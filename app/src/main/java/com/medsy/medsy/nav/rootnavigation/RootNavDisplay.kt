@@ -19,8 +19,8 @@ import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
-import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.auth.otp.OtpRoot
+import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.prescription.PrescriptionRoot
@@ -165,6 +165,9 @@ fun RootNavDisplay() {
                     onRequestedDestinationHandled = {
                         requestedNestedDestination = null
                     },
+                    openProductDetails = {
+                        rootBackStack.navigateSingleTop(Route.ProductDetails(it.toString()))
+                    }
                 )
             }
             entry<Route.AiChat> {
