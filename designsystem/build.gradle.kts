@@ -37,5 +37,8 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.compose.shimmer)
 
+    implementation(libs.google.maps.compose)
+    implementation(libs.google.play.services.location)
+
 
 }
