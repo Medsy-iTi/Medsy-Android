@@ -46,7 +46,7 @@ sealed interface Route : NavKey {
     data object Settings : Route
 
     @Serializable
-    data object CartCheckout : Route
+    data object CartRequest : Route
 
     @Serializable
     data class PersonalDetails(

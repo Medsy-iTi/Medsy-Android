@@ -1,4 +1,4 @@
-package com.medsy.presentation.cart.checkout
+package com.medsy.presentation.cart.cartrequest
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -44,16 +44,16 @@ import com.medsy.designsystem.components.location.MedsyLocationPickerScreen
 import com.medsy.domain.cart.model.DeliveryMethod
 import com.medsy.domain.cart.model.PaymentOption
 import com.medsy.presentation.R
-import com.medsy.presentation.cart.checkout.components.CheckoutOrderSummary
-import com.medsy.presentation.cart.checkout.components.DeliveryAddressSection
-import com.medsy.presentation.cart.checkout.components.FulfillmentSection
-import com.medsy.presentation.cart.checkout.components.PaymentSection
+import com.medsy.presentation.cart.cartrequest.components.CartRequestOrderSummary
+import com.medsy.presentation.cart.cartrequest.components.DeliveryAddressSection
+import com.medsy.presentation.cart.cartrequest.components.FulfillmentSection
+import com.medsy.presentation.cart.cartrequest.components.PaymentSection
 
 @Composable
-fun CartCheckoutRoot(
+fun CartRequestRoot(
     onNavigateBack: () -> Unit,
     onNavigateHome: () -> Unit,
-    viewModel: CartCheckoutViewModel = hiltViewModel(),
+    viewModel: CartRequestViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -64,8 +64,8 @@ fun CartCheckoutRoot(
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                CartCheckoutUIEffect.NavigateHome -> onNavigateHome()
-                is CartCheckoutUIEffect.ShowMessage -> {
+                CartRequestUIEffect.NavigateHome -> onNavigateHome()
+                is CartRequestUIEffect.ShowMessage -> {
                     snackbarHostState.showSnackbar(
                         ContextCompat.getString(context, effect.messageRes)
                     )
@@ -79,11 +79,11 @@ fun CartCheckoutRoot(
             initialLatitude = state.customLatitude,
             initialLongitude = state.customLongitude,
             onDismiss = {
-                viewModel.onIntent(CartCheckoutUIIntent.LocationPickerDismissed)
+                viewModel.onIntent(CartRequestUIIntent.LocationPickerDismissed)
             },
             onLocationConfirmed = { latitude, longitude ->
                 viewModel.onIntent(
-                    CartCheckoutUIIntent.LocationSelected(
+                    CartRequestUIIntent.LocationSelected(
                         latitude = latitude,
                         longitude = longitude,
                     )
@@ -91,7 +91,7 @@ fun CartCheckoutRoot(
             },
         )
     } else {
-        CartCheckoutScreen(
+        CartRequestScreen(
             state = state,
             snackbarHostState = snackbarHostState,
             onNavigateBack = onNavigateBack,
@@ -102,11 +102,11 @@ fun CartCheckoutRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartCheckoutScreen(
-    state: CartCheckoutState,
+fun CartRequestScreen(
+    state: CartRequestState,
     snackbarHostState: SnackbarHostState,
     onNavigateBack: () -> Unit,
-    onIntent: (CartCheckoutUIIntent) -> Unit,
+    onIntent: (CartRequestUIIntent) -> Unit,
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -114,7 +114,7 @@ fun CartCheckoutScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.checkout_title),
+                        text = stringResource(R.string.cart_request_title),
                         fontWeight = FontWeight.Bold,
                     )
                 },
@@ -125,7 +125,7 @@ fun CartCheckoutScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.checkout_back),
+                            contentDescription = stringResource(R.string.cart_request_back),
                         )
                     }
                 },
@@ -137,7 +137,7 @@ fun CartCheckoutScreen(
                 tonalElevation = 3.dp,
             ) {
                 MedsyButton(
-                    onClick = { onIntent(CartCheckoutUIIntent.SubmitClicked) },
+                    onClick = { onIntent(CartRequestUIIntent.SubmitClicked) },
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
                     enabled = state.isSubmitEnabled,
                     isLoading = state.isSubmitting,
@@ -150,7 +150,7 @@ fun CartCheckoutScreen(
                         )
                     } else {
                         Text(
-                            text = stringResource(R.string.checkout_submit),
+                            text = stringResource(R.string.cart_request_submit),
                             fontWeight = FontWeight.Bold,
                         )
                     }
@@ -180,7 +180,7 @@ fun CartCheckoutScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(
-                            text = stringResource(R.string.checkout_subtitle),
+                            text = stringResource(R.string.cart_request_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center,
@@ -188,16 +188,16 @@ fun CartCheckoutScreen(
                     }
                 }
                 item {
-                    CheckoutOrderSummary(
+                    CartRequestOrderSummary(
                         state = state,
-                        onRetry = { onIntent(CartCheckoutUIIntent.RetryCart) },
+                        onRetry = { onIntent(CartRequestUIIntent.RetryCart) },
                     )
                 }
                 item {
                     FulfillmentSection(
                         selected = state.deliveryMethod,
                         onSelected = {
-                            onIntent(CartCheckoutUIIntent.DeliveryMethodSelected(it))
+                            onIntent(CartRequestUIIntent.DeliveryMethodSelected(it))
                         },
                     )
                 }
@@ -205,16 +205,16 @@ fun CartCheckoutScreen(
                     DeliveryAddressSection(
                         state = state,
                         onAddressOptionSelected = {
-                            onIntent(CartCheckoutUIIntent.AddressOptionSelected(it))
+                            onIntent(CartRequestUIIntent.AddressOptionSelected(it))
                         },
                         onCustomAddressChanged = {
-                            onIntent(CartCheckoutUIIntent.CustomAddressChanged(it))
+                            onIntent(CartRequestUIIntent.CustomAddressChanged(it))
                         },
                         onChooseLocation = {
-                            onIntent(CartCheckoutUIIntent.LocationPickerClicked)
+                            onIntent(CartRequestUIIntent.LocationPickerClicked)
                         },
                         onRetryProfile = {
-                            onIntent(CartCheckoutUIIntent.RetryProfile)
+                            onIntent(CartRequestUIIntent.RetryProfile)
                         },
                     )
                 }
@@ -222,7 +222,7 @@ fun CartCheckoutScreen(
                     PaymentSection(
                         selected = state.paymentOption,
                         onSelected = {
-                            onIntent(CartCheckoutUIIntent.PaymentOptionSelected(it))
+                            onIntent(CartRequestUIIntent.PaymentOptionSelected(it))
                         },
                     )
                 }
@@ -233,9 +233,9 @@ fun CartCheckoutScreen(
 
 @Preview
 @Composable
-private fun CartCheckoutScreenPreview() {
-    CartCheckoutScreen(
-        state = CartCheckoutState(
+private fun CartRequestScreenPreview() {
+    CartRequestScreen(
+        state = CartRequestState(
             isCartLoading = false,
             isProfileLoading = false,
             deliveryMethod = DeliveryMethod.DELIVERY,

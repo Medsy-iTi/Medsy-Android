@@ -1,4 +1,4 @@
-package com.medsy.presentation.cart.checkout
+package com.medsy.presentation.cart.cartrequest
 
 import androidx.annotation.StringRes
 import com.medsy.domain.cart.model.CartDraft
@@ -9,12 +9,12 @@ import com.medsy.domain.cart.model.PaymentOption
 private const val CairoLatitude = 30.0444
 private const val CairoLongitude = 31.2357
 
-enum class CheckoutAddressOption {
+enum class CartRequestAddressOption {
     DEFAULT,
     CUSTOM,
 }
 
-data class CartCheckoutState(
+data class CartRequestState(
     val isCartLoading: Boolean = true,
     val items: List<CartItem> = emptyList(),
     val totalPriceEgp: Double = 0.0,
@@ -26,7 +26,7 @@ data class CartCheckoutState(
     val defaultLatitude: Double = CairoLatitude,
     val defaultLongitude: Double = CairoLongitude,
     val deliveryMethod: DeliveryMethod = DeliveryMethod.DELIVERY,
-    val addressOption: CheckoutAddressOption = CheckoutAddressOption.DEFAULT,
+    val addressOption: CartRequestAddressOption = CartRequestAddressOption.DEFAULT,
     val customAddress: String = "",
     val customLatitude: Double = CairoLatitude,
     val customLongitude: Double = CairoLongitude,
@@ -44,12 +44,12 @@ data class CartCheckoutState(
     val isDeliveryAddressValid: Boolean
         get() = when {
             deliveryMethod == DeliveryMethod.PICKUP -> true
-            addressOption == CheckoutAddressOption.DEFAULT -> hasDefaultAddress
+            addressOption == CartRequestAddressOption.DEFAULT -> hasDefaultAddress
             else -> customAddress.isNotBlank() && hasConfirmedCustomLocation
         }
 
     val isSubmitEnabled: Boolean
         get() = !isCartLoading && cartErrorMessageRes == null && hasRequestContent &&
-            isDeliveryAddressValid && !isSubmitting &&
-            (deliveryMethod == DeliveryMethod.PICKUP || !isProfileLoading)
+                isDeliveryAddressValid && !isSubmitting &&
+                (deliveryMethod == DeliveryMethod.PICKUP || !isProfileLoading)
 }

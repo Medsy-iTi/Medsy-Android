@@ -1,4 +1,4 @@
-package com.medsy.presentation.cart.checkout
+package com.medsy.presentation.cart.cartrequest
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +13,6 @@ import com.medsy.domain.common.onSuccess
 import com.medsy.domain.profile.usecase.GetProfileUseCase
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,24 +22,25 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class CartCheckoutViewModel @Inject constructor(
+class CartRequestViewModel @Inject constructor(
     private val getCart: GetCartUseCase,
     private val observeCartDraft: ObserveCartDraftUseCase,
     private val getProfile: GetProfileUseCase,
     private val submitProductsRequest: SubmitProductsRequestUseCase,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(CartCheckoutState())
+    private val _state = MutableStateFlow(CartRequestState())
     val state = _state
-        .onStart { loadCheckout() }
+        .onStart { loadRequest() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = CartCheckoutState(),
+            initialValue = CartRequestState(),
         )
 
-    private val _effect = Channel<CartCheckoutUIEffect>(capacity = Channel.BUFFERED)
+    private val _effect = Channel<CartRequestUIEffect>(capacity = Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
     init {
@@ -51,33 +51,33 @@ class CartCheckoutViewModel @Inject constructor(
         }
     }
 
-    fun onIntent(intent: CartCheckoutUIIntent) {
+    fun onIntent(intent: CartRequestUIIntent) {
         if (_state.value.isSubmitting) return
         when (intent) {
-            is CartCheckoutUIIntent.DeliveryMethodSelected -> _state.update {
+            is CartRequestUIIntent.DeliveryMethodSelected -> _state.update {
                 it.copy(deliveryMethod = intent.deliveryMethod)
             }
 
-            is CartCheckoutUIIntent.AddressOptionSelected -> {
-                if (intent.addressOption == CheckoutAddressOption.DEFAULT &&
+            is CartRequestUIIntent.AddressOptionSelected -> {
+                if (intent.addressOption == CartRequestAddressOption.DEFAULT &&
                     !_state.value.hasDefaultAddress
                 ) return
                 _state.update { it.copy(addressOption = intent.addressOption) }
             }
 
-            is CartCheckoutUIIntent.CustomAddressChanged -> _state.update {
+            is CartRequestUIIntent.CustomAddressChanged -> _state.update {
                 it.copy(customAddress = intent.address)
             }
 
-            CartCheckoutUIIntent.LocationPickerClicked -> _state.update {
+            CartRequestUIIntent.LocationPickerClicked -> _state.update {
                 it.copy(isMapPickerVisible = true)
             }
 
-            CartCheckoutUIIntent.LocationPickerDismissed -> _state.update {
+            CartRequestUIIntent.LocationPickerDismissed -> _state.update {
                 it.copy(isMapPickerVisible = false)
             }
 
-            is CartCheckoutUIIntent.LocationSelected -> _state.update {
+            is CartRequestUIIntent.LocationSelected -> _state.update {
                 it.copy(
                     isMapPickerVisible = false,
                     customLatitude = intent.latitude,
@@ -86,17 +86,17 @@ class CartCheckoutViewModel @Inject constructor(
                 )
             }
 
-            is CartCheckoutUIIntent.PaymentOptionSelected -> _state.update {
+            is CartRequestUIIntent.PaymentOptionSelected -> _state.update {
                 it.copy(paymentOption = intent.paymentOption)
             }
 
-            CartCheckoutUIIntent.RetryCart -> viewModelScope.launch { loadCart() }
-            CartCheckoutUIIntent.RetryProfile -> viewModelScope.launch { loadProfile() }
-            CartCheckoutUIIntent.SubmitClicked -> submit()
+            CartRequestUIIntent.RetryCart -> viewModelScope.launch { loadCart() }
+            CartRequestUIIntent.RetryProfile -> viewModelScope.launch { loadProfile() }
+            CartRequestUIIntent.SubmitClicked -> submit()
         }
     }
 
-    private suspend fun loadCheckout() = coroutineScope {
+    private suspend fun loadRequest() = coroutineScope {
         launch { loadCart() }
         launch { loadProfile() }
     }
@@ -155,12 +155,12 @@ class CartCheckoutViewModel @Inject constructor(
                             state.defaultLongitude
                         },
                         addressOption = if (address == null) {
-                            CheckoutAddressOption.CUSTOM
+                            CartRequestAddressOption.CUSTOM
                         } else if (
                             state.customAddress.isBlank() &&
                             !state.hasConfirmedCustomLocation
                         ) {
-                            CheckoutAddressOption.DEFAULT
+                            CartRequestAddressOption.DEFAULT
                         } else {
                             state.addressOption
                         },
@@ -172,7 +172,7 @@ class CartCheckoutViewModel @Inject constructor(
                     it.copy(
                         isProfileLoading = false,
                         profileErrorMessageRes = error.toMessageRes(),
-                        addressOption = CheckoutAddressOption.CUSTOM,
+                        addressOption = CartRequestAddressOption.CUSTOM,
                     )
                 }
             }
@@ -183,7 +183,7 @@ class CartCheckoutViewModel @Inject constructor(
         if (!currentState.isSubmitEnabled) return
 
         val isDelivery = currentState.deliveryMethod == DeliveryMethod.DELIVERY
-        val usesDefaultAddress = currentState.addressOption == CheckoutAddressOption.DEFAULT
+        val usesDefaultAddress = currentState.addressOption == CartRequestAddressOption.DEFAULT
         val address = when {
             !isDelivery -> null
             usesDefaultAddress -> currentState.defaultAddress
@@ -220,10 +220,10 @@ class CartCheckoutViewModel @Inject constructor(
                 )
             ).onSuccess {
                 _state.update { it.copy(isSubmitting = false) }
-                _effect.send(CartCheckoutUIEffect.NavigateHome)
+                _effect.send(CartRequestUIEffect.NavigateHome)
             }.onError { error ->
                 _state.update { it.copy(isSubmitting = false) }
-                _effect.send(CartCheckoutUIEffect.ShowMessage(error.toMessageRes()))
+                _effect.send(CartRequestUIEffect.ShowMessage(error.toMessageRes()))
             }
         }
     }

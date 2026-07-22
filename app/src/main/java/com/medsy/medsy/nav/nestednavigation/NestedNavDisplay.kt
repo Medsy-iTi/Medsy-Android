@@ -37,7 +37,7 @@ fun NestedNavDisplay(
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
     openPrescription: (Boolean) -> Unit,
-    openCartCheckout: () -> Unit,
+    openCartRequest: () -> Unit,
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
 ) {
@@ -129,7 +129,7 @@ fun NestedNavDisplay(
                 entry<Route.NestedNav.Cart> {
                     CartRoot(
                         onAddPrescription = { openPrescription(true) },
-                        onOpenCheckout = openCartCheckout,
+                        onOpenCartRequest = openCartRequest,
                     )
                 }
                 entry<Route.NestedNav.Profile> {

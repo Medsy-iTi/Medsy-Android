@@ -1,4 +1,4 @@
-package com.medsy.presentation.cart.checkout.components
+package com.medsy.presentation.cart.cartrequest.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -49,18 +49,18 @@ import com.medsy.designsystem.components.location.MedsyLocationPreview
 import com.medsy.domain.cart.model.DeliveryMethod
 import com.medsy.domain.cart.model.PaymentOption
 import com.medsy.presentation.R
-import com.medsy.presentation.cart.checkout.CartCheckoutState
-import com.medsy.presentation.cart.checkout.CheckoutAddressOption
+import com.medsy.presentation.cart.cartrequest.CartRequestAddressOption
+import com.medsy.presentation.cart.cartrequest.CartRequestState
 import com.medsy.presentation.cart.components.cartPriceText
 
 @Composable
-internal fun CheckoutOrderSummary(
-    state: CartCheckoutState,
+internal fun CartRequestOrderSummary(
+    state: CartRequestState,
     onRetry: () -> Unit,
 ) {
-    CheckoutSection(
+    CartRequestSection(
         icon = Icons.Outlined.ReceiptLong,
-        title = stringResource(R.string.checkout_order_summary),
+        title = stringResource(R.string.cart_request_order_summary),
     ) {
         if (state.isCartLoading) {
             CircularProgressIndicator(
@@ -78,7 +78,7 @@ internal fun CheckoutOrderSummary(
                     color = MaterialTheme.colorScheme.error,
                 )
                 TextButton(onClick = onRetry) {
-                    Text(text = stringResource(R.string.checkout_retry))
+                    Text(text = stringResource(R.string.cart_request_retry))
                 }
             }
         } else {
@@ -89,7 +89,7 @@ internal fun CheckoutOrderSummary(
             ) {
                 Text(
                     text = pluralStringResource(
-                        R.plurals.checkout_item_count,
+                        R.plurals.cart_request_item_count,
                         medicineCount,
                         medicineCount,
                     ),
@@ -105,12 +105,12 @@ internal fun CheckoutOrderSummary(
             }
             if (state.draft.prescriptionImage != null) {
                 StatusPill(
-                    label = stringResource(R.string.checkout_prescription_attached),
+                    label = stringResource(R.string.cart_request_prescription_attached),
                 )
             }
             if (!state.hasRequestContent) {
                 Text(
-                    text = stringResource(R.string.checkout_empty_request),
+                    text = stringResource(R.string.cart_request_empty_request),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error,
                 )
@@ -124,25 +124,25 @@ internal fun FulfillmentSection(
     selected: DeliveryMethod,
     onSelected: (DeliveryMethod) -> Unit,
 ) {
-    CheckoutSection(
+    CartRequestSection(
         icon = Icons.Outlined.LocalShipping,
-        title = stringResource(R.string.checkout_fulfillment_title),
-        description = stringResource(R.string.checkout_fulfillment_description),
+        title = stringResource(R.string.cart_request_fulfillment_title),
+        description = stringResource(R.string.cart_request_fulfillment_description),
     ) {
         ChoiceRow {
-            CheckoutChoiceCard(
+            CartRequestChoiceCard(
                 selected = selected == DeliveryMethod.DELIVERY,
                 icon = Icons.Outlined.LocalShipping,
-                title = stringResource(R.string.checkout_delivery),
-                description = stringResource(R.string.checkout_delivery_description),
+                title = stringResource(R.string.cart_request_delivery),
+                description = stringResource(R.string.cart_request_delivery_description),
                 onClick = { onSelected(DeliveryMethod.DELIVERY) },
                 modifier = Modifier.weight(1f),
             )
-            CheckoutChoiceCard(
+            CartRequestChoiceCard(
                 selected = selected == DeliveryMethod.PICKUP,
                 icon = Icons.Outlined.Storefront,
-                title = stringResource(R.string.checkout_pickup),
-                description = stringResource(R.string.checkout_pickup_description),
+                title = stringResource(R.string.cart_request_pickup),
+                description = stringResource(R.string.cart_request_pickup_description),
                 onClick = { onSelected(DeliveryMethod.PICKUP) },
                 modifier = Modifier.weight(1f),
             )
@@ -152,16 +152,16 @@ internal fun FulfillmentSection(
 
 @Composable
 internal fun DeliveryAddressSection(
-    state: CartCheckoutState,
-    onAddressOptionSelected: (CheckoutAddressOption) -> Unit,
+    state: CartRequestState,
+    onAddressOptionSelected: (CartRequestAddressOption) -> Unit,
     onCustomAddressChanged: (String) -> Unit,
     onChooseLocation: () -> Unit,
     onRetryProfile: () -> Unit,
 ) {
     AnimatedVisibility(visible = state.deliveryMethod == DeliveryMethod.DELIVERY) {
-        CheckoutSection(
+        CartRequestSection(
             icon = Icons.Outlined.Home,
-            title = stringResource(R.string.checkout_address_title),
+            title = stringResource(R.string.cart_request_address_title),
             modifier = Modifier.animateContentSize(),
         ) {
             when {
@@ -185,7 +185,7 @@ internal fun DeliveryAddressSection(
                         ) {
                             Text(
                                 text = stringResource(
-                                    R.string.checkout_profile_address_unavailable
+                                    R.string.cart_request_profile_address_unavailable
                                 ),
                                 style = MaterialTheme.typography.bodyMedium,
                             )
@@ -194,7 +194,7 @@ internal fun DeliveryAddressSection(
                                 style = MaterialTheme.typography.bodySmall,
                             )
                             TextButton(onClick = onRetryProfile) {
-                                Text(text = stringResource(R.string.checkout_retry))
+                                Text(text = stringResource(R.string.cart_request_retry))
                             }
                         }
                     }
@@ -207,7 +207,7 @@ internal fun DeliveryAddressSection(
                         shape = RoundedCornerShape(14.dp),
                     ) {
                         Text(
-                            text = stringResource(R.string.checkout_no_default_address),
+                            text = stringResource(R.string.cart_request_no_default_address),
                             modifier = Modifier.padding(14.dp),
                             style = MaterialTheme.typography.bodyMedium,
                         )
@@ -217,12 +217,12 @@ internal fun DeliveryAddressSection(
 
             if (state.hasDefaultAddress) {
                 AddressOptionCard(
-                    selected = state.addressOption == CheckoutAddressOption.DEFAULT,
-                    title = stringResource(R.string.checkout_default_address),
-                    badge = stringResource(R.string.checkout_default_badge),
+                    selected = state.addressOption == CartRequestAddressOption.DEFAULT,
+                    title = stringResource(R.string.cart_request_default_address),
+                    badge = stringResource(R.string.cart_request_default_badge),
                     address = requireNotNull(state.defaultAddress),
                     onClick = {
-                        onAddressOptionSelected(CheckoutAddressOption.DEFAULT)
+                        onAddressOptionSelected(CartRequestAddressOption.DEFAULT)
                     },
                 ) {
                     MedsyLocationPreview(
@@ -233,21 +233,21 @@ internal fun DeliveryAddressSection(
             }
 
             AddressOptionCard(
-                selected = state.addressOption == CheckoutAddressOption.CUSTOM,
-                title = stringResource(R.string.checkout_other_address),
-                onClick = { onAddressOptionSelected(CheckoutAddressOption.CUSTOM) },
+                selected = state.addressOption == CartRequestAddressOption.CUSTOM,
+                title = stringResource(R.string.cart_request_other_address),
+                onClick = { onAddressOptionSelected(CartRequestAddressOption.CUSTOM) },
             ) {
                 AnimatedVisibility(
-                    visible = state.addressOption == CheckoutAddressOption.CUSTOM,
+                    visible = state.addressOption == CartRequestAddressOption.CUSTOM,
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         OutlinedTextField(
                             value = state.customAddress,
                             onValueChange = onCustomAddressChanged,
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text(stringResource(R.string.checkout_address_label)) },
+                            label = { Text(stringResource(R.string.cart_request_address_label)) },
                             placeholder = {
-                                Text(stringResource(R.string.checkout_address_hint))
+                                Text(stringResource(R.string.cart_request_address_hint))
                             },
                             minLines = 2,
                             maxLines = 4,
@@ -273,9 +273,9 @@ internal fun DeliveryAddressSection(
                             Text(
                                 text = stringResource(
                                     if (state.hasConfirmedCustomLocation) {
-                                        R.string.checkout_change_location
+                                        R.string.cart_request_change_location
                                     } else {
-                                        R.string.checkout_choose_location
+                                        R.string.cart_request_choose_location
                                     }
                                 )
                             )
@@ -297,9 +297,9 @@ internal fun DeliveryAddressSection(
                             Text(
                                 text = stringResource(
                                     if (state.hasConfirmedCustomLocation) {
-                                        R.string.checkout_location_confirmed
+                                        R.string.cart_request_location_confirmed
                                     } else {
-                                        R.string.checkout_location_required
+                                        R.string.cart_request_location_required
                                     }
                                 ),
                                 style = MaterialTheme.typography.bodySmall,
@@ -318,25 +318,25 @@ internal fun PaymentSection(
     selected: PaymentOption,
     onSelected: (PaymentOption) -> Unit,
 ) {
-    CheckoutSection(
+    CartRequestSection(
         icon = Icons.Outlined.Payments,
-        title = stringResource(R.string.checkout_payment_title),
-        description = stringResource(R.string.checkout_payment_description),
+        title = stringResource(R.string.cart_request_payment_title),
+        description = stringResource(R.string.cart_request_payment_description),
     ) {
         ChoiceRow {
-            CheckoutChoiceCard(
+            CartRequestChoiceCard(
                 selected = selected == PaymentOption.CASH,
                 icon = Icons.Outlined.Payments,
-                title = stringResource(R.string.checkout_cash),
-                description = stringResource(R.string.checkout_cash_description),
+                title = stringResource(R.string.cart_request_cash),
+                description = stringResource(R.string.cart_request_cash_description),
                 onClick = { onSelected(PaymentOption.CASH) },
                 modifier = Modifier.weight(1f),
             )
-            CheckoutChoiceCard(
+            CartRequestChoiceCard(
                 selected = selected == PaymentOption.VISA,
                 icon = Icons.Outlined.CreditCard,
-                title = stringResource(R.string.checkout_visa),
-                description = stringResource(R.string.checkout_visa_description),
+                title = stringResource(R.string.cart_request_visa),
+                description = stringResource(R.string.cart_request_visa_description),
                 onClick = { onSelected(PaymentOption.VISA) },
                 modifier = Modifier.weight(1f),
             )
@@ -345,7 +345,7 @@ internal fun PaymentSection(
 }
 
 @Composable
-private fun CheckoutSection(
+private fun CartRequestSection(
     icon: ImageVector,
     title: String,
     modifier: Modifier = Modifier,
@@ -411,7 +411,7 @@ private fun ChoiceRow(
 }
 
 @Composable
-private fun CheckoutChoiceCard(
+private fun CartRequestChoiceCard(
     selected: Boolean,
     icon: ImageVector,
     title: String,

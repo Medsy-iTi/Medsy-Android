@@ -21,8 +21,8 @@ import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.auth.register.RegisterRoot
+import com.medsy.presentation.cart.cartrequest.CartRequestRoot
 import com.medsy.presentation.categories.CategoriesRoot
-import com.medsy.presentation.cart.checkout.CartCheckoutRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
@@ -162,8 +162,8 @@ fun RootNavDisplay() {
                             Route.Prescription(attachmentOnly)
                         )
                     },
-                    openCartCheckout = {
-                        rootBackStack.navigateSingleTop(Route.CartCheckout)
+                    openCartRequest = {
+                        rootBackStack.navigateSingleTop(Route.CartRequest)
                     },
                     requestedDestination = requestedNestedDestination,
                     onRequestedDestinationHandled = {
@@ -193,12 +193,12 @@ fun RootNavDisplay() {
                     onNext = { rootBackStack.removeLastOrNull() }
                 )
             }
-            entry<Route.CartCheckout> {
-                CartCheckoutRoot(
+            entry<Route.CartRequest> {
+                CartRequestRoot(
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateHome = {
                         requestedNestedDestination = Route.NestedNav.Home
-                        rootBackStack.popIfCurrentIs<Route.CartCheckout>()
+                        rootBackStack.popIfCurrentIs<Route.CartRequest>()
                     },
                 )
             }

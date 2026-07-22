@@ -95,7 +95,7 @@ class CartViewModel @Inject constructor(
                 )
             }
 
-            CartUIIntent.SubmitCartClicked -> sendEffect(CartUIEffect.OpenCheckout)
+            CartUIIntent.SubmitCartClicked -> sendEffect(CartUIEffect.OpenMakeRequest)
         }
     }
 
