@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
@@ -39,42 +40,27 @@ import kotlinx.coroutines.flow.collectLatest
 fun ProductDetailsRoot(
     productId: String,
     onNavigateBack: () -> Unit,
-    onNavigateToCart: () -> Unit,
     onNavigateToPharmacistChat: () -> Unit,
     viewModel: ProductDetailsViewModel = hiltViewModel(),
-) {
-    LaunchedEffect(productId) {
-        viewModel.init(productId)
-    }
-
-    ProductDetailsScreen(
-        onNavigateBack = onNavigateBack,
-        onNavigateToCart = onNavigateToCart,
-        onNavigateToPharmacistChat = onNavigateToPharmacistChat,
-        viewModel = viewModel,
-    )
-}
-
-@Composable
-fun ProductDetailsScreen(
-    onNavigateBack: () -> Unit,
-    onNavigateToCart: () -> Unit,
-    onNavigateToPharmacistChat: () -> Unit,
-    viewModel: ProductDetailsViewModel,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(productId) {
+        viewModel.init(productId)
+    }
+
+    LaunchedEffect(viewModel) {
         viewModel.effect.collectLatest { effect ->
             when (effect) {
                 ProductDetailsUIEffect.NavigateBack -> onNavigateBack()
-                ProductDetailsUIEffect.NavigateToCart -> onNavigateToCart()
                 ProductDetailsUIEffect.NavigateToPharmacistChat -> onNavigateToPharmacistChat()
                 ProductDetailsUIEffect.OpenShareSheet -> { /* trigger platform share sheet */ }
                 is ProductDetailsUIEffect.ShowMessage -> {
-                    snackbarHostState.showSnackbar(context.getString(effect.messageRes))
+                    snackbarHostState.showSnackbar(
+                        ContextCompat.getString(context, effect.messageRes)
+                    )
                 }
             }
         }
@@ -83,7 +69,7 @@ fun ProductDetailsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
-        ProductDetailsContent(
+        ProductDetailsScreen(
             state = state,
             onIntent = viewModel::onIntent,
             modifier = Modifier.padding(paddingValues),
@@ -92,7 +78,7 @@ fun ProductDetailsScreen(
 }
 
 @Composable
-fun ProductDetailsContent(
+fun ProductDetailsScreen(
     state: ProductDetailsUIState,
     onIntent: (ProductDetailsUIIntent) -> Unit,
     modifier: Modifier = Modifier,
@@ -107,13 +93,17 @@ fun ProductDetailsContent(
         return
     }
 
-    if (state.errorMessage != null || state.product == null) {
+    if (state.errorMessageRes != null || state.product == null) {
         Box(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = state.errorMessage ?: stringResource(R.string.product_details_error_load))
+                Text(
+                    text = stringResource(
+                        state.errorMessageRes ?: R.string.product_details_error_load
+                    )
+                )
                 TextButton(onClick = { onIntent(ProductDetailsUIIntent.RetryClicked) }) {
                     Text(text = stringResource(R.string.product_details_error_retry))
                 }

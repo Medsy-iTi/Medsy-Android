@@ -56,8 +56,7 @@ object NetworkModule {
                 if (BuildConfig.DEBUG) {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.HEADERS
-                            redactHeader("Authorization")
+                            level = HttpLoggingInterceptor.Level.BODY
                             redactHeader("Cookie")
                             redactHeader("Set-Cookie")
                         }

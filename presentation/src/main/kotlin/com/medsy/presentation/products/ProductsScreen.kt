@@ -11,10 +11,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
@@ -30,6 +33,8 @@ fun ProductsRoot(
     viewModel: ProductsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     LaunchedEffect(categoryId, categoryName) {
         viewModel.onIntent(ProductsUIIntent.LoadProducts(categoryId, categoryName))
@@ -40,23 +45,33 @@ fun ProductsRoot(
             when (effect) {
                 is ProductsUIEffect.NavigateBack -> onBackClick()
                 is ProductsUIEffect.NavigateToProductDetails -> onProductClick(effect.productId)
+                is ProductsUIEffect.ShowMessage ->
+                    snackbarHostState.showSnackbar(
+                        ContextCompat.getString(context, effect.messageRes)
+                    )
             }
         }
     }
 
-    ProductsScreen(
-        state = state,
-        onIntent = viewModel::onIntent
-    )
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { padding ->
+        ProductsScreen(
+            state = state,
+            onIntent = viewModel::onIntent,
+            modifier = Modifier.padding(padding),
+        )
+    }
 }
 
 @Composable
 fun ProductsScreen(
     state: ProductsUIState,
-    onIntent: (ProductsUIIntent) -> Unit
+    onIntent: (ProductsUIIntent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
             .statusBarsPadding()
@@ -118,7 +133,10 @@ fun ProductsScreen(
                     items(state.filteredProducts) { product ->
                         ProductListCard(
                             product = product,
-                            onClick = { onIntent(ProductsUIIntent.OnProductClick(product.id)) }
+                            onClick = { onIntent(ProductsUIIntent.OnProductClick(product.id)) },
+                            onAddToCart = {
+                                onIntent(ProductsUIIntent.OnAddToCartClick(product.id))
+                            },
                         )
                     }
                     item { Spacer(modifier = Modifier.height(16.dp)) }

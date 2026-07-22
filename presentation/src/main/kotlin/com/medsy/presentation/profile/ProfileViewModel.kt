@@ -33,6 +33,8 @@ class ProfileViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
 ) : ViewModel() {
 
+    private var hasCompletedInitialLoad = false
+
     private val _state = MutableStateFlow(ProfileState())
     val state = _state
         .onStart { loadProfile() }
@@ -63,9 +65,11 @@ class ProfileViewModel @Inject constructor(
                     state.copy(
                         name = profile.fullName,
                         phoneNumber = profile.phoneNumber,
+                        hasSavedLocation = profile.hasValidLocation,
                         isLoading = false,
                     )
                 }
+                hasCompletedInitialLoad = true
             }
             .onError { error ->
                 _state.update { state ->
@@ -75,6 +79,7 @@ class ProfileViewModel @Inject constructor(
                         errorMessageRes = error.toMessageRes(),
                     )
                 }
+                hasCompletedInitialLoad = true
             }
     }
 
@@ -120,12 +125,26 @@ class ProfileViewModel @Inject constructor(
 
     fun onIntent(intent: ProfileUIIntent) {
         when (intent) {
+            ProfileUIIntent.ScreenResumed -> {
+                if (hasCompletedInitialLoad) {
+                    viewModelScope.launch { loadProfile() }
+                }
+            }
+
             ProfileUIIntent.RetryProfileLoad -> {
                 viewModelScope.launch { loadProfile() }
             }
 
             ProfileUIIntent.PersonalDetailsClicked -> {
-                sendEffect(ProfileUIEffect.NavigateToPersonalDetails)
+                sendEffect(
+                    ProfileUIEffect.NavigateToPersonalDetails(startInEditMode = false)
+                )
+            }
+
+            ProfileUIIntent.AddAddressClicked -> {
+                sendEffect(
+                    ProfileUIEffect.NavigateToPersonalDetails(startInEditMode = true)
+                )
             }
 
             ProfileUIIntent.LanguageClicked -> {

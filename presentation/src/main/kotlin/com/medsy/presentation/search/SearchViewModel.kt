@@ -2,7 +2,10 @@ package com.medsy.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.common.fold
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
 import com.medsy.domain.search.model.SearchProduct
 import com.medsy.domain.search.usecase.SearchProductsUseCase
 import com.medsy.presentation.R
@@ -11,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -20,10 +22,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchProductsUseCase: SearchProductsUseCase
+    private val searchProductsUseCase: SearchProductsUseCase,
+    private val addCartItem: AddCartItemUseCase,
 ) : ViewModel() {
 
-    private var hasLoadedInitialData = false
     private val allFetchedProducts = mutableListOf<SearchProduct>()
 
 
@@ -110,9 +112,24 @@ class SearchViewModel @Inject constructor(
                 )
             }
 
-            is SearchUIIntent.AddToCartClicked -> {
-                sendEffect(SearchUIEffect.ShowMessage(R.string.search_added_to_cart))
-            }
+            is SearchUIIntent.AddToCartClicked -> addToCart(intent.productId)
+        }
+    }
+
+    private fun addToCart(rawProductId: String) {
+        val productId = rawProductId.toIntOrNull()
+        if (productId == null) {
+            sendEffect(SearchUIEffect.ShowMessage(R.string.error_invalid_id))
+            return
+        }
+        viewModelScope.launch {
+            addCartItem(productId)
+                .onSuccess {
+                    sendEffect(SearchUIEffect.ShowMessage(R.string.search_added_to_cart))
+                }
+                .onError { error ->
+                    sendEffect(SearchUIEffect.ShowMessage(error.toMessageRes()))
+                }
         }
     }
 

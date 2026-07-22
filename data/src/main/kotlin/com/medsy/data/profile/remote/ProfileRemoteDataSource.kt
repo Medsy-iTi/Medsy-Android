@@ -17,14 +17,10 @@ class ProfileRemoteDataSource @Inject constructor(
     }
 
     suspend fun updateCurrentProfile(
-        homeAddress: String?,
-        dob: String?,
+        request: UpdateCustomerProfileRequestDto,
     ): MedsyResult<CustomerDto, MedsyError.Remote> = safeApiCall {
         apiService.updateCurrentCustomer(
-            request = UpdateCustomerProfileRequestDto(
-                homeAddress = homeAddress,
-                dob = dob,
-            )
+            request = request,
         )
     }
 }

@@ -10,4 +10,11 @@ interface SearchRepository {
         size: Int,
         sort: List<String>?
     ): MedsyResult<SearchProductsPage, MedsyError.Remote>
+
+    suspend fun searchProducts(
+        keyword: String,
+        page: Int,
+        size: Int,
+        sort: List<String>?,
+    ): MedsyResult<SearchProductsPage, MedsyError.Remote>
 }

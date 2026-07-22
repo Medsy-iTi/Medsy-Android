@@ -31,13 +31,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
@@ -48,7 +48,6 @@ import com.medsy.presentation.search.components.SearchInputBar
 import com.medsy.presentation.search.components.SearchSelectionBottomSheet
 import com.medsy.presentation.search.components.SearchResultsHeader
 import com.medsy.presentation.search.components.SearchTopBar
-import kotlinx.coroutines.launch
 
 @Composable
 fun SearchRoot(
@@ -59,18 +58,16 @@ fun SearchRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 SearchUIEffect.NavigateBack -> onBack()
                 is SearchUIEffect.NavigateToProductDetails -> onNext(effect.productId)
-                is SearchUIEffect.ShowMessage -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(context.getString(effect.messageRes))
-                    }
-                }
+                is SearchUIEffect.ShowMessage ->
+                    snackbarHostState.showSnackbar(
+                        ContextCompat.getString(context, effect.messageRes)
+                    )
             }
         }
     }

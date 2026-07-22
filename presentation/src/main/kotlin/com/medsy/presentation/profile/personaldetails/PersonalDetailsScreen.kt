@@ -66,6 +66,7 @@ import java.time.ZoneOffset
 
 @Composable
 fun PersonalDetailsRoot(
+    startInEditMode: Boolean,
     onNavigateBack: () -> Unit,
     viewModel: PersonalDetailsViewModel = hiltViewModel(),
 ) {
@@ -73,6 +74,12 @@ fun PersonalDetailsRoot(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val saveSuccessMessage = stringResource(R.string.profile_personal_details_save_success)
+
+    LaunchedEffect(startInEditMode, viewModel) {
+        if (startInEditMode) {
+            viewModel.onIntent(PersonalDetailsUIIntent.StartEditingAddress)
+        }
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
@@ -84,22 +91,40 @@ fun PersonalDetailsRoot(
         }
     }
 
-    BackHandler(enabled = state.isEditing) {
+    BackHandler(enabled = state.isEditing && !state.isMapPickerVisible) {
         viewModel.onIntent(PersonalDetailsUIIntent.CancelEditClicked)
         onNavigateBack()
     }
 
-    PersonalDetailsScreen(
-        state = state,
-        snackbarHostState = snackbarHostState,
-        onNavigateBack = {
-            if (state.isEditing) {
-                viewModel.onIntent(PersonalDetailsUIIntent.CancelEditClicked)
-            }
-            onNavigateBack()
-        },
-        onIntent = viewModel::onIntent,
-    )
+    if (state.isMapPickerVisible) {
+        ProfileLocationPickerScreen(
+            initialLatitude = state.draftLatitude,
+            initialLongitude = state.draftLongitude,
+            onDismiss = {
+                viewModel.onIntent(PersonalDetailsUIIntent.LocationPickerDismissed)
+            },
+            onLocationConfirmed = { latitude, longitude ->
+                viewModel.onIntent(
+                    PersonalDetailsUIIntent.LocationSelected(
+                        latitude = latitude,
+                        longitude = longitude,
+                    )
+                )
+            },
+        )
+    } else {
+        PersonalDetailsScreen(
+            state = state,
+            snackbarHostState = snackbarHostState,
+            onNavigateBack = {
+                if (state.isEditing) {
+                    viewModel.onIntent(PersonalDetailsUIIntent.CancelEditClicked)
+                }
+                onNavigateBack()
+            },
+            onIntent = viewModel::onIntent,
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -179,8 +204,17 @@ fun PersonalDetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
+                onFirstNameChanged = {
+                    onIntent(PersonalDetailsUIIntent.FirstNameChanged(it))
+                },
+                onLastNameChanged = {
+                    onIntent(PersonalDetailsUIIntent.LastNameChanged(it))
+                },
                 onAddressChanged = {
                     onIntent(PersonalDetailsUIIntent.HomeAddressChanged(it))
+                },
+                onLocationPickerClick = {
+                    onIntent(PersonalDetailsUIIntent.LocationPickerClicked)
                 },
                 onDatePickerClick = { showDatePicker = true },
                 onSaveClick = { onIntent(PersonalDetailsUIIntent.SaveClicked) },
@@ -204,7 +238,10 @@ fun PersonalDetailsScreen(
 private fun PersonalDetailsContent(
     state: PersonalDetailsState,
     modifier: Modifier = Modifier,
+    onFirstNameChanged: (String) -> Unit,
+    onLastNameChanged: (String) -> Unit,
     onAddressChanged: (String) -> Unit,
+    onLocationPickerClick: () -> Unit,
     onDatePickerClick: () -> Unit,
     onSaveClick: () -> Unit,
 ) {
@@ -242,51 +279,124 @@ private fun PersonalDetailsContent(
         }
 
         item {
-            PersonalDetailsInfoContainer(
-                label = stringResource(R.string.profile_personal_details_customer_id),
-                value = profile.id?.toString().orEmpty().orNotProvided(notProvided),
-            )
-        }
-        item {
-            PersonalDetailsInfoContainer(
-                label = stringResource(R.string.profile_personal_details_first_name),
-                value = profile.firstName.orNotProvided(notProvided),
-            )
-        }
-        item {
-            PersonalDetailsInfoContainer(
-                label = stringResource(R.string.profile_personal_details_last_name),
-                value = profile.lastName.orNotProvided(notProvided),
-            )
-        }
-        item {
-            PersonalDetailsInfoContainer(
-                label = stringResource(R.string.profile_personal_details_email),
-                value = profile.email.orNotProvided(notProvided),
-            )
-        }
-        item {
-            PersonalDetailsInfoContainer(
-                label = stringResource(R.string.profile_personal_details_phone),
-                value = profile.phoneNumber.orNotProvided(notProvided),
-            )
+            if (state.isEditing) {
+                PersonalDetailsEditableField(
+                    label = stringResource(R.string.profile_personal_details_customer_id),
+                    value = profile.id?.toString().orEmpty().orNotProvided(notProvided),
+                    placeholder = notProvided,
+                    readOnly = true,
+                )
+            } else {
+                PersonalDetailsInfoContainer(
+                    label = stringResource(R.string.profile_personal_details_customer_id),
+                    value = profile.id?.toString().orEmpty().orNotProvided(notProvided),
+                )
+            }
         }
         item {
             if (state.isEditing) {
                 PersonalDetailsEditableField(
-                    label = stringResource(R.string.profile_personal_details_home_address),
-                    value = state.draftHomeAddress,
+                    label = stringResource(R.string.profile_personal_details_first_name),
+                    value = state.draftFirstName,
                     placeholder = notProvided,
-                    onValueChange = onAddressChanged,
-                    singleLine = false,
-                    minLines = 3,
+                    onValueChange = onFirstNameChanged,
+                    isError = !state.isFirstNameValid,
+                    errorMessage = stringResource(R.string.profile_personal_details_name_required),
                 )
             } else {
                 PersonalDetailsInfoContainer(
-                    label = stringResource(R.string.profile_personal_details_home_address),
-                    value = profile.homeAddress.orEmpty().orNotProvided(notProvided),
+                    label = stringResource(R.string.profile_personal_details_first_name),
+                    value = profile.firstName.orNotProvided(notProvided),
                     editable = true,
                 )
+            }
+        }
+        item {
+            if (state.isEditing) {
+                PersonalDetailsEditableField(
+                    label = stringResource(R.string.profile_personal_details_last_name),
+                    value = state.draftLastName,
+                    placeholder = notProvided,
+                    onValueChange = onLastNameChanged,
+                    isError = !state.isLastNameValid,
+                    errorMessage = stringResource(R.string.profile_personal_details_name_required),
+                )
+            } else {
+                PersonalDetailsInfoContainer(
+                    label = stringResource(R.string.profile_personal_details_last_name),
+                    value = profile.lastName.orNotProvided(notProvided),
+                    editable = true,
+                )
+            }
+        }
+        item {
+            if (state.isEditing) {
+                PersonalDetailsEditableField(
+                    label = stringResource(R.string.profile_personal_details_email),
+                    value = profile.email.orNotProvided(notProvided),
+                    placeholder = notProvided,
+                    readOnly = true,
+                )
+            } else {
+                PersonalDetailsInfoContainer(
+                    label = stringResource(R.string.profile_personal_details_email),
+                    value = profile.email.orNotProvided(notProvided),
+                )
+            }
+        }
+        item {
+            if (state.isEditing) {
+                PersonalDetailsEditableField(
+                    label = stringResource(R.string.profile_personal_details_phone),
+                    value = profile.phoneNumber.orNotProvided(notProvided),
+                    placeholder = notProvided,
+                    readOnly = true,
+                )
+            } else {
+                PersonalDetailsInfoContainer(
+                    label = stringResource(R.string.profile_personal_details_phone),
+                    value = profile.phoneNumber.orNotProvided(notProvided),
+                )
+            }
+        }
+        item {
+            if (state.isEditing) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    PersonalDetailsEditableField(
+                        label = stringResource(R.string.profile_personal_details_home_address),
+                        value = state.draftHomeAddress,
+                        placeholder = notProvided,
+                        onValueChange = onAddressChanged,
+                        singleLine = false,
+                        minLines = 3,
+                    )
+                    ProfileLocationCard(
+                        latitude = state.draftLatitude,
+                        longitude = state.draftLongitude,
+                        isEditing = true,
+                        onChangeLocation = onLocationPickerClick,
+                    )
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    PersonalDetailsInfoContainer(
+                        label = stringResource(R.string.profile_personal_details_home_address),
+                        value = profile.homeAddress.orEmpty().orNotProvided(notProvided),
+                        editable = true,
+                    )
+                    ProfileLocationCard(
+                        latitude = profile.latitude,
+                        longitude = profile.longitude,
+                        isEditing = false,
+                        onChangeLocation = {},
+                    )
+                }
             }
         }
         item {
@@ -321,7 +431,8 @@ private fun PersonalDetailsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 56.dp),
-                enabled = state.isEditing && state.hasChanges && !state.isSaving,
+                enabled = state.isEditing && state.hasChanges && !state.isSaving &&
+                    state.isFirstNameValid && state.isLastNameValid,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -427,6 +538,8 @@ private fun PersonalDetailsEditableField(
     readOnly: Boolean = false,
     singleLine: Boolean = true,
     minLines: Int = 1,
+    isError: Boolean = false,
+    errorMessage: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     Column(
@@ -446,9 +559,15 @@ private fun PersonalDetailsEditableField(
             readOnly = readOnly,
             singleLine = singleLine,
             minLines = minLines,
+            isError = isError,
             trailingIcon = trailingIcon,
             placeholder = {
                 Text(text = placeholder)
+            },
+            supportingText = if (isError && errorMessage != null) {
+                { Text(text = errorMessage) }
+            } else {
+                null
             },
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
@@ -458,6 +577,7 @@ private fun PersonalDetailsEditableField(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                errorContainerColor = MaterialTheme.colorScheme.surface,
             ),
         )
     }
@@ -565,6 +685,8 @@ private fun PersonalDetailsScreenPreview() {
                 homeAddress = "Cairo, Egypt",
                 dob = "2000-01-01",
                 phoneNumber = "+20 100 000 0000",
+                latitude = 30.0444,
+                longitude = 31.2357,
             ),
             isLoading = false,
         ),
