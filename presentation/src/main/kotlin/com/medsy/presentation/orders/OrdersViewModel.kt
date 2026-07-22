@@ -54,45 +54,53 @@ class OrdersViewModel @Inject constructor(
 
     private fun loadOrders() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = true, errorMessage = null) }
 
-            try {
-                val domainOrders = getOrdersUseCase()
+            val result = getOrdersUseCase(page = 0, size = 10, sort = null)
 
-                val uiOrders = domainOrders.map { domainOrder ->
+            result.fold(
+                onSuccess = { pageDomain ->
+                    val uiOrders = pageDomain.content.map { domainOrder ->
 
-                    val presentationStatus = when (domainOrder.status) {
-                        com.medsy.domain.orders.model.OrderStatus.Confirmed -> OrderStatus.Confirmed
-                        com.medsy.domain.orders.model.OrderStatus.Delivered -> OrderStatus.Delivered
-                        com.medsy.domain.orders.model.OrderStatus.Cancelled -> OrderStatus.Cancelled
-                        com.medsy.domain.orders.model.OrderStatus.Pending -> OrderStatus.Confirmed
+                        val presentationStatus = when (domainOrder.status) {
+                            com.medsy.domain.orders.model.OrderStatus.Confirmed -> OrderStatus.Confirmed
+                            com.medsy.domain.orders.model.OrderStatus.Delivered -> OrderStatus.Delivered
+                            com.medsy.domain.orders.model.OrderStatus.Cancelled -> OrderStatus.Cancelled
+                            com.medsy.domain.orders.model.OrderStatus.Pending -> OrderStatus.Confirmed
+                        }
+
+                        OrderSummary(
+                            id = domainOrder.id,
+                            dateLabel = domainOrder.dateLabel,
+                            status = presentationStatus,
+                            pharmacyName = domainOrder.pharmacyId,
+                            total = domainOrder.totalPrice.toInt(),
+                            productCount = domainOrder.items.sumOf { it.quantity },
+                            productThumbnails = domainOrder.items.map { item ->
+                                OrderProductThumbnail(
+                                    productId = item.productId,
+                                    imageUrl = null
+                                )
+                            }
+                        )
                     }
 
-                    OrderSummary(
-                        id = domainOrder.id,
-                        dateLabel = domainOrder.dateLabel,
-                        status = presentationStatus,
-                        pharmacyName = domainOrder.pharmacyName,
-                        total = domainOrder.total,
-                        productCount = domainOrder.productCount,
-                        productThumbnails = domainOrder.productThumbnails.map { thumb ->
-                            OrderProductThumbnail(
-                                productId = thumb.productId,
-                                imageUrl = thumb.imageUrl
-                            )
-                        }
-                    )
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            orders = uiOrders
+                        )
+                    }
+                },
+                onFailure = { exception ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = exception.localizedMessage ?: "Failed to load orders"
+                        )
+                    }
                 }
-
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        orders = uiOrders
-                    )
-                }
-            } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false) }
-            }
+            )
         }
     }
 

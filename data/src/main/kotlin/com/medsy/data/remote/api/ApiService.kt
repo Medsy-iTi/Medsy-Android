@@ -8,6 +8,8 @@ import com.medsy.data.profile.remote.dto.CustomerDto
 import com.medsy.data.profile.remote.dto.UpdateCustomerProfileRequestDto
 import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.dtos.products.ProductsDataDto
+import com.medsy.data.remote.model.OrderDto
+import com.medsy.data.remote.model.OrderPageDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.remote.ProductsPageDto
 import retrofit2.Response
@@ -89,4 +91,17 @@ interface ApiService {
         @Path("id") id: Int,
         @Header("lang") language: String
     ): Response<ApiResponse<ProductDetailsDto>>
+
+
+    @GET("api/v1/orders")
+    suspend fun getCurrentCustomerOrders(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: List<String>?
+    ): Response<ApiResponse<OrderPageDataDto>>
+
+    @GET("api/v1/orders/{id}")
+    suspend fun getOrderById(
+        @Path("id") id: Long
+    ): Response<ApiResponse<OrderDto>>
 }

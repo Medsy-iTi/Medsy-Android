@@ -14,7 +14,10 @@ data class OrderResponseDto(
 data class OrderPageDataDto(
     @Json(name = "content") val content: List<OrderDto>,
     @Json(name = "pageNumber") val pageNumber: Int,
-    @Json(name = "pageSize") val pageSize: Int
+    @Json(name = "pageSize") val pageSize: Int,
+    @Json(name = "totalElements") val totalElements: Int,
+    @Json(name = "totalPages") val totalPages: Int,
+    @Json(name = "last") val last: Boolean
 )
 
 @JsonClass(generateAdapter = true)
