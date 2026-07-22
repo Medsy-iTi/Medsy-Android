@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Icon
@@ -34,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -322,30 +322,17 @@ private fun MedicineIdentityRow(item: PrescriptionMedicine) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Box(
+        AsyncImage(
+            model = item.medicine.imageUrl,
+            contentDescription = item.medicine.name,
             modifier = Modifier
                 .size(48.dp)
-                .background(
-                    if (item.recognitionStatus == RecognitionStatus.NEEDS_REVIEW) {
-                        colors.prescriptionWarningContainer
-                    } else {
-                        colors.prescriptionSuccessSoft
-                    },
-                    RoundedCornerShape(14.dp),
-                ),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                Icons.Filled.Medication,
-                contentDescription = null,
-                tint = if (item.recognitionStatus == RecognitionStatus.NEEDS_REVIEW) {
-                    colors.prescriptionWarningContent
-                } else {
-                    colors.prescriptionPrimary
-                },
-                modifier = Modifier.size(30.dp),
-            )
-        }
+                .clip(RoundedCornerShape(14.dp))
+                .background(colors.prescriptionSuccessSoft),
+            contentScale = ContentScale.Fit,
+            placeholder = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
+            error = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
+        )
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = item.medicine.name,

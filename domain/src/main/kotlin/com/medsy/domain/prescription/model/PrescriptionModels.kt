@@ -6,10 +6,11 @@ data class PrescriptionImage(
 )
 
 data class Medicine(
-    val id: String,
+    val id: Int,
     val name: String,
     val packDescription: String,
     val unitPriceEgp: Int,
+    val imageUrl: String,
 )
 
 enum class RecognitionStatus {
@@ -31,8 +32,3 @@ sealed interface PrescriptionExtractionOutcome {
     data object Unreadable : PrescriptionExtractionOutcome
     data object NoMedicines : PrescriptionExtractionOutcome
 }
-
-data class PrescriptionCartRequest(
-    val prescriptionImage: PrescriptionImage,
-    val medicines: List<PrescriptionMedicine>,
-)

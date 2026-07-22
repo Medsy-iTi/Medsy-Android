@@ -5,4 +5,5 @@ sealed interface ProductsUIIntent {
     data class OnSearchQueryChange(val query: String) : ProductsUIIntent
     object OnBackClick : ProductsUIIntent
     data class OnProductClick(val productId: Int) : ProductsUIIntent
+    data class OnAddToCartClick(val productId: Int) : ProductsUIIntent
 }
