@@ -160,7 +160,7 @@ fun RootNavDisplay() {
                     
                     openOrderDetails = { orderId ->
                         rootBackStack.navigateSingleTop(Route.OrderDetails(orderId))
-                    }
+                    },
 
                     openPrescription = { attachmentOnly ->
                         rootBackStack.navigateSingleTop(
@@ -171,7 +171,7 @@ fun RootNavDisplay() {
                     onRequestedDestinationHandled = {
                         requestedNestedDestination = null
                     },
-                )
+                    )
             }
             entry<Route.AiChat> {
                 AiChatRoot(
