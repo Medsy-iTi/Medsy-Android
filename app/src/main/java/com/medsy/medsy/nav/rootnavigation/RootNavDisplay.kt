@@ -19,10 +19,9 @@ import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
-import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.auth.otp.OtpRoot
+import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.categories.CategoriesRoot
-import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.offers.available.AvailableOffersRoot
 import com.medsy.presentation.offers.confirmation.OrderConfirmationRoot
 import com.medsy.presentation.offers.details.OfferDetailsRoot
@@ -163,7 +162,7 @@ fun RootNavDisplay() {
                     },
                     openOffers = {
                         rootBackStack.navigateSingleTop(Route.AvailableOffers)
-                    }
+                    },
                     openPrescription = { attachmentOnly ->
                         rootBackStack.navigateSingleTop(
                             Route.Prescription(attachmentOnly)
@@ -264,7 +263,13 @@ fun RootNavDisplay() {
             }
             entry<Route.OrderConfirmation> {
                 OrderConfirmationRoot(
-                    onNavigateToTrackOrder = { rootBackStack.apply { clear(); navigateSingleTop(Route.NestedNav) } },
+                    onNavigateToTrackOrder = {
+                        rootBackStack.apply {
+                            clear(); navigateSingleTop(
+                            Route.NestedNav
+                        )
+                        }
+                    },
                     onNavigateToHome = { rootBackStack.apply { clear(); navigateSingleTop(Route.NestedNav) } }
                 )
             }
