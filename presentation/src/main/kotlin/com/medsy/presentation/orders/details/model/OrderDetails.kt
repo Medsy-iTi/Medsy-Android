@@ -7,14 +7,14 @@ enum class FulfillmentType {
     Delivery,
 }
 
-
 data class OrderPharmacyInfo(
-    val id: String,
+    val id: Long,
     val name: String,
 )
 
 data class OrderLineItem(
-    val id: String,
+    val id: Long,
+    val productId: Long,
     val medicineName: String,
     val imageUrl: String?,
     val quantity: Int,
@@ -25,7 +25,7 @@ data class OrderLineItem(
 }
 
 data class OrderDetails(
-    val id: String,
+    val id: Long,
     val status: OrderStatus,
     val dateLabel: String,
     val fulfillmentType: FulfillmentType,

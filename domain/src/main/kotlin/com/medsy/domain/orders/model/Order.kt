@@ -24,8 +24,8 @@ data class Order(
 )
 
 data class OrderItemDomain(
-    val id: String,
-    val productId: String,
+    val id: Long,
+    val productId: Long,
     val quantity: Int,
     val unitPrice: Double
 )

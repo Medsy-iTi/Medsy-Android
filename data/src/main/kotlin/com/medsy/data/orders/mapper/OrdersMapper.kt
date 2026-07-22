@@ -38,8 +38,8 @@ fun OrderDto.toDomain(): Order {
 
 fun OrderItemDto.toDomain(): OrderItemDomain {
     return OrderItemDomain(
-        id = id.toString(),
-        productId = productId.toString(),
+        id = id,
+        productId = productId,
         quantity = quantity,
         unitPrice = unitPrice
     )

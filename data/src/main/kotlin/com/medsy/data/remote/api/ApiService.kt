@@ -3,12 +3,12 @@ package com.medsy.data.remote.api
 
 import com.medsy.data.cart.remote.AddCartItemRequestDto
 import com.medsy.data.cart.remote.CartDto
+import com.medsy.data.orders.model.OrderDetailsDto
 import com.medsy.data.productdetails.remote.ProductDetailsDto
 import com.medsy.data.profile.remote.dto.CustomerDto
 import com.medsy.data.profile.remote.dto.UpdateCustomerProfileRequestDto
 import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.dtos.products.ProductsDataDto
-import com.medsy.data.remote.model.OrderDto
 import com.medsy.data.remote.model.OrderPageDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.remote.ProductsPageDto
@@ -103,5 +103,5 @@ interface ApiService {
     @GET("api/v1/orders/{id}")
     suspend fun getOrderById(
         @Path("id") id: Long
-    ): Response<ApiResponse<OrderDto>>
+    ): Response<ApiResponse<OrderDetailsDto>>
 }

@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun OrderDetailsRoot(
     orderId: String,
     onNavigateBack: () -> Unit,
-    onNavigateToPharmacyProfile: (String) -> Unit,
+    onNavigateToPharmacyProfile: (Long) -> Unit,
     onReorder: (String) -> Unit,
     viewModel: OrderDetailsViewModel = hiltViewModel(),
 ) {

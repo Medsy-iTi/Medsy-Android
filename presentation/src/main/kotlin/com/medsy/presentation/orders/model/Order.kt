@@ -14,7 +14,7 @@ enum class OrderFilter {
 }
 
 data class OrderProductThumbnail(
-    val productId: String,
+    val productId: Long,
     val imageUrl: String?,
 )
 
