@@ -35,7 +35,7 @@ import com.medsy.presentation.splash.SplashRoot
 @Composable
 fun RootNavDisplay() {
     val context = LocalContext.current
-    val rootBackStack: NavBackStack<NavKey> = rememberNavBackStack(Route.PharmacyProfile())
+    val rootBackStack: NavBackStack<NavKey> = rememberNavBackStack(Route.Splash)
 
     NavDisplay(
         modifier = Modifier.fillMaxSize(),
