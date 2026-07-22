@@ -71,7 +71,7 @@ private fun SearchFilterChip(
             )
         }
         Text(
-            text = stringResource(chip.labelRes),
+            text = chip.label ?: chip.labelRes?.let { stringResource(it) }.orEmpty(),
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = if (chip.isSelected) FontWeight.Bold else FontWeight.Normal,
             color = contentColor,

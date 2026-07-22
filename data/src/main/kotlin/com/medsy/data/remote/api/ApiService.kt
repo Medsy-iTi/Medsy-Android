@@ -73,7 +73,8 @@ interface ApiService {
     suspend fun getProducts(
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("sort") sort: List<String>?
+        @Query("sort") sort: List<String>?,
+        @Query("categoryId") categoryId: Int?
     ): Response<ApiResponse<ProductsPageDto>>
 
     @GET("api/v1/products/search")

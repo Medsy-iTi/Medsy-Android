@@ -12,8 +12,9 @@ class SearchProductsUseCase @Inject constructor(
     suspend operator fun invoke(
         page: Int,
         size: Int,
-        sort: List<String>?
+        sort: List<String>?,
+        categoryId: Int? = null
     ): MedsyResult<SearchProductsPage, MedsyError.Remote> {
-        return repository.getProducts(page, size, sort)
+        return repository.getProducts(page, size, sort, categoryId)
     }
 }

@@ -215,6 +215,17 @@ fun SearchScreen(
         )
     }
 
+    if (state.isCategoryBottomSheetOpen) {
+        SearchSelectionBottomSheet(
+            titleRes = R.string.search_category_title,
+            options = listOf(null) + state.categories,
+            selectedOption = state.selectedCategory,
+            optionLabel = { it?.name ?: stringResource(R.string.search_category_all) },
+            onOptionClick = { onIntent(SearchUIIntent.CategoryOptionSelected(it)) },
+            onDismissRequest = { onIntent(SearchUIIntent.DismissBottomSheet) }
+        )
+    }
+
 }
 
 @Composable

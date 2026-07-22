@@ -371,8 +371,10 @@
     <string name="cart_clear_message">This removes all medicines, the prescription, and the pharmacist note.</string>
     <string name="cart_clear_confirm">Clear</string>
     <string name="cart_cleared">Cart cleared</string>
-    <!-- Active Search Status -->
+    <!--  Active Search Status  -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>
+    <string name="search_category_title">Category Title</string>
+    <string name="search_category_all">All</string>
     <string name="home_search_status_searching_desc">Matching your request with nearby pharmacies</string>
     <string name="home_search_status_time">Search time</string>
     <string name="home_search_status_stage_1">Stage 1</string>
@@ -400,7 +402,6 @@
     <string name="home_search_status_search_wider">Search in a wider range</string>
     <string name="home_search_status_cancel">Cancel request</string>
     <string name="home_search_status_offers_available_format">%1$d offers available — you can compare</string>
-
     <plurals name="home_search_status_medicines">
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>

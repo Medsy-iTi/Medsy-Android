@@ -367,9 +367,11 @@
     <string name="cart_clear_message">سيؤدي ذلك إلى إزالة جميع الأدوية والروشتة وملاحظة الصيدلي.</string>
     <string name="cart_clear_confirm">إفراغ</string>
     <string name="cart_cleared">تم إفراغ السلة</string>
-    <!-- Active Search Status -->
+    <!--  Active Search Status  -->
     <string name="home_search_status_searching_title">جاري البحث عن أدويتك</string>
     <string name="home_search_status_searching_desc">نطابق طلبك مع الصيدليات القريبة</string>
+    <string name="search_category_title">عنوان الفئة</string>
+    <string name="search_category_all">الكل</string>
     <string name="home_search_status_time">وقت البحث</string>
     <string name="home_search_status_stage_1">المرحلة ١</string>
     <string name="home_search_status_stage_1_desc">صيدليات قريبة</string>
@@ -396,7 +398,6 @@
     <string name="home_search_status_search_wider">البحث في نطاق أوسع</string>
     <string name="home_search_status_cancel">إلغاء الطلب</string>
     <string name="home_search_status_offers_available_format">%1$d عروض متاحة — يمكنك المقارنة</string>
-
     <plurals name="home_search_status_medicines">
         <item quantity="zero">أدوية</item>
         <item quantity="one">دواء</item>
