@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -172,16 +171,14 @@ fun PrescriptionConfirmationScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            modifier = Modifier
-                .size(112.dp)
-                .background(colors.prescriptionSuccessContainer, CircleShape),
+            modifier = Modifier.size(160.dp),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_complete),
                 contentDescription = null,
                 tint = Color.Unspecified,
-                modifier = Modifier.size(64.dp),
+                modifier = Modifier.fillMaxSize(),
             )
         }
         Spacer(modifier = Modifier.height(28.dp))
