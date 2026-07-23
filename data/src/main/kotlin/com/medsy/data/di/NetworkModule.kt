@@ -1,6 +1,7 @@
 package com.medsy.data.di
 
 import com.medsy.data.BuildConfig
+import com.medsy.data.prescription.remote.AiInterceptor
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.auth.AuthInterceptor
 import com.medsy.data.remote.auth.TokenAuthenticator
@@ -35,13 +36,14 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         authInterceptor: AuthInterceptor,
+        aiInterceptor: AiInterceptor,
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val original = chain.request()
                 val url = original.url.newBuilder()
-                    .addQueryParameter("lang", Locale.getDefault().language)
+                    .setQueryParameter("lang", Locale.getDefault().language)
                     .build()
 
                 val request = original.newBuilder()
@@ -51,12 +53,13 @@ object NetworkModule {
                 chain.proceed(request)
             }
             .addInterceptor(authInterceptor)
+            .addInterceptor(aiInterceptor)
             .authenticator(tokenAuthenticator)
             .apply {
                 if (BuildConfig.DEBUG) {
                     addInterceptor(
                         HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.HEADERS
+                            level = HttpLoggingInterceptor.Level.BODY
                             redactHeader("Authorization")
                             redactHeader("Cookie")
                             redactHeader("Set-Cookie")

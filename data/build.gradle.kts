@@ -17,6 +17,7 @@ if (localPropertiesFile.exists()) {
 }
 val baseUrl = localProperties.getProperty("BASE_URL") ?: "\"https://medsy-api-dev.com/\""
 val accessToken = localProperties.getProperty("ACCESS_TOKEN") ?: "\"\""
+val aiApiKey = localProperties.getProperty("AI_API_KEY") ?: "\"\""
 
 android {
     namespace = "com.medsy.data"
@@ -28,6 +29,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
         buildConfigField("String", "ACCESS_TOKEN", "\"\"")
+        buildConfigField("String", "AI_API_KEY", "\"$aiApiKey\"")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
