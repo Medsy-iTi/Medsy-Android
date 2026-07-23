@@ -1,6 +1,6 @@
 package com.medsy.data.prescription.remote
 
-import com.medsy.data.prescription.remote.dto.AnalyzedMedicineDto
+import com.medsy.data.prescription.remote.dto.AnalyzedMedicineImageDto
 import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.network.safeApiCall
@@ -22,7 +22,7 @@ class PrescriptionRemoteDataSource @Inject constructor(
 
     suspend fun analyzeMedicineImage(
         image: MultipartBody.Part,
-    ): MedsyResult<List<AnalyzedMedicineDto>, MedsyError.Remote> {
+    ): MedsyResult<List<AnalyzedMedicineImageDto>, MedsyError.Remote> {
         return safeApiCall {
             apiService.analyzeMedicineImage(image = image)
         }
