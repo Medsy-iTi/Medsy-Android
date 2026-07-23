@@ -2,6 +2,7 @@ package com.medsy.data.prescription.repository
 
 import com.medsy.data.common.media.PrescriptionImageStorage
 import com.medsy.data.prescription.mapper.toDomain
+import com.medsy.data.prescription.remote.PrescriptionImageMimeType
 import com.medsy.data.prescription.remote.PrescriptionRemoteDataSource
 import com.medsy.data.remote.api.ApiService
 import com.medsy.domain.common.EmptyMedsyResult
@@ -51,11 +52,7 @@ class PrescriptionRepositoryImpl @Inject constructor(
         if (!file.exists()) return MedsyResult.Error(MedsyError.Local.MEDIA)
 
 
-        val mimeType = when (file.extension.lowercase()) {
-            "jpg", "jpeg" -> "image/jpeg"
-            "png" -> "image/png"
-            else -> "image/jpeg"
-        }
+        val mimeType = PrescriptionImageMimeType.fromExtension(file.extension).value
 
         val requestFile = file.asRequestBody(
             mimeType.toMediaType()

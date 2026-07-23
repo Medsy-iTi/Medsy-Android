@@ -162,7 +162,6 @@ internal fun ExtractedMedicineCard(
                     }
                 }
             } else {
-                // Placeholder when no suggestion exists
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,

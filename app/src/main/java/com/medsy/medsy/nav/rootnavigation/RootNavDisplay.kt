@@ -228,7 +228,7 @@ fun RootNavDisplay() {
                     onProductSelected = if (route.localItemId != null) {
                         { productId ->
                             prescriptionSelectionResult = route.localItemId to productId.toInt()
-                            rootBackStack.removeLastOrNull() // Return to existing Prescription screen
+                            rootBackStack.removeLastOrNull()
                         }
                     } else null
                 )

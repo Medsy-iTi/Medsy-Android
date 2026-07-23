@@ -59,7 +59,7 @@ fun MedicinePickerScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         PrescriptionAppBar(
-            title = stringResource(R.string.search_results_title), // Matches standard search title
+            title = stringResource(R.string.search_results_title),
             onBack = { onIntent(PrescriptionUIIntent.BackClicked) },
         )
 
