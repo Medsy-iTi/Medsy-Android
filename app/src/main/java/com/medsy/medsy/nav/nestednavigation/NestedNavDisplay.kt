@@ -40,6 +40,7 @@ fun NestedNavDisplay(
     openCartRequest: () -> Unit,
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
+    openProductDetails: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(

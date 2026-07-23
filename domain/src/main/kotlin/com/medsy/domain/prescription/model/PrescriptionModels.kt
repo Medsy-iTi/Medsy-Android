@@ -6,29 +6,43 @@ data class PrescriptionImage(
 )
 
 data class Medicine(
-    val id: Int,
+    val productId: Int,
     val name: String,
-    val packDescription: String,
-    val unitPriceEgp: Int,
-    val imageUrl: String,
+    val strength: String?,
+    val form: String?,
+    val price: Int,
+    val imageUrl: String?,
 )
 
-enum class RecognitionStatus {
-    RECOGNIZED,
-    NEEDS_REVIEW,
+enum class MatchStatus {
+    MATCHED,
+    NOT_FOUND,
 }
 
-data class PrescriptionMedicine(
-    val medicine: Medicine,
+data class ExtractedMedicine(
+    val localItemId: String,
+    val rawText: String,
+    val extractedName: String?,
+    val extractedStrength: String?,
+    val extractedForm: String?,
+    val matchStatus: MatchStatus,
+    val confidence: Double,
+    val candidates: List<Medicine>,
+    val selectedMedicine: Medicine? = null,
     val quantity: Int = 1,
-    val recognitionStatus: RecognitionStatus,
+    val isConfirmed: Boolean = false,
 )
 
 sealed interface PrescriptionExtractionOutcome {
     data class MedicinesDetected(
-        val medicines: List<PrescriptionMedicine>,
+        val medicines: List<ExtractedMedicine>,
     ) : PrescriptionExtractionOutcome
 
     data object Unreadable : PrescriptionExtractionOutcome
     data object NoMedicines : PrescriptionExtractionOutcome
 }
+
+data class PrescriptionCartRequest(
+    val prescriptionImage: PrescriptionImage,
+    val medicines: List<ExtractedMedicine>,
+)

@@ -10,19 +10,32 @@ import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.dtos.products.ProductsDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.remote.ProductsPageDto
+import com.medsy.data.prescription.remote.AiInterceptor
+import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.PATCH
+import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.Part
+import retrofit2.http.PATCH
 import retrofit2.http.Path
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 
 interface ApiService {
+    @Multipart
+    @Headers("${AiInterceptor.AI_KEY_FLAG}: true")
+    @POST("api/v1/prescriptions/analyze")
+    suspend fun analyzePrescription(
+        @Part image: MultipartBody.Part,
+    ): Response<ApiResponse<PrescriptionAnalysisDto>>
+
     @GET("api/v1/cart")
     suspend fun getCart(): Response<ApiResponse<CartDto>>
 

@@ -6,11 +6,11 @@ import com.medsy.domain.prescription.model.Medicine
 import com.medsy.domain.prescription.repository.PrescriptionRepository
 import javax.inject.Inject
 
-class SearchPrescriptionMedicinesUseCase @Inject constructor(
+class GetMedicineByIdUseCase @Inject constructor(
     private val repository: PrescriptionRepository,
 ) {
     suspend operator fun invoke(
-        query: String,
-    ): MedsyResult<List<Medicine>, MedsyError.Remote> =
-        repository.searchMedicines(query)
+        productId: Int,
+    ): MedsyResult<Medicine, MedsyError.Remote> =
+        repository.getMedicineById(productId)
 }
