@@ -1,5 +1,6 @@
 package com.medsy.presentation.search.components
 
+import CategoryChip
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -81,14 +82,12 @@ fun SearchCategoryBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // "All" chip
                 CategoryChip(
                     label = stringResource(R.string.search_category_all),
                     isSelected = tempSelectedCategory == null,
                     onClick = { tempSelectedCategory = null }
                 )
 
-                // Other categories
                 categories.forEach { category ->
                     CategoryChip(
                         label = category.name,
@@ -100,12 +99,10 @@ fun SearchCategoryBottomSheet(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Reset Button
                 OutlinedButton(
                     onClick = {
                         tempSelectedCategory = null
@@ -126,7 +123,6 @@ fun SearchCategoryBottomSheet(
                     )
                 }
 
-                // Apply Button
                 Button(
                     onClick = {
                         onCategorySelected(tempSelectedCategory)
@@ -150,44 +146,4 @@ fun SearchCategoryBottomSheet(
     }
 }
 
-@Composable
-private fun CategoryChip(
-    label: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val backgroundColor = if (isSelected) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.surface
-    }
 
-    val contentColor = if (isSelected) {
-        MaterialTheme.colorScheme.onPrimary
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
-    }
-
-    val borderColor = if (isSelected) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.outlineVariant
-    }
-
-    Box(
-        modifier = Modifier
-            .background(backgroundColor, RoundedCornerShape(20.dp))
-            .border(1.dp, borderColor, RoundedCornerShape(20.dp))
-            .clip(RoundedCornerShape(20.dp))
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = contentColor,
-        )
-    }
-}
