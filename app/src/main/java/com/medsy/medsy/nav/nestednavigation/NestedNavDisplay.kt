@@ -36,7 +36,7 @@ fun NestedNavDisplay(
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
     openOffers: () -> Unit,
-    openPrescription: (Boolean) -> Unit,
+    openPrescription: (Boolean, Boolean) -> Unit,
     openCartRequest: () -> Unit,
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
@@ -120,7 +120,8 @@ fun NestedNavDisplay(
                         onSearchClick = { openSearch() },
                         onNotificationClick = { /* Handle notification click */ },
                         onAddressClick = { /* Handle address click */ },
-                        onUploadPrescriptionClick = { openPrescription(false) },
+                        onUploadPrescriptionClick = { openPrescription(false, false) },
+                        onMedicineImageSearchClick = { openPrescription(false, true) },
                         onViewAllCategoriesClick = { openCategories() },
                         onCategoryClick = { categoryId, categoryName ->
                             openProducts(categoryId, categoryName)
@@ -130,7 +131,7 @@ fun NestedNavDisplay(
                 }
                 entry<Route.NestedNav.Cart> {
                     CartRoot(
-                        onAddPrescription = { openPrescription(true) },
+                        onAddPrescription = { openPrescription(true, false) },
                         onOpenCartRequest = openCartRequest,
                     )
                 }

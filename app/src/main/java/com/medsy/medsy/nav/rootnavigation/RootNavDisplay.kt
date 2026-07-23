@@ -165,9 +165,9 @@ fun RootNavDisplay() {
                     openOffers = {
                         rootBackStack.navigateSingleTop(Route.AvailableOffers)
                     },
-                    openPrescription = { attachmentOnly ->
+                    openPrescription = { attachmentOnly, isMedicineSearch ->
                         rootBackStack.navigateSingleTop(
-                            Route.Prescription(attachmentOnly)
+                            Route.Prescription(attachmentOnly, isMedicineSearch)
                         )
                     },
                     openCartRequest = {
@@ -254,6 +254,7 @@ fun RootNavDisplay() {
             entry<Route.Prescription> { route ->
                 PrescriptionRoot(
                     attachmentOnly = route.attachmentOnly,
+                    isMedicineSearch = route.isMedicineSearch,
                     resultLocalItemId = prescriptionSelectionResult?.first,
                     resultProductId = prescriptionSelectionResult?.second,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
@@ -270,6 +271,11 @@ fun RootNavDisplay() {
                     onNavigateToSearch = { query, localItemId ->
                         rootBackStack.navigateSingleTop(
                             Route.SearchNav(initialQuery = query, localItemId = localItemId)
+                        )
+                    },
+                    onNavigateToProductDetails = { productId ->
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = productId)
                         )
                     },
                     onResultHandled = {

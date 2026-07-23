@@ -49,7 +49,10 @@ fun PrescriptionImagePreviewScreen(
     val colors = MaterialTheme.extendedColors
     Column(modifier = Modifier.fillMaxSize()) {
         PrescriptionAppBar(
-            title = stringResource(R.string.prescription_upload_title),
+            title = stringResource(
+                if (state.isMedicineSearch) R.string.home_card_search_title
+                else R.string.prescription_upload_title
+            ),
             onBack = { onIntent(PrescriptionUIIntent.BackClicked) },
         )
         Column(
@@ -149,10 +152,10 @@ fun PrescriptionImagePreviewScreen(
             PrescriptionTipsCard(showThreeTips = false)
             PrescriptionPrimaryButton(
                 text = stringResource(
-                    if (state.isAttachmentOnly) {
-                        R.string.prescription_attach_to_cart
-                    } else {
-                        R.string.prescription_review_image
+                    when {
+                        state.isAttachmentOnly -> R.string.prescription_attach_to_cart
+                        state.isMedicineSearch -> R.string.medicine_search_review_button
+                        else -> R.string.prescription_review_image
                     }
                 ),
                 onClick = { onIntent(PrescriptionUIIntent.ReviewImageClicked) },

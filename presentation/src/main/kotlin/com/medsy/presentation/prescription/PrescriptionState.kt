@@ -32,6 +32,7 @@ data class MedicinePickerState(
 
 data class PrescriptionState(
     val isAttachmentOnly: Boolean = false,
+    val isMedicineSearch: Boolean = false,
     val step: PrescriptionStep = PrescriptionStep.SOURCE_SELECTION,
     val image: PrescriptionImage? = null,
     val medicines: List<ExtractedMedicine> = emptyList(),

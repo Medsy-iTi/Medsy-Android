@@ -19,6 +19,10 @@ interface PrescriptionRepository {
         image: PrescriptionImage,
     ): MedsyResult<PrescriptionExtractionOutcome, MedsyError>
 
+    suspend fun analyzeMedicineImage(
+        image: PrescriptionImage,
+    ): MedsyResult<List<Medicine>, MedsyError>
+
     suspend fun searchMedicines(
         query: String,
     ): MedsyResult<List<Medicine>, MedsyError.Remote>

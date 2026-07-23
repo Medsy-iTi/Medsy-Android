@@ -293,6 +293,11 @@
     <string name="prescription_return_home">Return to home</string>
     <string name="prescription_media_error">The selected image could not be opened. Please try another image.</string>
     <string name="prescription_error_generic">Something went wrong. Please try again.</string>
+    <string name="medicine_search_upload_title">Search by photo</string>
+    <string name="medicine_search_reading_title">Analyzing photo</string>
+    <string name="medicine_search_upload_failed_title">Photo search failed</string>
+    <string name="medicine_search_upload_failed_description">We couldn\'t identify the medicine. Please check your connection or try a clearer photo.</string>
+    <string name="medicine_search_review_button">Search for medicine</string>
     <!-- Auth Strings -->
     <string name="auth_email">Email</string>
     <string name="auth_password">Password</string>
@@ -470,7 +475,7 @@
     <string name="offers_estimated_time">Estimated Preparation Time</string>
     <string name="offers_payment_method">Payment Method</string>
     <string name="offers_cash_on_delivery">Cash on Delivery</string>
-    <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.</string>
+    <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.\nSearch in a wider range to find more pharmacies.</string>
     <string name="offers_track_order">Track Order</string>
     <string name="offers_back_to_home">Back to Home</string>
     <string name="offers_edit_address">Edit</string>

@@ -2,9 +2,9 @@ package com.medsy.data.prescription.repository
 
 import com.medsy.data.common.media.PrescriptionImageStorage
 import com.medsy.data.prescription.mapper.toDomain
+import com.medsy.data.prescription.mapper.toMedicine
 import com.medsy.data.prescription.remote.PrescriptionImageMimeType
 import com.medsy.data.prescription.remote.PrescriptionRemoteDataSource
-import com.medsy.data.remote.api.ApiService
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
@@ -14,19 +14,17 @@ import com.medsy.domain.prescription.model.PrescriptionCartRequest
 import com.medsy.domain.prescription.model.PrescriptionExtractionOutcome
 import com.medsy.domain.prescription.model.PrescriptionImage
 import com.medsy.domain.prescription.repository.PrescriptionRepository
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CancellationException
-import okhttp3.MediaType.Companion.toMediaType
 
 @Singleton
 class PrescriptionRepositoryImpl @Inject constructor(
     private val imageStorage: PrescriptionImageStorage,
     private val remoteDataSource: PrescriptionRemoteDataSource,
-    private val apiService: ApiService,
 ) : PrescriptionRepository {
 
     override suspend fun prepareCameraImage(): MedsyResult<PrescriptionImage, MedsyError.Local> =
@@ -51,75 +49,41 @@ class PrescriptionRepositoryImpl @Inject constructor(
         val file = imageStorage.getFile(image)
         if (!file.exists()) return MedsyResult.Error(MedsyError.Local.MEDIA)
 
-
         val mimeType = PrescriptionImageMimeType.fromExtension(file.extension).value
-
-        val requestFile = file.asRequestBody(
-            mimeType.toMediaType()
-        )
+        val requestFile = file.asRequestBody(mimeType.toMediaType())
         val multipartImage = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
         return remoteDataSource.analyzePrescription(multipartImage)
             .map { it.toDomain() }
     }
 
-    override suspend fun searchMedicines(
-        query: String,
-    ): MedsyResult<List<Medicine>, MedsyError.Remote> {
-        return try {
-            val response = if (query.isNotBlank()) {
-                apiService.searchProducts(keyword = query, page = 0, size = 50, sort = null)
-            } else {
-                apiService.getProducts(page = 0, size = 50, sort = null)
-            }
-            
-            val body = response.body()
-            if (response.isSuccessful && body != null && body.success && body.data != null) {
-                val isArabic = java.util.Locale.getDefault().language == "ar"
-                val results = body.data.content.map { dto ->
-                    val localizedName = if (isArabic && !dto.arabicName.isNullOrBlank()) dto.arabicName else dto.name
-                    Medicine(
-                        productId = dto.id,
-                        name = localizedName,
-                        strength = dto.scientificName,
-                        form = dto.route,
-                        price = dto.price.toInt(),
-                        imageUrl = dto.imageUrl
-                    )
-                }
-                MedsyResult.Success(results)
-            } else {
-                MedsyResult.Error(MedsyError.Remote.Unknown)
-            }
-        } catch (e: Exception) {
-            MedsyResult.Error(MedsyError.Remote.Unknown)
-        }
+    override suspend fun analyzeMedicineImage(
+        image: PrescriptionImage,
+    ): MedsyResult<List<Medicine>, MedsyError> {
+        val file = imageStorage.getFile(image)
+        if (!file.exists()) return MedsyResult.Error(MedsyError.Local.MEDIA)
+
+        val mimeType = PrescriptionImageMimeType.fromExtension(file.extension).value
+        val requestFile = file.asRequestBody(mimeType.toMediaType())
+        val multipartImage = MultipartBody.Part.createFormData("image", file.name, requestFile)
+
+        return remoteDataSource.analyzeMedicineImage(multipartImage)
+            .map { list -> list.map { it.toDomain() } }
     }
 
     override suspend fun getMedicineById(productId: Int): MedsyResult<Medicine, MedsyError.Remote> {
-        return try {
-            val response = apiService.getProductById(
-                productId,
-                java.util.Locale.getDefault().language
-            )
-            val body = response.body()
-            if (response.isSuccessful && body != null && body.success && body.data != null) {
-                val dto = body.data
-                val medicine = Medicine(
-                    productId = dto.id,
-                    name = dto.name,
-                    strength = dto.scientificName,
-                    form = dto.route,
-                    price = dto.price.toInt(),
-                    imageUrl = dto.imageUrl
-                )
-                MedsyResult.Success(medicine)
-            } else {
-                MedsyResult.Error(MedsyError.Remote.Unknown)
-            }
-        } catch (e: Exception) {
-            MedsyResult.Error(MedsyError.Remote.Unknown)
-        }
+        return remoteDataSource.getProductById(
+            productId,
+            java.util.Locale.getDefault().language
+        ).map { it.toMedicine() }
+    }
+
+    override suspend fun searchMedicines(
+        query: String,
+    ): MedsyResult<List<Medicine>, MedsyError.Remote> {
+        val isArabic = java.util.Locale.getDefault().language == "ar"
+        return remoteDataSource.searchProducts(query)
+            .map { page -> page.content.map { it.toMedicine(isArabic) } }
     }
 
     override suspend fun addPrescriptionToCart(

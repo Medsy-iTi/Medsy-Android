@@ -23,6 +23,7 @@ fun HomeRoot(
     onNotificationClick: () -> Unit,
     onAddressClick: () -> Unit,
     onUploadPrescriptionClick: () -> Unit,
+    onMedicineImageSearchClick: () -> Unit,
     onViewAllCategoriesClick: () -> Unit,
     onCategoryClick: (Int, String) -> Unit,
     onViewOffersClick: () -> Unit,
@@ -39,9 +40,11 @@ fun HomeRoot(
                     effect.categoryId.toInt(),
                     effect.categoryName
                 )
+
                 is HomeUIEffect.NavigateToNotifications -> onNotificationClick()
                 is HomeUIEffect.NavigateToAddressSelection -> onAddressClick()
                 is HomeUIEffect.NavigateToUploadPrescription -> onUploadPrescriptionClick()
+                is HomeUIEffect.NavigateToMedicineImageSearch -> onMedicineImageSearchClick()
                 is HomeUIEffect.NavigateToCategories -> onViewAllCategoriesClick()
                 is HomeUIEffect.NavigateToOffers -> onViewOffersClick()
             }
@@ -115,7 +118,7 @@ fun HomeScreen(
 
         Box(modifier = Modifier.padding(horizontal = 16.dp)) {
             OrderCardsSection(
-                onSearchMedicineClick = { onIntent(HomeUIIntent.OnStartSearchSimulation) },
+                onSearchMedicineClick = { onIntent(HomeUIIntent.OnSearchMedicineClick) },
                 onUploadPrescriptionClick = { onIntent(HomeUIIntent.OnUploadPrescriptionClick) }
             )
         }

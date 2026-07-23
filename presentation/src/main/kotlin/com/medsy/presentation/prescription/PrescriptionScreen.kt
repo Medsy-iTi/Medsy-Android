@@ -35,6 +35,7 @@ import com.medsy.presentation.prescription.prescriptionuploaderror.PrescriptionU
 @Composable
 fun PrescriptionRoot(
     attachmentOnly: Boolean,
+    isMedicineSearch: Boolean = false,
     resultLocalItemId: String? = null,
     resultProductId: Int? = null,
     onNavigateBack: () -> Unit,
@@ -42,6 +43,7 @@ fun PrescriptionRoot(
     onNavigateCart: () -> Unit,
     onPrescriptionAttached: () -> Unit,
     onNavigateToSearch: (String, String) -> Unit,
+    onNavigateToProductDetails: (String) -> Unit,
     onResultHandled: () -> Unit,
     viewModel: PrescriptionViewModel = hiltViewModel(),
 ) {
@@ -49,8 +51,8 @@ fun PrescriptionRoot(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    LaunchedEffect(attachmentOnly) {
-        viewModel.init(attachmentOnly)
+    LaunchedEffect(attachmentOnly, isMedicineSearch) {
+        viewModel.init(attachmentOnly, isMedicineSearch)
     }
 
     LaunchedEffect(resultLocalItemId, resultProductId) {
@@ -93,6 +95,10 @@ fun PrescriptionRoot(
                     effect.localItemId
                 )
 
+                is PrescriptionUIEffect.NavigateToProductDetails -> onNavigateToProductDetails(
+                    effect.productId
+                )
+
                 is PrescriptionUIEffect.ShowMessage ->
                     snackbarHostState.showSnackbar(
                         ContextCompat.getString(context, effect.messageRes)
@@ -126,12 +132,12 @@ fun PrescriptionScreen(
         when (state.step) {
             PrescriptionStep.SOURCE_SELECTION -> PrescriptionSourceScreen(state, onIntent)
             PrescriptionStep.IMAGE_PREVIEW -> PrescriptionImagePreviewScreen(state, onIntent)
-            PrescriptionStep.EXTRACTING -> PrescriptionExtractingScreen(onIntent)
+            PrescriptionStep.EXTRACTING -> PrescriptionExtractingScreen(state, onIntent)
             PrescriptionStep.MEDICINE_REVIEW -> PrescriptionReviewScreen(state, onIntent)
             PrescriptionStep.MEDICINE_PICKER -> MedicinePickerScreen(state.picker, onIntent)
-            PrescriptionStep.UPLOAD_ERROR -> PrescriptionUploadErrorScreen(onIntent)
-            PrescriptionStep.UNREADABLE -> PrescriptionUnreadableScreen(onIntent)
-            PrescriptionStep.NO_MEDICINES -> PrescriptionNoMedicinesScreen(onIntent)
+            PrescriptionStep.UPLOAD_ERROR -> PrescriptionUploadErrorScreen(state, onIntent)
+            PrescriptionStep.UNREADABLE -> PrescriptionUnreadableScreen(state, onIntent)
+            PrescriptionStep.NO_MEDICINES -> PrescriptionNoMedicinesScreen(state, onIntent)
             PrescriptionStep.CONFIRMATION -> PrescriptionConfirmationScreen(state, onIntent)
         }
     }

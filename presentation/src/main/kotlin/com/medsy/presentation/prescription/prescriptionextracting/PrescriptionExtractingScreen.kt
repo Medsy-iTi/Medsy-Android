@@ -28,17 +28,23 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
+import com.medsy.presentation.prescription.PrescriptionState
 import com.medsy.presentation.prescription.PrescriptionUIIntent
 import com.medsy.presentation.prescription.prescriptionextracting.components.LoadingDots
 import com.medsy.presentation.prescription.components.PrescriptionAppBar
 import com.medsy.presentation.prescription.components.RxDocumentIllustration
 
 @Composable
-fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
+fun PrescriptionExtractingScreen(
+    state: PrescriptionState,
+    onIntent: (PrescriptionUIIntent) -> Unit
+) {
     val colors = MaterialTheme.extendedColors
     Column(modifier = Modifier.fillMaxSize()) {
         PrescriptionAppBar(
-            title = stringResource(R.string.prescription_reading_title),
+            title = stringResource(
+                if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_reading_title
+            ),
             onBack = { onIntent(PrescriptionUIIntent.BackClicked) },
         )
         Column(
@@ -50,14 +56,18 @@ fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
             RxDocumentIllustration(modifier = Modifier.size(208.dp), showSearch = true)
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = stringResource(R.string.prescription_extracting_heading),
+                text = stringResource(
+                    if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_extracting_heading
+                ),
                 color = colors.prescriptionTitle,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = stringResource(R.string.prescription_extracting_description),
+                text = stringResource(
+                    if (state.isMedicineSearch) R.string.home_promo_subtitle_one else R.string.prescription_extracting_description
+                ),
                 color = colors.prescriptionSupporting,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
@@ -78,7 +88,10 @@ fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
                     .padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Icon(
                         Icons.Filled.CenterFocusStrong,
                         contentDescription = null,
