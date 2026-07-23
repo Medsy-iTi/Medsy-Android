@@ -87,7 +87,7 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("sort") sort: List<String>?,
-        @Query("categoryId") categoryId: Int?
+        @Query("categoryId") categoryId: Int?=null
     ): Response<ApiResponse<ProductsPageDto>>
 
     @GET("api/v1/products/search")
