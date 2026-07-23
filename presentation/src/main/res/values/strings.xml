@@ -297,6 +297,7 @@
     <string name="medicine_search_reading_title">Analyzing photo</string>
     <string name="medicine_search_upload_failed_title">Photo search failed</string>
     <string name="medicine_search_upload_failed_description">We couldn\'t identify the medicine. Please check your connection or try a clearer photo.</string>
+    <string name="medicine_search_review_button">Search for medicine</string>
     <!-- Auth Strings -->
     <string name="auth_email">Email</string>
     <string name="auth_password">Password</string>

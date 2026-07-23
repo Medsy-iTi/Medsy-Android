@@ -292,6 +292,7 @@
     <string name="medicine_search_reading_title">جاري تحليل الصورة</string>
     <string name="medicine_search_upload_failed_title">فشل البحث بالصورة</string>
     <string name="medicine_search_upload_failed_description">لم نتمكن من التعرف على الدواء. يرجى التحقق من الاتصال أو تجربة صورة أوضح.</string>
+    <string name="medicine_search_review_button">بحث عن الدواء</string>
     <!-- Auth Strings -->
     <string name="auth_email">البريد الإلكتروني</string>
     <string name="auth_password">كلمة المرور</string>
