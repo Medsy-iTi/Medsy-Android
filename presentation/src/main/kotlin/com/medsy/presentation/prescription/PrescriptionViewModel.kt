@@ -99,7 +99,7 @@ class PrescriptionViewModel @Inject constructor(
             )
 
             is PrescriptionUIIntent.MedicineQueryChanged -> search(intent.query)
-            is PrescriptionUIIntent.MedicineSelected -> selectMedicine(intent.medicineId)
+            is PrescriptionUIIntent.MedicineSelected -> selectMedicine(intent.productId)
             PrescriptionUIIntent.AddToCartClicked -> submitPrescription()
             PrescriptionUIIntent.ViewCartClicked -> sendEffect(PrescriptionUIEffect.NavigateCart)
             PrescriptionUIIntent.ReturnHomeClicked -> sendEffect(PrescriptionUIEffect.NavigateHome)
@@ -288,10 +288,10 @@ class PrescriptionViewModel @Inject constructor(
         }
     }
 
-    private fun selectMedicine(productId: String) {
+    private fun selectMedicine(productId: Int) {
         val state = _state.value
         val selected =
-            state.picker.results.firstOrNull { it.productId.toString() == productId } ?: return
+            state.picker.results.firstOrNull { it.productId == productId } ?: return
         val updated = when (state.picker.mode) {
             MedicinePickerMode.ADD -> addOrIncrement(state.medicines, selected, 1)
             MedicinePickerMode.REPLACE -> replaceMedicine(
@@ -367,7 +367,7 @@ class PrescriptionViewModel @Inject constructor(
             _state.update { it.copy(isSubmitting = true) }
             val items = current.medicines.map {
                 CartItemInput(
-                    productId = it.medicine.id,
+                    productId = it.selectedMedicine?.productId ?: 0,
                     quantity = it.quantity,
                 )
             }

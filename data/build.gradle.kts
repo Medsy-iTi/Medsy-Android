@@ -15,9 +15,9 @@ val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(FileInputStream(localPropertiesFile))
 }
-val baseUrl = localProperties.getProperty("BASE_URL") ?: "\"https://medsy-api-dev.com/\""
-val accessToken = localProperties.getProperty("ACCESS_TOKEN") ?: "\"\""
-val aiApiKey = localProperties.getProperty("AI_API_KEY") ?: "\"\""
+val baseUrl = localProperties.getProperty("BASE_URL") ?: "https://medsy-api-dev.com/"
+val accessToken = localProperties.getProperty("ACCESS_TOKEN") ?: ""
+val aiApiKey = localProperties.getProperty("AI_API_KEY") ?: ""
 
 android {
     namespace = "com.medsy.data"

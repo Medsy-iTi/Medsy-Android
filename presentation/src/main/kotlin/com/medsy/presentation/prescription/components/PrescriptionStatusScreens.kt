@@ -2,7 +2,6 @@ package com.medsy.presentation.prescription.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -294,7 +293,7 @@ fun PrescriptionConfirmationScreen(
                 Text(
                     text = stringResource(
                         R.string.prescription_price_egp,
-                        state.totalPriceEgp,
+                        state.totalEgp,
                     ),
                     color = colors.prescriptionPrimary,
                     fontWeight = FontWeight.Bold,
