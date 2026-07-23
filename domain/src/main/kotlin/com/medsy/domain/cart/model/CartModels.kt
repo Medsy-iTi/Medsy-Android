@@ -39,8 +39,8 @@ data class ProductsRequest(
     val prescriptionImage: PrescriptionImage?,
     val deliveryMethod: DeliveryMethod,
     val deliveryAddress: String?,
-    val latitude: Double?,
-    val longitude: Double?,
+    val deliveryLatitude: Double?,
+    val deliveryLongitude: Double?,
     val paymentOption: PaymentOption,
 )
 

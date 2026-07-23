@@ -214,8 +214,8 @@ class CartRequestViewModel @Inject constructor(
                     prescriptionImage = currentState.draft.prescriptionImage,
                     deliveryMethod = currentState.deliveryMethod,
                     deliveryAddress = address,
-                    latitude = latitude,
-                    longitude = longitude,
+                    deliveryLatitude = latitude,
+                    deliveryLongitude = longitude,
                     paymentOption = currentState.paymentOption,
                 )
             ).onSuccess {
