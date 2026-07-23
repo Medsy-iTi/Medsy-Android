@@ -373,8 +373,10 @@
     <string name="cart_cleared">Cart cleared</string>
     <!--  Active Search Status  -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>
-    <string name="search_category_title">Category Title</string>
+    <string name="search_category_title">Category</string>
     <string name="search_category_all">All</string>
+    <string name="search_category_reset">Reset</string>
+    <string name="search_category_apply">Apply</string>
     <string name="home_search_status_searching_desc">Matching your request with nearby pharmacies</string>
     <string name="home_search_status_time">Search time</string>
     <string name="home_search_status_stage_1">Stage 1</string>

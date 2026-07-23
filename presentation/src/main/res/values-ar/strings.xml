@@ -370,8 +370,10 @@
     <!--  Active Search Status  -->
     <string name="home_search_status_searching_title">جاري البحث عن أدويتك</string>
     <string name="home_search_status_searching_desc">نطابق طلبك مع الصيدليات القريبة</string>
-    <string name="search_category_title">عنوان الفئة</string>
+    <string name="search_category_title">القسم</string>
     <string name="search_category_all">الكل</string>
+    <string name="search_category_reset">إعادة ضبط</string>
+    <string name="search_category_apply">تطبيق</string>
     <string name="home_search_status_time">وقت البحث</string>
     <string name="home_search_status_stage_1">المرحلة ١</string>
     <string name="home_search_status_stage_1_desc">صيدليات قريبة</string>
