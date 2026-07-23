@@ -47,7 +47,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun submitProductsRequest(
         request: ProductsRequest,
     ): EmptyMedsyResult<MedsyError.Remote> =
-        remoteDataSource.submitProductsRequest()
+        remoteDataSource.submitProductsRequest(request)
 
     override suspend fun updateNote(
         note: String,

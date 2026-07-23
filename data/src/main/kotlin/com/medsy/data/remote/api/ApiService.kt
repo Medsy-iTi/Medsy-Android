@@ -10,6 +10,7 @@ import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.dtos.products.ProductsDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.remote.ProductsPageDto
+import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.data.prescription.remote.AiInterceptor
 import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
 import okhttp3.MultipartBody
@@ -57,6 +58,11 @@ interface ApiService {
 
     @DELETE("api/v1/cart")
     suspend fun clearCart(): Response<ApiResponse<Any>>
+
+    @POST("api/v1/requests")
+    suspend fun submitProductsRequest(
+        @Body request: ProductsRequest,
+    ): Response<ApiResponse<Any>>
 
     @GET("api/v1/categories")
     suspend fun getCategories(
