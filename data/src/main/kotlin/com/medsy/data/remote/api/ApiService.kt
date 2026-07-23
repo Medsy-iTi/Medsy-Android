@@ -11,6 +11,7 @@ import com.medsy.data.remote.dtos.products.ProductsDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.remote.ProductsPageDto
 import com.medsy.data.prescription.remote.AiInterceptor
+import com.medsy.data.prescription.remote.dto.AnalyzedMedicineDto
 import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -35,6 +36,13 @@ interface ApiService {
     suspend fun analyzePrescription(
         @Part image: MultipartBody.Part,
     ): Response<ApiResponse<PrescriptionAnalysisDto>>
+
+    @Multipart
+    @Headers("${AiInterceptor.AI_KEY_FLAG}: true")
+    @POST("api/v1/products/analyze-image")
+    suspend fun analyzeMedicineImage(
+        @Part image: MultipartBody.Part,
+    ): Response<ApiResponse<List<AnalyzedMedicineDto>>>
 
     @GET("api/v1/cart")
     suspend fun getCart(): Response<ApiResponse<CartDto>>

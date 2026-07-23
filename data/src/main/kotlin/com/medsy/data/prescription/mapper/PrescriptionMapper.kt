@@ -1,5 +1,6 @@
 package com.medsy.data.prescription.mapper
 
+import com.medsy.data.prescription.remote.dto.AnalyzedMedicineDto
 import com.medsy.data.prescription.remote.dto.ExtractedMedicineDto
 import com.medsy.data.prescription.remote.dto.MedicineCandidateDto
 import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
@@ -38,6 +39,17 @@ fun MedicineCandidateDto.toDomain(): Medicine {
         strength = strength,
         form = form,
         price = price,
+        imageUrl = imageUrl
+    )
+}
+
+fun AnalyzedMedicineDto.toDomain(): Medicine {
+    return Medicine(
+        productId = id ?: 0,
+        name = name ?: productName ?: "",
+        strength = scientificName,
+        form = route,
+        price = price?.toInt() ?: 0,
         imageUrl = imageUrl
     )
 }

@@ -14,13 +14,12 @@ import com.medsy.domain.prescription.model.PrescriptionCartRequest
 import com.medsy.domain.prescription.model.PrescriptionExtractionOutcome
 import com.medsy.domain.prescription.model.PrescriptionImage
 import com.medsy.domain.prescription.repository.PrescriptionRepository
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CancellationException
-import okhttp3.MediaType.Companion.toMediaType
 
 @Singleton
 class PrescriptionRepositoryImpl @Inject constructor(
@@ -51,49 +50,26 @@ class PrescriptionRepositoryImpl @Inject constructor(
         val file = imageStorage.getFile(image)
         if (!file.exists()) return MedsyResult.Error(MedsyError.Local.MEDIA)
 
-
         val mimeType = PrescriptionImageMimeType.fromExtension(file.extension).value
-
-        val requestFile = file.asRequestBody(
-            mimeType.toMediaType()
-        )
+        val requestFile = file.asRequestBody(mimeType.toMediaType())
         val multipartImage = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
         return remoteDataSource.analyzePrescription(multipartImage)
             .map { it.toDomain() }
     }
 
-    override suspend fun searchMedicines(
-        query: String,
-    ): MedsyResult<List<Medicine>, MedsyError.Remote> {
-        return try {
-            val response = if (query.isNotBlank()) {
-                apiService.searchProducts(keyword = query, page = 0, size = 50, sort = null)
-            } else {
-                apiService.getProducts(page = 0, size = 50, sort = null)
-            }
-            
-            val body = response.body()
-            if (response.isSuccessful && body != null && body.success && body.data != null) {
-                val isArabic = java.util.Locale.getDefault().language == "ar"
-                val results = body.data.content.map { dto ->
-                    val localizedName = if (isArabic && !dto.arabicName.isNullOrBlank()) dto.arabicName else dto.name
-                    Medicine(
-                        productId = dto.id,
-                        name = localizedName,
-                        strength = dto.scientificName,
-                        form = dto.route,
-                        price = dto.price.toInt(),
-                        imageUrl = dto.imageUrl
-                    )
-                }
-                MedsyResult.Success(results)
-            } else {
-                MedsyResult.Error(MedsyError.Remote.Unknown)
-            }
-        } catch (e: Exception) {
-            MedsyResult.Error(MedsyError.Remote.Unknown)
-        }
+    override suspend fun analyzeMedicineImage(
+        image: PrescriptionImage,
+    ): MedsyResult<List<Medicine>, MedsyError> {
+        val file = imageStorage.getFile(image)
+        if (!file.exists()) return MedsyResult.Error(MedsyError.Local.MEDIA)
+
+        val mimeType = PrescriptionImageMimeType.fromExtension(file.extension).value
+        val requestFile = file.asRequestBody(mimeType.toMediaType())
+        val multipartImage = MultipartBody.Part.createFormData("image", file.name, requestFile)
+
+        return remoteDataSource.analyzeMedicineImage(multipartImage)
+            .map { list -> list.map { it.toDomain() } }
     }
 
     override suspend fun getMedicineById(productId: Int): MedsyResult<Medicine, MedsyError.Remote> {
@@ -114,6 +90,40 @@ class PrescriptionRepositoryImpl @Inject constructor(
                     imageUrl = dto.imageUrl
                 )
                 MedsyResult.Success(medicine)
+            } else {
+                MedsyResult.Error(MedsyError.Remote.Unknown)
+            }
+        } catch (e: Exception) {
+            MedsyResult.Error(MedsyError.Remote.Unknown)
+        }
+    }
+
+    override suspend fun searchMedicines(
+        query: String,
+    ): MedsyResult<List<Medicine>, MedsyError.Remote> {
+        return try {
+            val response = if (query.isNotBlank()) {
+                apiService.searchProducts(keyword = query, page = 0, size = 50, sort = null)
+            } else {
+                apiService.getProducts(page = 0, size = 50, sort = null)
+            }
+
+            val body = response.body()
+            if (response.isSuccessful && body != null && body.success && body.data != null) {
+                val isArabic = java.util.Locale.getDefault().language == "ar"
+                val results = body.data.content.map { dto ->
+                    val localizedName =
+                        if (isArabic && !dto.arabicName.isNullOrBlank()) dto.arabicName else dto.name
+                    Medicine(
+                        productId = dto.id,
+                        name = localizedName,
+                        strength = dto.scientificName,
+                        form = dto.route,
+                        price = dto.price.toInt(),
+                        imageUrl = dto.imageUrl
+                    )
+                }
+                MedsyResult.Success(results)
             } else {
                 MedsyResult.Error(MedsyError.Remote.Unknown)
             }
