@@ -20,6 +20,7 @@ sealed interface PrescriptionUIIntent {
     data object AddMedicineManuallyClicked : PrescriptionUIIntent
     data class MedicineQueryChanged(val query: String) : PrescriptionUIIntent
     data class MedicineSelected(val productId: Int) : PrescriptionUIIntent
+    data class MedicineSelectedFromResult(val localItemId: String, val productId: Int) : PrescriptionUIIntent
     data object AddToCartClicked : PrescriptionUIIntent
     data object ViewCartClicked : PrescriptionUIIntent
     data object ReturnHomeClicked : PrescriptionUIIntent

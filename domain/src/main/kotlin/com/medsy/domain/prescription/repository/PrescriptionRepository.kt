@@ -23,6 +23,10 @@ interface PrescriptionRepository {
         query: String,
     ): MedsyResult<List<Medicine>, MedsyError.Remote>
 
+    suspend fun getMedicineById(
+        productId: Int,
+    ): MedsyResult<Medicine, MedsyError.Remote>
+
     suspend fun addPrescriptionToCart(
         request: PrescriptionCartRequest,
     ): EmptyMedsyResult<MedsyError.Remote>
