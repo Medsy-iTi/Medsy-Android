@@ -171,7 +171,7 @@ fun PrescriptionConfirmationScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            modifier = Modifier.size(160.dp),
+            modifier = Modifier.size(200.dp),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
