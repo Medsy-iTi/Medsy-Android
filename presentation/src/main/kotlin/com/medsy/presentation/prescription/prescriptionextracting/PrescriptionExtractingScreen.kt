@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionextracting
 
 
 import androidx.compose.foundation.background
@@ -24,10 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.prescription.PrescriptionUIIntent
+import com.medsy.presentation.prescription.prescriptionextracting.components.LoadingDots
+import com.medsy.presentation.prescription.components.PrescriptionAppBar
+import com.medsy.presentation.prescription.components.RxDocumentIllustration
 
 @Composable
 fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
@@ -91,14 +95,14 @@ fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
                     text = stringResource(R.string.prescription_stage_uploaded),
                     color = colors.prescriptionSupporting,
                     style = MaterialTheme.typography.labelMedium,
-                    textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough,
+                    textDecoration = TextDecoration.LineThrough,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                 )
                 Text(
                     text = stringResource(R.string.prescription_stage_quality),
                     color = colors.prescriptionSupporting,
                     style = MaterialTheme.typography.labelMedium,
-                    textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough,
+                    textDecoration = TextDecoration.LineThrough,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                 )
                 Text(

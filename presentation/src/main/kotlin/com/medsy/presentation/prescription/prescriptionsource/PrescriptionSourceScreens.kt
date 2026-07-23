@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionsource
 
 
 import androidx.compose.foundation.layout.Column
@@ -20,11 +20,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.prescription.PrescriptionState
 import com.medsy.presentation.prescription.PrescriptionUIIntent
+import com.medsy.presentation.prescription.components.CameraSourceIcon
+import com.medsy.presentation.prescription.components.GallerySourceIcon
+import com.medsy.presentation.prescription.components.PrescriptionAppBar
+import com.medsy.presentation.prescription.components.RxDocumentIllustration
+import com.medsy.presentation.prescription.prescriptionsource.components.SourceOptionCard
+import com.medsy.presentation.prescription.prescriptionimagepreview.components.PrescriptionTipsCard
 
 @Composable
 fun PrescriptionSourceScreen(

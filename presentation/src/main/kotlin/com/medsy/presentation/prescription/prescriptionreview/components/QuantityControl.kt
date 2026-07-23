@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionreview.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,7 @@ import com.medsy.presentation.R
 import com.medsy.presentation.prescription.PrescriptionUIIntent
 
 @Composable
-fun QuantityControl(
+internal fun QuantityControl(
     item: ExtractedMedicine,
     onIntent: (PrescriptionUIIntent) -> Unit,
 ) {
@@ -58,4 +58,3 @@ fun QuantityControl(
         )
     }
 }
-

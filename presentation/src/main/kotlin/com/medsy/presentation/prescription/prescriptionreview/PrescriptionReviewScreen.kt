@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionreview
 
 
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +16,12 @@ import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.prescription.PrescriptionState
 import com.medsy.presentation.prescription.PrescriptionUIIntent
+import com.medsy.presentation.prescription.components.PrescriptionAppBar
+import com.medsy.presentation.prescription.components.PrescriptionPrimaryButton
+import com.medsy.presentation.prescription.components.PrescriptionTextAction
+import com.medsy.presentation.prescription.prescriptionreview.components.ExtractedMedicineCard
+import com.medsy.presentation.prescription.prescriptionreview.components.ReviewSummaryCard
+import com.medsy.presentation.prescription.prescriptionreview.components.ReviewWarning
 
 @Composable
 fun PrescriptionReviewScreen(

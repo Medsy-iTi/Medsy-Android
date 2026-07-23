@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionreview.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +23,7 @@ import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 
 @Composable
-fun ReviewWarning() {
+internal fun ReviewWarning() {
     val colors = MaterialTheme.extendedColors
     Row(
         modifier = Modifier

@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.medicinepicker.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

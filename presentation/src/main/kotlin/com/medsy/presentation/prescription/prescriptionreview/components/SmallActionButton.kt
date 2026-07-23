@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionreview.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 
 @Composable
-fun SmallActionButton(
+internal fun SmallActionButton(
     text: String,
     primary: Boolean,
     modifier: Modifier,
@@ -46,4 +46,3 @@ fun SmallActionButton(
             .padding(vertical = 9.dp),
     )
 }
-

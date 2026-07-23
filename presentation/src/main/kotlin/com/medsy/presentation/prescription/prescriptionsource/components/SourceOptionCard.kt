@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionsource.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

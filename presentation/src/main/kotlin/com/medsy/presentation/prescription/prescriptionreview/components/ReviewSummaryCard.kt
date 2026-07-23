@@ -1,7 +1,6 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionreview.components
 
 import android.net.Uri
-import android.net.Uri.parse
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,7 +32,7 @@ import com.medsy.presentation.prescription.PrescriptionState
 import com.medsy.presentation.prescription.PrescriptionUIIntent
 
 @Composable
-fun ReviewSummaryCard(
+internal fun ReviewSummaryCard(
     state: PrescriptionState,
     onIntent: (PrescriptionUIIntent) -> Unit,
 ) {
@@ -107,4 +106,3 @@ fun ReviewSummaryCard(
         }
     }
 }
-

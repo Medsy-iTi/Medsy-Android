@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionreview.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 
 @Composable
-fun SummaryCountChip(
+internal fun SummaryCountChip(
     count: Int,
     label: String,
     warning: Boolean,
@@ -44,4 +44,3 @@ fun SummaryCountChip(
         )
     }
 }
-

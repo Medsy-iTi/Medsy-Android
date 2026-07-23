@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionreview.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,7 @@ import com.medsy.domain.prescription.model.ExtractedMedicine
 import com.medsy.presentation.R
 
 @Composable
-fun MedicineIdentityRow(item: ExtractedMedicine) {
+internal fun MedicineIdentityRow(item: ExtractedMedicine) {
     val colors = MaterialTheme.extendedColors
     val suggestion = item.selectedMedicine
 

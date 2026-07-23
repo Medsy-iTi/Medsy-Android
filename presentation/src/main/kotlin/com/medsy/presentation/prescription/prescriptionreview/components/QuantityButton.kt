@@ -1,4 +1,4 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionreview.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,12 +10,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 
 @Composable
-fun QuantityButton(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+internal fun QuantityButton(
+    icon: ImageVector,
     primary: Boolean,
     description: String,
     onClick: () -> Unit,
@@ -46,4 +47,3 @@ fun QuantityButton(
         )
     }
 }
-
