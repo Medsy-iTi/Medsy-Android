@@ -36,6 +36,32 @@ fun <T> SearchSelectionBottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    SearchSelectionBottomSheet(
+        titleRes = titleRes,
+        options = options,
+        selectedOption = selectedOption,
+        optionLabel = { stringResource(optionLabelRes(it)) },
+        onOptionClick = onOptionClick,
+        onDismissRequest = onDismissRequest,
+        modifier = modifier
+    )
+}
+
+/**
+ * Same selection bottom sheet, for options whose label is a dynamic string
+ * rather than a fixed string resource (e.g. a category name from the API).
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun <T> SearchSelectionBottomSheet(
+    titleRes: Int,
+    options: List<T>,
+    selectedOption: T,
+    optionLabel: @Composable (T) -> String,
+    onOptionClick: (T) -> Unit,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
@@ -88,7 +114,7 @@ fun <T> SearchSelectionBottomSheet(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = stringResource(optionLabelRes(option)),
+                        text = optionLabel(option),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )

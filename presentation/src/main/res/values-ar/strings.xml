@@ -159,6 +159,13 @@
     <string name="profile_location_disclaimer_title">أضف موقع التوصيل</string>
     <string name="profile_location_disclaimer_message">حدّد موقعك على الخريطة لمساعدة الصيدليات القريبة على خدمتك بدقة.</string>
     <string name="profile_location_disclaimer_action">فتح البيانات الشخصية</string>
+    <string name="profile_location_picker_title">اختيار الموقع</string>
+    <string name="profile_location_confirm">تأكيد الموقع</string>
+    <string name="profile_location_use_current">استخدام الموقع الحالي</string>
+    <string name="profile_location_permission_denied">لم يتم السماح بالوصول إلى الموقع. لا يزال بإمكانك اختيار الموقع يدويًا على الخريطة.</string>
+    <string name="profile_location_unavailable">تعذر تحديد موقعك الحالي. لا يزال بإمكانك اختيار الموقع يدويًا على الخريطة.</string>
+    <string name="profile_location_maps_unavailable">خرائط Google غير متاحة على هذا الجهاز.</string>
+    <string name="profile_location_selected_marker">موقع التوصيل المحدد</string>
     <string name="profile_location_card_title">الموقع على الخريطة</string>
     <string name="profile_location_card_selected">تم تحديد الموقع</string>
     <string name="profile_location_card_not_selected">لم يتم تحديد الموقع</string>
@@ -365,6 +372,7 @@
     <string name="cart_clear_message">سيؤدي ذلك إلى إزالة جميع الأدوية والروشتة وملاحظة الصيدلي.</string>
     <string name="cart_clear_confirm">إفراغ</string>
     <string name="cart_cleared">تم إفراغ السلة</string>
+    <!--  Active Search Status  -->
     <string name="cart_request_title">إكمال الطلب</string>
     <string name="cart_request_subtitle">بعض التفاصيل الأخيرة قبل إرسال طلبك إلى الصيدليات</string>
     <string name="cart_request_order_summary">ملخص الطلب</string>
@@ -407,6 +415,10 @@
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">جاري البحث عن أدويتك</string>
     <string name="home_search_status_searching_desc">نطابق طلبك مع الصيدليات القريبة</string>
+    <string name="search_category_title">القسم</string>
+    <string name="search_category_all">الكل</string>
+    <string name="search_category_reset">إعادة ضبط</string>
+    <string name="search_category_apply">تطبيق</string>
     <string name="home_search_status_time">وقت البحث</string>
     <string name="home_search_status_stage_1">المرحلة ١</string>
     <string name="home_search_status_stage_1_desc">صيدليات قريبة</string>
@@ -433,7 +445,6 @@
     <string name="home_search_status_search_wider">البحث في نطاق أوسع</string>
     <string name="home_search_status_cancel">إلغاء الطلب</string>
     <string name="home_search_status_offers_available_format">%1$d عروض متاحة — يمكنك المقارنة</string>
-
     <plurals name="home_search_status_medicines">
         <item quantity="zero">أدوية</item>
         <item quantity="one">دواء</item>
@@ -462,7 +473,7 @@
     <string name="offers_pharmacist_comment">تعليق من الصيدلي</string>
     <string name="offers_view_prescription">عرض الروشتة</string>
     <string name="offers_choose_offer">اختار هذا العرض</string>
-    
+
     <string name="offers_order_review_title">مراجعة الطلب</string>
     <string name="offers_delivery_address">عنوان التوصيل</string>
     <string name="offers_delivery_details">تفاصيل التوصيل</string>
@@ -471,7 +482,7 @@
     <string name="offers_total_medicines_price">إجمالي سعر الأدوية</string>
     <string name="offers_total">الإجمالي</string>
     <string name="offers_confirm_order">تأكيد الطلب</string>
-    
+
     <string name="offers_success_title">تم تأكيد طلبك بنجاح!</string>
     <string name="offers_order_number">رقم الطلب</string>
     <string name="offers_delivery_to">التوصيل إلى</string>

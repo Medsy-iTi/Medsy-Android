@@ -166,6 +166,13 @@
     <string name="profile_location_disclaimer_title">Add your delivery location</string>
     <string name="profile_location_disclaimer_message">Choose your location on the map to help nearby pharmacies serve you accurately.</string>
     <string name="profile_location_disclaimer_action">Open personal details</string>
+    <string name="profile_location_picker_title">Select location</string>
+    <string name="profile_location_confirm">Confirm location</string>
+    <string name="profile_location_use_current">Use current location</string>
+    <string name="profile_location_permission_denied">Location permission was not granted. You can still choose a location manually on the map.</string>
+    <string name="profile_location_unavailable">Your current location is unavailable. You can still choose a location manually on the map.</string>
+    <string name="profile_location_maps_unavailable">Google Maps is unavailable on this device.</string>
+    <string name="profile_location_selected_marker">Selected delivery location</string>
     <string name="profile_location_card_title">Map location</string>
     <string name="profile_location_card_selected">Location selected</string>
     <string name="profile_location_card_not_selected">Location not selected</string>
@@ -369,6 +376,7 @@
     <string name="cart_clear_message">This removes all medicines, the prescription, and the pharmacist note.</string>
     <string name="cart_clear_confirm">Clear</string>
     <string name="cart_cleared">Cart cleared</string>
+    <!--  Active Search Status  -->
     <string name="cart_request_title">Complete request</string>
     <string name="cart_request_subtitle">A few final details before pharmacies receive your request</string>
     <string name="cart_request_order_summary">Request summary</string>
@@ -407,6 +415,10 @@
     <string name="cart_request_back">Back to cart</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>
+    <string name="search_category_title">Category</string>
+    <string name="search_category_all">All</string>
+    <string name="search_category_reset">Reset</string>
+    <string name="search_category_apply">Apply</string>
     <string name="home_search_status_searching_desc">Matching your request with nearby pharmacies</string>
     <string name="home_search_status_time">Search time</string>
     <string name="home_search_status_stage_1">Stage 1</string>
@@ -434,7 +446,6 @@
     <string name="home_search_status_search_wider">Search in a wider range</string>
     <string name="home_search_status_cancel">Cancel request</string>
     <string name="home_search_status_offers_available_format">%1$d offers available — you can compare</string>
-
     <plurals name="home_search_status_medicines">
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>
@@ -459,7 +470,7 @@
     <string name="offers_pharmacist_comment">Pharmacist Comment</string>
     <string name="offers_view_prescription">View Prescription</string>
     <string name="offers_choose_offer">Choose this Offer</string>
-    
+
     <string name="offers_order_review_title">Order Review</string>
     <string name="offers_delivery_address">Delivery Address</string>
     <string name="offers_delivery_details">Delivery Details</string>
@@ -468,7 +479,7 @@
     <string name="offers_total_medicines_price">Total Medicines Price</string>
     <string name="offers_total">Total</string>
     <string name="offers_confirm_order">Confirm Order</string>
-    
+
     <string name="offers_success_title">Order Confirmed Successfully!</string>
     <string name="offers_order_number">Order Number</string>
     <string name="offers_delivery_to">Delivery To</string>

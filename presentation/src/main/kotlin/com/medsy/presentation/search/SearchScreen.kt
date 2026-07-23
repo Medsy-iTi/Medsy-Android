@@ -42,6 +42,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
 import com.medsy.presentation.search.components.ProductResultCard
+import com.medsy.presentation.search.components.SearchCategoryBottomSheet
 import com.medsy.presentation.search.components.SearchEmptyState
 import com.medsy.presentation.search.components.SearchFilterChips
 import com.medsy.presentation.search.components.SearchInputBar
@@ -231,6 +232,15 @@ fun SearchScreen(
             selectedOption = state.selectedSort,
             optionLabelRes = { it.labelResId },
             onOptionClick = { onIntent(SearchUIIntent.SortOptionSelected(it)) },
+            onDismissRequest = { onIntent(SearchUIIntent.DismissBottomSheet) }
+        )
+    }
+
+    if (state.isCategoryBottomSheetOpen) {
+        SearchCategoryBottomSheet(
+            categories = state.categories,
+            selectedCategory = state.selectedCategory,
+            onCategorySelected = { onIntent(SearchUIIntent.CategoryOptionSelected(it)) },
             onDismissRequest = { onIntent(SearchUIIntent.DismissBottomSheet) }
         )
     }
