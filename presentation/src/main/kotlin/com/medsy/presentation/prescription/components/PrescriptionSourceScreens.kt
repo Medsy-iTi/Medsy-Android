@@ -39,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
@@ -66,13 +65,25 @@ fun PrescriptionSourceScreen(
             RxDocumentIllustration()
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = stringResource(R.string.prescription_upload_heading),
+                text = stringResource(
+                    if (state.isAttachmentOnly) {
+                        R.string.prescription_attachment_heading
+                    } else {
+                        R.string.prescription_upload_heading
+                    }
+                ),
                 color = MaterialTheme.extendedColors.prescriptionTitle,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = stringResource(R.string.prescription_upload_description),
+                text = stringResource(
+                    if (state.isAttachmentOnly) {
+                        R.string.prescription_attachment_description
+                    } else {
+                        R.string.prescription_upload_description
+                    }
+                ),
                 color = MaterialTheme.extendedColors.prescriptionSupporting,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
@@ -103,11 +114,6 @@ fun PrescriptionSourceScreen(
                     modifier = Modifier.size(28.dp),
                 )
             }
-            PrescriptionPrimaryButton(
-                text = stringResource(R.string.prescription_continue),
-                onClick = {},
-                enabled = false,
-            )
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -180,7 +186,11 @@ fun PrescriptionImagePreviewScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Filled.Refresh, contentDescription = null, modifier = Modifier.size(17.dp))
+                    Icon(
+                        Icons.Filled.Refresh,
+                        contentDescription = null,
+                        modifier = Modifier.size(17.dp)
+                    )
                     Spacer(modifier = Modifier.size(8.dp))
                     Text(
                         text = stringResource(R.string.prescription_change_image),
@@ -216,8 +226,15 @@ fun PrescriptionImagePreviewScreen(
             }
             PrescriptionTipsCard(showThreeTips = false)
             PrescriptionPrimaryButton(
-                text = stringResource(R.string.prescription_review_image),
+                text = stringResource(
+                    if (state.isAttachmentOnly) {
+                        R.string.prescription_attach_to_cart
+                    } else {
+                        R.string.prescription_review_image
+                    }
+                ),
                 onClick = { onIntent(PrescriptionUIIntent.ReviewImageClicked) },
+                enabled = !state.isSubmitting,
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
@@ -270,7 +287,10 @@ private fun CameraSourceIcon() {
     Box(
         modifier = Modifier
             .size(52.dp)
-            .background(MaterialTheme.extendedColors.prescriptionSuccessSoft, RoundedCornerShape(16.dp)),
+            .background(
+                MaterialTheme.extendedColors.prescriptionSuccessSoft,
+                RoundedCornerShape(16.dp)
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
@@ -287,7 +307,10 @@ private fun GallerySourceIcon() {
     Box(
         modifier = Modifier
             .size(52.dp)
-            .background(MaterialTheme.extendedColors.prescriptionGalleryContainer, RoundedCornerShape(16.dp)),
+            .background(
+                MaterialTheme.extendedColors.prescriptionGalleryContainer,
+                RoundedCornerShape(16.dp)
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
@@ -319,7 +342,10 @@ private fun PrescriptionTipsCard(showThreeTips: Boolean) {
             },
             fontWeight = FontWeight.Bold,
         )
-        TipRow(Icons.Filled.CenterFocusStrong, stringResource(R.string.prescription_tip_clear_names))
+        TipRow(
+            Icons.Filled.CenterFocusStrong,
+            stringResource(R.string.prescription_tip_clear_names)
+        )
         TipRow(Icons.Filled.CameraAlt, stringResource(R.string.prescription_tip_avoid_shadows))
         if (showThreeTips) {
             TipRow(Icons.Filled.CropFree, stringResource(R.string.prescription_tip_full_image))
@@ -329,11 +355,17 @@ private fun PrescriptionTipsCard(showThreeTips: Boolean) {
 
 @Composable
 private fun TipRow(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         Box(
             modifier = Modifier
                 .size(32.dp)
-                .background(MaterialTheme.extendedColors.prescriptionSuccessSoft, RoundedCornerShape(14.dp)),
+                .background(
+                    MaterialTheme.extendedColors.prescriptionSuccessSoft,
+                    RoundedCornerShape(14.dp)
+                ),
             contentAlignment = Alignment.Center,
         ) {
             Icon(

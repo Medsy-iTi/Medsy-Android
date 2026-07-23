@@ -1,4 +1,4 @@
-package com.medsy.data.prescription.local
+package com.medsy.data.common.media
 
 import android.content.Context
 import android.net.Uri
@@ -44,6 +44,21 @@ class PrescriptionImageStorage @Inject constructor(
 
     fun getFile(image: PrescriptionImage): File {
         return File(directory, image.storageKey)
+    }
+
+    fun restore(
+        uri: String,
+        storageKey: String,
+    ): PrescriptionImage? {
+        val file = File(directory, storageKey)
+        return if (
+            file.canonicalFile.parentFile == directory.canonicalFile &&
+            file.isFile
+        ) {
+            PrescriptionImage(uri = uri, storageKey = storageKey)
+        } else {
+            null
+        }
     }
 
     private fun File.toPrescriptionImage(): PrescriptionImage {

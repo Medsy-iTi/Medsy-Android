@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -31,7 +32,8 @@ fun ProductDetailRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(end = 16.dp)) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -48,6 +50,7 @@ fun ProductDetailRow(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
             color = valueColor,
+            textAlign = TextAlign.Center,
         )
     }
     if (showDivider) {

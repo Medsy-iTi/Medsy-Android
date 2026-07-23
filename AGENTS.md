@@ -40,10 +40,13 @@ feature, bring only that feature's touched files into compliance.
    prescriptions, addresses, or medicine-request bodies. OkHttp BODY logging remains debug-only and
    authentication/cookie headers remain redacted.
 10. **Medsy is request-based, not an inventory catalog.** Do not design flows that assume a pharmacy
-    inventory feed. Estimated medicine prices are informational; pharmacist-entered final prices
-    are the only prices used in financial totals.
+    inventory feed. Backend product and cart prices are fixed and may be used in financial totals.
+    Do not label fixed prices as estimated or defer them to pharmacist-entered pricing.
 11. **Do not perform drive-by cleanup.** No unrelated renames, formatting sweeps, dependency
     upgrades, package moves, or placeholder rewrites while implementing a scoped feature.
+12. **Keep changes simple by following existing rules and patterns.** Do not introduce a new
+    pattern, abstraction, dependency, shared API, or architectural concept without explaining why
+    the existing approach is insufficient and receiving explicit approval first.
 
 ---
 
@@ -144,6 +147,9 @@ Shared-code placement:
 
 - Feature-specific code remains under that feature in its owning layer module.
 - A visual component used by one feature belongs in `presentation/<feature>/components`.
+- Keep screen files focused on root integration and screen-level state rendering. When a screen
+  becomes large, move coherent feature-local UI sections into that feature's `components` package
+  instead of leaving substantial component implementations in the screen file.
 - A feature-agnostic visual primitive genuinely used by multiple features belongs in
   `:designsystem`.
 - Shared domain concepts belong under `domain/common`; shared data infrastructure belongs under
@@ -227,6 +233,10 @@ ViewModel rules:
 - Update state with `_state.update { it.copy(...) }`.
 - Expose one `onIntent(intent)` entry point and use an exhaustive `when`; never leave
   `else -> TODO()` in implemented features.
+- For a fallible operation whose success and error paths only update state or send effects, prefer
+  the shared `.onSuccess { ... }.onError { error -> ... }` chain instead of an exhaustive `when`
+  over `MedsyResult`. Keep `when` or `fold` when result data changes control flow, the operation
+  transforms or returns a value, or more than simple success/error side effects are involved.
 - Use a `Channel<XUIEffect>(capacity = Channel.BUFFERED)` plus `receiveAsFlow()` only for one-off
   navigation or UI effects.
 - Do not store `Context`, composables, navigation back stacks, Retrofit types, DTOs, or resolved
@@ -343,6 +353,9 @@ exceptions outside `:data`.
   `presentation/common/util/ErrorMapper.kt`.
 - ViewModels expose `@StringRes` IDs or feature-specific UI error types. They never expose raw
   backend messages, exception messages, `Throwable`, or Android `Context`.
+- When a composable resolves an `@StringRes` carried by an effect, obtain
+  `val context = LocalContext.current` and use `ContextCompat.getString(context, effect.messageRes)`.
+  Do not call `context.getString(effect.messageRes)` directly.
 - Resolve resource IDs with `stringResource()` at the Compose boundary. Do not make the domain/data
   mapper composable and do not pass `Context` into a ViewModel.
 - Keep endpoint-specific mappings explicit: login `400` maps to invalid credentials, OTP
@@ -357,6 +370,8 @@ DTO rules:
 - Convert with explicit `toDomain()` mapper functions in `:data`.
 - Domain models represent Medsy concepts, not API wire shapes.
 - Repository interfaces return domain types/contracts only.
+- Put each use case class in its own file named after that use case. Do not group multiple use case
+  classes in one file.
 
 ---
 
@@ -419,9 +434,8 @@ Reusable components:
 
 - The patient creates a medicine request; nearby pharmacies respond with offers. Do not add
   inventory-dependent browsing behavior.
-- Estimated prices are labeled approximate and are never used as final financial totals.
-- Final totals use only pharmacist-entered final prices plus an explicit delivery-fee line when
-  applicable.
+- Backend product and cart prices are fixed and may be used in financial totals.
+- Display delivery fees only when the backend provides them; do not invent or estimate fees.
 - Prescription extraction is assistive. AI output must be reviewed and must never auto-confirm or
   auto-submit an order.
 - Leaflet content is retrieved verbatim from the approved medicine database, not generated.

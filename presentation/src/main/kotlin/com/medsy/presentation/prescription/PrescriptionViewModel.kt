@@ -2,6 +2,11 @@ package com.medsy.presentation.prescription
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.cart.model.AddCartItemsOutcome
+import com.medsy.domain.cart.model.CartItemInput
+import com.medsy.domain.cart.usecase.AddCartItemsUseCase
+import com.medsy.domain.cart.usecase.AttachCartPrescriptionUseCase
+import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.domain.prescription.model.ExtractedMedicine
@@ -16,6 +21,7 @@ import com.medsy.domain.prescription.usecase.ImportPrescriptionImageUseCase
 import com.medsy.domain.prescription.usecase.PreparePrescriptionCaptureUseCase
 import com.medsy.domain.prescription.usecase.SearchPrescriptionMedicinesUseCase
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -23,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,7 +40,8 @@ class PrescriptionViewModel @Inject constructor(
     private val deleteImage: DeletePrescriptionImageUseCase,
     private val extractPrescription: ExtractPrescriptionUseCase,
     private val searchMedicines: SearchPrescriptionMedicinesUseCase,
-    private val addPrescriptionToCart: AddPrescriptionToCartUseCase,
+    private val addCartItems: AddCartItemsUseCase,
+    private val attachCartPrescription: AttachCartPrescriptionUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PrescriptionState())
@@ -45,6 +53,13 @@ class PrescriptionViewModel @Inject constructor(
     private var pendingCameraImage: PrescriptionImage? = null
     private var extractionJob: Job? = null
     private var searchJob: Job? = null
+    private var hasInitialized = false
+
+    fun init(attachmentOnly: Boolean) {
+        if (hasInitialized) return
+        hasInitialized = true
+        _state.update { it.copy(isAttachmentOnly = attachmentOnly) }
+    }
 
     fun onIntent(intent: PrescriptionUIIntent) {
         when (intent) {
@@ -55,7 +70,13 @@ class PrescriptionViewModel @Inject constructor(
             is PrescriptionUIIntent.GalleryImageSelected -> handleGalleryResult(intent.uri)
             PrescriptionUIIntent.ChangeImageClicked -> showSourceSelection()
             PrescriptionUIIntent.DeleteImageClicked -> removeCurrentImage()
-            PrescriptionUIIntent.ReviewImageClicked -> startExtraction()
+            PrescriptionUIIntent.ReviewImageClicked -> {
+                if (_state.value.isAttachmentOnly) {
+                    attachPrescriptionOnly()
+                } else {
+                    startExtraction()
+                }
+            }
             PrescriptionUIIntent.RetryExtractionClicked -> startExtraction()
             PrescriptionUIIntent.ChooseAnotherImageClicked -> showSourceSelection()
             PrescriptionUIIntent.TogglePrescriptionImageClicked ->
@@ -141,7 +162,7 @@ class PrescriptionViewModel @Inject constructor(
 
     private fun removeCurrentImage() {
         val image = _state.value.image
-        _state.update { PrescriptionState() }
+        _state.update { PrescriptionState(isAttachmentOnly = it.isAttachmentOnly) }
         if (image != null) viewModelScope.launch { deleteImage(image) }
     }
 
@@ -248,6 +269,7 @@ class PrescriptionViewModel @Inject constructor(
         searchJob?.cancel()
         _state.update { it.copy(picker = it.picker.copy(query = query, isLoading = true)) }
         searchJob = viewModelScope.launch {
+            if (query.isNotBlank()) delay(SEARCH_DEBOUNCE_MILLIS)
             searchMedicines(query)
                 .onSuccess { medicines ->
                     _state.update {
@@ -343,19 +365,63 @@ class PrescriptionViewModel @Inject constructor(
         if (!current.canSubmit) return
         viewModelScope.launch {
             _state.update { it.copy(isSubmitting = true) }
-            val request = PrescriptionCartRequest(image, current.medicines)
-            addPrescriptionToCart(request)
-                .onSuccess {
+            val items = current.medicines.map {
+                CartItemInput(
+                    productId = it.medicine.id,
+                    quantity = it.quantity,
+                )
+            }
+            when (val result = addCartItems(items)) {
+                is MedsyResult.Error -> {
+                    _state.update { it.copy(isSubmitting = false) }
+                    sendEffect(
+                        PrescriptionUIEffect.ShowMessage(
+                            result.error.toMessageRes()
+                        )
+                    )
+                }
+
+                is MedsyResult.Success -> {
+                    val isPartial = result.data is AddCartItemsOutcome.Partial
+                    val attachmentResult = attachCartPrescription(image)
                     _state.update {
                         it.copy(
                             step = PrescriptionStep.CONFIRMATION,
                             isSubmitting = false,
+                            isPartialSubmission = isPartial,
+                        )
+                    }
+                    if (attachmentResult is MedsyResult.Error) {
+                        sendEffect(
+                            PrescriptionUIEffect.ShowMessage(
+                                attachmentResult.error.toMessageRes()
+                            )
+                        )
+                    } else if (isPartial) {
+                        sendEffect(
+                            PrescriptionUIEffect.ShowMessage(
+                                R.string.prescription_partial_cart
+                            )
                         )
                     }
                 }
-                .onError {
+            }
+        }
+    }
+
+    private fun attachPrescriptionOnly() {
+        val image = _state.value.image ?: return
+        if (_state.value.isSubmitting) return
+        viewModelScope.launch {
+            _state.update { it.copy(isSubmitting = true) }
+            attachCartPrescription(image)
+                .onSuccess {
                     _state.update { it.copy(isSubmitting = false) }
-                    sendEffect(PrescriptionUIEffect.ShowMessage(R.string.prescription_error_generic))
+                    sendEffect(PrescriptionUIEffect.PrescriptionAttached)
+                }
+                .onError { error ->
+                    _state.update { it.copy(isSubmitting = false) }
+                    sendEffect(PrescriptionUIEffect.ShowMessage(error.toMessageRes()))
                 }
         }
     }
@@ -396,5 +462,9 @@ class PrescriptionViewModel @Inject constructor(
 
     private fun sendEffect(effect: PrescriptionUIEffect) {
         viewModelScope.launch { _effect.send(effect) }
+    }
+
+    private companion object {
+        const val SEARCH_DEBOUNCE_MILLIS = 300L
     }
 }

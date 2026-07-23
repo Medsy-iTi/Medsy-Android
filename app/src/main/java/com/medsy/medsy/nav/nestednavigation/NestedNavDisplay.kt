@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -29,13 +30,16 @@ import kotlinx.serialization.modules.polymorphic
 @Composable
 fun NestedNavDisplay(
     navigateBack: () -> Unit,
-    openProductDetails: () -> Unit,
-    openPersonalDetails: () -> Unit,
+    openPersonalDetails: (startInEditMode: Boolean) -> Unit,
     openLogin: () -> Unit,
     openSearch: () -> Unit,
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
-    openPrescription: () -> Unit,
+    openOffers: () -> Unit,
+    openPrescription: (Boolean) -> Unit,
+    openCartRequest: () -> Unit,
+    requestedDestination: Route?,
+    onRequestedDestinationHandled: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -50,6 +54,18 @@ fun NestedNavDisplay(
         },
         Route.NestedNav.Home
     )
+
+    LaunchedEffect(requestedDestination) {
+        val destination = requestedDestination ?: return@LaunchedEffect
+        nestedBackStack.apply {
+            clear()
+            if (destination != Route.NestedNav.Home) {
+                navigateSingleTop(Route.NestedNav.Home)
+            }
+            navigateSingleTop(destination)
+        }
+        onRequestedDestinationHandled()
+    }
 
     Scaffold(
         bottomBar = {
@@ -103,15 +119,19 @@ fun NestedNavDisplay(
                         onSearchClick = { openSearch() },
                         onNotificationClick = { /* Handle notification click */ },
                         onAddressClick = { /* Handle address click */ },
-                        onUploadPrescriptionClick = { openPrescription() },
+                        onUploadPrescriptionClick = { openPrescription(false) },
                         onViewAllCategoriesClick = { openCategories() },
                         onCategoryClick = { categoryId, categoryName ->
                             openProducts(categoryId, categoryName)
-                        }
+                        },
+                        onViewOffersClick = { openOffers() }
                     )
                 }
                 entry<Route.NestedNav.Cart> {
-                    CartRoot(onNext = openProductDetails)
+                    CartRoot(
+                        onAddPrescription = { openPrescription(true) },
+                        onOpenCartRequest = openCartRequest,
+                    )
                 }
                 entry<Route.NestedNav.Profile> {
                     ProfileRoot(

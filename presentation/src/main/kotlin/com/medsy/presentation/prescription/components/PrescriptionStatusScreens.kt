@@ -190,14 +190,26 @@ fun PrescriptionConfirmationScreen(
         }
         Spacer(modifier = Modifier.height(28.dp))
         Text(
-            text = stringResource(R.string.prescription_confirmation_title),
+            text = stringResource(
+                if (state.isPartialSubmission) {
+                    R.string.prescription_partial_title
+                } else {
+                    R.string.prescription_confirmation_title
+                }
+            ),
             color = colors.prescriptionTitle,
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
         )
         Text(
-            text = stringResource(R.string.prescription_confirmation_description),
+            text = stringResource(
+                if (state.isPartialSubmission) {
+                    R.string.prescription_partial_description
+                } else {
+                    R.string.prescription_confirmation_description
+                }
+            ),
             color = colors.prescriptionSupporting,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
@@ -280,7 +292,10 @@ fun PrescriptionConfirmationScreen(
                     modifier = Modifier.weight(1f),
                 )
                 Text(
-                    text = stringResource(R.string.prescription_price_egp, state.totalEgp),
+                    text = stringResource(
+                        R.string.prescription_price_egp,
+                        state.totalPriceEgp,
+                    ),
                     color = colors.prescriptionPrimary,
                     fontWeight = FontWeight.Bold,
                 )

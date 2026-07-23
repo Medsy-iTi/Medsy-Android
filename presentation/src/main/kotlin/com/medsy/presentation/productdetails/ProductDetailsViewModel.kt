@@ -2,18 +2,19 @@ package com.medsy.presentation.productdetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.medsy.domain.common.MedsyError
+import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.common.MedsyResult
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
 import com.medsy.domain.productdetails.model.ProductDetails
 import com.medsy.domain.productdetails.usecase.GetProductDetailsUseCase
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.productdetails.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
-    private val getProductDetailsUseCase: GetProductDetailsUseCase
+    private val getProductDetailsUseCase: GetProductDetailsUseCase,
+    private val addCartItem: AddCartItemUseCase,
 ) : ViewModel() {
 
     private var productId: Int = -1
@@ -66,11 +68,16 @@ class ProductDetailsViewModel @Inject constructor(
 
     private fun loadProduct() {
         if (productId < 0) {
-            _state.update { it.copy(isLoading = false, errorMessage = "Invalid product ID") }
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    errorMessageRes = R.string.error_invalid_id,
+                )
+            }
             return
         }
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null) }
+            _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             val language = if (Locale.getDefault().language == "ar") "ar" else "en"
 
             val result = getProductDetailsUseCase(productId, language)
@@ -83,23 +90,18 @@ class ProductDetailsViewModel @Inject constructor(
                             isLoading = false,
                             product = details.toUiModel(),
                             isFavorite = false,
-                            errorMessage = null
+                            errorMessageRes = null,
                         )
                     }
                 }
                 is MedsyResult.Error -> {
-                val errorResId = when (result.error) {
-                    is MedsyError.Remote.NoInternet -> R.string.error_no_internet
-                    is MedsyError.Remote.Http -> R.string.error_server_message
-                    else -> R.string.error_unknown
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessageRes = result.error.toMessageRes(),
+                        )
+                    }
                 }
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = errorResId.toString()
-                    )
-                }
-            }
             }
         }
     }
@@ -109,11 +111,25 @@ class ProductDetailsViewModel @Inject constructor(
     }
 
     private fun addToCart() {
+        if (_state.value.isAddingToCart) return
+        val id = _state.value.product?.id?.toIntOrNull() ?: return
         viewModelScope.launch {
             _state.update { it.copy(isAddingToCart = true) }
-            delay(400)
-            _state.update { it.copy(isAddingToCart = false) }
-            sendEffect(ProductDetailsUIEffect.NavigateToCart)
+            addCartItem(id)
+                .onSuccess {
+                    _state.update { it.copy(isAddingToCart = false) }
+                    sendEffect(
+                        ProductDetailsUIEffect.ShowMessage(
+                            R.string.product_details_added_to_cart
+                        )
+                    )
+                }
+                .onError { error ->
+                    _state.update { it.copy(isAddingToCart = false) }
+                    sendEffect(
+                        ProductDetailsUIEffect.ShowMessage(error.toMessageRes())
+                    )
+                }
         }
     }
 
@@ -127,14 +143,13 @@ class ProductDetailsViewModel @Inject constructor(
         return Product(
             id = id.toString(),
             name = name,
-            imageUrls = if (imageUrl.isNotBlank()) listOf(imageUrl) else emptyList(),
-            strength = scientificName,
-            packInfo = categoryName,
+            imageUrls = imageUrl?.let { listOf(it) } ?: emptyList(),            strength = strength.orEmpty(),
+            packInfo = packSize.orEmpty(),
             price = price.toInt(),
-            description = "",
+            description = description.orEmpty(),
             manufacturer = company,
-            type = categoryName,
-            category = categoryName,
+            type = form.orEmpty(),
+            category = consumerCategory.orEmpty(),
             route = route,
             isFavorite = false
         )

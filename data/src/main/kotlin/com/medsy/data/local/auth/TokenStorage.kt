@@ -17,17 +17,7 @@ import androidx.core.content.edit
 class TokenStorage @Inject constructor(
     @ApplicationContext context: Context
 ) {
-    private val masterKey = MasterKey.Builder(context)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
-
-    private val prefs = EncryptedSharedPreferences.create(
-        context,
-        "medsy_auth_prefs",
-        masterKey,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+    private val prefs = createEncryptedPrefs(context)
 
     private val _sessionFlow = MutableStateFlow(readSessionInternal())
     val sessionFlow = _sessionFlow.asStateFlow()
@@ -58,7 +48,7 @@ class TokenStorage @Inject constructor(
     fun refreshToken(): String? = prefs.getString(KEY_REFRESH, null)
     fun readSession(): AuthSession? = _sessionFlow.value
 
-    private fun readSessionInternal(): AuthSession? {
+    private fun readSessionInternal(): AuthSession? = try {
         val accessToken = prefs.getString(KEY_ACCESS, null) ?: return null
         val refreshToken = prefs.getString(KEY_REFRESH, null) ?: return null
         
@@ -68,7 +58,7 @@ class TokenStorage @Inject constructor(
         val lastName = prefs.getString(KEY_USER_LAST, "") ?: ""
         val roleStr = prefs.getString(KEY_USER_ROLE, Role.CUSTOMER.name) ?: Role.CUSTOMER.name
         
-        return AuthSession(
+        AuthSession(
             accessToken = accessToken,
             refreshToken = refreshToken,
             user = User(
@@ -81,9 +71,12 @@ class TokenStorage @Inject constructor(
                 dob = prefs.getString(KEY_USER_DOB, null)
             )
         )
+    } catch (e: Exception) {
+        null
     }
 
     companion object {
+        private const val PREFS_NAME = "medsy_auth_prefs"
         private const val KEY_ACCESS = "access_token"
         private const val KEY_REFRESH = "refresh_token"
         private const val KEY_USER_ID = "user_id"
@@ -93,5 +86,33 @@ class TokenStorage @Inject constructor(
         private const val KEY_USER_ROLE = "user_role"
         private const val KEY_USER_ADDRESS = "user_address"
         private const val KEY_USER_DOB = "user_dob"
+
+        private fun createEncryptedPrefs(context: android.content.Context): android.content.SharedPreferences {
+            return try {
+                val masterKey = MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build()
+
+                EncryptedSharedPreferences.create(
+                    context,
+                    PREFS_NAME,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+            } catch (e: Exception) {
+                context.deleteSharedPreferences(PREFS_NAME)
+                val masterKey = MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build()
+                EncryptedSharedPreferences.create(
+                    context,
+                    PREFS_NAME,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+            }
+        }
     }
 }
