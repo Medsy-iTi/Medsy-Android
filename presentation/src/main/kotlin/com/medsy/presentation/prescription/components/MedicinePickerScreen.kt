@@ -65,11 +65,17 @@ fun MedicinePickerScreen(
             shape = RoundedCornerShape(16.dp),
         )
         when {
-            state.isLoading -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            state.isLoading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator(color = MaterialTheme.extendedColors.prescriptionPrimary)
             }
 
-            state.results.isEmpty() -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            state.results.isEmpty() -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
                     text = stringResource(R.string.prescription_no_search_results),
                     color = MaterialTheme.extendedColors.prescriptionSupporting,
@@ -80,9 +86,9 @@ fun MedicinePickerScreen(
                 contentPadding = PaddingValues(20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(state.results, key = { it.id }) { medicine ->
+                items(state.results, key = { it.productId }) { medicine ->
                     MedicinePickerCard(medicine) {
-                        onIntent(PrescriptionUIIntent.MedicineSelected(medicine.id))
+                        onIntent(PrescriptionUIIntent.MedicineSelected(medicine.productId.toString()))
                     }
                 }
             }
@@ -116,9 +122,13 @@ private fun MedicinePickerCard(medicine: Medicine, onClick: () -> Unit) {
             )
         }
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = medicine.name, color = colors.prescriptionTitle, fontWeight = FontWeight.Bold)
             Text(
-                text = medicine.packDescription,
+                text = medicine.name,
+                color = colors.prescriptionTitle,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = medicine.strength ?: "",
                 color = colors.prescriptionSupporting,
                 style = MaterialTheme.typography.bodySmall,
             )
@@ -126,7 +136,7 @@ private fun MedicinePickerCard(medicine: Medicine, onClick: () -> Unit) {
         Spacer(modifier = Modifier.size(4.dp))
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = stringResource(R.string.prescription_price_egp, medicine.unitPriceEgp),
+                text = stringResource(R.string.prescription_price_egp, medicine.price),
                 color = colors.prescriptionPrimary,
                 fontWeight = FontWeight.Bold,
             )

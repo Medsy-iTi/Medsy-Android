@@ -40,8 +40,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.medsy.designsystem.ui.theme.extendedColors
-import com.medsy.domain.prescription.model.PrescriptionMedicine
-import com.medsy.domain.prescription.model.RecognitionStatus
+import com.medsy.domain.prescription.model.ExtractedMedicine
+import com.medsy.domain.prescription.model.MatchStatus
 import com.medsy.presentation.R
 import com.medsy.presentation.prescription.PrescriptionState
 import com.medsy.presentation.prescription.PrescriptionUIIntent
@@ -69,7 +69,7 @@ fun PrescriptionReviewScreen(
                 )
             }
             item { ReviewSummaryCard(state, onIntent) }
-            items(state.medicines, key = { it.medicine.id }) { medicine ->
+            items(state.medicines, key = { it.localItemId }) { medicine ->
                 ExtractedMedicineCard(medicine, onIntent)
             }
             if (state.needsReviewCount > 0) {
@@ -112,7 +112,7 @@ private fun ReviewSummaryCard(
         )
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             SummaryCountChip(
-                count = state.recognizedCount,
+                count = state.confirmedCount,
                 label = stringResource(R.string.prescription_recognized_count),
                 warning = false,
                 modifier = Modifier.weight(1f),
@@ -202,11 +202,11 @@ private fun SummaryCountChip(
 
 @Composable
 private fun ExtractedMedicineCard(
-    item: PrescriptionMedicine,
+    item: ExtractedMedicine,
     onIntent: (PrescriptionUIIntent) -> Unit,
 ) {
     val colors = MaterialTheme.extendedColors
-    val needsReview = item.recognitionStatus == RecognitionStatus.NEEDS_REVIEW
+    val needsReview = !item.isConfirmed
     val borderColor =
         if (needsReview) colors.prescriptionWarningBorder else MaterialTheme.colorScheme.outline
     Column(
@@ -239,7 +239,7 @@ private fun ExtractedMedicineCard(
                 modifier = Modifier
                     .size(28.dp)
                     .clickable {
-                        onIntent(PrescriptionUIIntent.DeleteMedicineClicked(item.medicine.id))
+                        onIntent(PrescriptionUIIntent.DeleteMedicineClicked(item.localItemId))
                     }
                     .padding(6.dp),
             )
@@ -263,7 +263,7 @@ private fun ExtractedMedicineCard(
                         primary = true,
                         modifier = Modifier.weight(1f),
                         onClick = {
-                            onIntent(PrescriptionUIIntent.ConfirmMedicineClicked(item.medicine.id))
+                            onIntent(PrescriptionUIIntent.ConfirmMedicineClicked(item.localItemId))
                         },
                     )
                     SmallActionButton(
@@ -271,7 +271,7 @@ private fun ExtractedMedicineCard(
                         primary = false,
                         modifier = Modifier.weight(1f),
                         onClick = {
-                            onIntent(PrescriptionUIIntent.EditMedicineClicked(item.medicine.id))
+                            onIntent(PrescriptionUIIntent.EditMedicineClicked(item.localItemId))
                         },
                     )
                 }
@@ -292,7 +292,7 @@ private fun ExtractedMedicineCard(
                                 RoundedCornerShape(14.dp)
                             )
                             .clickable {
-                                onIntent(PrescriptionUIIntent.EditMedicineClicked(item.medicine.id))
+                                onIntent(PrescriptionUIIntent.EditMedicineClicked(item.localItemId))
                             }
                             .padding(horizontal = 12.dp, vertical = 7.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -316,8 +316,15 @@ private fun ExtractedMedicineCard(
 }
 
 @Composable
-private fun MedicineIdentityRow(item: PrescriptionMedicine) {
+private fun MedicineIdentityRow(item: ExtractedMedicine) {
     val colors = MaterialTheme.extendedColors
+    val suggestion = item.selectedMedicine
+
+    val medicineName = suggestion?.name ?: item.extractedName ?: item.rawText
+    val packDescription = suggestion?.strength ?: item.extractedStrength ?: ""
+    val price = suggestion?.price ?: 0
+    val isWarning = !item.isConfirmed
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -326,11 +333,7 @@ private fun MedicineIdentityRow(item: PrescriptionMedicine) {
             modifier = Modifier
                 .size(48.dp)
                 .background(
-                    if (item.recognitionStatus == RecognitionStatus.NEEDS_REVIEW) {
-                        colors.prescriptionWarningContainer
-                    } else {
-                        colors.prescriptionSuccessSoft
-                    },
+                    if (isWarning) colors.prescriptionWarningContainer else colors.prescriptionSuccessSoft,
                     RoundedCornerShape(14.dp),
                 ),
             contentAlignment = Alignment.Center,
@@ -338,29 +341,25 @@ private fun MedicineIdentityRow(item: PrescriptionMedicine) {
             Icon(
                 Icons.Filled.Medication,
                 contentDescription = null,
-                tint = if (item.recognitionStatus == RecognitionStatus.NEEDS_REVIEW) {
-                    colors.prescriptionWarningContent
-                } else {
-                    colors.prescriptionPrimary
-                },
+                tint = if (isWarning) colors.prescriptionWarningContent else colors.prescriptionPrimary,
                 modifier = Modifier.size(30.dp),
             )
         }
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = item.medicine.name,
+                text = medicineName,
                 color = colors.prescriptionTitle,
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = item.medicine.packDescription,
+                text = packDescription,
                 color = colors.prescriptionSupporting,
                 style = MaterialTheme.typography.labelMedium,
             )
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = stringResource(R.string.prescription_price_egp, item.medicine.unitPriceEgp),
+                text = stringResource(R.string.prescription_price_egp, price),
                 color = colors.prescriptionPrimary,
                 fontWeight = FontWeight.Bold,
             )
@@ -375,7 +374,7 @@ private fun MedicineIdentityRow(item: PrescriptionMedicine) {
 
 @Composable
 private fun QuantityControl(
-    item: PrescriptionMedicine,
+    item: ExtractedMedicine,
     onIntent: (PrescriptionUIIntent) -> Unit,
 ) {
     Row(
@@ -390,7 +389,7 @@ private fun QuantityControl(
             primary = false,
             description = stringResource(R.string.prescription_decrease_quantity),
             onClick = {
-                onIntent(PrescriptionUIIntent.DecreaseQuantityClicked(item.medicine.id))
+                onIntent(PrescriptionUIIntent.DecreaseQuantityClicked(item.localItemId))
             },
         )
         Text(
@@ -404,7 +403,7 @@ private fun QuantityControl(
             primary = true,
             description = stringResource(R.string.prescription_increase_quantity),
             onClick = {
-                onIntent(PrescriptionUIIntent.IncreaseQuantityClicked(item.medicine.id))
+                onIntent(PrescriptionUIIntent.IncreaseQuantityClicked(item.localItemId))
             },
         )
     }

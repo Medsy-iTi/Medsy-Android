@@ -125,7 +125,12 @@ private fun PrescriptionFailureLayout(
                     .background(container, RoundedCornerShape(24.dp)),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(icon, contentDescription = null, tint = content, modifier = Modifier.size(46.dp))
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = content,
+                    modifier = Modifier.size(46.dp)
+                )
             }
             Spacer(modifier = Modifier.height(28.dp))
             Text(
@@ -228,6 +233,8 @@ fun PrescriptionConfirmationScreen(
                 )
             }
             state.medicines.forEach { item ->
+                val medicineName = item.selectedMedicine?.name ?: item.extractedName ?: item.rawText
+                val price = item.selectedMedicine?.price ?: 0
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -236,11 +243,11 @@ fun PrescriptionConfirmationScreen(
                 ) {
                     Text(
                         text = if (item.quantity == 1) {
-                            item.medicine.name
+                            medicineName
                         } else {
                             stringResource(
                                 R.string.prescription_medicine_with_quantity,
-                                item.medicine.name,
+                                medicineName,
                                 item.quantity,
                             )
                         },
@@ -251,7 +258,7 @@ fun PrescriptionConfirmationScreen(
                     Text(
                         text = stringResource(
                             R.string.prescription_price_egp,
-                            item.medicine.unitPriceEgp * item.quantity,
+                            price * item.quantity,
                         ),
                         color = colors.prescriptionPrimary,
                         fontWeight = FontWeight.Bold,
