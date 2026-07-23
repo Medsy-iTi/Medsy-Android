@@ -13,14 +13,17 @@ interface PrescriptionRepository {
     suspend fun importGalleryImage(
         sourceUri: String,
     ): MedsyResult<PrescriptionImage, MedsyError.Local>
+
     suspend fun deleteImage(image: PrescriptionImage): EmptyMedsyResult<MedsyError.Local>
     suspend fun extractPrescription(
         image: PrescriptionImage,
-    ): MedsyResult<PrescriptionExtractionOutcome, MedsyError.Local>
+    ): MedsyResult<PrescriptionExtractionOutcome, MedsyError>
+
     suspend fun searchMedicines(
         query: String,
-    ): MedsyResult<List<Medicine>, MedsyError.Local>
+    ): MedsyResult<List<Medicine>, MedsyError.Remote>
+
     suspend fun addPrescriptionToCart(
         request: PrescriptionCartRequest,
-    ): EmptyMedsyResult<MedsyError.Local>
+    ): EmptyMedsyResult<MedsyError.Remote>
 }
