@@ -9,13 +9,15 @@ import com.medsy.domain.cart.usecase.AttachCartPrescriptionUseCase
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
+import com.medsy.domain.prescription.model.ExtractedMedicine
 import com.medsy.domain.prescription.model.Medicine
+import com.medsy.domain.prescription.model.PrescriptionCartRequest
 import com.medsy.domain.prescription.model.PrescriptionExtractionOutcome
 import com.medsy.domain.prescription.model.PrescriptionImage
-import com.medsy.domain.prescription.model.PrescriptionMedicine
-import com.medsy.domain.prescription.model.RecognitionStatus
+import com.medsy.domain.prescription.usecase.AddPrescriptionToCartUseCase
 import com.medsy.domain.prescription.usecase.DeletePrescriptionImageUseCase
 import com.medsy.domain.prescription.usecase.ExtractPrescriptionUseCase
+import com.medsy.domain.prescription.usecase.GetMedicineByIdUseCase
 import com.medsy.domain.prescription.usecase.ImportPrescriptionImageUseCase
 import com.medsy.domain.prescription.usecase.PreparePrescriptionCaptureUseCase
 import com.medsy.domain.prescription.usecase.SearchPrescriptionMedicinesUseCase
@@ -39,6 +41,7 @@ class PrescriptionViewModel @Inject constructor(
     private val deleteImage: DeletePrescriptionImageUseCase,
     private val extractPrescription: ExtractPrescriptionUseCase,
     private val searchMedicines: SearchPrescriptionMedicinesUseCase,
+    private val getMedicineById: GetMedicineByIdUseCase,
     private val addCartItems: AddCartItemsUseCase,
     private val attachCartPrescription: AttachCartPrescriptionUseCase,
 ) : ViewModel() {
@@ -76,6 +79,7 @@ class PrescriptionViewModel @Inject constructor(
                     startExtraction()
                 }
             }
+
             PrescriptionUIIntent.RetryExtractionClicked -> startExtraction()
             PrescriptionUIIntent.ChooseAnotherImageClicked -> showSourceSelection()
             PrescriptionUIIntent.TogglePrescriptionImageClicked ->
@@ -98,7 +102,11 @@ class PrescriptionViewModel @Inject constructor(
             )
 
             is PrescriptionUIIntent.MedicineQueryChanged -> search(intent.query)
-            is PrescriptionUIIntent.MedicineSelected -> selectMedicine(intent.medicineId)
+            is PrescriptionUIIntent.MedicineSelected -> selectMedicine(intent.productId)
+            is PrescriptionUIIntent.MedicineSelectedFromResult -> {
+                replaceMedicineFromResult(intent.localItemId, intent.productId)
+            }
+
             PrescriptionUIIntent.AddToCartClicked -> submitPrescription()
             PrescriptionUIIntent.ViewCartClicked -> sendEffect(PrescriptionUIEffect.NavigateCart)
             PrescriptionUIIntent.ReturnHomeClicked -> sendEffect(PrescriptionUIEffect.NavigateHome)
@@ -211,12 +219,12 @@ class PrescriptionViewModel @Inject constructor(
         }
     }
 
-    private fun confirmMedicine(medicineId: Int) {
+    private fun confirmMedicine(localItemId: String) {
         _state.update { state ->
             state.copy(
                 medicines = state.medicines.map {
-                    if (it.medicine.id == medicineId) {
-                        it.copy(recognitionStatus = RecognitionStatus.RECOGNIZED)
+                    if (it.localItemId == localItemId) {
+                        it.copy(isConfirmed = true)
                     } else {
                         it
                     }
@@ -225,17 +233,17 @@ class PrescriptionViewModel @Inject constructor(
         }
     }
 
-    private fun deleteMedicine(medicineId: Int) {
+    private fun deleteMedicine(localItemId: String) {
         _state.update { state ->
-            state.copy(medicines = state.medicines.filterNot { it.medicine.id == medicineId })
+            state.copy(medicines = state.medicines.filterNot { it.localItemId == localItemId })
         }
     }
 
-    private fun changeQuantity(medicineId: Int, delta: Int) {
+    private fun changeQuantity(localItemId: String, delta: Int) {
         _state.update { state ->
             state.copy(
                 medicines = state.medicines.map {
-                    if (it.medicine.id == medicineId) {
+                    if (it.localItemId == localItemId) {
                         it.copy(quantity = (it.quantity + delta).coerceAtLeast(1))
                     } else {
                         it
@@ -247,21 +255,33 @@ class PrescriptionViewModel @Inject constructor(
 
     private fun openMedicinePicker(
         mode: MedicinePickerMode,
-        targetMedicineId: Int?,
+        targetMedicineId: String?,
         returnStep: PrescriptionStep,
     ) {
-        _state.update {
-            it.copy(
-                step = PrescriptionStep.MEDICINE_PICKER,
-                picker = MedicinePickerState(
-                    mode = mode,
-                    targetMedicineId = targetMedicineId,
-                    returnStep = returnStep,
-                    isLoading = true,
-                ),
-            )
+        val item = _state.value.medicines.firstOrNull { it.localItemId == targetMedicineId }
+        val nameToSearch =
+            item?.selectedMedicine?.name ?: item?.extractedName ?: item?.rawText ?: ""
+
+        val words = nameToSearch.split(Regex("\\s+")).filter { it.length > 1 }
+        val initialQuery = if (words.size > 2) words.take(2).joinToString(" ") else nameToSearch
+
+        if (targetMedicineId != null) {
+            sendEffect(PrescriptionUIEffect.NavigateToSearch(initialQuery, targetMedicineId))
+        } else {
+            _state.update {
+                it.copy(
+                    step = PrescriptionStep.MEDICINE_PICKER,
+                    picker = MedicinePickerState(
+                        mode = mode,
+                        targetMedicineId = targetMedicineId,
+                        returnStep = returnStep,
+                        isLoading = true,
+                        query = initialQuery,
+                    ),
+                )
+            }
+            search(initialQuery)
         }
-        search("")
     }
 
     private fun search(query: String) {
@@ -287,9 +307,10 @@ class PrescriptionViewModel @Inject constructor(
         }
     }
 
-    private fun selectMedicine(medicineId: Int) {
+    private fun selectMedicine(productId: Int) {
         val state = _state.value
-        val selected = state.picker.results.firstOrNull { it.id == medicineId } ?: return
+        val selected =
+            state.picker.results.firstOrNull { it.productId == productId } ?: return
         val updated = when (state.picker.mode) {
             MedicinePickerMode.ADD -> addOrIncrement(state.medicines, selected, 1)
             MedicinePickerMode.REPLACE -> replaceMedicine(
@@ -307,23 +328,31 @@ class PrescriptionViewModel @Inject constructor(
     }
 
     private fun addOrIncrement(
-        current: List<PrescriptionMedicine>,
+        current: List<ExtractedMedicine>,
         medicine: Medicine,
         quantity: Int,
-    ): List<PrescriptionMedicine> {
-        val existing = current.firstOrNull { it.medicine.id == medicine.id }
+    ): List<ExtractedMedicine> {
+        val existing = current.firstOrNull { it.selectedMedicine?.productId == medicine.productId }
         return if (existing == null) {
-            current + PrescriptionMedicine(
-                medicine = medicine,
+            current + ExtractedMedicine(
+                localItemId = java.util.UUID.randomUUID().toString(),
+                rawText = medicine.name,
+                extractedName = medicine.name,
+                extractedStrength = medicine.strength,
+                extractedForm = medicine.form,
+                matchStatus = com.medsy.domain.prescription.model.MatchStatus.MATCHED,
+                confidence = 1.0,
+                candidates = listOf(medicine),
+                selectedMedicine = medicine,
                 quantity = quantity,
-                recognitionStatus = RecognitionStatus.RECOGNIZED,
+                isConfirmed = true,
             )
         } else {
             current.map {
-                if (it.medicine.id == medicine.id) {
+                if (it.selectedMedicine?.productId == medicine.productId) {
                     it.copy(
                         quantity = it.quantity + quantity,
-                        recognitionStatus = RecognitionStatus.RECOGNIZED,
+                        isConfirmed = true,
                     )
                 } else {
                     it
@@ -333,25 +362,48 @@ class PrescriptionViewModel @Inject constructor(
     }
 
     private fun replaceMedicine(
-        current: List<PrescriptionMedicine>,
-        targetId: Int?,
+        current: List<ExtractedMedicine>,
+        targetId: String?,
         replacement: Medicine,
-    ): List<PrescriptionMedicine> {
-        val target = current.firstOrNull { it.medicine.id == targetId } ?: return current
-        if (replacement.id == target.medicine.id) {
-            return current.map {
-                if (it.medicine.id == targetId) {
-                    it.copy(recognitionStatus = RecognitionStatus.RECOGNIZED)
-                } else {
-                    it
-                }
+    ): List<ExtractedMedicine> {
+        return current.map {
+            if (it.localItemId == targetId) {
+                it.copy(
+                    selectedMedicine = replacement,
+                    isConfirmed = true,
+                )
+            } else {
+                it
             }
         }
-        return addOrIncrement(
-            current = current.filterNot { it.medicine.id == targetId },
-            medicine = replacement,
-            quantity = target.quantity,
-        )
+    }
+
+    private fun replaceMedicineFromResult(localItemId: String, productId: Int) {
+        viewModelScope.launch {
+            _state.update { it.copy(isSubmitting = true) }
+            getMedicineById(productId)
+                .onSuccess { medicine ->
+                    _state.update { state ->
+                        state.copy(
+                            isSubmitting = false,
+                            medicines = state.medicines.map {
+                                if (it.localItemId == localItemId) {
+                                    it.copy(
+                                        selectedMedicine = medicine,
+                                        isConfirmed = true
+                                    )
+                                } else {
+                                    it
+                                }
+                            }
+                        )
+                    }
+                }
+                .onError {
+                    _state.update { it.copy(isSubmitting = false) }
+                    sendEffect(PrescriptionUIEffect.ShowMessage(R.string.prescription_error_generic))
+                }
+        }
     }
 
     private fun submitPrescription() {
@@ -360,11 +412,13 @@ class PrescriptionViewModel @Inject constructor(
         if (!current.canSubmit) return
         viewModelScope.launch {
             _state.update { it.copy(isSubmitting = true) }
-            val items = current.medicines.map {
-                CartItemInput(
-                    productId = it.medicine.id,
-                    quantity = it.quantity,
-                )
+            val items = current.medicines.mapNotNull { item ->
+                item.selectedMedicine?.let { medicine ->
+                    CartItemInput(
+                        productId = medicine.productId,
+                        quantity = item.quantity,
+                    )
+                }
             }
             when (val result = addCartItems(items)) {
                 is MedsyResult.Error -> {

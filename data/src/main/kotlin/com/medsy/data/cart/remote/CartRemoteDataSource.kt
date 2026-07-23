@@ -6,7 +6,9 @@ import com.medsy.data.remote.network.safeEmptyRestCall
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
+import kotlinx.coroutines.delay
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 class CartRemoteDataSource @Inject constructor(
     private val apiService: ApiService,
@@ -44,4 +46,10 @@ class CartRemoteDataSource @Inject constructor(
 
     suspend fun clearCart(): EmptyMedsyResult<MedsyError.Remote> =
         safeEmptyRestCall(apiService::clearCart)
+
+    suspend fun submitProductsRequest(): EmptyMedsyResult<MedsyError.Remote> {
+        delay(300L.milliseconds)
+        return MedsyResult.Success(Unit)
+    }
+
 }

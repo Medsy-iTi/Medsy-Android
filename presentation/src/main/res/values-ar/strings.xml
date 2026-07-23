@@ -368,6 +368,46 @@
     <string name="cart_clear_confirm">إفراغ</string>
     <string name="cart_cleared">تم إفراغ السلة</string>
     <!--  Active Search Status  -->
+    <string name="cart_request_title">إكمال الطلب</string>
+    <string name="cart_request_subtitle">بعض التفاصيل الأخيرة قبل إرسال طلبك إلى الصيدليات</string>
+    <string name="cart_request_order_summary">ملخص الطلب</string>
+    <plurals name="cart_request_item_count">
+        <item quantity="one">دواء واحد</item>
+        <item quantity="two">دواءان</item>
+        <item quantity="few">%d أدوية</item>
+        <item quantity="many">%d دواءً</item>
+        <item quantity="other">%d دواء</item>
+    </plurals>
+    <string name="cart_request_prescription_attached">الروشتة مرفقة</string>
+    <string name="cart_request_fulfillment_title">كيف ترغب في استلام الطلب؟</string>
+    <string name="cart_request_fulfillment_description">اختر التوصيل إلى عنوانك أو الاستلام من الصيدلية التي ستحددها لاحقًا.</string>
+    <string name="cart_request_delivery">توصيل</string>
+    <string name="cart_request_delivery_description">التوصيل إلى الموقع المحدد</string>
+    <string name="cart_request_pickup">استلام</string>
+    <string name="cart_request_pickup_description">استلم الطلب من الصيدلية</string>
+    <string name="cart_request_address_title">عنوان التوصيل</string>
+    <string name="cart_request_default_address">العنوان الافتراضي</string>
+    <string name="cart_request_default_badge">افتراضي</string>
+    <string name="cart_request_other_address">استخدام عنوان آخر</string>
+    <string name="cart_request_profile_address_unavailable">تعذر تحميل عنوانك الافتراضي. أدخل عنوانًا لهذا الطلب بدلًا منه.</string>
+    <string name="cart_request_no_default_address">لا يوجد عنوان افتراضي محفوظ. أدخل عنوانًا وأكد موقعه على الخريطة لهذا الطلب.</string>
+    <string name="cart_request_address_label">تفاصيل العنوان</string>
+    <string name="cart_request_address_hint">المبنى والشارع والمنطقة وأقرب علامة مميزة</string>
+    <string name="cart_request_choose_location">اختيار الموقع على الخريطة</string>
+    <string name="cart_request_change_location">تغيير الموقع على الخريطة</string>
+    <string name="cart_request_location_confirmed">تم تأكيد الموقع على الخريطة</string>
+    <string name="cart_request_location_required">أكد موقع التوصيل على الخريطة</string>
+    <string name="cart_request_payment_title">كيف ترغب في الدفع؟</string>
+    <string name="cart_request_payment_description">اختر طريقة دفع واحدة لهذا الطلب.</string>
+    <string name="cart_request_cash">نقدًا</string>
+    <string name="cart_request_cash_description">ادفع عند استلام الطلب</string>
+    <string name="cart_request_visa">فيزا</string>
+    <string name="cart_request_visa_description">الدفع باستخدام البطاقة</string>
+    <string name="cart_request_submit">إرسال طلب الأدوية</string>
+    <string name="cart_request_retry">إعادة المحاولة</string>
+    <string name="cart_request_empty_request">أضف دواءً واحدًا على الأقل أو أرفق روشتة قبل إرسال الطلب.</string>
+    <string name="cart_request_back">العودة إلى السلة</string>
+    <!-- Active Search Status -->
     <string name="home_search_status_searching_title">جاري البحث عن أدويتك</string>
     <string name="home_search_status_searching_desc">نطابق طلبك مع الصيدليات القريبة</string>
     <string name="search_category_title">القسم</string>
@@ -408,4 +448,44 @@
         <item quantity="many">دواءً</item>
         <item quantity="other">أدوية</item>
     </plurals>
+
+    <!-- Offers Flow -->
+    <string name="offers_available_title">العروض المتاحة</string>
+    <string name="offers_details_title">تفاصيل العرض</string>
+    <string name="offers_available_subtitle_format">%1$d عروض متاحة لطلبك</string>
+    <string name="offers_badge_full">عرض كامل</string>
+    <string name="offers_badge_partial">عرض جزئي</string>
+    <string name="offers_badge_combined">عرض مركب</string>
+    <string name="offers_best_price">أفضل سعر</string>
+    <string name="offers_missing_medicines">يحتوي على أدوية غير متوفرة</string>
+    <string name="offers_combined_coverage">تغطية كاملة للطلب</string>
+    <string name="offers_from_egp">من\n%1$d</string>
+    <string name="offers_price_note">الأسعار نهائية من ميدسي ومطابقة لأسعار الصيدلية</string>
+    <string name="offers_pharmacy_title_format">صيدلية %1$s</string>
+    <string name="offers_manager_format">%1$s (المدير)</string>
+    <string name="offers_requested_medicines">الأدوية المطلوبة</string>
+    <string name="offers_available">متوفر</string>
+    <string name="offers_pharmacist_comment">تعليق من الصيدلي</string>
+    <string name="offers_view_prescription">عرض الروشتة</string>
+    <string name="offers_choose_offer">اختار هذا العرض</string>
+
+    <string name="offers_order_review_title">مراجعة الطلب</string>
+    <string name="offers_delivery_address">عنوان التوصيل</string>
+    <string name="offers_delivery_details">تفاصيل التوصيل</string>
+    <string name="offers_home_delivery">توصيل للمنزل</string>
+    <string name="offers_delivery_fee">رسوم التوصيل</string>
+    <string name="offers_total_medicines_price">إجمالي سعر الأدوية</string>
+    <string name="offers_total">الإجمالي</string>
+    <string name="offers_confirm_order">تأكيد الطلب</string>
+
+    <string name="offers_success_title">تم تأكيد طلبك بنجاح!</string>
+    <string name="offers_order_number">رقم الطلب</string>
+    <string name="offers_delivery_to">التوصيل إلى</string>
+    <string name="offers_estimated_time">وقت التجهيز المتوقع</string>
+    <string name="offers_payment_method">طريقة الدفع</string>
+    <string name="offers_cash_on_delivery">كاش عند الاستلام</string>
+    <string name="offers_notification_note">سيتم إشعارك عند بدء تجهيز الطلب\nيمكنك متابعة حالة الطلب من الصفحة الرئيسية</string>
+    <string name="offers_track_order">تتبع الطلب</string>
+    <string name="offers_back_to_home">العودة إلى الرئيسية</string>
+    <string name="offers_edit_address">تعديل</string>
 </resources>

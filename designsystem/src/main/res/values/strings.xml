@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="location_picker_title">Select location</string>
+    <string name="location_picker_confirm">Confirm location</string>
+    <string name="location_picker_use_current">Use current location</string>
+    <string name="location_picker_permission_denied">Location permission was not granted. You can still choose a location manually on the map.</string>
+    <string name="location_picker_unavailable">Your current location is unavailable. You can still choose a location manually on the map.</string>
+    <string name="location_picker_maps_unavailable">Google Maps is unavailable on this device.</string>
+    <string name="location_picker_selected_marker">Selected location</string>
+    <string name="location_picker_back">Back</string>
+</resources>

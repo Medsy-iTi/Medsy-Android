@@ -1,8 +1,7 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionuploaderror
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,11 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -29,7 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,6 +37,9 @@ import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.prescription.PrescriptionState
 import com.medsy.presentation.prescription.PrescriptionUIIntent
+import com.medsy.presentation.prescription.components.PrescriptionAppBar
+import com.medsy.presentation.prescription.components.PrescriptionPrimaryButton
+import com.medsy.presentation.prescription.components.PrescriptionTextAction
 
 @Composable
 fun PrescriptionUploadErrorScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
@@ -125,7 +127,12 @@ private fun PrescriptionFailureLayout(
                     .background(container, RoundedCornerShape(24.dp)),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(icon, contentDescription = null, tint = content, modifier = Modifier.size(46.dp))
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = content,
+                    modifier = Modifier.size(46.dp)
+                )
             }
             Spacer(modifier = Modifier.height(28.dp))
             Text(
@@ -164,24 +171,15 @@ fun PrescriptionConfirmationScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            modifier = Modifier
-                .size(112.dp)
-                .background(colors.prescriptionSuccessContainer, CircleShape),
+            modifier = Modifier.size(200.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(52.dp)
-                    .border(3.dp, colors.prescriptionPrimary, CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    Icons.Filled.Check,
-                    contentDescription = null,
-                    tint = colors.prescriptionPrimary,
-                    modifier = Modifier.size(30.dp),
-                )
-            }
+            Icon(
+                painter = painterResource(R.drawable.ic_complete),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
         Spacer(modifier = Modifier.height(28.dp))
         Text(
@@ -240,6 +238,8 @@ fun PrescriptionConfirmationScreen(
                 )
             }
             state.medicines.forEach { item ->
+                val medicineName = item.selectedMedicine?.name ?: item.extractedName ?: item.rawText
+                val price = item.selectedMedicine?.price ?: 0
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -248,11 +248,11 @@ fun PrescriptionConfirmationScreen(
                 ) {
                     Text(
                         text = if (item.quantity == 1) {
-                            item.medicine.name
+                            medicineName
                         } else {
                             stringResource(
                                 R.string.prescription_medicine_with_quantity,
-                                item.medicine.name,
+                                medicineName,
                                 item.quantity,
                             )
                         },
@@ -263,7 +263,7 @@ fun PrescriptionConfirmationScreen(
                     Text(
                         text = stringResource(
                             R.string.prescription_price_egp,
-                            item.medicine.unitPriceEgp * item.quantity,
+                            price * item.quantity,
                         ),
                         color = colors.prescriptionPrimary,
                         fontWeight = FontWeight.Bold,
@@ -287,7 +287,7 @@ fun PrescriptionConfirmationScreen(
                 Text(
                     text = stringResource(
                         R.string.prescription_price_egp,
-                        state.totalPriceEgp,
+                        state.totalEgp,
                     ),
                     color = colors.prescriptionPrimary,
                     fontWeight = FontWeight.Bold,

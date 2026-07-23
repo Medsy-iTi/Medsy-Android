@@ -16,4 +16,5 @@ sealed interface CartUIIntent {
     data class NoteChanged(val note: String) : CartUIIntent
     data object SaveNoteClicked : CartUIIntent
     data object NoteDialogDismissed : CartUIIntent
+    data object SubmitCartClicked : CartUIIntent
 }

@@ -45,8 +45,8 @@ fun ProfileHeaderCard(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp,
-            pressedElevation = 2.dp,
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
         ),
         border = BorderStroke(
             width = 1.dp,
@@ -63,7 +63,6 @@ fun ProfileHeaderCard(
                 Box(
                     modifier = Modifier
                         .size(76.dp)
-                        .shadow(elevation = 7.dp, shape = CircleShape)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center,
