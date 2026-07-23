@@ -28,7 +28,7 @@
     <string name="home_section_categories">تسوق من الفئات</string>
     <string name="home_view_all">عرض الكل</string>
 
-    <string name="home_cat_more">المزيد</string>>
+    <string name="home_cat_more">المزيد</string>
     <string name="home_banner_fast_delivery">توصيل سريع</string>
     <string name="home_banner_to_door">إلى باب منزلك</string>
     <string name="home_banner_image_desc_one">بانر يعرض ميزة البحث عن الدواء</string>
@@ -288,6 +288,10 @@
     <string name="prescription_return_home">العودة للرئيسية</string>
     <string name="prescription_media_error">تعذر فتح الصورة المختارة. يرجى تجربة صورة أخرى.</string>
     <string name="prescription_error_generic">حدث خطأ ما. يرجى المحاولة مرة أخرى.</string>
+    <string name="medicine_search_upload_title">بحث بالصورة</string>
+    <string name="medicine_search_reading_title">جاري تحليل الصورة</string>
+    <string name="medicine_search_upload_failed_title">فشل البحث بالصورة</string>
+    <string name="medicine_search_upload_failed_description">لم نتمكن من التعرف على الدواء. يرجى التحقق من الاتصال أو تجربة صورة أوضح.</string>
     <!-- Auth Strings -->
     <string name="auth_email">البريد الإلكتروني</string>
     <string name="auth_password">كلمة المرور</string>
@@ -363,13 +367,13 @@
     <string name="cart_request_title">إكمال الطلب</string>
     <string name="cart_request_subtitle">بعض التفاصيل الأخيرة قبل إرسال طلبك إلى الصيدليات</string>
     <string name="cart_request_order_summary">ملخص الطلب</string>
-    <plurals name="cart_request_item_count">
-        <item quantity="one">دواء واحد</item>
-        <item quantity="two">دواءان</item>
-        <item quantity="few">%d أدوية</item>
-        <item quantity="many">%d دواءً</item>
-        <item quantity="other">%d دواء</item>
-    </plurals>
+<!--    <plurals name="cart_request_item_count">-->
+<!--        <item quantity="one">دواء واحد</item>-->
+<!--        <item quantity="two">دواءان</item>-->
+<!--        <item quantity="few">%d أدوية</item>-->
+<!--        <item quantity="many">%d دواءً</item>-->
+<!--        <item quantity="other">%d دواء</item>-->
+<!--    </plurals>-->
     <string name="cart_request_prescription_attached">الروشتة مرفقة</string>
     <string name="cart_request_fulfillment_title">كيف ترغب في استلام الطلب؟</string>
     <string name="cart_request_fulfillment_description">اختر التوصيل إلى عنوانك أو الاستلام من الصيدلية التي ستحددها لاحقًا.</string>

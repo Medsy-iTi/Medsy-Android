@@ -42,13 +42,23 @@ import com.medsy.presentation.prescription.components.PrescriptionPrimaryButton
 import com.medsy.presentation.prescription.components.PrescriptionTextAction
 
 @Composable
-fun PrescriptionUploadErrorScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
+fun PrescriptionUploadErrorScreen(
+    state: PrescriptionState,
+    onIntent: (PrescriptionUIIntent) -> Unit
+) {
+    val isMedicineSearch = state.isMedicineSearch
     PrescriptionFailureLayout(
-        appBarTitle = stringResource(R.string.prescription_upload_title),
+        appBarTitle = stringResource(
+            if (isMedicineSearch) R.string.medicine_search_upload_title else R.string.prescription_upload_title
+        ),
         icon = Icons.Filled.WifiOff,
         iconType = FailureIconType.ERROR,
-        title = stringResource(R.string.prescription_upload_failed_title),
-        description = stringResource(R.string.prescription_upload_failed_description),
+        title = stringResource(
+            if (isMedicineSearch) R.string.medicine_search_upload_failed_title else R.string.prescription_upload_failed_title
+        ),
+        description = stringResource(
+            if (isMedicineSearch) R.string.medicine_search_upload_failed_description else R.string.prescription_upload_failed_description
+        ),
         primaryText = stringResource(R.string.prescription_retry),
         onPrimary = { onIntent(PrescriptionUIIntent.RetryExtractionClicked) },
         secondaryText = stringResource(R.string.prescription_choose_another_image),
@@ -58,27 +68,47 @@ fun PrescriptionUploadErrorScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
 }
 
 @Composable
-fun PrescriptionUnreadableScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
+fun PrescriptionUnreadableScreen(
+    state: PrescriptionState,
+    onIntent: (PrescriptionUIIntent) -> Unit
+) {
     PrescriptionFailureLayout(
-        appBarTitle = stringResource(R.string.prescription_read_prescription_title),
+        appBarTitle = stringResource(
+            if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_read_prescription_title
+        ),
         icon = Icons.Filled.ErrorOutline,
         iconType = FailureIconType.WARNING,
-        title = stringResource(R.string.prescription_unreadable_title),
-        description = stringResource(R.string.prescription_unreadable_description),
+        title = stringResource(
+            if (state.isMedicineSearch) R.string.search_empty_title else R.string.prescription_unreadable_title
+        ),
+        description = stringResource(
+            if (state.isMedicineSearch) R.string.search_empty_subtitle else R.string.prescription_unreadable_description
+        ),
         primaryText = stringResource(R.string.prescription_choose_another_image),
         onPrimary = { onIntent(PrescriptionUIIntent.ChooseAnotherImageClicked) },
+        secondaryText = stringResource(R.string.prescription_add_medicine_manually),
+        onSecondary = { onIntent(PrescriptionUIIntent.AddMedicineManuallyClicked) },
         onBack = { onIntent(PrescriptionUIIntent.BackClicked) },
     )
 }
 
 @Composable
-fun PrescriptionNoMedicinesScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
+fun PrescriptionNoMedicinesScreen(
+    state: PrescriptionState,
+    onIntent: (PrescriptionUIIntent) -> Unit
+) {
     PrescriptionFailureLayout(
-        appBarTitle = stringResource(R.string.prescription_review_title),
+        appBarTitle = stringResource(
+            if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_review_title
+        ),
         icon = Icons.Filled.SearchOff,
         iconType = FailureIconType.SUCCESS,
-        title = stringResource(R.string.prescription_no_medicines_title),
-        description = stringResource(R.string.prescription_no_medicines_description),
+        title = stringResource(
+            if (state.isMedicineSearch) R.string.search_empty_title else R.string.prescription_no_medicines_title
+        ),
+        description = stringResource(
+            if (state.isMedicineSearch) R.string.search_empty_subtitle else R.string.prescription_no_medicines_description
+        ),
         primaryText = stringResource(R.string.prescription_choose_another_image),
         onPrimary = { onIntent(PrescriptionUIIntent.ChooseAnotherImageClicked) },
         secondaryText = stringResource(R.string.prescription_add_medicine_manually),

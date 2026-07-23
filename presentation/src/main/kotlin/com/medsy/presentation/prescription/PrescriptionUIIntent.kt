@@ -13,6 +13,7 @@ sealed interface PrescriptionUIIntent {
     data object ChooseAnotherImageClicked : PrescriptionUIIntent
     data object TogglePrescriptionImageClicked : PrescriptionUIIntent
     data class ConfirmMedicineClicked(val medicineId: String) : PrescriptionUIIntent
+    data class MedicineClicked(val productId: String) : PrescriptionUIIntent
     data class EditMedicineClicked(val medicineId: String) : PrescriptionUIIntent
     data class DeleteMedicineClicked(val medicineId: String) : PrescriptionUIIntent
     data class IncreaseQuantityClicked(val medicineId: String) : PrescriptionUIIntent

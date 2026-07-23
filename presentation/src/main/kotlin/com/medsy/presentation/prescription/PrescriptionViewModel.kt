@@ -15,6 +15,7 @@ import com.medsy.domain.prescription.model.PrescriptionCartRequest
 import com.medsy.domain.prescription.model.PrescriptionExtractionOutcome
 import com.medsy.domain.prescription.model.PrescriptionImage
 import com.medsy.domain.prescription.usecase.AddPrescriptionToCartUseCase
+import com.medsy.domain.prescription.usecase.AnalyzeMedicineImageUseCase
 import com.medsy.domain.prescription.usecase.DeletePrescriptionImageUseCase
 import com.medsy.domain.prescription.usecase.ExtractPrescriptionUseCase
 import com.medsy.domain.prescription.usecase.GetMedicineByIdUseCase
@@ -40,6 +41,7 @@ class PrescriptionViewModel @Inject constructor(
     private val importImage: ImportPrescriptionImageUseCase,
     private val deleteImage: DeletePrescriptionImageUseCase,
     private val extractPrescription: ExtractPrescriptionUseCase,
+    private val analyzeMedicineImage: AnalyzeMedicineImageUseCase,
     private val searchMedicines: SearchPrescriptionMedicinesUseCase,
     private val getMedicineById: GetMedicineByIdUseCase,
     private val addCartItems: AddCartItemsUseCase,
@@ -57,10 +59,10 @@ class PrescriptionViewModel @Inject constructor(
     private var searchJob: Job? = null
     private var hasInitialized = false
 
-    fun init(attachmentOnly: Boolean) {
+    fun init(attachmentOnly: Boolean, isMedicineSearch: Boolean = false) {
         if (hasInitialized) return
         hasInitialized = true
-        _state.update { it.copy(isAttachmentOnly = attachmentOnly) }
+        _state.update { it.copy(isAttachmentOnly = attachmentOnly, isMedicineSearch = isMedicineSearch) }
     }
 
     fun onIntent(intent: PrescriptionUIIntent) {
@@ -86,6 +88,9 @@ class PrescriptionViewModel @Inject constructor(
                 _state.update { it.copy(isPrescriptionExpanded = !it.isPrescriptionExpanded) }
 
             is PrescriptionUIIntent.ConfirmMedicineClicked -> confirmMedicine(intent.medicineId)
+            is PrescriptionUIIntent.MedicineClicked -> {
+                sendEffect(PrescriptionUIEffect.NavigateToProductDetails(intent.productId))
+            }
             is PrescriptionUIIntent.EditMedicineClicked -> openMedicinePicker(
                 mode = MedicinePickerMode.REPLACE,
                 targetMedicineId = intent.medicineId,
@@ -196,26 +201,63 @@ class PrescriptionViewModel @Inject constructor(
         extractionJob?.cancel()
         extractionJob = viewModelScope.launch {
             _state.update { it.copy(step = PrescriptionStep.EXTRACTING) }
-            extractPrescription(image)
-                .onSuccess { outcome ->
-                    when (outcome) {
-                        is PrescriptionExtractionOutcome.MedicinesDetected -> _state.update {
-                            it.copy(
-                                step = PrescriptionStep.MEDICINE_REVIEW,
-                                medicines = outcome.medicines,
-                            )
+
+            if (_state.value.isMedicineSearch) {
+                android.util.Log.d("searchMedsy", "ViewModel: Starting Medicine Image Search...")
+                analyzeMedicineImage(image)
+                    .onSuccess { candidates ->
+                        android.util.Log.d("searchMedsy", "ViewModel: Search Success! Found ${candidates.size} candidates")
+                        if (candidates.isEmpty()) {
+                            _state.update { it.copy(step = PrescriptionStep.NO_MEDICINES) }
+                            return@onSuccess
                         }
 
-                        PrescriptionExtractionOutcome.Unreadable ->
-                            _state.update { it.copy(step = PrescriptionStep.UNREADABLE) }
-
-                        PrescriptionExtractionOutcome.NoMedicines ->
-                            _state.update { it.copy(step = PrescriptionStep.NO_MEDICINES) }
+                        val product = candidates.first()
+                        val extracted = ExtractedMedicine(
+                            localItemId = "search_result",
+                            rawText = product.name,
+                            extractedName = product.name,
+                            extractedStrength = product.strength,
+                            extractedForm = product.form,
+                            matchStatus = com.medsy.domain.prescription.model.MatchStatus.MATCHED,
+                            confidence = 1.0,
+                            candidates = candidates,
+                            selectedMedicine = product,
+                            isConfirmed = false
+                        )
+                        _state.update {
+                            it.copy(
+                                step = PrescriptionStep.MEDICINE_REVIEW,
+                                medicines = listOf(extracted),
+                            )
+                        }
                     }
-                }
-                .onError {
-                    _state.update { it.copy(step = PrescriptionStep.UPLOAD_ERROR) }
-                }
+                    .onError { error ->
+                        android.util.Log.e("searchMedsy", "ViewModel: Search Error: $error")
+                        _state.update { it.copy(step = PrescriptionStep.UPLOAD_ERROR) }
+                    }
+            } else {
+                extractPrescription(image)
+                    .onSuccess { outcome ->
+                        when (outcome) {
+                            is PrescriptionExtractionOutcome.MedicinesDetected -> _state.update {
+                                it.copy(
+                                    step = PrescriptionStep.MEDICINE_REVIEW,
+                                    medicines = outcome.medicines,
+                                )
+                            }
+
+                            PrescriptionExtractionOutcome.Unreadable ->
+                                _state.update { it.copy(step = PrescriptionStep.UNREADABLE) }
+
+                            PrescriptionExtractionOutcome.NoMedicines ->
+                                _state.update { it.copy(step = PrescriptionStep.NO_MEDICINES) }
+                        }
+                    }
+                    .onError {
+                        _state.update { it.copy(step = PrescriptionStep.UPLOAD_ERROR) }
+                    }
+            }
         }
     }
 
@@ -390,7 +432,7 @@ class PrescriptionViewModel @Inject constructor(
                                 if (it.localItemId == localItemId) {
                                     it.copy(
                                         selectedMedicine = medicine,
-                                        isConfirmed = true
+                                        isConfirmed = false
                                     )
                                 } else {
                                     it

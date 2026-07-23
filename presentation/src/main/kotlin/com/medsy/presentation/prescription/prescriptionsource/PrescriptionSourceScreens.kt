@@ -38,7 +38,9 @@ fun PrescriptionSourceScreen(
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         PrescriptionAppBar(
-            title = stringResource(R.string.prescription_upload_title),
+            title = stringResource(
+                if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_upload_title
+            ),
             onBack = { onIntent(PrescriptionUIIntent.BackClicked) },
         )
         Column(
@@ -48,14 +50,14 @@ fun PrescriptionSourceScreen(
                 .padding(horizontal = 20.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            RxDocumentIllustration()
+            RxDocumentIllustration(showSearch = state.isMedicineSearch)
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = stringResource(
-                    if (state.isAttachmentOnly) {
-                        R.string.prescription_attachment_heading
-                    } else {
-                        R.string.prescription_upload_heading
+                    when {
+                        state.isAttachmentOnly -> R.string.prescription_attachment_heading
+                        state.isMedicineSearch -> R.string.home_card_search_title
+                        else -> R.string.prescription_upload_heading
                     }
                 ),
                 color = MaterialTheme.extendedColors.prescriptionTitle,
@@ -64,10 +66,10 @@ fun PrescriptionSourceScreen(
             )
             Text(
                 text = stringResource(
-                    if (state.isAttachmentOnly) {
-                        R.string.prescription_attachment_description
-                    } else {
-                        R.string.prescription_upload_description
+                    when {
+                        state.isAttachmentOnly -> R.string.prescription_attachment_description
+                        state.isMedicineSearch -> R.string.home_card_search_desc
+                        else -> R.string.prescription_upload_description
                     }
                 ),
                 color = MaterialTheme.extendedColors.prescriptionSupporting,

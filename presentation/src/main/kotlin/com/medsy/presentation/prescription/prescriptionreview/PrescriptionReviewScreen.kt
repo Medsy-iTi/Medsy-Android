@@ -28,9 +28,12 @@ fun PrescriptionReviewScreen(
     state: PrescriptionState,
     onIntent: (PrescriptionUIIntent) -> Unit,
 ) {
+    val isMedicineSearch = state.isMedicineSearch
     Column {
         PrescriptionAppBar(
-            title = stringResource(R.string.prescription_review_title),
+            title = stringResource(
+                if (isMedicineSearch) R.string.search_results_title else R.string.prescription_review_title
+            ),
             onBack = { onIntent(PrescriptionUIIntent.BackClicked) },
         )
         LazyColumn(
@@ -46,19 +49,26 @@ fun PrescriptionReviewScreen(
                 )
             }
             item { ReviewSummaryCard(state, onIntent) }
+
             items(state.medicines, key = { it.localItemId }) { medicine ->
                 ExtractedMedicineCard(medicine, onIntent)
             }
+
             if (state.needsReviewCount > 0) {
                 item { ReviewWarning() }
             }
+
             item {
                 PrescriptionPrimaryButton(
-                    text = stringResource(R.string.prescription_add_to_cart),
+                    text = stringResource(
+                        if (isMedicineSearch) R.string.product_add_to_cart
+                        else R.string.prescription_add_to_cart
+                    ),
                     enabled = state.canSubmit,
                     onClick = { onIntent(PrescriptionUIIntent.AddToCartClicked) },
                 )
             }
+
             item {
                 PrescriptionTextAction(
                     text = stringResource(R.string.prescription_add_medicine_manually),
