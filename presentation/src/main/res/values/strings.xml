@@ -3,6 +3,8 @@
 
     <!-- App -->
     <string name="app_name">Medesy</string>
+    <string name="splash_logo_description">Medesy Logo</string>
+    <string name="splash_tagline">Your health, our priority</string>
     <string name="medsy_logo_content_desc">Medesy Logo</string>
     <string name="app_name_prefix">Med</string>
     <string name="app_name_suffix">sy</string>

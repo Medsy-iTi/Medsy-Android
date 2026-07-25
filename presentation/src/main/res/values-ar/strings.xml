@@ -4,6 +4,8 @@
 
     <!-- App -->
     <string name="app_name">ميدسي</string>
+    <string name="splash_logo_description">شعار ميدسي</string>
+    <string name="splash_tagline">صحتك، أولويتنا</string>
     <string name="app_name_prefix">ميد</string>
     <string name="app_name_suffix">سي</string>
     <string name="medsy_logo_content_desc">شعار ميدسي</string>
