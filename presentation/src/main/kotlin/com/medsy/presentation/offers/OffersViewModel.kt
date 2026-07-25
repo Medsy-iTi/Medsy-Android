@@ -65,14 +65,20 @@ class OffersViewModel @Inject constructor(
             when (result) {
                 is com.medsy.domain.common.MedsyResult.Success -> {
                     activeRequestRepository.clearActiveRequest()
+                    val orderIdStr = "#MS-${System.currentTimeMillis().toString().takeLast(6)}"
                     _state.update { 
                         it.copy(
                             isConfirmingOrder = false, 
                             orderConfirmed = true,
-                            orderId = "#MS-${System.currentTimeMillis().toString().takeLast(6)}"
+                            orderId = orderIdStr
                         ) 
                     }
-                    sendEffect(OffersUIEffect.NavigateToOrderConfirmation)
+                    val offer = _state.value.selectedOffer
+                    sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
+                        orderIdStr,
+                        offer?.pharmacyName.orEmpty(),
+                        offer?.managerName.orEmpty()
+                    ))
                 }
                 is MedsyResult.Error -> {
                     _state.update { it.copy(isConfirmingOrder = false) }
