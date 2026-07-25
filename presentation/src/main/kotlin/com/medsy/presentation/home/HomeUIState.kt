@@ -15,18 +15,20 @@ sealed interface ActiveSearchStatus {
     data object Idle : ActiveSearchStatus
     
     data class Searching(
-        val stage: Int,
-        val elapsedTime: Int
+        val requestId: Long,
+        val remainingTimeSeconds: Int
     ) : ActiveSearchStatus
     
     data class FirstOfferArrived(
-        val elapsedTime: Int,
+        val requestId: Long,
+        val remainingTimeSeconds: Int,
         val minPrice: Int,
         val totalOffers: Int = 1
     ) : ActiveSearchStatus
     
     data class MultipleOffersArrived(
-        val elapsedTime: Int,
+        val requestId: Long,
+        val remainingTimeSeconds: Int,
         val minPrice: Int,
         val totalOffers: Int
     ) : ActiveSearchStatus

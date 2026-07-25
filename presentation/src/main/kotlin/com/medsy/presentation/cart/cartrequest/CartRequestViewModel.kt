@@ -210,13 +210,13 @@ class CartRequestViewModel @Inject constructor(
                             quantity = item.quantity,
                         )
                     },
-                    note = currentState.draft.pharmacistNote,
+                    notes = currentState.draft.pharmacistNote,
                     prescriptionImage = currentState.draft.prescriptionImage,
                     deliveryMethod = currentState.deliveryMethod,
                     deliveryAddress = address,
                     deliveryLatitude = latitude,
                     deliveryLongitude = longitude,
-                    paymentOption = currentState.paymentOption,
+                    paymentMethod = currentState.paymentOption,
                 )
             ).onSuccess {
                 _state.update { it.copy(isSubmitting = false) }

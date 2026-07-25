@@ -30,7 +30,12 @@ fun ActiveSearchContent(
 ) {
     when (status) {
         is ActiveSearchStatus.Searching -> {
-            ActiveSearchStages(currentStage = status.stage)
+            val stage = when {
+                status.remainingTimeSeconds > 600 -> 1
+                status.remainingTimeSeconds > 300 -> 2
+                else -> 3
+            }
+            ActiveSearchStages(currentStage = stage)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.home_search_status_notification_note),

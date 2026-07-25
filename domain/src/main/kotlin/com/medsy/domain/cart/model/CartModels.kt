@@ -35,13 +35,13 @@ enum class PaymentOption {
 
 data class ProductsRequest(
     val items: List<CartItemInput>,
-    val note: String?,
+    val notes: String?,
     val prescriptionImage: PrescriptionImage?,
     val deliveryMethod: DeliveryMethod,
     val deliveryAddress: String?,
     val deliveryLatitude: Double?,
     val deliveryLongitude: Double?,
-    val paymentOption: PaymentOption,
+    val paymentMethod: PaymentOption,
 )
 
 data class CartDraft(

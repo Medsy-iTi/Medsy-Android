@@ -6,10 +6,15 @@ import com.medsy.domain.cart.repository.CartRepository
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
+import com.medsy.domain.common.asEmptyDataResult
+import com.medsy.domain.common.onSuccess
+import com.medsy.domain.requests.model.MedicineRequest
+import com.medsy.domain.requests.repository.ActiveRequestRepository
 import javax.inject.Inject
 
 class SubmitProductsRequestUseCase @Inject constructor(
     private val cartRepository: CartRepository,
+    private val activeRequestRepository: ActiveRequestRepository,
 ) {
     suspend operator fun invoke(
         request: ProductsRequest,
@@ -26,7 +31,7 @@ class SubmitProductsRequestUseCase @Inject constructor(
         }
 
         val normalizedRequest = request.copy(
-            note = request.note?.trim()?.takeIf(String::isNotBlank),
+            notes = request.notes?.trim()?.takeIf(String::isNotBlank),
             deliveryAddress = request.deliveryAddress?.trim()?.takeIf(String::isNotBlank),
             deliveryLatitude = request.deliveryLatitude.takeIf {
                 request.deliveryMethod == DeliveryMethod.DELIVERY
@@ -37,5 +42,14 @@ class SubmitProductsRequestUseCase @Inject constructor(
         )
 
         return cartRepository.submitProductsRequest(normalizedRequest)
+            .onSuccess { requestId ->
+                activeRequestRepository.setActiveRequest(
+                    MedicineRequest(
+                        id = requestId,
+                        createdAtMillis = System.currentTimeMillis()
+                    )
+                )
+            }
+            .asEmptyDataResult()
     }
 }

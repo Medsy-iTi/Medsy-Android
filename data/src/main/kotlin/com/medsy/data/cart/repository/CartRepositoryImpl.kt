@@ -11,6 +11,13 @@ import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.map
+import com.medsy.data.cart.remote.CartItemInputDto
+import com.medsy.data.cart.remote.ProductsRequestDto
+import com.medsy.data.common.media.PrescriptionImageStorage
+import com.medsy.data.prescription.remote.PrescriptionImageMimeType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import com.medsy.domain.prescription.model.PrescriptionImage
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -18,6 +25,7 @@ import javax.inject.Inject
 class CartRepositoryImpl @Inject constructor(
     private val remoteDataSource: CartRemoteDataSource,
     private val draftStorage: CartDraftStorage,
+    private val imageStorage: PrescriptionImageStorage,
 ) : CartRepository {
     override val draft: Flow<CartDraft> = draftStorage.draft
 
@@ -46,8 +54,28 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun submitProductsRequest(
         request: ProductsRequest,
-    ): EmptyMedsyResult<MedsyError.Remote> =
-        remoteDataSource.submitProductsRequest(request)
+    ): MedsyResult<Long, MedsyError.Remote> {
+        var multipartImage: MultipartBody.Part? = null
+        if (request.prescriptionImage != null) {
+            val file = imageStorage.getFile(request.prescriptionImage!!)
+            if (file.exists()) {
+                val mimeType = PrescriptionImageMimeType.fromExtension(file.extension).value
+                val requestFile = file.asRequestBody(mimeType.toMediaType())
+                multipartImage = MultipartBody.Part.createFormData("prescription", file.name, requestFile)
+            }
+        }
+        
+        val requestDto = ProductsRequestDto(
+            items = request.items.map { CartItemInputDto(it.productId, it.quantity) },
+            notes = request.notes,
+            deliveryMethod = request.deliveryMethod.name,
+            deliveryAddress = request.deliveryAddress,
+            deliveryLatitude = request.deliveryLatitude,
+            deliveryLongitude = request.deliveryLongitude,
+            paymentMethod = request.paymentMethod.name
+        )
+        return remoteDataSource.submitProductsRequest(requestDto, multipartImage)
+    }
 
     override suspend fun updateNote(
         note: String,
