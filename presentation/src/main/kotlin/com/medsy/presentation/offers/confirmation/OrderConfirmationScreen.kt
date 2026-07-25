@@ -51,34 +51,29 @@ import com.medsy.presentation.offers.OffersViewModel
 
 @Composable
 fun OrderConfirmationRoot(
+    orderId: String,
+    pharmacyName: String,
+    managerName: String,
     onNavigateToTrackOrder: () -> Unit,
-    onNavigateToHome: () -> Unit,
-    viewModel: OffersViewModel = hiltViewModel()
+    onNavigateToHome: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
-    LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                is OffersUIEffect.NavigateToTrackOrder -> onNavigateToTrackOrder()
-                is OffersUIEffect.NavigateToHome -> onNavigateToHome()
-                else -> Unit
-            }
-        }
-    }
-
     OrderConfirmationScreen(
-        state = state,
-        onIntent = viewModel::onIntent
+        orderId = orderId,
+        pharmacyName = pharmacyName,
+        managerName = managerName,
+        onTrackOrder = onNavigateToTrackOrder,
+        onBackToHome = onNavigateToHome
     )
 }
 
 @Composable
 fun OrderConfirmationScreen(
-    state: OffersState,
-    onIntent: (OffersUIIntent) -> Unit
+    orderId: String,
+    pharmacyName: String,
+    managerName: String,
+    onTrackOrder: () -> Unit,
+    onBackToHome: () -> Unit
 ) {
-    val offer = state.selectedOffer
     
     Scaffold(
         bottomBar = {
@@ -88,7 +83,7 @@ fun OrderConfirmationScreen(
                     .padding(16.dp)
             ) {
                 Button(
-                    onClick = { onIntent(OffersUIIntent.TrackOrder) },
+                    onClick = onTrackOrder,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -108,7 +103,7 @@ fun OrderConfirmationScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Button(
-                    onClick = { onIntent(OffersUIIntent.BackToHome) },
+                    onClick = onBackToHome,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -169,7 +164,7 @@ fun OrderConfirmationScreen(
                     .padding(horizontal = 24.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = state.orderId ?: "#MS-250721-001",
+                    text = orderId,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -206,13 +201,13 @@ fun OrderConfirmationScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column(horizontalAlignment = Alignment.Start) {
                             Text(
-                                text = stringResource(R.string.offers_pharmacy_title_format, offer?.pharmacyName.orEmpty()),
+                                text = stringResource(R.string.offers_pharmacy_title_format, pharmacyName),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onBackground
                             )
                             Text(
-                                text = stringResource(R.string.offers_manager_format, offer?.managerName.orEmpty()),
+                                text = stringResource(R.string.offers_manager_format, managerName),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
