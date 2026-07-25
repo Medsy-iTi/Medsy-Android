@@ -51,7 +51,7 @@ import com.medsy.presentation.offers.components.PriceSummarySection
 @Composable
 fun OrderReviewRoot(
     onNavigateBack: () -> Unit,
-    onNavigateToOrderConfirmation: () -> Unit,
+    onNavigateToOrderConfirmation: (String, String, String) -> Unit,
     viewModel: OffersViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -60,7 +60,7 @@ fun OrderReviewRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OffersUIEffect.NavigateBack -> onNavigateBack()
-                is OffersUIEffect.NavigateToOrderConfirmation -> onNavigateToOrderConfirmation()
+                is OffersUIEffect.NavigateToOrderConfirmation -> onNavigateToOrderConfirmation(effect.orderId, effect.pharmacyName, effect.managerName)
                 else -> Unit
             }
         }
