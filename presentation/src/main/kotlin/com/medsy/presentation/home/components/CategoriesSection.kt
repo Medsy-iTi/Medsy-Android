@@ -64,10 +64,12 @@ fun CategoriesSection(
         ) {
             items(categories.size) { index ->
                 val cat = categories[index]
+                val categoryColorSchemes = colors.categoryColors
+                val colorScheme = categoryColorSchemes[index % categoryColorSchemes.size]
 
                 val icon = Icons.Default.MedicalServices
-                val bgCol = MaterialTheme.extendedColors.categoryContainerBg
-                val iconCol = MaterialTheme.extendedColors.onCategoryContainer
+                val bgCol = colorScheme.first
+                val iconCol = colorScheme.second
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

@@ -30,11 +30,13 @@ fun OrderCard(
     title: String,
     subtitle: String,
     iconRes: Int,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLow,
+    contentColor: Color = MaterialTheme.colorScheme.onBackground,
     onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.surfaceContainerLow, RoundedCornerShape(16.dp))
+            .background(containerColor, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -49,13 +51,13 @@ fun OrderCard(
             text = title,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
+            color = contentColor
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = subtitle,
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = contentColor.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
             lineHeight = 16.sp
         )

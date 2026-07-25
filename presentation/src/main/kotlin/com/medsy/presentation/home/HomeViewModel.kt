@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import com.medsy.domain.profile.usecase.GetProfileUseCase
+import com.medsy.domain.profile.usecase.ObserveProfileUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.presentation.R
@@ -24,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getProfileUseCase: GetProfileUseCase
+    private val getProfileUseCase: GetProfileUseCase,
+    private val observeProfileUseCase: ObserveProfileUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
@@ -35,10 +37,10 @@ class HomeViewModel @Inject constructor(
     private var searchSimulationJob: Job? = null
 
     init {
-
         _state.update {
             it.copy(
-                notificationCount = 1, deliveryAddress = "شارع النيل، المعادي", banners = listOf(
+                notificationCount = 1,
+                banners = listOf(
                     PromoBannerUi(
                         id = "1",
                         titleRes = R.string.home_promo_title_one,
@@ -63,17 +65,30 @@ class HomeViewModel @Inject constructor(
                         imageRes = R.drawable.banner3,
                         imageContentDescRes = R.string.home_banner_image_desc_three
                     ),
-                ), categories = emptyList()
+                ),
+                categories = emptyList()
             )
         }
         fetchCategories()
-        preloadProfile()
+        observeProfileData()
         startSearchSimulation()
     }
 
-    private fun preloadProfile() {
+    private fun observeProfileData() {
         viewModelScope.launch {
-            getProfileUseCase()
+            observeProfileUseCase().collectLatest { profile ->
+                profile?.homeAddress?.let { address ->
+                    _state.update { it.copy(deliveryAddress = address) }
+                }
+            }
+        }
+        
+        viewModelScope.launch {
+            getProfileUseCase().onSuccess { profile ->
+                profile.homeAddress?.let { address ->
+                    _state.update { it.copy(deliveryAddress = address) }
+                }
+            }
         }
     }
 
