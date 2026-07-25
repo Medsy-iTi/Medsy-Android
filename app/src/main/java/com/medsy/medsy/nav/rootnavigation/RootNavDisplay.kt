@@ -298,11 +298,16 @@ fun RootNavDisplay() {
             entry<Route.OrderReview> {
                 OrderReviewRoot(
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToOrderConfirmation = { rootBackStack.navigateSingleTop(Route.OrderConfirmation) }
+                    onNavigateToOrderConfirmation = { orderId, pharmacyName, managerName ->
+                        rootBackStack.navigateSingleTop(Route.OrderConfirmation(orderId, pharmacyName, managerName)) 
+                    }
                 )
             }
-            entry<Route.OrderConfirmation> {
+            entry<Route.OrderConfirmation> { route ->
                 OrderConfirmationRoot(
+                    orderId = route.orderId,
+                    pharmacyName = route.pharmacyName,
+                    managerName = route.managerName,
                     onNavigateToTrackOrder = {
                         rootBackStack.apply {
                             clear(); navigateSingleTop(

@@ -3,7 +3,7 @@ package com.medsy.presentation.offers
 sealed interface OffersUIEffect {
     data object NavigateToOfferDetails : OffersUIEffect
     data object NavigateToOrderReview : OffersUIEffect
-    data object NavigateToOrderConfirmation : OffersUIEffect
+    data class NavigateToOrderConfirmation(val orderId: String, val pharmacyName: String, val managerName: String) : OffersUIEffect
     data object NavigateBack : OffersUIEffect
     data object NavigateToHome : OffersUIEffect
     data object NavigateToTrackOrder : OffersUIEffect
