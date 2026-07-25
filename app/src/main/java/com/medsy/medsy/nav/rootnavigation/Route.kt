@@ -80,5 +80,5 @@ sealed interface Route : NavKey {
     data object OrderReview : Route
     
     @Serializable
-    data object OrderConfirmation : Route
+    data class OrderConfirmation(val orderId: String, val pharmacyName: String, val managerName: String) : Route
 }
