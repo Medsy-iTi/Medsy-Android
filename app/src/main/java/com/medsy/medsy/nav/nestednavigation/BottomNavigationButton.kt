@@ -34,7 +34,7 @@ fun BottomNavigationButton(
         label = {
             Text(
                 text = stringResource(label),
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             )
         },
         modifier = modifier,

@@ -1,62 +1,55 @@
 package com.medsy.medsy.nav.nestednavigation
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.offset
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ShortNavigationBarItem
-import androidx.compose.material3.ShortNavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import com.medsy.presentation.aichat.components.MedsyAiNavIcon
 
 @Composable
-fun BottomNavigationButton(
+fun AiChatNavigationButton(
     onClick: () -> Unit,
-    @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
     selected: Boolean = false,
     @StringRes label: Int,
-    prominent: Boolean = false,
 ) {
-    ShortNavigationBarItem(
-        selected = selected,
-        onClick = onClick,
-        icon = {
-            if (prominent) {
-                MedsyAiNavIcon(
-                    selected = selected,
-                    modifier = Modifier
-                        .offset(y = (-12).dp),
-                )
+    // Owned here so the whole item stays tappable while the ripple is rendered
+    // only inside the circular icon instead of the nav bar item's pill indicator.
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Column(
+        modifier = modifier
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                role = Role.Tab,
+                onClick = onClick,
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        MedsyAiNavIcon(
+            selected = selected,
+            interactionSource = interactionSource,
+        )
+        Text(
+            text = stringResource(label),
+            style = MaterialTheme.typography.labelMedium,
+            color = if (selected) {
+                MaterialTheme.colorScheme.primary
             } else {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = null,
-                )
-            }
-        },
-        label = {
-            Text(
-                text = stringResource(label),
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                modifier = if (prominent) Modifier.offset(y = (-6).dp) else Modifier,
-            )
-        },
-        modifier = modifier,
-        colors = ShortNavigationBarItemDefaults.colors(
-            selectedIconColor = MaterialTheme.colorScheme.primary,
-            selectedTextColor = MaterialTheme.colorScheme.primary,
-            unselectedIconColor = MaterialTheme.colorScheme.onBackground,
-            unselectedTextColor = MaterialTheme.colorScheme.onBackground,
-            selectedIndicatorColor = Color.Transparent,
-        ),
-    )
+                MaterialTheme.colorScheme.onBackground
+            },
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+        )
+    }
 }

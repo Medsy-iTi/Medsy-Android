@@ -38,7 +38,7 @@ import com.medsy.presentation.splash.SplashRoot
 
 @Composable
 fun RootNavDisplay() {
-    val rootBackStack = rememberNavBackStack(Route.Splash)
+    val rootBackStack = rememberNavBackStack(Route.NestedNav)
     var requestedNestedDestination by remember { mutableStateOf<Route?>(null) }
 
     NavDisplay(
@@ -169,21 +169,21 @@ fun RootNavDisplay() {
                             Route.Prescription(attachmentOnly)
                         )
                     },
+                    openAiChat = {
+                        rootBackStack.navigateSingleTop(Route.AiChat)
+                    },
                     openCartRequest = {
                         rootBackStack.navigateSingleTop(Route.CartRequest)
                     },
                     requestedDestination = requestedNestedDestination,
                     onRequestedDestinationHandled = {
                         requestedNestedDestination = null
-                    },
-                    openProductDetails = {
-                        rootBackStack.navigateSingleTop(Route.ProductDetails(it.toString()))
                     }
                 )
             }
             entry<Route.AiChat> {
                 AiChatRoot(
-                    onNext = { rootBackStack.removeLastOrNull() }
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
                 )
             }
             entry<Route.ProductDetails> { route ->
@@ -191,7 +191,8 @@ fun RootNavDisplay() {
                     productId = route.id,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToPharmacistChat = {
-                        rootBackStack.navigateSingleTop(Route.AiChat(/* required params here */))
+                        rootBackStack.removeLastOrNull()
+                        rootBackStack.navigateSingleTop(Route.AiChat)
                     },
                 )
             }

@@ -31,16 +31,17 @@ sealed interface Route : NavKey {
         data object Cart : Route
 
         @Serializable
+        data object Orders : Route
+
+        @Serializable
         data object Profile : Route
-
-
     }
 
     @Serializable
-    data class ProductDetails(val id: String) : Route
+    data object AiChat : Route
 
     @Serializable
-    data class AiChat(val initialPrompt: String? = null) : Route
+    data class ProductDetails(val id: String) : Route
 
     @Serializable
     data object Settings : Route
@@ -69,13 +70,13 @@ sealed interface Route : NavKey {
 
     @Serializable
     data object AvailableOffers : Route
-    
+
     @Serializable
     data object OfferDetails : Route
-    
+
     @Serializable
     data object OrderReview : Route
-    
+
     @Serializable
     data object OrderConfirmation : Route
 }

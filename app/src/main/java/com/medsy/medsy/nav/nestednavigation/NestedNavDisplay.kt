@@ -22,6 +22,7 @@ import com.medsy.medsy.nav.rootnavigation.Route
 import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.home.HomeRoot
+import com.medsy.presentation.orders.OrdersRoot
 import com.medsy.presentation.profile.ProfileRoot
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -32,6 +33,7 @@ fun NestedNavDisplay(
     navigateBack: () -> Unit,
     openPersonalDetails: (startInEditMode: Boolean) -> Unit,
     openLogin: () -> Unit,
+    openAiChat: () -> Unit,
     openSearch: () -> Unit,
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
@@ -48,6 +50,7 @@ fun NestedNavDisplay(
                 polymorphic(NavKey::class) {
                     subclass(Route.NestedNav.Home::class, Route.NestedNav.Home.serializer())
                     subclass(Route.NestedNav.Cart::class, Route.NestedNav.Cart.serializer())
+                    subclass(Route.NestedNav.Orders::class, Route.NestedNav.Orders.serializer())
                     subclass(Route.NestedNav.Profile::class, Route.NestedNav.Profile.serializer())
                 }
             }
@@ -73,23 +76,33 @@ fun NestedNavDisplay(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             ) {
-                BottomBarDestination.entries.forEach { destination ->
+                BottomBarDestination.entries.forEachIndexed { index, destination ->
                     val isSelected = nestedBackStack.lastOrNull() == destination.route
-                    BottomNavigationButton(
-                        onClick = {
-                            nestedBackStack.apply {
-                                clear()
-                                if (destination.route != Route.NestedNav.Home) {
-                                    navigateSingleTop(Route.NestedNav.Home)
+
+                    if (index != 2) {
+                        BottomNavigationButton(
+                            onClick = {
+                                nestedBackStack.apply {
+                                    clear()
+                                    if (destination.route != Route.NestedNav.Home) {
+                                        navigateSingleTop(Route.NestedNav.Home)
+                                    }
+                                    navigateSingleTop(destination.route)
                                 }
-                                navigateSingleTop(destination.route)
-                            }
-                        },
-                        icon = if (isSelected) destination.selectedIcon else destination.icon,
-                        modifier = Modifier.weight(1f),
-                        selected = isSelected,
-                        label = destination.title
-                    )
+                            },
+                            icon = if (isSelected) destination.selectedIcon else destination.icon,
+                            modifier = Modifier.weight(1f),
+                            selected = isSelected,
+                            label = destination.title,
+                        )
+                    } else {
+                        AiChatNavigationButton(
+                            onClick = openAiChat,
+                            modifier = Modifier.weight(1f),
+                            selected = isSelected,
+                            label = destination.title,
+                        )
+                    }
                 }
             }
         }
@@ -132,6 +145,9 @@ fun NestedNavDisplay(
                         onAddPrescription = { openPrescription(true) },
                         onOpenCartRequest = openCartRequest,
                     )
+                }
+                entry<Route.NestedNav.Orders> {
+                    OrdersRoot()
                 }
                 entry<Route.NestedNav.Profile> {
                     ProfileRoot(
