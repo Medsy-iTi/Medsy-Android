@@ -87,7 +87,7 @@ class CartRequestViewModel @Inject constructor(
             }
 
             is CartRequestUIIntent.PaymentOptionSelected -> _state.update {
-                it.copy(paymentOption = intent.paymentOption)
+                it.copy(paymentMethod = intent.paymentMethod)
             }
 
             CartRequestUIIntent.RetryCart -> viewModelScope.launch { loadCart() }
@@ -210,13 +210,13 @@ class CartRequestViewModel @Inject constructor(
                             quantity = item.quantity,
                         )
                     },
-                    note = currentState.draft.pharmacistNote,
-                    prescriptionImage = currentState.draft.prescriptionImage,
+                    notes = currentState.draft.pharmacistNote,
+                    prescription = currentState.draft.prescriptionImage,
                     deliveryMethod = currentState.deliveryMethod,
                     deliveryAddress = address,
                     deliveryLatitude = latitude,
                     deliveryLongitude = longitude,
-                    paymentOption = currentState.paymentOption,
+                    paymentMethod = currentState.paymentMethod,
                 )
             ).onSuccess {
                 _state.update { it.copy(isSubmitting = false) }

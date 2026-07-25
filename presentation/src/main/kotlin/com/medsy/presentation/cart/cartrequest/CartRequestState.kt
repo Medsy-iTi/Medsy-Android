@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import com.medsy.domain.cart.model.CartDraft
 import com.medsy.domain.cart.model.CartItem
 import com.medsy.domain.cart.model.DeliveryMethod
-import com.medsy.domain.cart.model.PaymentOption
+import com.medsy.domain.cart.model.PaymentMethod
 
 private const val CairoLatitude = 30.0444
 private const val CairoLongitude = 31.2357
@@ -32,7 +32,7 @@ data class CartRequestState(
     val customLongitude: Double = CairoLongitude,
     val hasConfirmedCustomLocation: Boolean = false,
     val isMapPickerVisible: Boolean = false,
-    val paymentOption: PaymentOption = PaymentOption.CASH,
+    val paymentMethod: PaymentMethod = PaymentMethod.CASH,
     val isSubmitting: Boolean = false,
 ) {
     val hasRequestContent: Boolean

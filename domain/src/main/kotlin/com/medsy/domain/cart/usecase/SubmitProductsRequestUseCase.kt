@@ -14,7 +14,7 @@ class SubmitProductsRequestUseCase @Inject constructor(
     suspend operator fun invoke(
         request: ProductsRequest,
     ): EmptyMedsyResult<MedsyError> {
-        val hasRequestContent = request.items.isNotEmpty() || request.prescriptionImage != null
+        val hasRequestContent = request.items.isNotEmpty() || request.prescription != null
         val hasValidDeliveryAddress = request.deliveryMethod != DeliveryMethod.DELIVERY || (
                 request.deliveryAddress?.isNotBlank() == true &&
                         request.deliveryLatitude?.let { it in -90.0..90.0 } == true &&
@@ -26,7 +26,7 @@ class SubmitProductsRequestUseCase @Inject constructor(
         }
 
         val normalizedRequest = request.copy(
-            note = request.note?.trim()?.takeIf(String::isNotBlank),
+            notes = request.notes?.trim()?.takeIf(String::isNotBlank),
             deliveryAddress = request.deliveryAddress?.trim()?.takeIf(String::isNotBlank),
             deliveryLatitude = request.deliveryLatitude.takeIf {
                 request.deliveryMethod == DeliveryMethod.DELIVERY
