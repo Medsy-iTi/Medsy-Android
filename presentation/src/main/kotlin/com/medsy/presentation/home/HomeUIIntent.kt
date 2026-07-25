@@ -15,4 +15,5 @@ sealed interface HomeUIIntent {
     object OnCancelSearchSimulation : HomeUIIntent
     object OnViewOffersClick : HomeUIIntent
     object OnSearchWiderRangeClick : HomeUIIntent
+    data class OnAddressResolved(val address: String) : HomeUIIntent
 }

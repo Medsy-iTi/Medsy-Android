@@ -3,7 +3,7 @@ package com.medsy.presentation.offers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.common.MedsyResult
-import com.medsy.domain.offers.model.OfferType
+import com.medsy.presentation.offers.model.OfferType
 import com.medsy.domain.offers.usecase.AcceptOfferUseCase
 import com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
 import com.medsy.domain.requests.repository.ActiveRequestRepository
@@ -74,7 +74,7 @@ class OffersViewModel @Inject constructor(
                     }
                     sendEffect(OffersUIEffect.NavigateToOrderConfirmation)
                 }
-                is com.medsy.domain.common.MedsyResult.Error -> {
+                is MedsyResult.Error -> {
                     _state.update { it.copy(isConfirmingOrder = false) }
                     // Handle error (e.g., show a toast)
                 }
@@ -121,12 +121,12 @@ class OffersViewModel @Inject constructor(
                     
                     PharmacyOffer(
                         id = offer.id.toString(),
-                        pharmacyName = "صيدلية رقم ${offer.pharmacyId}", // Placeholder until backend adds name
-                        managerName = "مدير ${offer.pharmacistId}",      // Placeholder
+                        pharmacyName = offer.pharmacyId.toString(),
+                        managerName = offer.pharmacistId.toString(),
                         price = totalPrice,
                         type = type,
                         medicines = offerMedicines,
-                        pharmacistComment = "تم مراجعة الطلب وجميع الأدوية المتوفرة جاهزة." // Placeholder
+                        pharmacistComment = null
                     )
                 }
                 

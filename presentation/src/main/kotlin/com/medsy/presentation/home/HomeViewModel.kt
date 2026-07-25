@@ -205,6 +205,9 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeUIIntent.OnSearchWiderRangeClick -> { /* Refresh/Widen Search */ }
+            is HomeUIIntent.OnAddressResolved -> {
+                _state.update { it.copy(deliveryAddress = intent.address) }
+            }
         }
     }
 
