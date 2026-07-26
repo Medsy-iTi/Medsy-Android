@@ -8,8 +8,11 @@ import com.medsy.domain.offers.usecase.AcceptOfferUseCase
 import com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
 import com.medsy.domain.requests.repository.ActiveRequestRepository
 import com.medsy.domain.requests.usecase.GetMedicineRequestByIdUseCase
+import com.medsy.domain.productdetails.usecase.GetProductDetailsUseCase
 import com.medsy.presentation.offers.model.OfferMedicine
 import com.medsy.presentation.offers.model.PharmacyOffer
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +28,7 @@ import javax.inject.Inject
 class OffersViewModel @Inject constructor(
     private val getOffersForRequestUseCase: GetOffersForRequestUseCase,
     private val getMedicineRequestByIdUseCase: GetMedicineRequestByIdUseCase,
+    private val getProductDetailsUseCase: GetProductDetailsUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
     private val activeRequestRepository: ActiveRequestRepository
 ) : ViewModel() {
@@ -58,10 +62,13 @@ class OffersViewModel @Inject constructor(
     }
 
     private fun confirmOrder() {
-        val selectedOfferId = _state.value.selectedOffer?.id?.toLongOrNull() ?: return
+        val selectedOffer = _state.value.selectedOffer ?: return
+        val requestId = _state.value.requestId ?: return
+        val selectedItemIds = selectedOffer.medicines.filter { it.isAvailable }.mapNotNull { it.id.toLongOrNull() }
+
         viewModelScope.launch {
             _state.update { it.copy(isConfirmingOrder = true) }
-            val result = acceptOfferUseCase(selectedOfferId)
+            val result = acceptOfferUseCase(requestId, selectedItemIds)
             when (result) {
                 is com.medsy.domain.common.MedsyResult.Success -> {
                     activeRequestRepository.clearActiveRequest()
@@ -122,20 +129,48 @@ class OffersViewModel @Inject constructor(
                 val originalItems = requestDetails.items
                 
                 val pharmacyOffers = offersResult.data.content.map { offer ->
-                    val offerMedicines = originalItems.map { reqItem ->
-                        val isAvailable = offer.items.any { it.requestItemId == reqItem.id }
-                        OfferMedicine(
-                            id = reqItem.id.toString(),
-                            name = reqItem.productName,
-                            packageInfo = reqItem.packSize ?: "",
-                            price = reqItem.unitPrice.toInt(),
-                            isAvailable = isAvailable,
-                            quantity = reqItem.quantity,
-                            imageUrl = reqItem.imageUrl
-                        )
-                    }
+                    async {
+                        val offerMedicines = originalItems.map { reqItem ->
+                            async {
+                                val offerItem = offer.items.find { it.requestItemId == reqItem.id }
+                                val isAvailable = offerItem != null
+                                
+                                var finalName = reqItem.productName
+                                var finalPrice = reqItem.unitPrice.toInt()
+                                var finalImage = reqItem.imageUrl
+                                var finalPackage = reqItem.packSize ?: ""
+                                var isSubstitute = false
+                                var originalName: String? = null
+                                
+                                if (isAvailable && offerItem.productId != reqItem.productId) {
+                                    // Substitute!
+                                    isSubstitute = true
+                                    originalName = reqItem.productName
+                                    finalImage = null // Clear original image first
+                                    val prodResult = getProductDetailsUseCase(offerItem.productId, "en")
+                                    if (prodResult is MedsyResult.Success) {
+                                        finalName = prodResult.data.name
+                                        finalPrice = prodResult.data.price.toInt()
+                                        finalImage = prodResult.data.imageUrl
+                                        finalPackage = prodResult.data.packSize ?: ""
+                                    }
+                                }
+                                
+                                OfferMedicine(
+                                    id = reqItem.id.toString(),
+                                    name = finalName,
+                                    packageInfo = finalPackage,
+                                    price = finalPrice,
+                                    isAvailable = isAvailable,
+                                    quantity = reqItem.quantity,
+                                    imageUrl = finalImage,
+                                    isSubstitute = isSubstitute,
+                                    originalProductName = originalName
+                                )
+                            }
+                        }.awaitAll()
 
-                    val availableCount = offerMedicines.count { it.isAvailable }
+                        val availableCount = offerMedicines.count { it.isAvailable }
                     val type = if (availableCount == offerMedicines.size) OfferType.FULL else OfferType.PARTIAL
                     val totalPrice = offerMedicines.filter { it.isAvailable }.sumOf { it.price * it.quantity }
                     
@@ -148,13 +183,15 @@ class OffersViewModel @Inject constructor(
                         medicines = offerMedicines,
                         pharmacistComment = null
                     )
-                }
+                    }
+                }.awaitAll()
                 
                 _state.update { 
                     it.copy(
                         isLoading = false,
                         availableOffers = pharmacyOffers,
-                        selectedOffer = it.selectedOffer ?: pharmacyOffers.firstOrNull()
+                        selectedOffer = it.selectedOffer ?: pharmacyOffers.firstOrNull(),
+                        requestId = requestId
                     ) 
                 }
             } else {

@@ -465,12 +465,14 @@
     <string name="offers_combined_coverage">Full coverage for your request</string>
     <string name="offers_from_egp">from\n%1$d</string>
     <string name="offers_price_note">Prices are final from Medsy and match pharmacy prices, only a discount and delivery fee may apply.</string>
-    <string name="offers_pharmacy_title_format">%1$s Pharmacy</string>
+    <string name="offers_pharmacy_title_format">Pharmacy #%1$s</string>
     <string name="offers_manager_format">%1$s (Manager)</string>
     <string name="offers_not_available">Not Available</string>
     <string name="offers_requested_medicines">Requested Medicines</string>
     <string name="offers_available">Available</string>
+    <string name="offers_pharmacist_note_title">Pharmacist Note</string>
     <string name="offers_pharmacist_comment">Pharmacist Comment</string>
+    <string name="offers_substitute_for">Substitute for %1$s</string>
     <string name="offers_view_prescription">View Prescription</string>
     <string name="offers_choose_offer">Choose this Offer</string>
 

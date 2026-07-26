@@ -22,5 +22,7 @@ data class OfferMedicine(
     val price: Int,
     val isAvailable: Boolean,
     val quantity: Int = 1,
-    val imageUrl: String? = null
+    val imageUrl: String? = null,
+    val isSubstitute: Boolean = false,
+    val originalProductName: String? = null
 )

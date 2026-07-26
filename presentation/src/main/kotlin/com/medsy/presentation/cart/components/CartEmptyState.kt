@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ReceiptLong
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.ReceiptLong
 import androidx.compose.material3.Icon
@@ -128,7 +129,7 @@ internal fun CartEmptyState(
                 modifier = Modifier.fillMaxSize(),
             )
             Icon(
-                imageVector = Icons.Outlined.ReceiptLong,
+                imageVector = Icons.AutoMirrored.Outlined.ReceiptLong,
                 contentDescription = null,
                 tint = colors.primary,
                 modifier = Modifier

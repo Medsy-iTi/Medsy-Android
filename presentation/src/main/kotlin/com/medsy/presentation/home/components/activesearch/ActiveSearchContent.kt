@@ -46,7 +46,7 @@ fun ActiveSearchContent(
             )
         }
         is ActiveSearchStatus.FirstOfferArrived -> {
-            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = 2, totalCount = 3, onViewOffersClick = onViewOffersClick) 
+            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = status.foundCount, totalCount = status.totalCount, onViewOffersClick = onViewOffersClick) 
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.home_search_status_auto_stop_note),
@@ -57,7 +57,7 @@ fun ActiveSearchContent(
             )
         }
         is ActiveSearchStatus.MultipleOffersArrived -> {
-            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = 3, totalCount = 3, onViewOffersClick = onViewOffersClick)
+            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = status.foundCount, totalCount = status.totalCount, onViewOffersClick = onViewOffersClick)
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier

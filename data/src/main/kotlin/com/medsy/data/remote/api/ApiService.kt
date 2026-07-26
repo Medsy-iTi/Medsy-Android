@@ -116,7 +116,7 @@ interface ApiService {
         @Query("size") size: Int,
         @Query("sort") sort: List<String>?,
     ): Response<ApiResponse<ProductsPageDto>>
-    @GET("api/v1/medicines/{id}")
+    @GET("api/v1/products/{id}")
     suspend fun getProductById(
         @Path("id") id: Int,
         @Query("lang") lang: String = "en",
@@ -129,9 +129,10 @@ interface ApiService {
         @Query("size") size: Int = 20,
     ): Response<ApiResponse<OffersPageDto>>
 
-    @POST("api/v1/offers/{id}/accept")
-    suspend fun acceptOffer(
-        @Path("id") id: Long,
+    @POST("api/v1/requests/{requestId}/confirm")
+    suspend fun confirmRequest(
+        @Path("requestId") requestId: Long,
+        @retrofit2.http.Body request: com.medsy.data.offers.remote.ConfirmRequestDto
     ): Response<ApiResponse<Any>>
 
     @GET("api/v1/requests/{id}")

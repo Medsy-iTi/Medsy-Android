@@ -25,8 +25,9 @@ class OffersRepositoryImpl @Inject constructor(
             .map { it.toDomain() }
 
     override suspend fun acceptOffer(
-        offerId: Long,
+        requestId: Long,
+        selectedRequestItemIds: List<Long>,
     ): EmptyMedsyResult<MedsyError.Remote> =
-        remoteDataSource.acceptOffer(offerId)
+        remoteDataSource.acceptOffer(requestId, selectedRequestItemIds)
             .asEmptyDataResult()
 }

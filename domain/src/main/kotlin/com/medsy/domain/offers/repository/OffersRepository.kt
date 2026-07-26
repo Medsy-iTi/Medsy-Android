@@ -13,6 +13,7 @@ interface OffersRepository {
     ): MedsyResult<OffersPage, MedsyError.Remote>
 
     suspend fun acceptOffer(
-        offerId: Long,
+        requestId: Long,
+        selectedRequestItemIds: List<Long>,
     ): EmptyMedsyResult<MedsyError.Remote>
 }

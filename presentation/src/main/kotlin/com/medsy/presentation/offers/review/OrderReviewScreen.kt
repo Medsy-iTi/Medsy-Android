@@ -23,6 +23,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import com.medsy.designsystem.components.MedsyShimmer
+import com.medsy.designsystem.components.MedsyShimmerPlaceholder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -123,9 +125,39 @@ fun OrderReviewScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (offer != null) {
+            if (state.isLoading || offer == null) {
+                MedsyShimmer(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            MedsyShimmerPlaceholder(modifier = Modifier.size(44.dp), shape = RoundedCornerShape(8.dp))
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                MedsyShimmerPlaceholder(modifier = Modifier.height(20.dp).fillMaxWidth(0.5f))
+                                Spacer(modifier = Modifier.height(8.dp))
+                                MedsyShimmerPlaceholder(modifier = Modifier.height(14.dp).fillMaxWidth(0.3f))
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(24.dp))
+                        MedsyShimmerPlaceholder(modifier = Modifier.height(24.dp).fillMaxWidth(0.4f))
+                        Spacer(modifier = Modifier.height(16.dp))
+                        repeat(3) {
+                            MedsyShimmerPlaceholder(modifier = Modifier.fillMaxWidth().height(80.dp), shape = RoundedCornerShape(12.dp))
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
+                    }
+                }
+            } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
@@ -249,11 +281,6 @@ fun OrderReviewScreen(
                         )
                     }
                 }
-            } else {
-                Text(
-                    text = "Offer not found",
-                    modifier = Modifier.align(Alignment.Center)
-                )
             }
         }
     }

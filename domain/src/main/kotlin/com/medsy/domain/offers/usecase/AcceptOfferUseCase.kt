@@ -9,6 +9,7 @@ class AcceptOfferUseCase @Inject constructor(
     private val repository: OffersRepository,
 ) {
     suspend operator fun invoke(
-        offerId: Long,
-    ): EmptyMedsyResult<MedsyError.Remote> = repository.acceptOffer(offerId)
+        requestId: Long,
+        selectedRequestItemIds: List<Long>,
+    ): EmptyMedsyResult<MedsyError.Remote> = repository.acceptOffer(requestId, selectedRequestItemIds)
 }

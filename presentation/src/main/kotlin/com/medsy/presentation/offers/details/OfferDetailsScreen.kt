@@ -118,7 +118,7 @@ fun OfferDetailsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (state.isLoading) {
+            if (state.isLoading || offer == null) {
                 MedsyShimmer(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier
@@ -150,7 +150,7 @@ fun OfferDetailsScreen(
                         }
                     }
                 }
-            } else if (offer != null) {
+            } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
@@ -250,11 +250,6 @@ fun OfferDetailsScreen(
                         }
                     }
                 }
-            } else {
-                Text(
-                    text = "Offer not found",
-                    modifier = Modifier.align(Alignment.Center)
-                )
             }
         }
     }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ReceiptLong
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.CreditCard
 import androidx.compose.material.icons.outlined.EditLocationAlt
@@ -59,7 +60,7 @@ internal fun CartRequestOrderSummary(
     onRetry: () -> Unit,
 ) {
     CartRequestSection(
-        icon = Icons.Outlined.ReceiptLong,
+        icon = Icons.AutoMirrored.Outlined.ReceiptLong,
         title = stringResource(R.string.cart_request_order_summary),
     ) {
         if (state.isCartLoading) {

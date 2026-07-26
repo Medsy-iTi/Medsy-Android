@@ -6,6 +6,7 @@ import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import com.medsy.domain.profile.usecase.GetProfileUseCase
 import com.medsy.domain.requests.usecase.ObserveActiveRequestUseCase
 import com.medsy.domain.requests.usecase.ClearActiveRequestUseCase
+import com.medsy.domain.requests.usecase.GetMedicineRequestByIdUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.presentation.R
@@ -30,7 +31,8 @@ class HomeViewModel @Inject constructor(
     private val getProfileUseCase: GetProfileUseCase,
     private val observeActiveRequestUseCase: ObserveActiveRequestUseCase,
     private val clearActiveRequestUseCase: ClearActiveRequestUseCase,
-    private val getOffersForRequestUseCase: com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
+    private val getOffersForRequestUseCase: com.medsy.domain.offers.usecase.GetOffersForRequestUseCase,
+    private val getMedicineRequestByIdUseCase: GetMedicineRequestByIdUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
@@ -151,6 +153,12 @@ class HomeViewModel @Inject constructor(
                     }
 
                     // Real API polling
+                    var originalRequestMinPrice = 0
+                    val reqResult = getMedicineRequestByIdUseCase(request.id)
+                    if (reqResult is com.medsy.domain.common.MedsyResult.Success) {
+                        originalRequestMinPrice = reqResult.data.items.sumOf { it.unitPrice * it.quantity }.toInt()
+                    }
+
                     mockPollingJob = launch {
                         while (true) {
                             delay(5000.milliseconds) // Poll every 5 seconds
@@ -158,7 +166,10 @@ class HomeViewModel @Inject constructor(
                             if (offersResult is com.medsy.domain.common.MedsyResult.Success) {
                                 val offers = offersResult.data.content
                                 if (offers.isNotEmpty()) {
-                                    val minPrice = 0
+                                    val totalCount = offers.maxOfOrNull { it.items.size } ?: 0
+                                    val minPrice = originalRequestMinPrice
+                                    val maxFoundCount = offers.maxOfOrNull { it.items.size } ?: 0
+
                                     _state.update { s ->
                                         val currentStatus = s.activeSearchStatus
                                         val remaining = when (currentStatus) {
@@ -172,7 +183,9 @@ class HomeViewModel @Inject constructor(
                                                 activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(
                                                     requestId = request.id,
                                                     remainingTimeSeconds = remaining,
-                                                    minPrice = minPrice
+                                                    minPrice = minPrice,
+                                                    foundCount = maxFoundCount,
+                                                    totalCount = totalCount
                                                 )
                                             )
                                         } else {
@@ -181,7 +194,9 @@ class HomeViewModel @Inject constructor(
                                                     requestId = request.id,
                                                     remainingTimeSeconds = remaining,
                                                     minPrice = minPrice,
-                                                    totalOffers = offers.size
+                                                    totalOffers = offers.size,
+                                                    foundCount = maxFoundCount,
+                                                    totalCount = totalCount
                                                 )
                                             )
                                         }

@@ -473,7 +473,6 @@
     <string name="offers_available">متوفر</string>
     <string name="offers_not_available">غير متوفر</string>
     <string name="offers_requested_medicines">الأدوية المطلوبة</string>
-    <string name="offers_pharmacist_comment">تعليق من الصيدلي</string>
     <string name="offers_view_prescription">عرض الروشتة</string>
     <string name="offers_choose_offer">اختار هذا العرض</string>
 
@@ -496,4 +495,6 @@
     <string name="offers_track_order">تتبع الطلب</string>
     <string name="offers_back_to_home">العودة إلى الرئيسية</string>
     <string name="offers_edit_address">تعديل</string>
+    <string name="offers_pharmacist_note_title">ملاحظة الصيدلي</string>
+    <string name="offers_substitute_for">بديل لـ %1$s</string>
 </resources>

@@ -23,14 +23,18 @@ sealed interface ActiveSearchStatus {
         val requestId: Long,
         val remainingTimeSeconds: Int,
         val minPrice: Int,
-        val totalOffers: Int = 1
+        val totalOffers: Int = 1,
+        val foundCount: Int = 0,
+        val totalCount: Int = 0
     ) : ActiveSearchStatus
     
     data class MultipleOffersArrived(
         val requestId: Long,
         val remainingTimeSeconds: Int,
         val minPrice: Int,
-        val totalOffers: Int
+        val totalOffers: Int,
+        val foundCount: Int = 0,
+        val totalCount: Int = 0
     ) : ActiveSearchStatus
     
     data object SearchEndedNoOffers : ActiveSearchStatus

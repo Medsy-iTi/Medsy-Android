@@ -104,20 +104,31 @@ fun MedicineItemRow(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 if (medicine.isAvailable) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(R.string.offers_available),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.extendedColors.badgeSuccess,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = MaterialTheme.extendedColors.badgeSuccess,
-                            modifier = Modifier.size(14.dp)
-                        )
+                    if (medicine.isSubstitute) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.offers_substitute_for, medicine.originalProductName ?: ""),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.extendedColors.warning,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    } else {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.offers_available),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.extendedColors.badgeSuccess,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.extendedColors.badgeSuccess,
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
                     }
                 } else {
                     Row(verticalAlignment = Alignment.CenterVertically) {

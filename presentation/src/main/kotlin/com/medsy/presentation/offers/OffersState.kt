@@ -9,5 +9,6 @@ data class OffersState(
     val deliveryFee: Int = 20,
     val isConfirmingOrder: Boolean = false,
     val orderConfirmed: Boolean = false,
-    val orderId: String? = null
+    val orderId: String? = null,
+    val requestId: Long? = null
 )
