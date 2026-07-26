@@ -347,7 +347,9 @@
     <!-- Cart -->
     <string name="cart_title">سلة الطلب</string>
     <string name="cart_clear_description">إفراغ السلة</string>
-    <string name="cart_empty">لا توجد أدوية في السلة حتى الآن.</string>
+    <string name="cart_empty">سلة الأدوية فارغة</string>
+    <string name="cart_empty_badge">سلة فارغة</string>
+    <string name="cart_empty_supporting">أضف دواءً واحدًا على الأقل للمتابعة. الروشتة والملاحظات تفاصيل مساعدة فقط.</string>
     <string name="cart_remove_item_description">إزالة الدواء</string>
     <string name="cart_decrease_quantity">تقليل الكمية</string>
     <string name="cart_increase_quantity">زيادة الكمية</string>
@@ -410,7 +412,7 @@
     <string name="cart_request_visa_description">الدفع باستخدام البطاقة</string>
     <string name="cart_request_submit">إرسال طلب الأدوية</string>
     <string name="cart_request_retry">إعادة المحاولة</string>
-    <string name="cart_request_empty_request">أضف دواءً واحدًا على الأقل أو أرفق روشتة قبل إرسال الطلب.</string>
+    <string name="cart_request_empty_request">أضف دواءً واحدًا على الأقل قبل إرسال الطلب. الروشتة والملاحظات عناصر مساعدة فقط.</string>
     <string name="cart_request_back">العودة إلى السلة</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">جاري البحث عن أدويتك</string>
