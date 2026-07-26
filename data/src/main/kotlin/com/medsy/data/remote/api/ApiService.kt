@@ -3,6 +3,9 @@ package com.medsy.data.remote.api
 
 import com.medsy.data.cart.remote.AddCartItemRequestDto
 import com.medsy.data.cart.remote.CartDto
+import com.medsy.data.cart.remote.MedicineRequestDto
+import com.medsy.data.cart.remote.ProductsRequestDto
+import com.medsy.data.offers.remote.OffersPageDto
 import com.medsy.data.productdetails.remote.ProductDetailsDto
 import com.medsy.data.profile.remote.dto.CustomerDto
 import com.medsy.data.profile.remote.dto.UpdateCustomerProfileRequestDto
@@ -70,9 +73,9 @@ interface ApiService {
     @Multipart
     @POST("api/v1/requests")
     suspend fun submitProductsRequest(
-        @Part("request") request: com.medsy.data.cart.remote.ProductsRequestDto,
+        @Part("request") request: ProductsRequestDto,
         @Part prescription: MultipartBody.Part? = null,
-    ): Response<ApiResponse<com.medsy.data.cart.remote.MedicineRequestDto>>
+    ): Response<ApiResponse<MedicineRequestDto>>
 
     @GET("api/v1/categories")
     suspend fun getCategories(
@@ -117,14 +120,14 @@ interface ApiService {
     suspend fun getProductById(
         @Path("id") id: Int,
         @Query("lang") lang: String = "en",
-    ): Response<ApiResponse<com.medsy.data.productdetails.remote.ProductDetailsDto>>
+    ): Response<ApiResponse<ProductDetailsDto>>
 
     @GET("api/v1/offers/requests/{requestId}")
     suspend fun getOffersForRequest(
         @Path("requestId") requestId: Long,
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 20,
-    ): Response<ApiResponse<com.medsy.data.offers.remote.OffersPageDto>>
+    ): Response<ApiResponse<OffersPageDto>>
 
     @POST("api/v1/offers/{id}/accept")
     suspend fun acceptOffer(
@@ -134,5 +137,5 @@ interface ApiService {
     @GET("api/v1/requests/{id}")
     suspend fun getRequestById(
         @Path("id") id: Long,
-    ): Response<ApiResponse<com.medsy.data.cart.remote.MedicineRequestDto>>
+    ): Response<ApiResponse<MedicineRequestDto>>
 }

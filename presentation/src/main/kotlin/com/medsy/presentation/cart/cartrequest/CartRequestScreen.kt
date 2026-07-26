@@ -42,7 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsyButton
 import com.medsy.designsystem.components.location.MedsyLocationPickerScreen
 import com.medsy.domain.cart.model.DeliveryMethod
-import com.medsy.domain.cart.model.PaymentMethod
+import com.medsy.domain.cart.model.PaymentOption
 import com.medsy.presentation.R
 import com.medsy.presentation.cart.cartrequest.components.CartRequestOrderSummary
 import com.medsy.presentation.cart.cartrequest.components.DeliveryAddressSection
@@ -220,7 +220,7 @@ fun CartRequestScreen(
                 }
                 item {
                     PaymentSection(
-                        selected = state.paymentMethod,
+                        selected = state.paymentOption,
                         onSelected = {
                             onIntent(CartRequestUIIntent.PaymentOptionSelected(it))
                         },
@@ -239,7 +239,7 @@ private fun CartRequestScreenPreview() {
             isCartLoading = false,
             isProfileLoading = false,
             deliveryMethod = DeliveryMethod.DELIVERY,
-            paymentMethod = PaymentMethod.CASH,
+            paymentOption = PaymentOption.CASH,
         ),
         snackbarHostState = remember { SnackbarHostState() },
         onNavigateBack = {},

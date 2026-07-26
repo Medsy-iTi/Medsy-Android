@@ -47,7 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.components.location.MedsyLocationPreview
 import com.medsy.domain.cart.model.DeliveryMethod
-import com.medsy.domain.cart.model.PaymentMethod
+import com.medsy.domain.cart.model.PaymentOption
 import com.medsy.presentation.R
 import com.medsy.presentation.cart.cartrequest.CartRequestAddressOption
 import com.medsy.presentation.cart.cartrequest.CartRequestState
@@ -315,8 +315,8 @@ internal fun DeliveryAddressSection(
 
 @Composable
 internal fun PaymentSection(
-    selected: PaymentMethod,
-    onSelected: (PaymentMethod) -> Unit,
+    selected: PaymentOption,
+    onSelected: (PaymentOption) -> Unit,
 ) {
     CartRequestSection(
         icon = Icons.Outlined.Payments,
@@ -325,19 +325,19 @@ internal fun PaymentSection(
     ) {
         ChoiceRow {
             CartRequestChoiceCard(
-                selected = selected == PaymentMethod.CASH,
+                selected = selected == PaymentOption.CASH,
                 icon = Icons.Outlined.Payments,
                 title = stringResource(R.string.cart_request_cash),
                 description = stringResource(R.string.cart_request_cash_description),
-                onClick = { onSelected(PaymentMethod.CASH) },
+                onClick = { onSelected(PaymentOption.CASH) },
                 modifier = Modifier.weight(1f),
             )
             CartRequestChoiceCard(
-                selected = selected == PaymentMethod.VISA,
+                selected = selected == PaymentOption.VISA,
                 icon = Icons.Outlined.CreditCard,
                 title = stringResource(R.string.cart_request_visa),
                 description = stringResource(R.string.cart_request_visa_description),
-                onClick = { onSelected(PaymentMethod.VISA) },
+                onClick = { onSelected(PaymentOption.VISA) },
                 modifier = Modifier.weight(1f),
             )
         }
