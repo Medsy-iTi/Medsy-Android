@@ -1,5 +1,7 @@
 package com.medsy.presentation.search
 
+import com.medsy.domain.categories.model.Category
+
 sealed interface SearchUIIntent {
     data class QueryChanged(val value: String) : SearchUIIntent
     data object ClearQueryClicked : SearchUIIntent
@@ -12,6 +14,7 @@ sealed interface SearchUIIntent {
     // Bottom Sheets
     data class SortOptionSelected(val option: SortOption) : SearchUIIntent
     data class PriceFilterOptionSelected(val option: PriceFilterOption) : SearchUIIntent
+    data class CategoryOptionSelected(val category: Category?) : SearchUIIntent
     data object DismissBottomSheet : SearchUIIntent
 
     // Pagination

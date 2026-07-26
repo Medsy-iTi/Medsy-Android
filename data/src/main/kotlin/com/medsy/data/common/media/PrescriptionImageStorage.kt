@@ -39,10 +39,11 @@ class PrescriptionImageStorage @Inject constructor(
     }
 
     fun delete(image: PrescriptionImage) {
-        val file = File(directory, image.storageKey)
-        if (file.canonicalFile.parentFile == directory.canonicalFile) {
-            file.delete()
-        }
+        getFile(image).delete()
+    }
+
+    fun getFile(image: PrescriptionImage): File {
+        return File(directory, image.storageKey)
     }
 
     fun restore(

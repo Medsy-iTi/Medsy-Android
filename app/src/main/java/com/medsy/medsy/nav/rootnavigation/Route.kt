@@ -62,7 +62,7 @@ sealed interface Route : NavKey {
     ) : Route
 
     @Serializable
-    data object SearchNav : Route
+    data class SearchNav(val initialQuery: String? = null, val localItemId: String? = null) : Route
 
     @Serializable
     data object Categories : Route
@@ -70,6 +70,9 @@ sealed interface Route : NavKey {
     @Serializable
     data class Prescription(
         val attachmentOnly: Boolean = false,
+        val isMedicineSearch: Boolean = false,
+        val resultLocalItemId: String? = null,
+        val resultProductId: Int? = null,
     ) : Route
 
     @Serializable

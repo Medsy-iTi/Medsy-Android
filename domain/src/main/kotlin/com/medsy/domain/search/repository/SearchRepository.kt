@@ -8,7 +8,8 @@ interface SearchRepository {
     suspend fun getProducts(
         page: Int,
         size: Int,
-        sort: List<String>?
+        sort: List<String>?,
+        categoryId: Int? = null
     ): MedsyResult<SearchProductsPage, MedsyError.Remote>
 
     suspend fun searchProducts(

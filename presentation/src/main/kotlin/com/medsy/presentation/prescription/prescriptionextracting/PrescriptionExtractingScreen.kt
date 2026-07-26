@@ -1,14 +1,9 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionextracting
 
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CenterFocusStrong
@@ -25,24 +19,32 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
+import com.medsy.presentation.prescription.PrescriptionState
 import com.medsy.presentation.prescription.PrescriptionUIIntent
+import com.medsy.presentation.prescription.prescriptionextracting.components.LoadingDots
+import com.medsy.presentation.prescription.components.PrescriptionAppBar
+import com.medsy.presentation.prescription.components.RxDocumentIllustration
 
 @Composable
-fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
+fun PrescriptionExtractingScreen(
+    state: PrescriptionState,
+    onIntent: (PrescriptionUIIntent) -> Unit
+) {
     val colors = MaterialTheme.extendedColors
     Column(modifier = Modifier.fillMaxSize()) {
         PrescriptionAppBar(
-            title = stringResource(R.string.prescription_reading_title),
+            title = stringResource(
+                if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_reading_title
+            ),
             onBack = { onIntent(PrescriptionUIIntent.BackClicked) },
         )
         Column(
@@ -54,14 +56,18 @@ fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
             RxDocumentIllustration(modifier = Modifier.size(208.dp), showSearch = true)
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = stringResource(R.string.prescription_extracting_heading),
+                text = stringResource(
+                    if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_extracting_heading
+                ),
                 color = colors.prescriptionTitle,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = stringResource(R.string.prescription_extracting_description),
+                text = stringResource(
+                    if (state.isMedicineSearch) R.string.home_promo_subtitle_one else R.string.prescription_extracting_description
+                ),
                 color = colors.prescriptionSupporting,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
@@ -82,7 +88,10 @@ fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
                     .padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Icon(
                         Icons.Filled.CenterFocusStrong,
                         contentDescription = null,
@@ -99,14 +108,14 @@ fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
                     text = stringResource(R.string.prescription_stage_uploaded),
                     color = colors.prescriptionSupporting,
                     style = MaterialTheme.typography.labelMedium,
-                    textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough,
+                    textDecoration = TextDecoration.LineThrough,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                 )
                 Text(
                     text = stringResource(R.string.prescription_stage_quality),
                     color = colors.prescriptionSupporting,
                     style = MaterialTheme.typography.labelMedium,
-                    textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough,
+                    textDecoration = TextDecoration.LineThrough,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                 )
                 Text(
@@ -121,23 +130,3 @@ fun PrescriptionExtractingScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
     }
 }
 
-@Composable
-private fun LoadingDots(modifier: Modifier = Modifier) {
-    val transition = rememberInfiniteTransition(label = "prescriptionLoading")
-    val opacity by transition.animateFloat(
-        initialValue = 0.35f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(650), RepeatMode.Reverse),
-        label = "prescriptionLoadingOpacity",
-    )
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        repeat(3) { index ->
-            Box(
-                modifier = Modifier
-                    .size(9.dp)
-                    .alpha((opacity - index * 0.12f).coerceIn(0.25f, 1f))
-                    .background(MaterialTheme.extendedColors.prescriptionPrimary, CircleShape),
-            )
-        }
-    }
-}

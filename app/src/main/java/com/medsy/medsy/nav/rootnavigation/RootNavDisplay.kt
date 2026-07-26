@@ -41,6 +41,7 @@ import com.medsy.presentation.splash.SplashRoot
 fun RootNavDisplay() {
     val rootBackStack = rememberNavBackStack(Route.Splash)
     var requestedNestedDestination by remember { mutableStateOf<Route?>(null) }
+    var prescriptionSelectionResult by remember { mutableStateOf<Pair<String, Int>?>(null) }
 
     NavDisplay(
         modifier = Modifier.fillMaxSize(),
@@ -143,7 +144,7 @@ fun RootNavDisplay() {
                         rootBackStack.popIfCurrentIs<Route.NestedNav>()
                     },
                     openSearch = {
-                        rootBackStack.navigateSingleTop(Route.SearchNav)
+                        rootBackStack.navigateSingleTop(Route.SearchNav())
                     },
                     openPersonalDetails = { startInEditMode ->
                         rootBackStack.navigateSingleTop(
@@ -170,9 +171,9 @@ fun RootNavDisplay() {
                     openOffers = {
                         rootBackStack.navigateSingleTop(Route.AvailableOffers)
                     },
-                    openPrescription = { attachmentOnly ->
+                    openPrescription = { attachmentOnly, isMedicineSearch ->
                         rootBackStack.navigateSingleTop(
-                            Route.Prescription(attachmentOnly)
+                            Route.Prescription(attachmentOnly, isMedicineSearch)
                         )
                     },
                     openCartRequest = {
@@ -235,14 +236,21 @@ fun RootNavDisplay() {
                     onNavigateBack = { rootBackStack.removeLastOrNull() }
                 )
             }
-            entry<Route.SearchNav> {
+            entry<Route.SearchNav> { route ->
                 SearchRoot(
+                    initialQuery = route.initialQuery,
                     onNext = { productId ->
                         rootBackStack.navigateSingleTop(
                             Route.ProductDetails(id = productId)
                         )
                     },
                     onBack = { rootBackStack.removeLastOrNull() },
+                    onProductSelected = if (route.localItemId != null) {
+                        { productId ->
+                            prescriptionSelectionResult = route.localItemId to productId.toInt()
+                            rootBackStack.removeLastOrNull()
+                        }
+                    } else null
                 )
             }
             entry<Route.Categories> {
@@ -266,6 +274,9 @@ fun RootNavDisplay() {
             entry<Route.Prescription> { route ->
                 PrescriptionRoot(
                     attachmentOnly = route.attachmentOnly,
+                    isMedicineSearch = route.isMedicineSearch,
+                    resultLocalItemId = prescriptionSelectionResult?.first,
+                    resultProductId = prescriptionSelectionResult?.second,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateHome = {
                         rootBackStack.popIfCurrentIs<Route.Prescription>()
@@ -277,6 +288,19 @@ fun RootNavDisplay() {
                     onPrescriptionAttached = {
                         rootBackStack.popIfCurrentIs<Route.Prescription>()
                     },
+                    onNavigateToSearch = { query, localItemId ->
+                        rootBackStack.navigateSingleTop(
+                            Route.SearchNav(initialQuery = query, localItemId = localItemId)
+                        )
+                    },
+                    onNavigateToProductDetails = { productId ->
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = productId)
+                        )
+                    },
+                    onResultHandled = {
+                        prescriptionSelectionResult = null
+                    }
                 )
             }
             entry<Route.AvailableOffers> {

@@ -28,7 +28,7 @@ interface CartRepository {
 
     suspend fun submitProductsRequest(
         request: ProductsRequest,
-    ): EmptyMedsyResult<MedsyError.Remote>
+    ): EmptyMedsyResult<MedsyError>
 
     suspend fun updateNote(note: String): EmptyMedsyResult<MedsyError.Local>
     suspend fun attachPrescription(

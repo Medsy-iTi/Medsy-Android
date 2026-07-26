@@ -3,6 +3,7 @@ package com.medsy.data.remote.api
 
 import com.medsy.data.cart.remote.AddCartItemRequestDto
 import com.medsy.data.cart.remote.CartDto
+import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.data.orders.model.OrderDetailsDto
 import com.medsy.data.productdetails.remote.ProductDetailsDto
 import com.medsy.data.profile.remote.dto.CustomerDto
@@ -12,19 +13,40 @@ import com.medsy.data.remote.dtos.products.ProductsDataDto
 import com.medsy.data.remote.model.OrderPageDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.remote.ProductsPageDto
+import com.medsy.data.prescription.remote.AiInterceptor
+import com.medsy.data.prescription.remote.dto.AnalyzedMedicineImageDto
+import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.PATCH
+import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.Part
+import retrofit2.http.PATCH
 import retrofit2.http.Path
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 
 interface ApiService {
+    @Multipart
+    @Headers("${AiInterceptor.AI_KEY_FLAG}: true")
+    @POST("api/v1/prescriptions/analyze")
+    suspend fun analyzePrescription(
+        @Part image: MultipartBody.Part,
+    ): Response<ApiResponse<PrescriptionAnalysisDto>>
+
+    @Multipart
+    @Headers("${AiInterceptor.AI_KEY_FLAG}: true")
+    @POST("api/v1/products/analyze-image")
+    suspend fun analyzeMedicineImage(
+        @Part image: MultipartBody.Part,
+    ): Response<ApiResponse<List<AnalyzedMedicineImageDto>>>
+
     @GET("api/v1/cart")
     suspend fun getCart(): Response<ApiResponse<CartDto>>
 
@@ -46,6 +68,13 @@ interface ApiService {
 
     @DELETE("api/v1/cart")
     suspend fun clearCart(): Response<ApiResponse<Any>>
+
+    @Multipart
+    @POST("api/v1/requests")
+    suspend fun submitProductsRequest(
+        @Part("request") request: ProductsRequestDto,
+        @Part prescription: MultipartBody.Part?,
+    ): Response<ApiResponse<Any>>
 
     @GET("api/v1/categories")
     suspend fun getCategories(
@@ -75,7 +104,8 @@ interface ApiService {
     suspend fun getProducts(
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("sort") sort: List<String>?
+        @Query("sort") sort: List<String>?,
+        @Query("categoryId") categoryId: Int?=null
     ): Response<ApiResponse<ProductsPageDto>>
 
     @GET("api/v1/products/search")

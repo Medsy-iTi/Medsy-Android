@@ -300,6 +300,11 @@
     <string name="prescription_return_home">Return to home</string>
     <string name="prescription_media_error">The selected image could not be opened. Please try another image.</string>
     <string name="prescription_error_generic">Something went wrong. Please try again.</string>
+    <string name="medicine_search_upload_title">Search by photo</string>
+    <string name="medicine_search_reading_title">Analyzing photo</string>
+    <string name="medicine_search_upload_failed_title">Photo search failed</string>
+    <string name="medicine_search_upload_failed_description">We couldn\'t identify the medicine. Please check your connection or try a clearer photo.</string>
+    <string name="medicine_search_review_button">Search for medicine</string>
     <!-- Auth Strings -->
     <string name="auth_email">Email</string>
     <string name="auth_password">Password</string>
@@ -346,7 +351,9 @@
     <!-- Cart -->
     <string name="cart_title">Request cart</string>
     <string name="cart_clear_description">Clear cart</string>
-    <string name="cart_empty">Your cart has no medicines yet.</string>
+    <string name="cart_empty">Your medicine cart is empty</string>
+    <string name="cart_empty_badge">Empty cart</string>
+    <string name="cart_empty_supporting">Add at least one medicine to continue. Prescriptions and notes are supporting details.</string>
     <string name="cart_remove_item_description">Remove medicine</string>
     <string name="cart_decrease_quantity">Decrease quantity</string>
     <string name="cart_increase_quantity">Increase quantity</string>
@@ -371,6 +378,7 @@
     <string name="cart_clear_message">This removes all medicines, the prescription, and the pharmacist note.</string>
     <string name="cart_clear_confirm">Clear</string>
     <string name="cart_cleared">Cart cleared</string>
+    <!--  Active Search Status  -->
     <string name="cart_request_title">Complete request</string>
     <string name="cart_request_subtitle">A few final details before pharmacies receive your request</string>
     <string name="cart_request_order_summary">Request summary</string>
@@ -405,10 +413,14 @@
     <string name="cart_request_visa_description">Pay by card</string>
     <string name="cart_request_submit">Submit medicine request</string>
     <string name="cart_request_retry">Retry</string>
-    <string name="cart_request_empty_request">Add at least one medicine or a prescription before submitting.</string>
+    <string name="cart_request_empty_request">Add at least one medicine before submitting. Prescriptions and notes only support the request.</string>
     <string name="cart_request_back">Back to cart</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>
+    <string name="search_category_title">Category</string>
+    <string name="search_category_all">All</string>
+    <string name="search_category_reset">Reset</string>
+    <string name="search_category_apply">Apply</string>
     <string name="home_search_status_searching_desc">Matching your request with nearby pharmacies</string>
     <string name="home_search_status_time">Search time</string>
     <string name="home_search_status_stage_1">Stage 1</string>
@@ -436,7 +448,6 @@
     <string name="home_search_status_search_wider">Search in a wider range</string>
     <string name="home_search_status_cancel">Cancel request</string>
     <string name="home_search_status_offers_available_format">%1$d offers available — you can compare</string>
-
     <plurals name="home_search_status_medicines">
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>
@@ -477,7 +488,7 @@
     <string name="offers_estimated_time">Estimated Preparation Time</string>
     <string name="offers_payment_method">Payment Method</string>
     <string name="offers_cash_on_delivery">Cash on Delivery</string>
-    <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.</string>
+    <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.\nSearch in a wider range to find more pharmacies.</string>
     <string name="offers_track_order">Track Order</string>
     <string name="offers_back_to_home">Back to Home</string>
     <string name="offers_edit_address">Edit</string>

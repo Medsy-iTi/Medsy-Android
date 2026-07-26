@@ -2,7 +2,9 @@ package com.medsy.data.cart.repository
 
 import com.medsy.data.cart.local.CartDraftStorage
 import com.medsy.data.cart.mapper.toDomain
+import com.medsy.data.cart.mapper.toDto
 import com.medsy.data.cart.remote.CartRemoteDataSource
+import com.medsy.data.common.media.PrescriptionImageStorage
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartDraft
 import com.medsy.domain.cart.model.ProductsRequest
@@ -14,10 +16,14 @@ import com.medsy.domain.common.map
 import com.medsy.domain.prescription.model.PrescriptionImage
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 
 class CartRepositoryImpl @Inject constructor(
     private val remoteDataSource: CartRemoteDataSource,
     private val draftStorage: CartDraftStorage,
+    private val imageStorage: PrescriptionImageStorage,
 ) : CartRepository {
     override val draft: Flow<CartDraft> = draftStorage.draft
 
@@ -46,8 +52,29 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun submitProductsRequest(
         request: ProductsRequest,
-    ): EmptyMedsyResult<MedsyError.Remote> =
-        remoteDataSource.submitProductsRequest()
+    ): EmptyMedsyResult<MedsyError> {
+        val prescription = request.prescription?.let { image ->
+            val file = imageStorage.getFile(image)
+            if (!file.isFile || !file.canRead()) {
+                return MedsyResult.Error(MedsyError.Local.MEDIA)
+            }
+
+            val mediaType = when (file.extension.lowercase()) {
+                "png" -> "image/png"
+                else -> "image/jpeg"
+            }.toMediaType()
+            MultipartBody.Part.createFormData(
+                "prescription",
+                file.name,
+                file.asRequestBody(mediaType),
+            )
+        }
+
+        return remoteDataSource.submitProductsRequest(
+            request = request.toDto(),
+            prescription = prescription,
+        )
+    }
 
     override suspend fun updateNote(
         note: String,

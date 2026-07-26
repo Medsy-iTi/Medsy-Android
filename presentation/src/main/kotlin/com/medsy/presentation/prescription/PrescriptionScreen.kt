@@ -22,31 +22,49 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.medsy.presentation.prescription.components.MedicinePickerScreen
-import com.medsy.presentation.prescription.components.PrescriptionConfirmationScreen
-import com.medsy.presentation.prescription.components.PrescriptionExtractingScreen
-import com.medsy.presentation.prescription.components.PrescriptionImagePreviewScreen
-import com.medsy.presentation.prescription.components.PrescriptionNoMedicinesScreen
-import com.medsy.presentation.prescription.components.PrescriptionReviewScreen
-import com.medsy.presentation.prescription.components.PrescriptionSourceScreen
-import com.medsy.presentation.prescription.components.PrescriptionUnreadableScreen
-import com.medsy.presentation.prescription.components.PrescriptionUploadErrorScreen
+import com.medsy.presentation.prescription.medicinepicker.MedicinePickerScreen
+import com.medsy.presentation.prescription.prescriptionuploaderror.PrescriptionConfirmationScreen
+import com.medsy.presentation.prescription.prescriptionextracting.PrescriptionExtractingScreen
+import com.medsy.presentation.prescription.prescriptionimagepreview.PrescriptionImagePreviewScreen
+import com.medsy.presentation.prescription.prescriptionuploaderror.PrescriptionNoMedicinesScreen
+import com.medsy.presentation.prescription.prescriptionreview.PrescriptionReviewScreen
+import com.medsy.presentation.prescription.prescriptionsource.PrescriptionSourceScreen
+import com.medsy.presentation.prescription.prescriptionuploaderror.PrescriptionUnreadableScreen
+import com.medsy.presentation.prescription.prescriptionuploaderror.PrescriptionUploadErrorScreen
 
 @Composable
 fun PrescriptionRoot(
     attachmentOnly: Boolean,
+    isMedicineSearch: Boolean = false,
+    resultLocalItemId: String? = null,
+    resultProductId: Int? = null,
     onNavigateBack: () -> Unit,
     onNavigateHome: () -> Unit,
     onNavigateCart: () -> Unit,
     onPrescriptionAttached: () -> Unit,
+    onNavigateToSearch: (String, String) -> Unit,
+    onNavigateToProductDetails: (String) -> Unit,
+    onResultHandled: () -> Unit,
     viewModel: PrescriptionViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    LaunchedEffect(attachmentOnly) {
-        viewModel.init(attachmentOnly)
+    LaunchedEffect(attachmentOnly, isMedicineSearch) {
+        viewModel.init(attachmentOnly, isMedicineSearch)
+    }
+
+    LaunchedEffect(resultLocalItemId, resultProductId) {
+        if (resultLocalItemId != null && resultProductId != null) {
+            viewModel.onIntent(
+                PrescriptionUIIntent.MedicineSelectedFromResult(
+                    resultLocalItemId,
+                    resultProductId
+                )
+            )
+            onResultHandled()
+        }
     }
 
     val cameraLauncher = rememberLauncherForActivityResult(
@@ -72,6 +90,15 @@ fun PrescriptionRoot(
                 PrescriptionUIEffect.NavigateHome -> onNavigateHome()
                 PrescriptionUIEffect.NavigateCart -> onNavigateCart()
                 PrescriptionUIEffect.PrescriptionAttached -> onPrescriptionAttached()
+                is PrescriptionUIEffect.NavigateToSearch -> onNavigateToSearch(
+                    effect.query,
+                    effect.localItemId
+                )
+
+                is PrescriptionUIEffect.NavigateToProductDetails -> onNavigateToProductDetails(
+                    effect.productId
+                )
+
                 is PrescriptionUIEffect.ShowMessage ->
                     snackbarHostState.showSnackbar(
                         ContextCompat.getString(context, effect.messageRes)
@@ -105,12 +132,12 @@ fun PrescriptionScreen(
         when (state.step) {
             PrescriptionStep.SOURCE_SELECTION -> PrescriptionSourceScreen(state, onIntent)
             PrescriptionStep.IMAGE_PREVIEW -> PrescriptionImagePreviewScreen(state, onIntent)
-            PrescriptionStep.EXTRACTING -> PrescriptionExtractingScreen(onIntent)
+            PrescriptionStep.EXTRACTING -> PrescriptionExtractingScreen(state, onIntent)
             PrescriptionStep.MEDICINE_REVIEW -> PrescriptionReviewScreen(state, onIntent)
             PrescriptionStep.MEDICINE_PICKER -> MedicinePickerScreen(state.picker, onIntent)
-            PrescriptionStep.UPLOAD_ERROR -> PrescriptionUploadErrorScreen(onIntent)
-            PrescriptionStep.UNREADABLE -> PrescriptionUnreadableScreen(onIntent)
-            PrescriptionStep.NO_MEDICINES -> PrescriptionNoMedicinesScreen(onIntent)
+            PrescriptionStep.UPLOAD_ERROR -> PrescriptionUploadErrorScreen(state, onIntent)
+            PrescriptionStep.UNREADABLE -> PrescriptionUnreadableScreen(state, onIntent)
+            PrescriptionStep.NO_MEDICINES -> PrescriptionNoMedicinesScreen(state, onIntent)
             PrescriptionStep.CONFIRMATION -> PrescriptionConfirmationScreen(state, onIntent)
         }
     }

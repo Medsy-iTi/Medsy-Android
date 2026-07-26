@@ -28,7 +28,7 @@
     <string name="home_section_categories">تسوق من الفئات</string>
     <string name="home_view_all">عرض الكل</string>
 
-    <string name="home_cat_more">المزيد</string>>
+    <string name="home_cat_more">المزيد</string>
     <string name="home_banner_fast_delivery">توصيل سريع</string>
     <string name="home_banner_to_door">إلى باب منزلك</string>
     <string name="home_banner_image_desc_one">بانر يعرض ميزة البحث عن الدواء</string>
@@ -295,6 +295,11 @@
     <string name="prescription_return_home">العودة للرئيسية</string>
     <string name="prescription_media_error">تعذر فتح الصورة المختارة. يرجى تجربة صورة أخرى.</string>
     <string name="prescription_error_generic">حدث خطأ ما. يرجى المحاولة مرة أخرى.</string>
+    <string name="medicine_search_upload_title">بحث بالصورة</string>
+    <string name="medicine_search_reading_title">جاري تحليل الصورة</string>
+    <string name="medicine_search_upload_failed_title">فشل البحث بالصورة</string>
+    <string name="medicine_search_upload_failed_description">لم نتمكن من التعرف على الدواء. يرجى التحقق من الاتصال أو تجربة صورة أوضح.</string>
+    <string name="medicine_search_review_button">بحث عن الدواء</string>
     <!-- Auth Strings -->
     <string name="auth_email">البريد الإلكتروني</string>
     <string name="auth_password">كلمة المرور</string>
@@ -342,7 +347,9 @@
     <!-- Cart -->
     <string name="cart_title">سلة الطلب</string>
     <string name="cart_clear_description">إفراغ السلة</string>
-    <string name="cart_empty">لا توجد أدوية في السلة حتى الآن.</string>
+    <string name="cart_empty">سلة الأدوية فارغة</string>
+    <string name="cart_empty_badge">سلة فارغة</string>
+    <string name="cart_empty_supporting">أضف دواءً واحدًا على الأقل للمتابعة. الروشتة والملاحظات تفاصيل مساعدة فقط.</string>
     <string name="cart_remove_item_description">إزالة الدواء</string>
     <string name="cart_decrease_quantity">تقليل الكمية</string>
     <string name="cart_increase_quantity">زيادة الكمية</string>
@@ -367,16 +374,17 @@
     <string name="cart_clear_message">سيؤدي ذلك إلى إزالة جميع الأدوية والروشتة وملاحظة الصيدلي.</string>
     <string name="cart_clear_confirm">إفراغ</string>
     <string name="cart_cleared">تم إفراغ السلة</string>
+    <!--  Active Search Status  -->
     <string name="cart_request_title">إكمال الطلب</string>
     <string name="cart_request_subtitle">بعض التفاصيل الأخيرة قبل إرسال طلبك إلى الصيدليات</string>
     <string name="cart_request_order_summary">ملخص الطلب</string>
-    <plurals name="cart_request_item_count">
-        <item quantity="one">دواء واحد</item>
-        <item quantity="two">دواءان</item>
-        <item quantity="few">%d أدوية</item>
-        <item quantity="many">%d دواءً</item>
-        <item quantity="other">%d دواء</item>
-    </plurals>
+<!--    <plurals name="cart_request_item_count">-->
+<!--        <item quantity="one">دواء واحد</item>-->
+<!--        <item quantity="two">دواءان</item>-->
+<!--        <item quantity="few">%d أدوية</item>-->
+<!--        <item quantity="many">%d دواءً</item>-->
+<!--        <item quantity="other">%d دواء</item>-->
+<!--    </plurals>-->
     <string name="cart_request_prescription_attached">الروشتة مرفقة</string>
     <string name="cart_request_fulfillment_title">كيف ترغب في استلام الطلب؟</string>
     <string name="cart_request_fulfillment_description">اختر التوصيل إلى عنوانك أو الاستلام من الصيدلية التي ستحددها لاحقًا.</string>
@@ -404,11 +412,15 @@
     <string name="cart_request_visa_description">الدفع باستخدام البطاقة</string>
     <string name="cart_request_submit">إرسال طلب الأدوية</string>
     <string name="cart_request_retry">إعادة المحاولة</string>
-    <string name="cart_request_empty_request">أضف دواءً واحدًا على الأقل أو أرفق روشتة قبل إرسال الطلب.</string>
+    <string name="cart_request_empty_request">أضف دواءً واحدًا على الأقل قبل إرسال الطلب. الروشتة والملاحظات عناصر مساعدة فقط.</string>
     <string name="cart_request_back">العودة إلى السلة</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">جاري البحث عن أدويتك</string>
     <string name="home_search_status_searching_desc">نطابق طلبك مع الصيدليات القريبة</string>
+    <string name="search_category_title">القسم</string>
+    <string name="search_category_all">الكل</string>
+    <string name="search_category_reset">إعادة ضبط</string>
+    <string name="search_category_apply">تطبيق</string>
     <string name="home_search_status_time">وقت البحث</string>
     <string name="home_search_status_stage_1">المرحلة ١</string>
     <string name="home_search_status_stage_1_desc">صيدليات قريبة</string>
@@ -435,7 +447,6 @@
     <string name="home_search_status_search_wider">البحث في نطاق أوسع</string>
     <string name="home_search_status_cancel">إلغاء الطلب</string>
     <string name="home_search_status_offers_available_format">%1$d عروض متاحة — يمكنك المقارنة</string>
-
     <plurals name="home_search_status_medicines">
         <item quantity="zero">أدوية</item>
         <item quantity="one">دواء</item>

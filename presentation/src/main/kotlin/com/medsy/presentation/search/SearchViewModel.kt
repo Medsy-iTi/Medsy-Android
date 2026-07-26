@@ -3,6 +3,7 @@ package com.medsy.presentation.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
+import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import com.medsy.domain.common.fold
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchProductsUseCase: SearchProductsUseCase,
     private val addCartItem: AddCartItemUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
 ) : ViewModel() {
 
     private val allFetchedProducts = mutableListOf<SearchProduct>()
@@ -42,6 +44,7 @@ class SearchViewModel @Inject constructor(
 
     init {
         reloadProducts()
+        loadCategories()
     }
 
     fun onIntent(intent: SearchUIIntent) {
@@ -66,6 +69,9 @@ class SearchViewModel @Inject constructor(
                     SearchFilterId.PRICE.name -> {
                         _state.value = _state.value.copy(isPriceBottomSheetOpen = true)
                     }
+                    SearchFilterId.CATEGORY.name -> {
+                        _state.value = _state.value.copy(isCategoryBottomSheetOpen = true)
+                    }
                 }
             }
             is SearchUIIntent.SortOptionSelected -> {
@@ -86,10 +92,21 @@ class SearchViewModel @Inject constructor(
                 updateProductsUiList()
             }
 
+            is SearchUIIntent.CategoryOptionSelected -> {
+                _state.update { currentState ->
+                    currentState.copy(
+                        selectedCategory = intent.category,
+                        isCategoryBottomSheetOpen = false
+                    )
+                }
+                reloadProducts()
+            }
+
             SearchUIIntent.DismissBottomSheet -> {
                 _state.value = _state.value.copy(
                     isSortBottomSheetOpen = false,
-                    isPriceBottomSheetOpen = false
+                    isPriceBottomSheetOpen = false,
+                    isCategoryBottomSheetOpen = false
                 )
             }
 
@@ -133,6 +150,16 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    private fun loadCategories() {
+        viewModelScope.launch {
+            getCategoriesUseCase(page = 0, size = 50).collect { result ->
+                result.onSuccess { categories ->
+                    _state.update { it.copy(categories = categories) }
+                }
+            }
+        }
+    }
+
     private fun reloadProducts() {
         _state.value = _state.value.copy(
             isLoading = true,
@@ -156,7 +183,8 @@ class SearchViewModel @Inject constructor(
             val result = searchProductsUseCase(
                 page = page,
                 size = 20,
-                sort = listOf(_state.value.selectedSort.apiValue)
+                sort = listOf(_state.value.selectedSort.apiValue),
+                categoryId = _state.value.selectedCategory?.id
             )
 
             result.fold(
