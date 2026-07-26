@@ -1,4 +1,5 @@
-package com.medsy.data.remote.model
+
+package com.medsy.data.orders.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -28,11 +29,11 @@ data class OrderDto(
     @Json(name = "pharmacistId") val pharmacistId: Long?,
     @Json(name = "offerId") val offerId: Long?,
     @Json(name = "totalPrice") val totalPrice: Double,
-    @Json(name = "deliveryLatitude") val deliveryLatitude: Double,
-    @Json(name = "deliveryLongitude") val deliveryLongitude: Double,
-    @Json(name = "status") val status: String,
-    @Json(name = "date") val date: String,
-    @Json(name = "items") val items: List<OrderItemDto>
+    @Json(name = "deliveryLatitude") val deliveryLatitude: Double?,
+    @Json(name = "deliveryLongitude") val deliveryLongitude: Double?,
+    @Json(name = "status") val status: String? = null,
+    @Json(name = "createdAt") val date: String? = null,
+    @Json(name = "items") val items: List<OrderItemDto>? = emptyList()
 )
 
 @JsonClass(generateAdapter = true)
@@ -40,5 +41,7 @@ data class OrderItemDto(
     @Json(name = "id") val id: Long,
     @Json(name = "productId") val productId: Long,
     @Json(name = "quantity") val quantity: Int,
-    @Json(name = "unitPrice") val unitPrice: Double
+    @Json(name = "unitPrice") val unitPrice: Double,
+    @Json(name = "productName") val productName: String? = null,
+    @Json(name = "imageUrl") val imageUrl: String? = null
 )

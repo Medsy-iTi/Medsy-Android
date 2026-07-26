@@ -1,11 +1,5 @@
 package com.medsy.domain.orders.model
 
-enum class OrderStatusDomain {
-    Pending,
-    Confirmed,
-    Delivered,
-    Cancelled
-}
 
 data class OrderDetailsDomain(
     val id: Long,

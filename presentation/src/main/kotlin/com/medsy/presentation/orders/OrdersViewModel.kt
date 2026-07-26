@@ -11,7 +11,6 @@ import com.medsy.presentation.orders.model.OrderSummary
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -65,27 +64,27 @@ class OrdersViewModel @Inject constructor(
                     val uiOrders = pageDomain.content.map { domainOrder ->
 
                         val presentationStatus = when (domainOrder.status) {
-                            com.medsy.domain.orders.model.OrderStatus.Confirmed -> OrderStatus.Confirmed
-                            com.medsy.domain.orders.model.OrderStatus.Delivered -> OrderStatus.Delivered
-                            com.medsy.domain.orders.model.OrderStatus.Cancelled -> OrderStatus.Cancelled
-                            com.medsy.domain.orders.model.OrderStatus.Pending -> OrderStatus.Confirmed
+                            com.medsy.domain.orders.model.OrderStatusDomain.Confirmed -> OrderStatus.Confirmed
+                            com.medsy.domain.orders.model.OrderStatusDomain.Delivered -> OrderStatus.Delivered
+                            com.medsy.domain.orders.model.OrderStatusDomain.Cancelled -> OrderStatus.Cancelled
+                            com.medsy.domain.orders.model.OrderStatusDomain.Pending -> OrderStatus.Confirmed
                         }
 
                         OrderSummary(
-                            id = domainOrder.id,
+                            id = domainOrder.id.toString(),
                             dateLabel = domainOrder.dateLabel,
                             status = presentationStatus,
-                            pharmacyName = domainOrder.pharmacyId,
+                            pharmacyName = domainOrder.pharmacyId?.toString(),
                             total = domainOrder.totalPrice.toInt(),
                             productCount = domainOrder.items.sumOf { it.quantity },
                             productThumbnails = domainOrder.items.map { item ->
                                 OrderProductThumbnail(
                                     productId = item.productId,
-                                    imageUrl = null
+                                    imageUrl = item.imageUrl
                                 )
                             }
                         )
-                    }
+                    }.reversed()
 
                     _state.update {
                         it.copy(

@@ -1,13 +1,12 @@
 package com.medsy.data.orders.mapper
 
-import com.medsy.data.remote.model.OrderDto
-import com.medsy.data.remote.model.OrderItemDto
-import com.medsy.data.remote.model.OrderPageDataDto
+import com.medsy.data.orders.model.OrderDto
+import com.medsy.data.orders.model.OrderItemDto
+import com.medsy.data.orders.model.OrderPageDataDto
 import com.medsy.domain.orders.model.Order
-import com.medsy.domain.orders.model.OrderStatus
+import com.medsy.domain.orders.model.OrderStatusDomain
 import com.medsy.domain.orders.model.OrderPageDomain
 import com.medsy.domain.orders.model.OrderItemDomain
-
 
 fun OrderPageDataDto.toDomain(): OrderPageDomain {
     return OrderPageDomain(
@@ -22,17 +21,17 @@ fun OrderPageDataDto.toDomain(): OrderPageDomain {
 
 fun OrderDto.toDomain(): Order {
     return Order(
-        id = id.toString(),
-        userId = userId.toString(),
-        pharmacyId = pharmacyId?.toString(),
-        pharmacistId = pharmacistId?.toString(),
-        offerId = offerId?.toString(),
+        id = id,
+        userId = userId,
+        pharmacyId = pharmacyId,
+        pharmacistId = pharmacistId,
+        offerId = offerId,
         totalPrice = totalPrice,
         deliveryLatitude = deliveryLatitude,
         deliveryLongitude = deliveryLongitude,
-        status = status.toOrderStatus(),
-        dateLabel = date,
-        items = items.map { it.toDomain() }
+        status = status.toOrderStatusDomain(),
+        dateLabel = date ?: "",
+        items = items?.map { it.toDomain() } ?: emptyList()
     )
 }
 
@@ -41,16 +40,18 @@ fun OrderItemDto.toDomain(): OrderItemDomain {
         id = id,
         productId = productId,
         quantity = quantity,
-        unitPrice = unitPrice
+        unitPrice = unitPrice,
+        productName = productName,
+        imageUrl = imageUrl
     )
 }
 
-private fun String.toOrderStatus(): OrderStatus {
-    return when (this.uppercase()) {
-        "CONFIRMED" -> OrderStatus.Confirmed
-        "DELIVERED" -> OrderStatus.Delivered
-        "CANCELLED", "CANCELED" -> OrderStatus.Cancelled
-        "PENDING" -> OrderStatus.Pending
-        else -> OrderStatus.Pending
+private fun String?.toOrderStatusDomain(): OrderStatusDomain {
+    return when (this?.uppercase()) {
+        "CONFIRMED" -> OrderStatusDomain.Confirmed
+        "DELIVERED" -> OrderStatusDomain.Delivered
+        "CANCELLED", "CANCELED" -> OrderStatusDomain.Cancelled
+        "PENDING" -> OrderStatusDomain.Pending
+        else -> OrderStatusDomain.Pending
     }
 }

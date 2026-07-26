@@ -18,10 +18,10 @@ data class OrderLineItem(
     val medicineName: String,
     val imageUrl: String?,
     val quantity: Int,
-    val unitPrice: Int,
+    val unitPrice: Double,
     val alternativeToMedicineName: String? = null,
 ) {
-    val lineTotal: Int get() = quantity * unitPrice
+    val lineTotal: Double get() = quantity * unitPrice
 }
 
 data class OrderDetails(
@@ -31,7 +31,7 @@ data class OrderDetails(
     val fulfillmentType: FulfillmentType,
     val pharmacy: OrderPharmacyInfo?,
     val lineItems: List<OrderLineItem>,
-    val itemsSubtotal: Int,
-    val deliveryFee: Int?,
-    val finalTotal: Int,
+    val itemsSubtotal: Double,
+    val deliveryFee: Double?,
+    val finalTotal: Double,
 )

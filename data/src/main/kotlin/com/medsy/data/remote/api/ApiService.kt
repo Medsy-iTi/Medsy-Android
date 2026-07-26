@@ -10,7 +10,7 @@ import com.medsy.data.profile.remote.dto.CustomerDto
 import com.medsy.data.profile.remote.dto.UpdateCustomerProfileRequestDto
 import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.dtos.products.ProductsDataDto
-import com.medsy.data.remote.model.OrderPageDataDto
+import com.medsy.data.orders.model.OrderPageDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.remote.ProductsPageDto
 import com.medsy.data.prescription.remote.AiInterceptor

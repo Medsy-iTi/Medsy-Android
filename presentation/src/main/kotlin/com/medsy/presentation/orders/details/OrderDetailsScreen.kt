@@ -162,9 +162,9 @@ private fun OrderDetailsContent(
 
             item {
                 OrderDetailsPriceSummary(
-                    itemsSubtotal = order.itemsSubtotal,
-                    deliveryFee = order.deliveryFee,
-                    finalTotal = order.finalTotal,
+                    itemsSubtotal = order.itemsSubtotal.toInt(),
+                    deliveryFee = order.deliveryFee?.toInt(),
+                    finalTotal = order.finalTotal.toInt(),
                 )
             }
         }

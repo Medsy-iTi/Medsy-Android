@@ -22,17 +22,8 @@ fun OrderDetailsDto.toDomain(): OrderDetailsDomain {
     )
 }
 
-fun OrderItemDto.toDomain(): OrderItemDomain {
-    return OrderItemDomain(
-        id = id,
-        productId = productId,
-        quantity = quantity,
-        unitPrice = unitPrice
-    )
-}
-
-private fun mapOrderStatus(status: String): OrderStatusDomain {
-    return when (status.uppercase()) {
+private fun mapOrderStatus(status: String?): OrderStatusDomain {
+    return when (status?.uppercase()) {
         "PENDING" -> OrderStatusDomain.Pending
         "CONFIRMED" -> OrderStatusDomain.Confirmed
         "DELIVERED" -> OrderStatusDomain.Delivered
@@ -40,3 +31,4 @@ private fun mapOrderStatus(status: String): OrderStatusDomain {
         else -> OrderStatusDomain.Pending
     }
 }
+

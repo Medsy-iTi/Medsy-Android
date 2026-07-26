@@ -31,10 +31,9 @@ class OrderDetailsViewModel @Inject constructor(
     private var hasLoadedInitialData = false
 
     fun init(id: String) {
-        orderId = id
-        if (!hasLoadedInitialData) {
+        if (orderId != id) {
+            orderId = id
             loadOrderDetails()
-            hasLoadedInitialData = true
         }
     }
 
@@ -101,17 +100,17 @@ class OrderDetailsViewModel @Inject constructor(
                         lineItems = domainOrder.items.map { item ->
                             OrderLineItem(
                                 id = item.id,
-                                medicineName = "",
-                                imageUrl = null,
+                                medicineName = item.productName ?: "",
+                                imageUrl = item.imageUrl,
                                 quantity = item.quantity,
-                                unitPrice = item.unitPrice.toInt(),
+                                unitPrice = item.unitPrice,
                                 alternativeToMedicineName = null,
                                 productId = item.productId
                             )
                         },
-                        itemsSubtotal = domainOrder.totalPrice.toInt(),
+                        itemsSubtotal = domainOrder.totalPrice,
                         deliveryFee = null,
-                        finalTotal = domainOrder.totalPrice.toInt()
+                        finalTotal = domainOrder.totalPrice
                     )
 
                     _state.update {

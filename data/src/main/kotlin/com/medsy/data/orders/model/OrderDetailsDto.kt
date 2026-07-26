@@ -20,15 +20,7 @@ data class OrderDetailsDto(
     @Json(name = "totalPrice") val totalPrice: Double,
     @Json(name = "deliveryLatitude") val deliveryLatitude: Double?,
     @Json(name = "deliveryLongitude") val deliveryLongitude: Double?,
-    @Json(name = "status") val status: String,
-    @Json(name = "date") val date: String,
+    @Json(name = "status") val status: String?,
+    @Json(name = "createdAt") val date: String,
     @Json(name = "items") val items: List<OrderItemDto>
-)
-
-@JsonClass(generateAdapter = true)
-data class OrderItemDto(
-    @Json(name = "id") val id: Long,
-    @Json(name = "productId") val productId: Long,
-    @Json(name = "quantity") val quantity: Int,
-    @Json(name = "unitPrice") val unitPrice: Double
 )

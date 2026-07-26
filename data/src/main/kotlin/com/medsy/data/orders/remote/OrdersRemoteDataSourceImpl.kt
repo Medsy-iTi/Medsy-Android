@@ -2,7 +2,7 @@ package com.medsy.data.orders.remote
 
 import com.medsy.data.orders.model.OrderDetailsDto
 import com.medsy.data.remote.api.ApiService
-import com.medsy.data.remote.model.OrderPageDataDto
+import com.medsy.data.orders.model.OrderPageDataDto
 import com.medsy.data.remote.network.safeApiCall
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
