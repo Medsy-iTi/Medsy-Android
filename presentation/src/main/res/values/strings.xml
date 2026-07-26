@@ -351,7 +351,9 @@
     <!-- Cart -->
     <string name="cart_title">Request cart</string>
     <string name="cart_clear_description">Clear cart</string>
-    <string name="cart_empty">Your cart has no medicines yet.</string>
+    <string name="cart_empty">Your medicine cart is empty</string>
+    <string name="cart_empty_badge">Empty cart</string>
+    <string name="cart_empty_supporting">Add at least one medicine to continue. Prescriptions and notes are supporting details.</string>
     <string name="cart_remove_item_description">Remove medicine</string>
     <string name="cart_decrease_quantity">Decrease quantity</string>
     <string name="cart_increase_quantity">Increase quantity</string>
@@ -411,7 +413,7 @@
     <string name="cart_request_visa_description">Pay by card</string>
     <string name="cart_request_submit">Submit medicine request</string>
     <string name="cart_request_retry">Retry</string>
-    <string name="cart_request_empty_request">Add at least one medicine or a prescription before submitting.</string>
+    <string name="cart_request_empty_request">Add at least one medicine before submitting. Prescriptions and notes only support the request.</string>
     <string name="cart_request_back">Back to cart</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>

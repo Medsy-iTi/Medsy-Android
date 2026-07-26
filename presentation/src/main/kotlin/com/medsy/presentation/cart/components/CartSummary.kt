@@ -47,19 +47,6 @@ internal fun CartTotalSummary(totalPriceEgp: Double) {
 }
 
 @Composable
-internal fun CartEmptyMessage() {
-    Text(
-        text = stringResource(R.string.cart_empty),
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 28.dp),
-    )
-}
-
-@Composable
 internal fun CartError(
     message: String,
     onRetry: () -> Unit,

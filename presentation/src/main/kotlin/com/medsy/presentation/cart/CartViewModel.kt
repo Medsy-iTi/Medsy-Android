@@ -95,7 +95,11 @@ class CartViewModel @Inject constructor(
                 )
             }
 
-            CartUIIntent.SubmitCartClicked -> sendEffect(CartUIEffect.OpenMakeRequest)
+            CartUIIntent.SubmitCartClicked -> {
+                if (_state.value.canContinue) {
+                    sendEffect(CartUIEffect.OpenMakeRequest)
+                }
+            }
         }
     }
 
