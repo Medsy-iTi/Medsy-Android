@@ -35,8 +35,8 @@ data class CartRequestState(
     val paymentMethod: PaymentMethod = PaymentMethod.CASH,
     val isSubmitting: Boolean = false,
 ) {
-    val hasRequestContent: Boolean
-        get() = items.isNotEmpty() || draft.prescriptionImage != null
+    val hasProducts: Boolean
+        get() = items.isNotEmpty()
 
     val hasDefaultAddress: Boolean
         get() = !defaultAddress.isNullOrBlank()
@@ -49,7 +49,7 @@ data class CartRequestState(
         }
 
     val isSubmitEnabled: Boolean
-        get() = !isCartLoading && cartErrorMessageRes == null && hasRequestContent &&
+        get() = !isCartLoading && cartErrorMessageRes == null && hasProducts &&
                 isDeliveryAddressValid && !isSubmitting &&
                 (deliveryMethod == DeliveryMethod.PICKUP || !isProfileLoading)
 }

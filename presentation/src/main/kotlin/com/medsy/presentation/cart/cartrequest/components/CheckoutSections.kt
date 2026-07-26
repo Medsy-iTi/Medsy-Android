@@ -108,7 +108,7 @@ internal fun CartRequestOrderSummary(
                     label = stringResource(R.string.cart_request_prescription_attached),
                 )
             }
-            if (!state.hasRequestContent) {
+            if (!state.hasProducts) {
                 Text(
                     text = stringResource(R.string.cart_request_empty_request),
                     style = MaterialTheme.typography.bodySmall,
