@@ -28,20 +28,20 @@ enum class DeliveryMethod {
     PICKUP,
 }
 
-enum class PaymentOption {
+enum class PaymentMethod {
     CASH,
     VISA,
 }
 
 data class ProductsRequest(
     val items: List<CartItemInput>,
-    val note: String?,
-    val prescriptionImage: PrescriptionImage?,
+    val notes: String?,
+    val prescription: PrescriptionImage?,
     val deliveryMethod: DeliveryMethod,
     val deliveryAddress: String?,
     val deliveryLatitude: Double?,
     val deliveryLongitude: Double?,
-    val paymentOption: PaymentOption,
+    val paymentMethod: PaymentMethod,
 )
 
 data class CartDraft(

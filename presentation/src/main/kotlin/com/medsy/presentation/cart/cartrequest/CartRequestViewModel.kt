@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.cart.model.DeliveryMethod
 import com.medsy.domain.cart.model.ProductsRequest
+import com.medsy.domain.cart.usecase.ClearCartDraftUseCase
 import com.medsy.domain.cart.usecase.GetCartUseCase
 import com.medsy.domain.cart.usecase.ObserveCartDraftUseCase
 import com.medsy.domain.cart.usecase.SubmitProductsRequestUseCase
@@ -30,6 +31,7 @@ class CartRequestViewModel @Inject constructor(
     private val observeCartDraft: ObserveCartDraftUseCase,
     private val getProfile: GetProfileUseCase,
     private val submitProductsRequest: SubmitProductsRequestUseCase,
+    private val clearCartDraft: ClearCartDraftUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CartRequestState())
     val state = _state
@@ -87,7 +89,7 @@ class CartRequestViewModel @Inject constructor(
             }
 
             is CartRequestUIIntent.PaymentOptionSelected -> _state.update {
-                it.copy(paymentOption = intent.paymentOption)
+                it.copy(paymentMethod = intent.paymentMethod)
             }
 
             CartRequestUIIntent.RetryCart -> viewModelScope.launch { loadCart() }
@@ -210,15 +212,16 @@ class CartRequestViewModel @Inject constructor(
                             quantity = item.quantity,
                         )
                     },
-                    note = currentState.draft.pharmacistNote,
-                    prescriptionImage = currentState.draft.prescriptionImage,
+                    notes = currentState.draft.pharmacistNote,
+                    prescription = currentState.draft.prescriptionImage,
                     deliveryMethod = currentState.deliveryMethod,
                     deliveryAddress = address,
                     deliveryLatitude = latitude,
                     deliveryLongitude = longitude,
-                    paymentOption = currentState.paymentOption,
+                    paymentMethod = currentState.paymentMethod,
                 )
             ).onSuccess {
+                clearCartDraft()
                 _state.update { it.copy(isSubmitting = false) }
                 _effect.send(CartRequestUIEffect.NavigateHome)
             }.onError { error ->
