@@ -79,8 +79,10 @@ internal fun CartContent(
             item { CartTotalSummary(state.totalPriceEgp) }
             item {
                 MedsyButton(
-                    onClick = {},
-                    enabled = false,
+                    onClick = {
+                        onIntent(CartUIIntent.SubmitCartClicked)
+                    },
+                    enabled = state.canContinue,
                 ) {
                     Text(stringResource(R.string.cart_continue))
                 }

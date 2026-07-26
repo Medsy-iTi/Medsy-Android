@@ -1,5 +1,6 @@
 package com.medsy.presentation.search
 
+import com.medsy.domain.categories.model.Category
 import com.medsy.presentation.R
 
 data class SearchState(
@@ -9,8 +10,11 @@ data class SearchState(
     val products: List<SearchProductUi> = emptyList(),
     val favoriteProductIds: Set<String> = emptySet(),
     val selectedSort: SortOption = SortOption.NAME_ASC,
+    val categories: List<Category> = emptyList(),
+    val selectedCategory: Category? = null,
     val isPriceBottomSheetOpen: Boolean = false,
     val isSortBottomSheetOpen: Boolean = false,
+    val isCategoryBottomSheetOpen: Boolean = false,
     val currentPage: Int = 0,
     val totalPages: Int = 0,
     val isLastPage: Boolean = true,
@@ -26,18 +30,28 @@ data class SearchState(
                 labelRes = selectedSort.labelResId,
                 isSelected = true,
                 hasLeadingIcon = true
+            ),
+            SearchFilterChipUi(
+                id = SearchFilterId.CATEGORY.name,
+                label = selectedCategory?.name,
+                labelRes = if (selectedCategory == null) R.string.search_category_all else null,
+                isSelected = selectedCategory != null,
             )
         )
 }
 
 data class SearchFilterChipUi(
     val id: String,
-    val labelRes: Int,
+    // Exactly one of labelRes/label should be set. label wins when both are
+    // set, since it represents a dynamic value (e.g. a selected category
+    // name) that a fixed string resource can't express.
+    val labelRes: Int? = null,
+    val label: String? = null,
     val isSelected: Boolean = false,
     val hasLeadingIcon: Boolean = false,
 )
 
-enum class SearchFilterId { SORT, PRICE }
+enum class SearchFilterId { SORT, PRICE, CATEGORY }
 
 enum class PriceFilterOption(val minPrice: Double?, val maxPrice: Double?, val labelResId: Int) {
     ALL(null, null, R.string.search_price_all),

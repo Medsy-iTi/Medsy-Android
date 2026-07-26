@@ -23,6 +23,27 @@ data class CartItemInput(
     val quantity: Int,
 )
 
+enum class DeliveryMethod {
+    DELIVERY,
+    PICKUP,
+}
+
+enum class PaymentOption {
+    CASH,
+    VISA,
+}
+
+data class ProductsRequest(
+    val items: List<CartItemInput>,
+    val note: String?,
+    val prescriptionImage: PrescriptionImage?,
+    val deliveryMethod: DeliveryMethod,
+    val deliveryAddress: String?,
+    val deliveryLatitude: Double?,
+    val deliveryLongitude: Double?,
+    val paymentOption: PaymentOption,
+)
+
 data class CartDraft(
     val prescriptionImage: PrescriptionImage? = null,
     val pharmacistNote: String = "",

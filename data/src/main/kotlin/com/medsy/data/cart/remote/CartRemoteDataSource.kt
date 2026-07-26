@@ -3,6 +3,7 @@ package com.medsy.data.cart.remote
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.network.safeApiCall
 import com.medsy.data.remote.network.safeEmptyRestCall
+import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
@@ -44,4 +45,12 @@ class CartRemoteDataSource @Inject constructor(
 
     suspend fun clearCart(): EmptyMedsyResult<MedsyError.Remote> =
         safeEmptyRestCall(apiService::clearCart)
+
+    suspend fun submitProductsRequest(
+        request: ProductsRequest
+    ): EmptyMedsyResult<MedsyError.Remote> =
+        safeEmptyRestCall {
+            apiService.submitProductsRequest(request)
+        }
+
 }

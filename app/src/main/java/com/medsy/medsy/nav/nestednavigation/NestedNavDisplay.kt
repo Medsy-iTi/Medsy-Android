@@ -30,15 +30,17 @@ import kotlinx.serialization.modules.polymorphic
 @Composable
 fun NestedNavDisplay(
     navigateBack: () -> Unit,
-    openProductDetails: () -> Unit,
     openPersonalDetails: (startInEditMode: Boolean) -> Unit,
     openLogin: () -> Unit,
     openSearch: () -> Unit,
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
-    openPrescription: (Boolean) -> Unit,
+    openOffers: () -> Unit,
+    openPrescription: (Boolean, Boolean) -> Unit,
+    openCartRequest: () -> Unit,
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
+    openProductDetails: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -118,16 +120,19 @@ fun NestedNavDisplay(
                         onSearchClick = { openSearch() },
                         onNotificationClick = { /* Handle notification click */ },
                         onAddressClick = { /* Handle address click */ },
-                        onUploadPrescriptionClick = { openPrescription(false) },
+                        onUploadPrescriptionClick = { openPrescription(false, false) },
+                        onMedicineImageSearchClick = { openPrescription(false, true) },
                         onViewAllCategoriesClick = { openCategories() },
                         onCategoryClick = { categoryId, categoryName ->
                             openProducts(categoryId, categoryName)
-                        }
+                        },
+                        onViewOffersClick = { openOffers() }
                     )
                 }
                 entry<Route.NestedNav.Cart> {
                     CartRoot(
-                        onAddPrescription = { openPrescription(true) },
+                        onAddPrescription = { openPrescription(true, false) },
+                        onOpenCartRequest = openCartRequest,
                     )
                 }
                 entry<Route.NestedNav.Profile> {

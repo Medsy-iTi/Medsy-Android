@@ -1,8 +1,7 @@
-package com.medsy.presentation.prescription.components
+package com.medsy.presentation.prescription.prescriptionuploaderror
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,11 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -29,7 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,15 +37,28 @@ import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.prescription.PrescriptionState
 import com.medsy.presentation.prescription.PrescriptionUIIntent
+import com.medsy.presentation.prescription.components.PrescriptionAppBar
+import com.medsy.presentation.prescription.components.PrescriptionPrimaryButton
+import com.medsy.presentation.prescription.components.PrescriptionTextAction
 
 @Composable
-fun PrescriptionUploadErrorScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
+fun PrescriptionUploadErrorScreen(
+    state: PrescriptionState,
+    onIntent: (PrescriptionUIIntent) -> Unit
+) {
+    val isMedicineSearch = state.isMedicineSearch
     PrescriptionFailureLayout(
-        appBarTitle = stringResource(R.string.prescription_upload_title),
+        appBarTitle = stringResource(
+            if (isMedicineSearch) R.string.medicine_search_upload_title else R.string.prescription_upload_title
+        ),
         icon = Icons.Filled.WifiOff,
         iconType = FailureIconType.ERROR,
-        title = stringResource(R.string.prescription_upload_failed_title),
-        description = stringResource(R.string.prescription_upload_failed_description),
+        title = stringResource(
+            if (isMedicineSearch) R.string.medicine_search_upload_failed_title else R.string.prescription_upload_failed_title
+        ),
+        description = stringResource(
+            if (isMedicineSearch) R.string.medicine_search_upload_failed_description else R.string.prescription_upload_failed_description
+        ),
         primaryText = stringResource(R.string.prescription_retry),
         onPrimary = { onIntent(PrescriptionUIIntent.RetryExtractionClicked) },
         secondaryText = stringResource(R.string.prescription_choose_another_image),
@@ -56,27 +68,47 @@ fun PrescriptionUploadErrorScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
 }
 
 @Composable
-fun PrescriptionUnreadableScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
+fun PrescriptionUnreadableScreen(
+    state: PrescriptionState,
+    onIntent: (PrescriptionUIIntent) -> Unit
+) {
     PrescriptionFailureLayout(
-        appBarTitle = stringResource(R.string.prescription_read_prescription_title),
+        appBarTitle = stringResource(
+            if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_read_prescription_title
+        ),
         icon = Icons.Filled.ErrorOutline,
         iconType = FailureIconType.WARNING,
-        title = stringResource(R.string.prescription_unreadable_title),
-        description = stringResource(R.string.prescription_unreadable_description),
+        title = stringResource(
+            if (state.isMedicineSearch) R.string.search_empty_title else R.string.prescription_unreadable_title
+        ),
+        description = stringResource(
+            if (state.isMedicineSearch) R.string.search_empty_subtitle else R.string.prescription_unreadable_description
+        ),
         primaryText = stringResource(R.string.prescription_choose_another_image),
         onPrimary = { onIntent(PrescriptionUIIntent.ChooseAnotherImageClicked) },
+        secondaryText = stringResource(R.string.prescription_add_medicine_manually),
+        onSecondary = { onIntent(PrescriptionUIIntent.AddMedicineManuallyClicked) },
         onBack = { onIntent(PrescriptionUIIntent.BackClicked) },
     )
 }
 
 @Composable
-fun PrescriptionNoMedicinesScreen(onIntent: (PrescriptionUIIntent) -> Unit) {
+fun PrescriptionNoMedicinesScreen(
+    state: PrescriptionState,
+    onIntent: (PrescriptionUIIntent) -> Unit
+) {
     PrescriptionFailureLayout(
-        appBarTitle = stringResource(R.string.prescription_review_title),
+        appBarTitle = stringResource(
+            if (state.isMedicineSearch) R.string.home_card_search_title else R.string.prescription_review_title
+        ),
         icon = Icons.Filled.SearchOff,
         iconType = FailureIconType.SUCCESS,
-        title = stringResource(R.string.prescription_no_medicines_title),
-        description = stringResource(R.string.prescription_no_medicines_description),
+        title = stringResource(
+            if (state.isMedicineSearch) R.string.search_empty_title else R.string.prescription_no_medicines_title
+        ),
+        description = stringResource(
+            if (state.isMedicineSearch) R.string.search_empty_subtitle else R.string.prescription_no_medicines_description
+        ),
         primaryText = stringResource(R.string.prescription_choose_another_image),
         onPrimary = { onIntent(PrescriptionUIIntent.ChooseAnotherImageClicked) },
         secondaryText = stringResource(R.string.prescription_add_medicine_manually),
@@ -125,7 +157,12 @@ private fun PrescriptionFailureLayout(
                     .background(container, RoundedCornerShape(24.dp)),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(icon, contentDescription = null, tint = content, modifier = Modifier.size(46.dp))
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = content,
+                    modifier = Modifier.size(46.dp)
+                )
             }
             Spacer(modifier = Modifier.height(28.dp))
             Text(
@@ -164,24 +201,15 @@ fun PrescriptionConfirmationScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            modifier = Modifier
-                .size(112.dp)
-                .background(colors.prescriptionSuccessContainer, CircleShape),
+            modifier = Modifier.size(200.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(52.dp)
-                    .border(3.dp, colors.prescriptionPrimary, CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    Icons.Filled.Check,
-                    contentDescription = null,
-                    tint = colors.prescriptionPrimary,
-                    modifier = Modifier.size(30.dp),
-                )
-            }
+            Icon(
+                painter = painterResource(R.drawable.ic_complete),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
         Spacer(modifier = Modifier.height(28.dp))
         Text(
@@ -240,6 +268,8 @@ fun PrescriptionConfirmationScreen(
                 )
             }
             state.medicines.forEach { item ->
+                val medicineName = item.selectedMedicine?.name ?: item.extractedName ?: item.rawText
+                val price = item.selectedMedicine?.price ?: 0
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -248,11 +278,11 @@ fun PrescriptionConfirmationScreen(
                 ) {
                     Text(
                         text = if (item.quantity == 1) {
-                            item.medicine.name
+                            medicineName
                         } else {
                             stringResource(
                                 R.string.prescription_medicine_with_quantity,
-                                item.medicine.name,
+                                medicineName,
                                 item.quantity,
                             )
                         },
@@ -263,7 +293,7 @@ fun PrescriptionConfirmationScreen(
                     Text(
                         text = stringResource(
                             R.string.prescription_price_egp,
-                            item.medicine.unitPriceEgp * item.quantity,
+                            price * item.quantity,
                         ),
                         color = colors.prescriptionPrimary,
                         fontWeight = FontWeight.Bold,
@@ -287,7 +317,7 @@ fun PrescriptionConfirmationScreen(
                 Text(
                     text = stringResource(
                         R.string.prescription_price_egp,
-                        state.totalPriceEgp,
+                        state.totalEgp,
                     ),
                     color = colors.prescriptionPrimary,
                     fontWeight = FontWeight.Bold,

@@ -1,4 +1,4 @@
-package com.medsy.presentation.profile.personaldetails
+package com.medsy.designsystem.components.location
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -48,17 +48,17 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import com.medsy.presentation.R
+import com.medsy.designsystem.R
 import kotlinx.coroutines.launch
 
 private val CairoLocation = LatLng(30.0444, 31.2357)
@@ -67,7 +67,7 @@ private const val CairoZoom = 12f
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileLocationPickerScreen(
+fun MedsyLocationPickerScreen(
     initialLatitude: Double?,
     initialLongitude: Double?,
     onDismiss: () -> Unit,
@@ -78,9 +78,9 @@ fun ProfileLocationPickerScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val permissionDeniedMessage = stringResource(R.string.profile_location_permission_denied)
-    val locationUnavailableMessage = stringResource(R.string.profile_location_unavailable)
-    val markerTitle = stringResource(R.string.profile_location_selected_marker)
+    val permissionDeniedMessage = stringResource(R.string.location_picker_permission_denied)
+    val locationUnavailableMessage = stringResource(R.string.location_picker_unavailable)
+    val markerTitle = stringResource(R.string.location_picker_selected_marker)
     val hasSavedLocation = initialLatitude != null && initialLongitude != null &&
         initialLatitude in -90.0..90.0 && initialLongitude in -180.0..180.0
     val initialPosition = if (hasSavedLocation) {
@@ -177,7 +177,7 @@ fun ProfileLocationPickerScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.profile_location_picker_title),
+                        text = stringResource(R.string.location_picker_title),
                         fontWeight = FontWeight.SemiBold,
                     )
                 },
@@ -185,7 +185,7 @@ fun ProfileLocationPickerScreen(
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.content_desc_back),
+                            contentDescription = stringResource(R.string.location_picker_back),
                         )
                     }
                 },
@@ -205,7 +205,7 @@ fun ProfileLocationPickerScreen(
                     .padding(horizontal = 20.dp, vertical = 16.dp),
                 contentPadding = PaddingValues(vertical = 16.dp),
             ) {
-                Text(text = stringResource(R.string.profile_location_confirm))
+                Text(text = stringResource(R.string.location_picker_confirm))
             }
         },
     ) { innerPadding ->
@@ -217,9 +217,7 @@ fun ProfileLocationPickerScreen(
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
-                properties = MapProperties(
-                    isMyLocationEnabled = hasLocationPermission,
-                ),
+                properties = MapProperties(isMyLocationEnabled = hasLocationPermission),
                 uiSettings = MapUiSettings(
                     myLocationButtonEnabled = false,
                     zoomControlsEnabled = false,
@@ -262,9 +260,7 @@ fun ProfileLocationPickerScreen(
                 } else {
                     Icon(
                         imageVector = Icons.Outlined.MyLocation,
-                        contentDescription = stringResource(
-                            R.string.profile_location_use_current
-                        ),
+                        contentDescription = stringResource(R.string.location_picker_use_current),
                     )
                 }
             }
@@ -280,12 +276,12 @@ private fun LocationPickerUnavailableContent(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = stringResource(R.string.profile_location_picker_title)) },
+                title = { Text(text = stringResource(R.string.location_picker_title)) },
                 navigationIcon = {
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.content_desc_back),
+                            contentDescription = stringResource(R.string.location_picker_back),
                         )
                     }
                 },
@@ -300,13 +296,13 @@ private fun LocationPickerUnavailableContent(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = stringResource(R.string.profile_location_maps_unavailable),
+                text = stringResource(R.string.location_picker_maps_unavailable),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
             )
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.content_desc_back))
+                Text(text = stringResource(R.string.location_picker_back))
             }
         }
     }

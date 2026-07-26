@@ -61,10 +61,6 @@ dependencies {
     // Lottie
     implementation(libs.lottie.compose)
 
-    // Profile location picker
-    implementation(libs.google.maps.compose)
-    implementation(libs.google.play.services.location)
-
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
