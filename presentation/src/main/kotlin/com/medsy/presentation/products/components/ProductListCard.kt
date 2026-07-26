@@ -42,7 +42,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import com.medsy.designsystem.components.MedsyShimmerPlaceholder
 import com.medsy.presentation.R
 import com.medsy.presentation.products.ProductUi
 import java.util.regex.Pattern
@@ -84,33 +85,39 @@ fun ProductListCard(
                     .height(180.dp)
                     .background(Color.White)
             ) {
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = product.imageUrl,
                     contentDescription = product.name,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp),
-                    contentScale = ContentScale.Fit
-                )
-
-                Surface(
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .size(36.dp)
-                        .align(Alignment.TopEnd),
-                    shape = CircleShape,
-                    color = Color.White,
-                    shadowElevation = 4.dp
-                ) {
-                    IconButton(onClick = { /* TODO: Favorite */ }) {
-                        Icon(
-                            imageVector = Icons.Default.FavoriteBorder,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(20.dp)
+                    contentScale = ContentScale.Fit,
+                    loading = {
+                        MedsyShimmerPlaceholder(
+                            modifier = Modifier.fillMaxSize(),
+                            shape = RoundedCornerShape(16.dp)
                         )
                     }
-                }
+                )
+
+//                Surface(
+//                    modifier = Modifier
+//                        .padding(12.dp)
+//                        .size(36.dp)
+//                        .align(Alignment.TopEnd),
+//                    shape = CircleShape,
+//                    color = Color.White,
+//                    shadowElevation = 4.dp
+//                ) {
+//                    IconButton(onClick = { /* TODO: Favorite */ }) {
+//                        Icon(
+//                            imageVector = Icons.Default.FavoriteBorder,
+//                            contentDescription = null,
+//                            tint = MaterialTheme.colorScheme.primary,
+//                            modifier = Modifier.size(20.dp)
+//                        )
+//                    }
+//                }
 
                 strength?.let {
                     Surface(

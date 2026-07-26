@@ -74,7 +74,6 @@ fun ProductsScreen(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
-            .statusBarsPadding()
     ) {
         ProductsTopBar(
             title = state.categoryName,
@@ -82,7 +81,8 @@ fun ProductsScreen(
         )
 
         if (state.products.size > 10) {
-            Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
                 OutlinedTextField(
                     value = state.searchQuery,
                     onValueChange = { onIntent(ProductsUIIntent.OnSearchQueryChange(it)) },
@@ -113,6 +113,7 @@ fun ProductsScreen(
                     singleLine = true
                 )
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
