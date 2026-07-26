@@ -62,6 +62,7 @@ internal fun CartItemCard(
             Icon(
                 imageVector = Icons.Filled.DeleteOutline,
                 contentDescription = stringResource(R.string.cart_remove_item_description),
+                tint = MaterialTheme.colorScheme.error,
             )
         }
         Column(
