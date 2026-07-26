@@ -3,10 +3,7 @@ package com.medsy.presentation.cart
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -25,10 +22,12 @@ import com.medsy.presentation.cart.components.CartClearDialog
 import com.medsy.presentation.cart.components.CartContent
 import com.medsy.presentation.cart.components.CartError
 import com.medsy.presentation.cart.components.CartNoteDialog
+import com.medsy.presentation.cart.components.CartShimmer
 
 @Composable
 fun CartRoot(
     onAddPrescription: () -> Unit,
+    onMedicineSearch: () -> Unit,
     onOpenCartRequest: () -> Unit,
     viewModel: CartViewModel = hiltViewModel(),
 ) {
@@ -42,6 +41,7 @@ fun CartRoot(
             when (effect) {
                 CartUIEffect.OpenPrescription -> onAddPrescription()
                 CartUIEffect.OpenMakeRequest -> onOpenCartRequest()
+                CartUIEffect.OpenMedicineSearch -> onMedicineSearch()
                 is CartUIEffect.ShowMessage ->
                     snackbarHostState.showSnackbar(
                         ContextCompat.getString(
@@ -53,13 +53,14 @@ fun CartRoot(
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-    ) { padding ->
+    Box(modifier = Modifier.fillMaxSize()) {
         CartScreen(
             state = state,
             onIntent = viewModel::onIntent,
-            modifier = Modifier.padding(padding),
+        )
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
         )
     }
 }
@@ -73,12 +74,10 @@ fun CartScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
     ) {
         when {
-            state.isLoading -> CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-            )
+            state.isLoading -> CartShimmer()
 
             state.errorMessageRes != null -> CartError(
                 message = stringResource(state.errorMessageRes),

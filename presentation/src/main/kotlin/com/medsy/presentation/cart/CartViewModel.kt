@@ -100,6 +100,8 @@ class CartViewModel @Inject constructor(
                     sendEffect(CartUIEffect.OpenMakeRequest)
                 }
             }
+
+            CartUIIntent.SearchMedicineClicked -> sendEffect(CartUIEffect.OpenMedicineSearch)
         }
     }
 

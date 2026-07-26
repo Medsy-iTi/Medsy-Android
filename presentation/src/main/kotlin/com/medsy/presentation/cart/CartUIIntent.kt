@@ -17,4 +17,5 @@ sealed interface CartUIIntent {
     data object SaveNoteClicked : CartUIIntent
     data object NoteDialogDismissed : CartUIIntent
     data object SubmitCartClicked : CartUIIntent
+    data object SearchMedicineClicked : CartUIIntent
 }
