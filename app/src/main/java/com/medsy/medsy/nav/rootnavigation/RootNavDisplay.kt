@@ -12,8 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -24,7 +22,6 @@ import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
 import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.auth.register.RegisterRoot
-import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.cart.cartrequest.CartRequestRoot
 import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.offers.available.AvailableOffersRoot

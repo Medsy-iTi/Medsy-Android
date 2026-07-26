@@ -18,7 +18,7 @@ material = "1.14.0"
 jetbrainsKotlinJvm = "2.2.10"
 material3Version = "1.3.0"
 materialIconsExtended = "1.7.8"
-mapsCompose = "8.3.0"
+mapsCompose = "8.4.0"
 okhttp = "5.4.0"
 nav3 = "1.1.4"
 hilt = "2.60.1"
@@ -31,7 +31,6 @@ coil = "3.5.0"
 coreSplashscreen = "1.2.0"
 dataStore = "1.2.1"
 coroutines = "1.11.0"
-mapsCompose = "6.12.0"
 playServicesLocation = "21.4.0"
 
 runtime = "1.11.4"
@@ -97,7 +96,6 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 
 #collect as state with lifecycle
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
-google-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 google-play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
