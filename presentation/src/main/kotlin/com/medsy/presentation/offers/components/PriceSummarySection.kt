@@ -12,10 +12,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.PriceFormatter
 
 @Composable
 fun PriceSummarySection(
@@ -23,6 +25,7 @@ fun PriceSummarySection(
     deliveryFee: Int,
     modifier: Modifier = Modifier
 ) {
+    val locale = LocalConfiguration.current.locales[0]
     val total = medicinesPrice + deliveryFee
     
     Column(
@@ -56,7 +59,7 @@ fun PriceSummarySection(
             )
             Row {
                 Text(
-                    text = total.toString(),
+                    text = PriceFormatter.formatPrice(total, locale),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary

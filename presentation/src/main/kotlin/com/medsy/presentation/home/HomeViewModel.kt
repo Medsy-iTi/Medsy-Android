@@ -150,6 +150,10 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeUIIntent.OnSearchWiderRangeClick -> startSearchSimulation()
+            HomeUIIntent.RefreshData -> {
+                fetchCategories()
+                observeProfileData()
+            }
         }
     }
 

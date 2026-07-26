@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,6 +31,11 @@ fun HomeRoot(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val locale = LocalConfiguration.current.locales[0]
+
+    LaunchedEffect(locale) {
+        viewModel.onIntent(HomeUIIntent.RefreshData)
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->

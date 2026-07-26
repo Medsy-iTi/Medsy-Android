@@ -183,7 +183,7 @@
     <string name="search_filter_chip_price">السعر</string>
     <string name="search_filter_chip_most_relevant">الأكثر صلة</string>
     <string name="search_results_count">%1$d نتيجة</string>
-    <string name="search_price_egp">%1$d جنيه</string>
+    <string name="search_price_egp">%1$s جنيه</string>
     <string name="search_favorite_desc">أضف للمفضلة</string>
     <string name="search_add_to_cart_desc">أضف إلى السلة</string>
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>

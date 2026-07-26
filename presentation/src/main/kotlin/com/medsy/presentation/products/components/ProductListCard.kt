@@ -37,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.medsy.designsystem.components.MedsyShimmerPlaceholder
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.PriceFormatter
 import com.medsy.presentation.products.ProductUi
 import java.util.regex.Pattern
 
@@ -55,7 +57,9 @@ fun ProductListCard(
     onAddToCart: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val strength = remember(product.name) {
+    val locale = LocalConfiguration.current.locales[0]
+    
+    val strength = remember(product.name, locale) {
         val pattern =
             Pattern.compile("(\\d+([/.]\\d+)?\\s?(MG|مجم|ML|مل|%|G|جم))", Pattern.CASE_INSENSITIVE)
         val matcher = pattern.matcher(product.name)
@@ -200,8 +204,11 @@ fun ProductListCard(
                         }
                     }
 
+                    val formattedPrice = remember(product.price, locale) {
+                        PriceFormatter.formatPrice(product.price.toDouble(), locale)
+                    }
                     Text(
-                        text = "${product.price} ${stringResource(R.string.currency_egp)}",
+                        text = stringResource(R.string.search_price_egp, formattedPrice),
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.onPrimary,
