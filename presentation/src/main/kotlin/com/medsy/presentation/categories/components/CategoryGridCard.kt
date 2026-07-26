@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,19 +31,20 @@ import com.medsy.presentation.home.CategoryUi
 @Composable
 fun CategoryGridCard(
     category: CategoryUi,
+    containerColor: Color,
+    contentColor: Color,
+    borderColor: Color,
     onClick: () -> Unit
 ) {
 
     val icon = Icons.Default.MedicalServices
-    val bgColor = MaterialTheme.extendedColors.categoryContainerBg
-    val iconColor = MaterialTheme.extendedColors.onCategoryContainer
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
-            .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
+            .border(1.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -50,13 +52,13 @@ fun CategoryGridCard(
         Box(
             modifier = Modifier
                 .size(56.dp)
-                .background(bgColor, RoundedCornerShape(14.dp)),
+                .background(containerColor, RoundedCornerShape(14.dp)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = iconColor,
+                tint = contentColor,
                 modifier = Modifier.size(28.dp)
             )
         }

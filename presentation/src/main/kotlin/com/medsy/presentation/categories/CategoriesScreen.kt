@@ -36,9 +36,11 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.size
+import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.categories.components.CategoriesTopBar
 import com.medsy.presentation.categories.components.CategoryGridCard
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 
 
 @Composable
@@ -135,6 +137,8 @@ fun CategoriesScreen(
                 )
             }
         } else {
+            val categoryColorSchemes = MaterialTheme.extendedColors.categoryColors
+            
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
@@ -143,9 +147,13 @@ fun CategoriesScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(state.filteredCategories) { category ->
+                itemsIndexed(state.filteredCategories) { index, category ->
+                    val colorScheme = categoryColorSchemes[index % categoryColorSchemes.size]
                     CategoryGridCard(
                         category = category,
+                        containerColor = colorScheme.first,
+                        contentColor = colorScheme.second,
+                        borderColor = colorScheme.second.copy(alpha = 0.3f),
                         onClick = { onIntent(CategoriesUIIntent.OnCategoryClick(category.id)) }
                     )
                 }
