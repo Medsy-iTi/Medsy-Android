@@ -18,6 +18,7 @@ import com.medsy.presentation.home.ActiveSearchStatus
 import com.medsy.presentation.home.components.activesearch.ActiveSearchContent
 import com.medsy.presentation.home.components.activesearch.ActiveSearchHeader
 import com.medsy.presentation.home.components.activesearch.ActiveSearchTimer
+import androidx.compose.foundation.clickable
 
 @Composable
 fun ActiveSearchCard(
@@ -34,7 +35,12 @@ fun ActiveSearchCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 5.dp, vertical = 8.dp),
+            .padding(horizontal = 5.dp, vertical = 8.dp)
+            .clickable {
+                if (!isEnded && status !is ActiveSearchStatus.Searching) {
+                    onViewOffersClick()
+                }
+            },
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
         colors = CardDefaults.cardColors(

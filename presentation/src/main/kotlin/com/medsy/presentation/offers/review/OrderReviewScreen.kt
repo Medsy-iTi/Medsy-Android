@@ -123,7 +123,9 @@ fun OrderReviewScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (offer != null) {
+            if (state.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            } else if (offer != null) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
@@ -140,7 +142,7 @@ fun OrderReviewScreen(
                         )
                     }
 
-                    items(offer.medicines) { medicine ->
+                    items(offer.medicines.filter { it.isAvailable }) { medicine ->
                         MedicineItemRow(medicine = medicine, isSingleLinePrice = true)
                     }
 

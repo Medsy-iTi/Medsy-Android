@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <resources>
 
@@ -468,8 +468,9 @@
     <string name="offers_price_note">الأسعار نهائية من ميدسي ومطابقة لأسعار الصيدلية</string>
     <string name="offers_pharmacy_title_format">صيدلية %1$s</string>
     <string name="offers_manager_format">%1$s (المدير)</string>
-    <string name="offers_requested_medicines">الأدوية المطلوبة</string>
     <string name="offers_available">متوفر</string>
+    <string name="offers_not_available">غير متوفر</string>
+    <string name="offers_requested_medicines">الأدوية المطلوبة</string>
     <string name="offers_pharmacist_comment">تعليق من الصيدلي</string>
     <string name="offers_view_prescription">عرض الروشتة</string>
     <string name="offers_choose_offer">اختار هذا العرض</string>

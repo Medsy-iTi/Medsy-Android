@@ -106,10 +106,11 @@ fun AvailableOffersScreen(
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
+                    val reversedOffers = state.availableOffers.reversed()
                     Text(
                         text = stringResource(
                             R.string.offers_available_subtitle_format,
-                            state.availableOffers.size
+                            reversedOffers.size
                         ),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -120,7 +121,7 @@ fun AvailableOffersScreen(
                         modifier = Modifier.weight(1f),
                         contentPadding = PaddingValues(16.dp)
                     ) {
-                        items(state.availableOffers, key = { it.id }) { offer ->
+                        items(reversedOffers, key = { it.id }) { offer ->
                             OfferCard(
                                 offer = offer,
                                 onClick = { onIntent(OffersUIIntent.SelectOffer(offer.id)) }

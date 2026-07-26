@@ -465,6 +465,7 @@
     <string name="offers_price_note">Prices are final from Medsy and match pharmacy prices, only a discount and delivery fee may apply.</string>
     <string name="offers_pharmacy_title_format">%1$s Pharmacy</string>
     <string name="offers_manager_format">%1$s (Manager)</string>
+    <string name="offers_not_available">Not Available</string>
     <string name="offers_requested_medicines">Requested Medicines</string>
     <string name="offers_available">Available</string>
     <string name="offers_pharmacist_comment">Pharmacist Comment</string>

@@ -22,13 +22,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getProfileUseCase: GetProfileUseCase,
     private val observeActiveRequestUseCase: ObserveActiveRequestUseCase,
-    private val clearActiveRequestUseCase: ClearActiveRequestUseCase
+    private val clearActiveRequestUseCase: ClearActiveRequestUseCase,
+    private val getOffersForRequestUseCase: com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
@@ -42,7 +44,7 @@ class HomeViewModel @Inject constructor(
     init {
         _state.update {
             it.copy(
-                notificationCount = 1, deliveryAddress = "شارع النيل، المعادي", banners = listOf(
+                notificationCount = 1, deliveryAddress = "", banners = listOf(
                     PromoBannerUi(
                         id = "1",
                         titleRes = R.string.home_promo_title_one,
@@ -144,28 +146,48 @@ class HomeViewModel @Inject constructor(
                                     )
                                 }
                             }
-                            delay(1000)
+                            delay(1000.milliseconds)
                         }
                     }
 
-                    // Mock API polling (until real backend integration)
+                    // Real API polling
                     mockPollingJob = launch {
-                        delay(20000) // Wait 20 seconds before first offer arrives
-                        _state.update { s ->
-                            val currentStatus = s.activeSearchStatus
-                            val remaining = when (currentStatus) {
-                                is ActiveSearchStatus.Searching -> currentStatus.remainingTimeSeconds
-                                is ActiveSearchStatus.FirstOfferArrived -> currentStatus.remainingTimeSeconds
-                                is ActiveSearchStatus.MultipleOffersArrived -> currentStatus.remainingTimeSeconds
-                                else -> 900
+                        while (true) {
+                            delay(5000.milliseconds) // Poll every 5 seconds
+                            val offersResult = getOffersForRequestUseCase(request.id)
+                            if (offersResult is com.medsy.domain.common.MedsyResult.Success) {
+                                val offers = offersResult.data.content
+                                if (offers.isNotEmpty()) {
+                                    val minPrice = 0
+                                    _state.update { s ->
+                                        val currentStatus = s.activeSearchStatus
+                                        val remaining = when (currentStatus) {
+                                            is ActiveSearchStatus.Searching -> currentStatus.remainingTimeSeconds
+                                            is ActiveSearchStatus.FirstOfferArrived -> currentStatus.remainingTimeSeconds
+                                            is ActiveSearchStatus.MultipleOffersArrived -> currentStatus.remainingTimeSeconds
+                                            else -> 900
+                                        }
+                                        if (offers.size == 1) {
+                                            s.copy(
+                                                activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(
+                                                    requestId = request.id,
+                                                    remainingTimeSeconds = remaining,
+                                                    minPrice = minPrice
+                                                )
+                                            )
+                                        } else {
+                                            s.copy(
+                                                activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(
+                                                    requestId = request.id,
+                                                    remainingTimeSeconds = remaining,
+                                                    minPrice = minPrice,
+                                                    totalOffers = offers.size
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
                             }
-                            s.copy(
-                                activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(
-                                    requestId = request.id,
-                                    remainingTimeSeconds = remaining,
-                                    minPrice = 48
-                                )
-                            )
                         }
                     }
                 }

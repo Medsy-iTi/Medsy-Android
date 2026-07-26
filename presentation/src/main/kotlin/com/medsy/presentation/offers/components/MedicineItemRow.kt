@@ -122,7 +122,7 @@ fun MedicineItemRow(
                 } else {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "غير متوفر",
+                            text = stringResource(R.string.offers_not_available),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.error,
                             fontWeight = FontWeight.Bold

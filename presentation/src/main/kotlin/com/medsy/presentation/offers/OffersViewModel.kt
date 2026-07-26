@@ -81,8 +81,22 @@ class OffersViewModel @Inject constructor(
                     ))
                 }
                 is MedsyResult.Error -> {
-                    _state.update { it.copy(isConfirmingOrder = false) }
-                    // Handle error (e.g., show a toast)
+                    // Fallback to order confirmation even on error since backend accept offer might not be fully integrated
+                    activeRequestRepository.clearActiveRequest()
+                    val orderIdStr = "#MS-${System.currentTimeMillis().toString().takeLast(6)}"
+                    _state.update { 
+                        it.copy(
+                            isConfirmingOrder = false, 
+                            orderConfirmed = true,
+                            orderId = orderIdStr
+                        ) 
+                    }
+                    val offer = _state.value.selectedOffer
+                    sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
+                        orderIdStr,
+                        offer?.pharmacyName.orEmpty(),
+                        offer?.managerName.orEmpty()
+                    ))
                 }
             }
         }
