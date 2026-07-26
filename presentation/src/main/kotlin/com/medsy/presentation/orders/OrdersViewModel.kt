@@ -2,7 +2,9 @@ package com.medsy.presentation.orders
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.common.fold
 import com.medsy.domain.orders.usecase.GetOrdersUseCase
+import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.orders.model.OrderProductThumbnail
 import com.medsy.presentation.orders.model.OrderStatus
 import com.medsy.presentation.orders.model.OrderSummary
@@ -54,7 +56,7 @@ class OrdersViewModel @Inject constructor(
 
     private fun loadOrders() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null) }
+            _state.update { it.copy(isLoading = true, errorMessageRes = null) }
 
             val result = getOrdersUseCase(page = 0, size = 10, sort = null)
 
@@ -88,15 +90,16 @@ class OrdersViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            orders = uiOrders
+                            orders = uiOrders,
+                            errorMessageRes = null
                         )
                     }
                 },
-                onFailure = { exception ->
+                onError = { error ->
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = exception.localizedMessage ?: "Failed to load orders"
+                            errorMessageRes = error.toMessageRes()
                         )
                     }
                 }

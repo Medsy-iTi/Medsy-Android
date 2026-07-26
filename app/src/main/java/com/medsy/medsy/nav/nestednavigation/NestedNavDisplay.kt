@@ -41,7 +41,8 @@ fun NestedNavDisplay(
     openCartRequest: () -> Unit,
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
-) {
+    openOrderDetails: (String) -> Unit,
+    ) {
 
     val nestedBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {

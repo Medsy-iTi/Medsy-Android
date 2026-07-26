@@ -183,9 +183,6 @@ fun RootNavDisplay() {
                     onRequestedDestinationHandled = {
                         requestedNestedDestination = null
                     },
-                    openProductDetails = {
-                        rootBackStack.navigateSingleTop(Route.ProductDetails(it.toString()))
-                    }
                 )
 
             }

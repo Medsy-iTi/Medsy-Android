@@ -8,7 +8,7 @@ data class OrdersUIState(
     val isLoading: Boolean = true,
     val selectedFilter: OrderFilter = OrderFilter.All,
     val orders: List<OrderSummary> = emptyList(),
-    val errorMessage: String? = null
+    val errorMessageRes: Int? = null
 ) {
     val filteredOrders: List<OrderSummary>
         get() = orders.filter { it.matchesFilter(selectedFilter) }

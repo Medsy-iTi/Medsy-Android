@@ -2,9 +2,11 @@ package com.medsy.presentation.orders.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.common.fold
 import com.medsy.domain.orders.model.OrderStatusDomain
 import com.medsy.domain.orders.usecase.GetOrderByIdUseCase
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.orders.details.model.FulfillmentType
 import com.medsy.presentation.orders.details.model.OrderDetails
 import com.medsy.presentation.orders.details.model.OrderLineItem
@@ -120,11 +122,11 @@ class OrderDetailsViewModel @Inject constructor(
                         )
                     }
                 },
-                onFailure = {
+                onError = { error ->
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            errorMessageRes = R.string.order_details_error_load
+                            errorMessageRes = error.toMessageRes()
                         )
                     }
                 }
