@@ -115,11 +115,6 @@ private fun MedsySnackbarBanner(data: SnackbarData) {
         MedsySnackbarType.Error   -> MaterialTheme.colorScheme.error
         MedsySnackbarType.Info    -> MaterialTheme.colorScheme.onSurfaceVariant
     }
-    val onBaseColor = when (type) {
-        MedsySnackbarType.Success -> MaterialTheme.extendedColors.onSuccess
-        MedsySnackbarType.Error   -> MaterialTheme.colorScheme.onError
-        MedsySnackbarType.Info    -> MaterialTheme.colorScheme.surface
-    }
     val icon = when (type) {
         MedsySnackbarType.Success -> Icons.Filled.CheckCircle
         MedsySnackbarType.Error   -> Icons.Filled.Error

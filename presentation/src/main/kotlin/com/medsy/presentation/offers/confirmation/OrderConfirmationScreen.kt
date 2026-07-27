@@ -53,14 +53,12 @@ import com.medsy.presentation.offers.OffersViewModel
 fun OrderConfirmationRoot(
     orderId: String,
     pharmacyName: String,
-    managerName: String,
     onNavigateToTrackOrder: () -> Unit,
     onNavigateToHome: () -> Unit
 ) {
     OrderConfirmationScreen(
         orderId = orderId,
         pharmacyName = pharmacyName,
-        managerName = managerName,
         onTrackOrder = onNavigateToTrackOrder,
         onBackToHome = onNavigateToHome
     )
@@ -70,10 +68,10 @@ fun OrderConfirmationRoot(
 fun OrderConfirmationScreen(
     orderId: String,
     pharmacyName: String,
-    managerName: String,
     onTrackOrder: () -> Unit,
     onBackToHome: () -> Unit
 ) {
+    androidx.activity.compose.BackHandler(onBack = onBackToHome)
     
     Scaffold(
         bottomBar = {
@@ -205,11 +203,6 @@ fun OrderConfirmationScreen(
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = stringResource(R.string.offers_manager_format, managerName),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }

@@ -465,8 +465,8 @@
     <string name="offers_combined_coverage">Full coverage for your request</string>
     <string name="offers_from_egp">from\n%1$d</string>
     <string name="offers_price_note">Prices are final from Medsy and match pharmacy prices, only a discount and delivery fee may apply.</string>
-    <string name="offers_pharmacy_title_format">Pharmacy #%1$s</string>
-    <string name="offers_manager_format">%1$s (Manager)</string>
+    <string name="offers_pharmacy_title_format">Offer %1$s</string>
+    <string name="offers_manager_format">%1$s</string>
     <string name="offers_not_available">Not Available</string>
     <string name="offers_requested_medicines">Requested Medicines</string>
     <string name="offers_available">Available</string>
@@ -494,5 +494,6 @@
     <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.\nSearch in a wider range to find more pharmacies.</string>
     <string name="offers_track_order">Track Order</string>
     <string name="offers_back_to_home">Back to Home</string>
+    <string name="offers_available_empty">No offers available yet</string>
     <string name="offers_edit_address">Edit</string>
 </resources>

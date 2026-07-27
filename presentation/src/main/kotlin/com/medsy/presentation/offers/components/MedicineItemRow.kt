@@ -59,6 +59,7 @@ fun MedicineItemRow(
         Spacer(modifier = Modifier.width(12.dp))
         
         Column(
+            modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
@@ -77,7 +78,7 @@ fun MedicineItemRow(
             )
         }
         
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.width(8.dp))
         
         if (isSingleLinePrice) {
             Row(
@@ -87,7 +88,9 @@ fun MedicineItemRow(
                     text = "${medicine.price} ${stringResource(R.string.currency_egp)}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible
                 )
             }
         } else {
@@ -98,7 +101,9 @@ fun MedicineItemRow(
                     text = "${medicine.price} ${stringResource(R.string.currency_egp)}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible
                 )
                 
                 Spacer(modifier = Modifier.height(4.dp))

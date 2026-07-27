@@ -53,7 +53,7 @@ import com.medsy.presentation.offers.components.PriceSummarySection
 @Composable
 fun OrderReviewRoot(
     onNavigateBack: () -> Unit,
-    onNavigateToOrderConfirmation: (String, String, String) -> Unit,
+    onNavigateToOrderConfirmation: (String, String) -> Unit,
     viewModel: OffersViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -62,7 +62,7 @@ fun OrderReviewRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OffersUIEffect.NavigateBack -> onNavigateBack()
-                is OffersUIEffect.NavigateToOrderConfirmation -> onNavigateToOrderConfirmation(effect.orderId, effect.pharmacyName, effect.managerName)
+                is OffersUIEffect.NavigateToOrderConfirmation -> onNavigateToOrderConfirmation(effect.orderId, effect.pharmacyName)
                 else -> Unit
             }
         }
@@ -80,208 +80,210 @@ fun OrderReviewScreen(
     onIntent: (OffersUIIntent) -> Unit
 ) {
     val offer = state.selectedOffer
-    
-    Scaffold(
-        topBar = {
-            OfferTopAppBar(
-                title = stringResource(R.string.offers_order_review_title),
-                onBackClick = { onIntent(OffersUIIntent.NavigateBack) }
-            )
-        },
-        bottomBar = {
-            if (offer != null) {
-                Box(modifier = Modifier.padding(16.dp)) {
-                    Button(
-                        onClick = { onIntent(OffersUIIntent.ConfirmOrder) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        shape = RoundedCornerShape(12.dp),
-                        enabled = !state.isConfirmingOrder
-                    ) {
-                        if (state.isConfirmingOrder) {
-                            CircularProgressIndicator(
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        } else {
-                            Text(
-                                text = stringResource(R.string.offers_confirm_order),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
+    val snackbarHostState =
+        androidx.compose.runtime.remember { androidx.compose.material3.SnackbarHostState() }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                OfferTopAppBar(
+                    title = stringResource(R.string.offers_order_review_title),
+                    onBackClick = { onIntent(OffersUIIntent.NavigateBack) }
+                )
+            },
+            bottomBar = {
+                if (offer != null) {
+                    Box(modifier = Modifier.padding(16.dp)) {
+                        com.medsy.designsystem.components.MedsyButton(
+                            onClick = { onIntent(OffersUIIntent.ConfirmOrder) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            enabled = !state.isConfirmingOrder,
+                            snackbarHostState = snackbarHostState
+                        ) {
+                            if (state.isConfirmingOrder) {
+                                CircularProgressIndicator(
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(R.string.offers_confirm_order),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            if (state.isLoading || offer == null) {
-                MedsyShimmer(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp)
-                    ) {
-                        Row(
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                if (state.isLoading || offer == null) {
+                    MedsyShimmer(modifier = Modifier.fillMaxSize()) {
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(MaterialTheme.colorScheme.surface)
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .fillMaxSize()
+                                .padding(16.dp)
                         ) {
-                            MedsyShimmerPlaceholder(modifier = Modifier.size(44.dp), shape = RoundedCornerShape(8.dp))
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column {
-                                MedsyShimmerPlaceholder(modifier = Modifier.height(20.dp).fillMaxWidth(0.5f))
-                                Spacer(modifier = Modifier.height(8.dp))
-                                MedsyShimmerPlaceholder(modifier = Modifier.height(14.dp).fillMaxWidth(0.3f))
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(24.dp))
-                        MedsyShimmerPlaceholder(modifier = Modifier.height(24.dp).fillMaxWidth(0.4f))
-                        Spacer(modifier = Modifier.height(16.dp))
-                        repeat(3) {
-                            MedsyShimmerPlaceholder(modifier = Modifier.fillMaxWidth().height(80.dp), shape = RoundedCornerShape(12.dp))
-                            Spacer(modifier = Modifier.height(12.dp))
-                        }
-                    }
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
-                ) {
-
-
-                    item {
-                        Text(
-                            text = stringResource(R.string.offers_requested_medicines),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-
-                    items(offer.medicines.filter { it.isAvailable }) { medicine ->
-                        MedicineItemRow(medicine = medicine, isSingleLinePrice = true)
-                    }
-
-                    item {
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = stringResource(R.string.offers_delivery_address),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier.padding(bottom = 16.dp)
-                        )
-                        
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(MaterialTheme.colorScheme.surface)
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.LocationOn,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            
-                            Spacer(modifier = Modifier.width(16.dp))
-                            
-                            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.Start) {
-                                Text(
-                                    text = stringResource(R.string.home_address_mock),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    textAlign = TextAlign.Start
-                                )
-                                Text(
-                                    text = "أمام برج النيل، الدور 3، شقة 12",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    textAlign = TextAlign.Start
-                                )
-                            }
-                            
-                            Spacer(modifier = Modifier.width(16.dp))
-                            
-                            Button(
-                                onClick = { },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                ),
-                                shape = RoundedCornerShape(8.dp),
-                                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = stringResource(R.string.offers_edit_address),
-                                    style = MaterialTheme.typography.labelLarge,
-                                    fontWeight = FontWeight.Bold
+                                MedsyShimmerPlaceholder(
+                                    modifier = Modifier.size(44.dp),
+                                    shape = RoundedCornerShape(8.dp)
                                 )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column {
+                                    MedsyShimmerPlaceholder(
+                                        modifier = Modifier.height(20.dp).fillMaxWidth(0.5f)
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    MedsyShimmerPlaceholder(
+                                        modifier = Modifier.height(14.dp).fillMaxWidth(0.3f)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(24.dp))
+                            MedsyShimmerPlaceholder(
+                                modifier = Modifier.height(24.dp).fillMaxWidth(0.4f)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            repeat(3) {
+                                MedsyShimmerPlaceholder(
+                                    modifier = Modifier.fillMaxWidth().height(80.dp),
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
                             }
                         }
-                        
-                        Spacer(modifier = Modifier.height(24.dp))
-                        
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(horizontalAlignment = Alignment.Start) {
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
+                    ) {
+
+
+                        item {
+                            Text(
+                                text = stringResource(R.string.offers_requested_medicines),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+
+                        items(offer.medicines.filter { it.isAvailable }) { medicine ->
+                            MedicineItemRow(medicine = medicine, isSingleLinePrice = true)
+                        }
+
+                        item {
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Text(
+                                text = stringResource(R.string.offers_delivery_address),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.LocationOn,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+
+                                Spacer(modifier = Modifier.width(16.dp))
+
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    horizontalAlignment = Alignment.Start
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.home_address_mock),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        textAlign = TextAlign.Start
+                                    )
+                                    Text(
+                                        text = "أمام برج النيل، الدور 3، شقة 12",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        textAlign = TextAlign.Start
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(horizontalAlignment = Alignment.Start) {
+                                    Text(
+                                        text = stringResource(R.string.offers_delivery_details),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.offers_home_delivery),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.weight(1f))
+
                                 Text(
-                                    text = stringResource(R.string.offers_delivery_details),
-                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = state.deliveryFee.toString(),
+                                    style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
                                 Text(
-                                    text = stringResource(R.string.offers_home_delivery),
+                                    text = " ${stringResource(R.string.currency_egp)}",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            
-                            Spacer(modifier = Modifier.weight(1f))
-                            
-                            Text(
-                                text = state.deliveryFee.toString(),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = " ${stringResource(R.string.currency_egp)}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+                            Spacer(modifier = Modifier.height(32.dp))
+
+                            PriceSummarySection(
+                                medicinesPrice = offer.price,
+                                deliveryFee = state.deliveryFee
                             )
                         }
-                        
-                        Spacer(modifier = Modifier.height(32.dp))
-                        
-                        PriceSummarySection(
-                            medicinesPrice = offer.price,
-                            deliveryFee = state.deliveryFee
-                        )
                     }
                 }
             }
         }
+        com.medsy.designsystem.components.MedsySnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }

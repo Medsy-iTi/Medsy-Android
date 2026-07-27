@@ -38,6 +38,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.showError
+import com.medsy.designsystem.util.isNetworkAvailable
+import kotlinx.coroutines.launch
 import com.medsy.presentation.R
 import com.medsy.presentation.offers.OffersState
 import com.medsy.presentation.offers.OffersUIEffect
@@ -75,95 +78,120 @@ fun AvailableOffersScreen(
     state: OffersState,
     onIntent: (OffersUIIntent) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            OfferTopAppBar(
-                title = stringResource(R.string.offers_available_title),
-                onBackClick = { onIntent(OffersUIIntent.NavigateBack) },
-                actions = {
-                    IconButton(onClick = { onIntent(OffersUIIntent.RefreshOffers) }) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Refresh",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            if (state.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    val reversedOffers = state.availableOffers.reversed()
-                    Text(
-                        text = stringResource(
-                            R.string.offers_available_subtitle_format,
-                            reversedOffers.size
-                        ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
+    val snackbarHostState = androidx.compose.runtime.remember { androidx.compose.material3.SnackbarHostState() }
+    val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
 
-                    LazyColumn(
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(16.dp)
-                    ) {
-                        items(reversedOffers, key = { it.id }) { offer ->
-                            OfferCard(
-                                offer = offer,
-                                onClick = { onIntent(OffersUIIntent.SelectOffer(offer.id)) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                OfferTopAppBar(
+                    title = stringResource(R.string.offers_available_title),
+                    onBackClick = { onIntent(OffersUIIntent.NavigateBack) },
+                    actions = {
+                        IconButton(onClick = { onIntent(OffersUIIntent.RefreshOffers) }) {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = "Refresh",
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .background(Color.Transparent)
-                            .padding(16.dp),
-                        contentAlignment = Alignment.CenterStart
+                )
+            }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                if (state.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                } else if (state.availableOffers.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.offers_available_empty),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+                        val reversedOffers = state.availableOffers.reversed()
+                        Text(
+                            text = stringResource(
+                                R.string.offers_available_subtitle_format,
+                                reversedOffers.size
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+
+                        val context = androidx.compose.ui.platform.LocalContext.current
+                        LazyColumn(
+                            modifier = Modifier.weight(1f),
+                            contentPadding = PaddingValues(16.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.offers_price_note),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                textAlign = TextAlign.Start
-                            )
+                            items(reversedOffers, key = { it.id }) { offer ->
+                                OfferCard(
+                                    offer = offer,
+                                    onClick = { 
+                                        if (!context.isNetworkAvailable()) {
+                                            coroutineScope.launch {
+                                                snackbarHostState.showError(context.getString(com.medsy.designsystem.R.string.designsystem_network_error))
+                                            }
+                                        } else {
+                                            onIntent(OffersUIIntent.SelectOffer(offer.id)) 
+                                        }
+                                    }
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .background(Color.Transparent)
+                                .padding(16.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(R.string.offers_price_note),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    textAlign = TextAlign.Start
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+        com.medsy.designsystem.components.MedsySnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }

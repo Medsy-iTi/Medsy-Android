@@ -141,6 +141,7 @@ fun CartRequestScreen(
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
                     enabled = state.isSubmitEnabled,
                     isLoading = state.isSubmitting,
+                    snackbarHostState = snackbarHostState,
                 ) {
                     if (state.isSubmitting) {
                         CircularProgressIndicator(

@@ -468,8 +468,8 @@
     <string name="offers_combined_coverage">تغطية كاملة للطلب</string>
     <string name="offers_from_egp">من\n%1$d</string>
     <string name="offers_price_note">الأسعار نهائية من ميدسي ومطابقة لأسعار الصيدلية</string>
-    <string name="offers_pharmacy_title_format">صيدلية %1$s</string>
-    <string name="offers_manager_format">%1$s (المدير)</string>
+    <string name="offers_pharmacy_title_format">عرض %1$s</string>
+    <string name="offers_manager_format">%1$s</string>
     <string name="offers_available">متوفر</string>
     <string name="offers_not_available">غير متوفر</string>
     <string name="offers_requested_medicines">الأدوية المطلوبة</string>
@@ -493,7 +493,8 @@
     <string name="offers_cash_on_delivery">كاش عند الاستلام</string>
     <string name="offers_notification_note">سيتم إشعارك عند بدء تجهيز الطلب\nيمكنك متابعة حالة الطلب من الصفحة الرئيسية</string>
     <string name="offers_track_order">تتبع الطلب</string>
-    <string name="offers_back_to_home">العودة إلى الرئيسية</string>
+    <string name="offers_back_to_home">العودة للرئيسية</string>
+    <string name="offers_available_empty">لا توجد عروض متاحة بعد</string>
     <string name="offers_edit_address">تعديل</string>
     <string name="offers_pharmacist_note_title">ملاحظة الصيدلي</string>
     <string name="offers_substitute_for">بديل لـ %1$s</string>

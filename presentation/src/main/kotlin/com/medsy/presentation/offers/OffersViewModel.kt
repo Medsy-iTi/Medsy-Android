@@ -72,7 +72,7 @@ class OffersViewModel @Inject constructor(
             when (result) {
                 is com.medsy.domain.common.MedsyResult.Success -> {
                     activeRequestRepository.clearActiveRequest()
-                    val orderIdStr = "#MS-${System.currentTimeMillis().toString().takeLast(6)}"
+                    val orderIdStr = "#MS-$requestId"
                     _state.update { 
                         it.copy(
                             isConfirmingOrder = false, 
@@ -83,14 +83,13 @@ class OffersViewModel @Inject constructor(
                     val offer = _state.value.selectedOffer
                     sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
                         orderIdStr,
-                        offer?.pharmacyName.orEmpty(),
-                        offer?.managerName.orEmpty()
+                        offer?.pharmacyName.orEmpty()
                     ))
                 }
                 is MedsyResult.Error -> {
                     // Fallback to order confirmation even on error since backend accept offer might not be fully integrated
                     activeRequestRepository.clearActiveRequest()
-                    val orderIdStr = "#MS-${System.currentTimeMillis().toString().takeLast(6)}"
+                    val orderIdStr = "#MS-$requestId"
                     _state.update { 
                         it.copy(
                             isConfirmingOrder = false, 
@@ -101,8 +100,7 @@ class OffersViewModel @Inject constructor(
                     val offer = _state.value.selectedOffer
                     sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
                         orderIdStr,
-                        offer?.pharmacyName.orEmpty(),
-                        offer?.managerName.orEmpty()
+                        offer?.pharmacyName.orEmpty()
                     ))
                 }
             }
