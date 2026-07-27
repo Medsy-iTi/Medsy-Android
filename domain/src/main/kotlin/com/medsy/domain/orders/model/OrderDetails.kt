@@ -19,5 +19,8 @@ data class OrderDetailsDomain(
     val deliveryLongitude: Double?,
     val status: OrderStatusDomain,
     val date: String,
+    val prescriptionImage: String? = null,
+    val customerNote: String? = null,
+    val pharmacyNote: String? = null,
     val items: List<OrderItemDomain>
 )

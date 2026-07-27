@@ -515,6 +515,10 @@
     <!--   Order Details (M-25)   -->
     <string name="order_details_title_format">Order #%1$s</string>
     <string name="order_details_fulfillment_pickup">Pickup</string>
+    <string name="order_details_prescription_title">Prescription Image</string>
+    <string name="order_details_customer_note_title">Customer Notes</string>
+    <string name="order_details_pharmacy_note_title">Pharmacy Notes</string>
+    <string name="order_details_no_notes">No notes provided</string>
     <string name="order_details_fulfillment_delivery">Delivery</string>
     <string name="order_details_pharmacy_label">Pharmacy</string>
     <string name="order_details_alternative_to_format">Alternative to %1$s</string>

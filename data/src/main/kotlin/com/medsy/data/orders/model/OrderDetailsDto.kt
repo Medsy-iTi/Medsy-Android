@@ -29,5 +29,8 @@ data class OrderDetailsDto(
     @Json(name = "deliveryLongitude") val deliveryLongitude: Double? = null,
     @Json(name = "status") val status: String? = null,
     @Json(name = "createdAt") val date: String,
+    @Json(name = "prescriptionImage") val prescriptionImage: String? = null,
+    @Json(name = "customerNote") val customerNote: String? = null,
+    @Json(name = "pharmacyNote") val pharmacyNote: String? = null,
     @Json(name = "items") val items: List<OrderItemDto>
 )

@@ -519,6 +519,10 @@
     <!--   Order Details (M-25)   -->
     <string name="order_details_title_format">طلب #%1$s</string>
     <string name="order_details_fulfillment_pickup">استلام من الصيدلية</string>
+    <string name="order_details_prescription_title">صورة الروشتة</string>
+    <string name="order_details_customer_note_title">ملاحظات العميل</string>
+    <string name="order_details_pharmacy_note_title">ملاحظات الصيدلية</string>
+    <string name="order_details_no_notes">لا توجد ملاحظات</string>
     <string name="order_details_fulfillment_delivery">توصيل</string>
     <string name="order_details_pharmacy_label">الصيدلية</string>
     <string name="order_details_alternative_to_format">بديل عن %1$s</string>

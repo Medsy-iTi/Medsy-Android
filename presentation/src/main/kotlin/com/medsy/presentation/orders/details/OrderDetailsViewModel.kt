@@ -115,7 +115,10 @@ class OrderDetailsViewModel @Inject constructor(
                         },
                         itemsSubtotal = domainOrder.subTotal,
                         deliveryFee = domainOrder.deliveryFee,
-                        finalTotal = domainOrder.total
+                        finalTotal = domainOrder.total,
+                        prescriptionImage = domainOrder.prescriptionImage,
+                        customerNote = domainOrder.customerNote,
+                        pharmacyNote = domainOrder.pharmacyNote
                     )
 
                     _state.update {

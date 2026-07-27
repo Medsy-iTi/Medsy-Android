@@ -3,6 +3,7 @@ package com.medsy.presentation.orders
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.common.fold
+import com.medsy.domain.orders.model.OrderStatusDomain
 import com.medsy.domain.orders.usecase.GetOrdersUseCase
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.orders.model.OrderProductThumbnail
@@ -64,10 +65,10 @@ class OrdersViewModel @Inject constructor(
                     val uiOrders = pageDomain.content.map { domainOrder ->
 
                         val presentationStatus = when (domainOrder.status) {
-                            com.medsy.domain.orders.model.OrderStatusDomain.Confirmed -> OrderStatus.Confirmed
-                            com.medsy.domain.orders.model.OrderStatusDomain.Delivered -> OrderStatus.Delivered
-                            com.medsy.domain.orders.model.OrderStatusDomain.Cancelled -> OrderStatus.Cancelled
-                            com.medsy.domain.orders.model.OrderStatusDomain.Pending -> OrderStatus.Confirmed
+                            OrderStatusDomain.Confirmed -> OrderStatus.Confirmed
+                            OrderStatusDomain.Delivered -> OrderStatus.Delivered
+                            OrderStatusDomain.Cancelled -> OrderStatus.Cancelled
+                            OrderStatusDomain.Pending -> OrderStatus.Confirmed
                         }
 
                         OrderSummary(

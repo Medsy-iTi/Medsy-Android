@@ -36,4 +36,7 @@ data class OrderDetails(
     val itemsSubtotal: Double,
     val deliveryFee: Double?,
     val finalTotal: Double,
+    val prescriptionImage: String? = null,
+    val customerNote: String? = null,
+    val pharmacyNote: String? = null,
 )

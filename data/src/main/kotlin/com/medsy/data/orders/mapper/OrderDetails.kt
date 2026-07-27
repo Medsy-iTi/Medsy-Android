@@ -25,6 +25,9 @@ fun OrderDetailsDto.toDomain(): OrderDetailsDomain {
         deliveryLongitude = deliveryLongitude,
         status = mapOrderStatus(status),
         date = date,
+        prescriptionImage = prescriptionImage,
+        customerNote = customerNote,
+        pharmacyNote = pharmacyNote,
         items = items.map { it.toDomain() }
     )
 }

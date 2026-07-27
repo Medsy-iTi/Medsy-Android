@@ -38,6 +38,9 @@ fun OrderDto.toDomain(): Order {
         deliveryLongitude = deliveryLongitude,
         status = status.toOrderStatusDomain(),
         dateLabel = date ?: "",
+        prescriptionImage = prescriptionImage,
+        customerNote = customerNote,
+        pharmacyNote = pharmacyNote,
         items = items?.map { it.toDomain() } ?: emptyList()
     )
 }

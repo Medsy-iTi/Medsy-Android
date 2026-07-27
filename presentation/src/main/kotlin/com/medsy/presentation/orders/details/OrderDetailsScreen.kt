@@ -1,5 +1,6 @@
 package com.medsy.presentation.orders.details
 
+import OrderNoteSection
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,13 +9,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,11 +25,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.medsy.presentation.R
 import com.medsy.presentation.orders.details.components.OrderDetailsLineItemRow
 import com.medsy.presentation.orders.details.components.OrderDetailsPharmacyCard
@@ -153,6 +156,52 @@ private fun OrderDetailsContent(
                         onClick = { onIntent(OrderDetailsUIIntent.PharmacyClicked) },
                     )
                 }
+            }
+
+            if (!order.prescriptionImage.isNullOrBlank()) {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            text = stringResource(R.string.order_details_prescription_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
+                            ),
+                        ) {
+                            AsyncImage(
+                                model = order.prescriptionImage,
+                                contentDescription = stringResource(R.string.order_details_prescription_title),
+                                contentScale = ContentScale.FillWidth,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(max = 240.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                            )
+                        }
+                    }
+                }
+            }
+
+            item {
+                OrderNoteSection(
+                    titleRes = R.string.order_details_customer_note_title,
+                    note = order.customerNote
+                )
+            }
+
+            item {
+                OrderNoteSection(
+                    titleRes = R.string.order_details_pharmacy_note_title,
+                    note = order.pharmacyNote
+                )
             }
 
             item {
