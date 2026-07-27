@@ -1,5 +1,7 @@
 package com.medsy.presentation.orders.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,8 +15,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -54,34 +58,47 @@ private fun OrdersFilterChip(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val backgroundColor = if (selected) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.background
-    }
-    val contentColor = if (selected) {
-        MaterialTheme.colorScheme.onPrimary
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
-    val borderColor = if (selected) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.outline
-    }
+    val backgroundColor by animateColorAsState(
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+        },
+        animationSpec = tween(durationMillis = 200),
+        label = "ChipBg"
+    )
+    val contentColor by animateColorAsState(
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.onPrimaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        },
+        animationSpec = tween(durationMillis = 200),
+        label = "ChipContent"
+    )
+    val borderColor by animateColorAsState(
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+        } else {
+            MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+        },
+        animationSpec = tween(durationMillis = 200),
+        label = "ChipBorder"
+    )
 
     Row(
         modifier = Modifier
-            .background(backgroundColor, RoundedCornerShape(20.dp))
-            .border(1.dp, borderColor, RoundedCornerShape(20.dp))
+            .background(backgroundColor, RoundedCornerShape(50.dp))
+            .border(1.dp, borderColor, RoundedCornerShape(50.dp))
+            .clip(RoundedCornerShape(50.dp))
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
             color = contentColor,
         )
     }

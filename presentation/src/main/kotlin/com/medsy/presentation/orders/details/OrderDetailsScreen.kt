@@ -1,5 +1,6 @@
 package com.medsy.presentation.orders.details
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -142,7 +148,7 @@ private fun OrderDetailsContent(
             if (order.pharmacy != null) {
                 item {
                     OrderDetailsPharmacyCard(
-                        pharmacyName = order.pharmacy.name,
+                        pharmacy = order.pharmacy,
                         onClick = { onIntent(OrderDetailsUIIntent.PharmacyClicked) },
                     )
                 }
@@ -152,12 +158,33 @@ private fun OrderDetailsContent(
                 Text(
                     text = stringResource(R.string.order_details_items_title),
                     style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
             }
 
-            items(order.lineItems, key = { it.id }) { item ->
-                OrderDetailsLineItemRow(item = item)
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
+                    ),
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        order.lineItems.forEachIndexed { index, lineItem ->
+                            OrderDetailsLineItemRow(item = lineItem)
+                            if (index < order.lineItems.lastIndex) {
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = 12.dp),
+                                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
             item {

@@ -33,7 +33,7 @@ fun OrderDetailsPriceSummary(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
         ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

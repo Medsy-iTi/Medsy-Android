@@ -504,7 +504,9 @@
     <string name="orders_filter_active">الجارية</string>
     <string name="orders_filter_finished">المنتهية</string>
     <string name="orders_filter_cancelled">ملغاة</string>
+    <string name="orders_status_placed">تم الطلب</string>
     <string name="orders_status_confirmed">تم تأكيد الطلب</string>
+    <string name="orders_status_delivering">جاري التوصيل</string>
     <string name="orders_status_delivered">تم التسليم</string>
     <string name="orders_status_cancelled">ملغي</string>
     <string name="orders_from_pharmacy_format">من %1$s</string>

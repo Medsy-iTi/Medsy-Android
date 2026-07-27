@@ -3,6 +3,7 @@ package com.medsy.presentation.orders.details.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -26,6 +27,8 @@ fun OrderDetailsTopBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
+
+            .statusBarsPadding()
             .padding(horizontal = 4.dp, vertical = 4.dp),
     ) {
         IconButton(
@@ -41,7 +44,7 @@ fun OrderDetailsTopBar(
 
         Text(
             text = stringResource(R.string.order_details_title_format, orderId),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.align(Alignment.Center),

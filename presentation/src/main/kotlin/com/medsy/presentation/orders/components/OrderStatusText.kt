@@ -1,11 +1,18 @@
 package com.medsy.presentation.orders.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,21 +32,24 @@ fun OrderStatusText(
     pharmacyName: String?,
     modifier: Modifier = Modifier,
 ) {
-    val (statusLabelRes, statusColor, statusBgColor) = when (status) {
-        OrderStatus.Confirmed -> Triple(
+    val (statusLabelRes, statusColor, statusBgColor, statusIcon) = when (status) {
+        OrderStatus.Confirmed -> Quadruple(
             R.string.orders_status_confirmed,
             MaterialTheme.extendedColors.onSuccessContainer,
-            MaterialTheme.extendedColors.successContainer
+            MaterialTheme.extendedColors.successContainer,
+            Icons.Outlined.Schedule
         )
-        OrderStatus.Delivered -> Triple(
+        OrderStatus.Delivered -> Quadruple(
             R.string.orders_status_delivered,
             MaterialTheme.extendedColors.onSuccessContainer,
-            MaterialTheme.extendedColors.successContainer
+            MaterialTheme.extendedColors.successContainer,
+            Icons.Outlined.CheckCircle
         )
-        OrderStatus.Cancelled -> Triple(
+        OrderStatus.Cancelled -> Quadruple(
             R.string.orders_status_cancelled,
             MaterialTheme.colorScheme.onErrorContainer,
-            MaterialTheme.colorScheme.errorContainer
+            MaterialTheme.colorScheme.errorContainer,
+            Icons.Outlined.Cancel
         )
     }
 
@@ -59,12 +69,23 @@ fun OrderStatusText(
                     .background(statusBgColor)
                     .padding(horizontal = 10.dp, vertical = 6.dp)
             ) {
-                Text(
-                    text = stringResource(statusLabelRes),
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = statusColor,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Icon(
+                        imageVector = statusIcon,
+                        contentDescription = null,
+                        tint = statusColor,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = stringResource(statusLabelRes),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = statusColor,
+                    )
+                }
             }
         }
         if (subtitle != null) {
@@ -77,3 +98,10 @@ fun OrderStatusText(
         }
     }
 }
+
+private data class Quadruple<out A, out B, out C, out D>(
+    val first: A,
+    val second: B,
+    val third: C,
+    val fourth: D
+)

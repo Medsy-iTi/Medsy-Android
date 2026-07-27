@@ -6,34 +6,42 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.LocalPharmacy
+import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.presentation.R
-
+import com.medsy.presentation.orders.details.model.OrderPharmacyInfo
 
 @Composable
 fun OrderDetailsPharmacyCard(
-    pharmacyName: String,
+    pharmacy: OrderPharmacyInfo,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -42,7 +50,7 @@ fun OrderDetailsPharmacyCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
         ),
     ) {
         Row(
@@ -52,7 +60,10 @@ fun OrderDetailsPharmacyCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.LocalPharmacy,
                     contentDescription = null,
@@ -69,20 +80,54 @@ fun OrderDetailsPharmacyCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
-                        text = pharmacyName,
+                        text = pharmacy.name,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 2.dp),
                     )
+                    if (!pharmacy.address.isNullOrBlank()) {
+                        Text(
+                            text = pharmacy.address,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 2.dp),
+                        )
+                    }
                 }
             }
 
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (!pharmacy.phone.isNullOrBlank()) {
+                    IconButton(
+                        onClick = {
+                            try {
+                                val intent = android.content.Intent(
+                                    android.content.Intent.ACTION_DIAL,
+                                    android.net.Uri.parse("tel:${pharmacy.phone}")
+                                )
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                // fallback
+                            }
+                        },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Phone,
+                            contentDescription = "Call Pharmacy",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(4.dp))
+                }
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

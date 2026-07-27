@@ -95,7 +95,12 @@ class OrderDetailsViewModel @Inject constructor(
                         dateLabel = domainOrder.date,
                         fulfillmentType = FulfillmentType.Delivery,
                         pharmacy = domainOrder.pharmacyId?.let {
-                            OrderPharmacyInfo(id = it, name = domainOrder.pharmacyName ?: "")
+                            OrderPharmacyInfo(
+                                id = it,
+                                name = domainOrder.pharmacyName ?: "",
+                                address = domainOrder.pharmacyAddress,
+                                phone = domainOrder.pharmacyPhone
+                            )
                         },
                         lineItems = domainOrder.items.map { item ->
                             OrderLineItem(

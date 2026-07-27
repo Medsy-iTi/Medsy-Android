@@ -501,7 +501,9 @@
     <string name="orders_filter_active">Active</string>
     <string name="orders_filter_finished">Finished</string>
     <string name="orders_filter_cancelled">Cancelled</string>
+    <string name="orders_status_placed">Placed</string>
     <string name="orders_status_confirmed">Order confirmed</string>
+    <string name="orders_status_delivering">Delivering</string>
     <string name="orders_status_delivered">Delivered</string>
     <string name="orders_status_cancelled">Cancelled</string>
     <string name="orders_from_pharmacy_format">From %1$s</string>

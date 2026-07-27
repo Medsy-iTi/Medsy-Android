@@ -10,6 +10,8 @@ enum class FulfillmentType {
 data class OrderPharmacyInfo(
     val id: Long,
     val name: String,
+    val address: String? = null,
+    val phone: String? = null,
 )
 
 data class OrderLineItem(
