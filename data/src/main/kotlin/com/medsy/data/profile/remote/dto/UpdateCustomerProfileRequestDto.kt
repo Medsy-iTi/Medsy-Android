@@ -5,6 +5,6 @@ data class UpdateCustomerProfileRequestDto(
     val lastName: String,
     val homeAddress: String?,
     val dob: String?,
-    val latitude: Double?,
-    val longitude: Double?,
+    val deliveryLatitude: Double?,
+    val deliveryLongitude: Double?,
 )
