@@ -13,8 +13,8 @@ fun CustomerDto.toDomain(): Profile = Profile(
     homeAddress = homeAddress,
     dob = dob,
     phoneNumber = phoneNumber.orEmpty(),
-    latitude = latitude,
-    longitude = longitude,
+    latitude = deliveryLatitude,
+    longitude = deliveryLongitude,
 )
 
 fun UpdateProfileParams.toDto(): UpdateCustomerProfileRequestDto =
@@ -23,6 +23,6 @@ fun UpdateProfileParams.toDto(): UpdateCustomerProfileRequestDto =
         lastName = lastName,
         homeAddress = homeAddress,
         dob = dob,
-        latitude = latitude,
-        longitude = longitude,
+        deliveryLatitude = latitude,
+        deliveryLongitude = longitude,
     )
