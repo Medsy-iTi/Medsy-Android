@@ -8,6 +8,6 @@ data class CustomerDto(
     val homeAddress: String?,
     val dob: String?,
     val phoneNumber: String?,
-    val latitude: Double?,
-    val longitude: Double?,
+    val deliveryLatitude: Double?,
+    val deliveryLongitude: Double?,
 )
