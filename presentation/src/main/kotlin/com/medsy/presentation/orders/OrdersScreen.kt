@@ -26,7 +26,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
 import com.medsy.presentation.orders.components.OrderCard
+import com.medsy.presentation.orders.components.OrderCardShimmer
 import com.medsy.presentation.orders.components.OrdersFilterChipsRow
+import com.medsy.presentation.orders.components.OrdersFilterChipsShimmerRow
 
 @Composable
 fun OrdersRoot(
@@ -72,17 +74,24 @@ fun OrdersScreen(
                 .padding(top = 4.dp, bottom = 12.dp),
         )
 
-        OrdersFilterChipsRow(
-            selectedFilter = state.selectedFilter,
-            onFilterSelected = { onIntent(OrdersUIIntent.FilterSelected(it)) },
-        )
+        if (state.isLoading) {
+            OrdersFilterChipsShimmerRow()
+        } else {
+            OrdersFilterChipsRow(
+                selectedFilter = state.selectedFilter,
+                onFilterSelected = { onIntent(OrdersUIIntent.FilterSelected(it)) },
+            )
+        }
 
         when {
-            state.isLoading -> Box(
+            state.isLoading -> LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
+                contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                CircularProgressIndicator()
+                items(3) {
+                    OrderCardShimmer()
+                }
             }
 
             state.errorMessageRes != null -> Box(

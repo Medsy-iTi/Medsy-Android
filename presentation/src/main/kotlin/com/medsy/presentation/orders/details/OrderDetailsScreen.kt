@@ -35,6 +35,7 @@ import com.medsy.presentation.orders.details.components.OrderDetailsLineItemRow
 import com.medsy.presentation.orders.details.components.OrderDetailsPharmacyCard
 import com.medsy.presentation.orders.details.components.OrderDetailsPriceSummary
 import com.medsy.presentation.orders.details.components.OrderDetailsReorderBar
+import com.medsy.presentation.orders.details.components.OrderDetailsShimmer
 import com.medsy.presentation.orders.details.components.OrderDetailsStatusHeader
 import com.medsy.presentation.orders.details.components.OrderDetailsTopBar
 import kotlinx.coroutines.flow.collectLatest
@@ -105,9 +106,9 @@ private fun OrderDetailsContent(
     modifier: Modifier = Modifier,
 ) {
     if (state.isLoading) {
-        Box(modifier = modifier, contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
+        OrderDetailsShimmer(
+            modifier = modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+        )
         return
     }
 
