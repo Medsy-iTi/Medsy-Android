@@ -22,11 +22,18 @@ fun OrderPageDataDto.toDomain(): OrderPageDomain {
 fun OrderDto.toDomain(): Order {
     return Order(
         id = id,
-        userId = userId,
+        customerId = customerId,
+        customerName = customerName,
         pharmacyId = pharmacyId,
+        pharmacyName = pharmacyName,
+        pharmacyAddress = pharmacyAddress,
+        pharmacyPhone = pharmacyPhone,
         pharmacistId = pharmacistId,
+        pharmacistName = pharmacistName,
         offerId = offerId,
-        totalPrice = totalPrice,
+        subTotal = subTotal,
+        deliveryFee = deliveryFee,
+        total = total,
         deliveryLatitude = deliveryLatitude,
         deliveryLongitude = deliveryLongitude,
         status = status.toOrderStatusDomain(),
@@ -41,6 +48,7 @@ fun OrderItemDto.toDomain(): OrderItemDomain {
         productId = productId,
         quantity = quantity,
         unitPrice = unitPrice,
+        totalPrice = totalPrice,
         productName = productName,
         imageUrl = imageUrl
     )

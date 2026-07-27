@@ -95,7 +95,7 @@ class OrderDetailsViewModel @Inject constructor(
                         dateLabel = domainOrder.date,
                         fulfillmentType = FulfillmentType.Delivery,
                         pharmacy = domainOrder.pharmacyId?.let {
-                            OrderPharmacyInfo(id = it, name = "")
+                            OrderPharmacyInfo(id = it, name = domainOrder.pharmacyName ?: "")
                         },
                         lineItems = domainOrder.items.map { item ->
                             OrderLineItem(
@@ -108,9 +108,9 @@ class OrderDetailsViewModel @Inject constructor(
                                 productId = item.productId
                             )
                         },
-                        itemsSubtotal = domainOrder.totalPrice,
-                        deliveryFee = null,
-                        finalTotal = domainOrder.totalPrice
+                        itemsSubtotal = domainOrder.subTotal,
+                        deliveryFee = domainOrder.deliveryFee,
+                        finalTotal = domainOrder.total
                     )
 
                     _state.update {

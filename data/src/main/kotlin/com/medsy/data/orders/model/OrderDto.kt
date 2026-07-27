@@ -24,11 +24,18 @@ data class OrderPageDataDto(
 @JsonClass(generateAdapter = true)
 data class OrderDto(
     @Json(name = "id") val id: Long,
-    @Json(name = "userId") val userId: Long,
+    @Json(name = "customerId") val customerId: Long,
+    @Json(name = "customerName") val customerName: String?,
     @Json(name = "pharmacyId") val pharmacyId: Long?,
+    @Json(name = "pharmacyName") val pharmacyName: String?,
+    @Json(name = "pharmacyAddress") val pharmacyAddress: String?,
+    @Json(name = "pharmacyPhone") val pharmacyPhone: String?,
     @Json(name = "pharmacistId") val pharmacistId: Long?,
+    @Json(name = "pharmacistName") val pharmacistName: String?,
     @Json(name = "offerId") val offerId: Long?,
-    @Json(name = "totalPrice") val totalPrice: Double,
+    @Json(name = "subTotal") val subTotal: Double,
+    @Json(name = "deliveryFee") val deliveryFee: Double,
+    @Json(name = "total") val total: Double,
     @Json(name = "deliveryLatitude") val deliveryLatitude: Double?,
     @Json(name = "deliveryLongitude") val deliveryLongitude: Double?,
     @Json(name = "status") val status: String? = null,
@@ -42,6 +49,7 @@ data class OrderItemDto(
     @Json(name = "productId") val productId: Long,
     @Json(name = "quantity") val quantity: Int,
     @Json(name = "unitPrice") val unitPrice: Double,
+    @Json(name = "totalPrice") val totalPrice: Double? = null,
     @Json(name = "productName") val productName: String? = null,
     @Json(name = "imageUrl") val imageUrl: String? = null
 )

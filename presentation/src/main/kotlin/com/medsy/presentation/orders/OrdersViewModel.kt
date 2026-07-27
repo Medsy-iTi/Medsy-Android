@@ -74,8 +74,8 @@ class OrdersViewModel @Inject constructor(
                             id = domainOrder.id.toString(),
                             dateLabel = domainOrder.dateLabel,
                             status = presentationStatus,
-                            pharmacyName = domainOrder.pharmacyId?.toString(),
-                            total = domainOrder.totalPrice.toInt(),
+                            pharmacyName = domainOrder.pharmacyName,
+                            total = domainOrder.total.toInt(),
                             productCount = domainOrder.items.sumOf { it.quantity },
                             productThumbnails = domainOrder.items.map { item ->
                                 OrderProductThumbnail(
