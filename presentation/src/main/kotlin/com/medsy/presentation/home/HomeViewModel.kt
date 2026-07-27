@@ -82,7 +82,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-        
+
         viewModelScope.launch {
             getProfileUseCase().onSuccess { profile ->
                 profile.homeAddress?.let { address ->
@@ -93,11 +93,13 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchCategories() {
+        if (_state.value.categories.isNotEmpty()) return
+
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getCategoriesUseCase(page = 0, size = 20).collectLatest { result ->
                 result.onSuccess { domainCategories ->
-                    val uiCategories = domainCategories.take(7).map {
+                    val uiCategories = domainCategories.take(9).map {
                         CategoryUi(
                             id = it.id.toString(), name = it.name
                         )

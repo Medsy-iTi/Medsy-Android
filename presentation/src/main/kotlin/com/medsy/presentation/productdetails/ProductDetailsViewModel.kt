@@ -76,6 +76,9 @@ class ProductDetailsViewModel @Inject constructor(
             }
             return
         }
+
+        if (_state.value.product?.id == productId.toString()) return
+
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             val language = if (Locale.getDefault().language == "ar") "ar" else "en"
@@ -150,6 +153,8 @@ class ProductDetailsViewModel @Inject constructor(
             manufacturer = company,
             type = form.orEmpty(),
             category = consumerCategory.orEmpty(),
+            scientificName = scientificName,
+            scientificCategory = scientificCategory.orEmpty(),
             route = route,
             isFavorite = false
         )

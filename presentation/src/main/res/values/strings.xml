@@ -218,6 +218,8 @@
     <string name="product_details_pharmacist_notice">This medicine is dispensed only after pharmacist review to determine the appropriate dose for your condition.</string>
     <string name="product_details_info_title">Product Information</string>
     <string name="product_details_label_manufacturer">Manufacturer</string>
+    <string name="product_details_label_scientific_name">Scientific Name</string>
+    <string name="product_details_label_scientific_category">Scientific Category</string>
     <string name="product_details_label_type">Type</string>
     <string name="product_details_label_category">Drug Category</string>
     <string name="product_details_label_usage_method">Usage Method</string>

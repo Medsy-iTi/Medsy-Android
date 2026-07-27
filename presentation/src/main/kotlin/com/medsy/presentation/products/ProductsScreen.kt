@@ -2,9 +2,9 @@ package com.medsy.presentation.products
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -16,13 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
-import com.medsy.presentation.products.components.ProductListCard
+import com.medsy.presentation.products.components.ProductGridCard
 import com.medsy.presentation.products.components.ProductsTopBar
+import com.medsy.presentation.products.components.ProductsShimmer
 
 @Composable
 fun ProductsRoot(
@@ -70,77 +72,83 @@ fun ProductsScreen(
     onIntent: (ProductsUIIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        ProductsTopBar(
-            title = state.categoryName,
-            onBackClick = { onIntent(ProductsUIIntent.OnBackClick) }
-        )
+    if (state.isLoading) {
+        ProductsShimmer()
+    } else {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            ProductsTopBar(
+                title = state.categoryName,
+                onBackClick = { onIntent(ProductsUIIntent.OnBackClick) }
+            )
 
-        if (state.products.size > 10) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-                OutlinedTextField(
-                    value = state.searchQuery,
-                    onValueChange = { onIntent(ProductsUIIntent.OnSearchQueryChange(it)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.home_search_hint),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    },
-                    shape = RoundedCornerShape(28.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                        cursorColor = MaterialTheme.colorScheme.primary
-                    ),
-                    singleLine = true
-                )
+            if (state.products.size > 10) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    OutlinedTextField(
+                        value = state.searchQuery,
+                        onValueChange = { onIntent(ProductsUIIntent.OnSearchQueryChange(it)) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        placeholder = {
+                            Text(
+                                text = stringResource(R.string.home_search_hint),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
+                        shape = RoundedCornerShape(28.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                            cursorColor = MaterialTheme.colorScheme.primary
+                        ),
+                        singleLine = true
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
-        }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (state.errorMessageRes != null) {
-                Text(
-                    text = stringResource(state.errorMessageRes),
-                    modifier = Modifier.align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.error
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    items(state.filteredProducts) { product ->
-                        ProductListCard(
-                            product = product,
-                            onClick = { onIntent(ProductsUIIntent.OnProductClick(product.id)) },
-                            onAddToCart = {
-                                onIntent(ProductsUIIntent.OnAddToCartClick(product.id))
-                            },
-                        )
+            Box(modifier = Modifier.fillMaxSize()) {
+                if (state.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                } else if (state.errorMessageRes != null) {
+                    Text(
+                        text = stringResource(state.errorMessageRes),
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(state.filteredProducts) { product ->
+                            ProductGridCard(
+                                product = product,
+                                onClick = { onIntent(ProductsUIIntent.OnProductClick(product.id)) },
+                                onAddToCart = {
+                                    onIntent(ProductsUIIntent.OnAddToCartClick(product.id))
+                                },
+                            )
+                        }
+                        item { Spacer(modifier = Modifier.height(16.dp)) }
                     }
-                    item { Spacer(modifier = Modifier.height(16.dp)) }
                 }
             }
         }

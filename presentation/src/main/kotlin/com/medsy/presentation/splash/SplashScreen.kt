@@ -175,6 +175,7 @@ fun SplashScreen() {
                 val textColor =
                     if (isDark) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurface
 
+                // Using a single Text with buildAnnotatedString and a smaller font size to fit on one line
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(color = primaryColor)) {
@@ -184,11 +185,13 @@ fun SplashScreen() {
                             append(stringResource(R.string.app_name_suffix))
                         }
                     },
-                    style = MaterialTheme.typography.displayLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = (-0.5).sp,
+                    style = MaterialTheme.typography.displayMedium.copy(
+                        fontWeight = FontWeight.ExtraBold,
                     ),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    softWrap = false,
+                    maxLines = 1,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))

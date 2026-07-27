@@ -29,6 +29,7 @@ import com.medsy.presentation.R
 import com.medsy.presentation.productdetails.components.PharmacistNoticeCard
 import com.medsy.presentation.productdetails.components.ProductBottomActions
 import com.medsy.presentation.productdetails.components.ProductDetailsList
+import com.medsy.presentation.productdetails.components.ProductDetailsShimmer
 import com.medsy.presentation.productdetails.components.ProductImageCarousel
 import com.medsy.presentation.productdetails.components.ProductInfoSection
 import com.medsy.presentation.productdetails.components.ProductTitlePriceSection
@@ -56,7 +57,9 @@ fun ProductDetailsRoot(
             when (effect) {
                 ProductDetailsUIEffect.NavigateBack -> onNavigateBack()
                 ProductDetailsUIEffect.NavigateToPharmacistChat -> onNavigateToPharmacistChat()
-                ProductDetailsUIEffect.OpenShareSheet -> { /* trigger platform share sheet */ }
+                ProductDetailsUIEffect.OpenShareSheet -> { /* trigger platform share sheet */
+                }
+
                 is ProductDetailsUIEffect.ShowMessage -> {
                     snackbarHostState.showSnackbar(
                         ContextCompat.getString(context, effect.messageRes)
@@ -84,12 +87,7 @@ fun ProductDetailsScreen(
     modifier: Modifier = Modifier,
 ) {
     if (state.isLoading) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            CircularProgressIndicator()
-        }
+        ProductDetailsShimmer()
         return
     }
 
@@ -151,6 +149,8 @@ fun ProductDetailsScreen(
 
             ProductDetailsList(
                 manufacturer = product.manufacturer,
+                scientificName = product.scientificName,
+                scientificCategory = product.scientificCategory,
                 category = product.category,
                 usage = product.route,
             )

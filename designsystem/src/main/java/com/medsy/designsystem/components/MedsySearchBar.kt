@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.shadow
+
 
 @Composable
 fun MedsySearchBar(
@@ -30,8 +32,18 @@ fun MedsySearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(28.dp),
+                ambientColor = MaterialTheme.colorScheme.primary,
+                spotColor = MaterialTheme.colorScheme.primary
+            )
             .background(MaterialTheme.colorScheme.background, RoundedCornerShape(28.dp))
-            .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(28.dp))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                RoundedCornerShape(28.dp)
+            )
             .clickable { onSearchClick() }
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart

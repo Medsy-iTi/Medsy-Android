@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -129,17 +130,33 @@ fun HomeShimmer(
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    repeat(4) {
-                        MedsyShimmerPlaceholder(
-                            modifier = Modifier
-                                .size(70.dp),
-                            shape = RoundedCornerShape(12.dp)
-                        )
+
+                repeat(2) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        repeat(3) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                MedsyShimmerPlaceholder(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1.1f),
+                                    shape = RoundedCornerShape(20.dp)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                MedsyShimmerPlaceholder(
+                                    modifier = Modifier
+                                        .width(60.dp)
+                                        .height(12.dp)
+                                )
+                            }
+                        }
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }

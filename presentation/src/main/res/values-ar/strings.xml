@@ -211,6 +211,8 @@
     <string name="product_details_pharmacist_notice">لا يتم صرف هذا الدواء إلا بعد مراجعة الصيدلي لتحديد الجرعة المناسبة لحالتك.</string>
     <string name="product_details_info_title">معلومات المنتج</string>
     <string name="product_details_label_manufacturer">الشركة المنتجة</string>
+    <string name="product_details_label_scientific_name">الاسم العلمي</string>
+    <string name="product_details_label_scientific_category">الفئة العلمية</string>
     <string name="product_details_label_type">النوع</string>
     <string name="product_details_label_category">فئة الدواء</string>
     <string name="product_details_label_dispensing_method">طريقة الصرف</string>

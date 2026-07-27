@@ -37,12 +37,18 @@ fun CategoryGridCard(
     onClick: () -> Unit
 ) {
 
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     val icon = Icons.Default.MedicalServices
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp))
+            .shadow(
+                elevation = if (isDark) 10.dp else 4.dp,
+                shape = RoundedCornerShape(16.dp),
+                ambientColor = MaterialTheme.colorScheme.primary,
+                spotColor = MaterialTheme.colorScheme.primary
+            )
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
             .border(1.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
