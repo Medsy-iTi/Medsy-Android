@@ -75,7 +75,7 @@ fun OrderDetailsLineItemRow(
                 text = stringResource(
                     R.string.order_details_qty_x_price_format,
                     item.quantity,
-                    item.unitPrice,
+                    item.unitPrice.toInt(),
                 ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -84,7 +84,7 @@ fun OrderDetailsLineItemRow(
         }
 
         Text(
-            text = stringResource(R.string.search_price_egp, item.lineTotal),
+            text = stringResource(R.string.search_price_egp, item.lineTotal.toInt()),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,
