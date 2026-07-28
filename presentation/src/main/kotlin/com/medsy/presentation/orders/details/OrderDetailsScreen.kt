@@ -191,20 +191,6 @@ private fun OrderDetailsContent(
             }
 
             item {
-                OrderNoteSection(
-                    titleRes = R.string.order_details_customer_note_title,
-                    note = order.customerNote
-                )
-            }
-
-            item {
-                OrderNoteSection(
-                    titleRes = R.string.order_details_pharmacy_note_title,
-                    note = order.pharmacyNote
-                )
-            }
-
-            item {
                 Text(
                     text = stringResource(R.string.order_details_items_title),
                     style = MaterialTheme.typography.titleMedium,
@@ -235,6 +221,20 @@ private fun OrderDetailsContent(
                         }
                     }
                 }
+            }
+
+            item {
+                OrderNoteSection(
+                    titleRes = R.string.order_details_customer_note_title,
+                    note = order.customerNote
+                )
+            }
+
+            item {
+                OrderNoteSection(
+                    titleRes = R.string.order_details_pharmacy_note_title,
+                    note = order.pharmacyNote
+                )
             }
 
             item {
