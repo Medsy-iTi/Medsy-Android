@@ -1,4 +1,4 @@
-package com.medsy.presentation.orders.components
+package com.medsy.presentation.orders.orderslist.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.components.MedsyShimmer
 import com.medsy.designsystem.components.MedsyShimmerPlaceholder
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.model.OrderFilter
+import com.medsy.presentation.orders.orderslist.model.OrderFilter
 
 @Composable
 fun OrdersFilterChipsRow(

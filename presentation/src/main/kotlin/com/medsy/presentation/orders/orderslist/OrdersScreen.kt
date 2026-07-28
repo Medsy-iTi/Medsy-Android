@@ -1,4 +1,4 @@
-package com.medsy.presentation.orders
+package com.medsy.presentation.orders.orderslist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.components.OrderCard
-import com.medsy.presentation.orders.components.OrderCardShimmer
-import com.medsy.presentation.orders.components.OrdersFilterChipsRow
-import com.medsy.presentation.orders.components.OrdersFilterChipsShimmerRow
+import com.medsy.presentation.orders.orderslist.components.OrderCard
+import com.medsy.presentation.orders.orderslist.components.OrderCardShimmer
+import com.medsy.presentation.orders.orderslist.components.OrdersFilterChipsRow
+import com.medsy.presentation.orders.orderslist.components.OrdersFilterChipsShimmerRow
 
 @Composable
 fun OrdersRoot(

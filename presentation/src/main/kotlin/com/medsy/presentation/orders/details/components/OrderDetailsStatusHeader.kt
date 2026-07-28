@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.orders.details.model.FulfillmentType
-import com.medsy.presentation.orders.model.OrderStatus
+import com.medsy.presentation.orders.orderslist.model.OrderStatus
 
 @Composable
 fun OrderDetailsStatusHeader(

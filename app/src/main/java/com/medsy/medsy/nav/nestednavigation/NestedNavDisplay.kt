@@ -22,7 +22,7 @@ import com.medsy.medsy.nav.rootnavigation.Route
 import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.home.HomeRoot
-import com.medsy.presentation.orders.OrdersRoot
+import com.medsy.presentation.orders.orderslist.OrdersRoot
 import com.medsy.presentation.profile.ProfileRoot
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic

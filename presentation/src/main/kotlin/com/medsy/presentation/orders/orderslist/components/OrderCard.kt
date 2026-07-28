@@ -1,4 +1,4 @@
-package com.medsy.presentation.orders.components
+package com.medsy.presentation.orders.orderslist.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
@@ -24,6 +24,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -35,8 +36,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.model.OrderSummary
-import com.medsy.presentation.orders.model.OrderStatus
+import com.medsy.presentation.orders.orderslist.model.OrderSummary
+import com.medsy.presentation.orders.orderslist.model.OrderStatus
 
 @Composable
 fun OrderCard(
@@ -63,7 +64,7 @@ fun OrderCard(
             .graphicsLayer(scaleX = scale, scaleY = scale)
             .clickable(
                 interactionSource = interactionSource,
-                indication = androidx.compose.material3.ripple(),
+                indication = ripple(),
                 onClick = onClick
             ),
         shape = RoundedCornerShape(16.dp),

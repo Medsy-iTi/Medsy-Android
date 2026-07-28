@@ -7,7 +7,7 @@ import com.medsy.presentation.orders.details.model.FulfillmentType
 import com.medsy.presentation.orders.details.model.OrderDetails
 import com.medsy.presentation.orders.details.model.OrderLineItem
 import com.medsy.presentation.orders.details.model.OrderPharmacyInfo
-import com.medsy.presentation.orders.model.OrderStatus
+import com.medsy.presentation.orders.orderslist.model.OrderStatus
 
 fun OrderDetailsDomain.toPresentation(): OrderDetails {
     val presentationStatus = when (status) {

@@ -244,13 +244,6 @@ private fun OrderDetailsContent(
             }
 
             item {
-                OrderNoteSection(
-                    titleRes = R.string.order_details_pharmacy_note_title,
-                    note = order.pharmacyNote
-                )
-            }
-
-            item {
                 OrderDetailsPriceSummary(
                     itemsSubtotal = order.itemsSubtotal.toInt(),
                     deliveryFee = order.deliveryFee?.toInt(),

@@ -1,4 +1,4 @@
-package com.medsy.presentation.orders.components
+package com.medsy.presentation.orders.orderslist.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.model.OrderProductThumbnail
+import com.medsy.presentation.orders.orderslist.model.OrderProductThumbnail
 
 @Composable
 fun OrderProductThumbnails(

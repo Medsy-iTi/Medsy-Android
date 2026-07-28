@@ -1,4 +1,4 @@
-package com.medsy.presentation.orders.components
+package com.medsy.presentation.orders.orderslist.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.model.OrderStatus
+import com.medsy.presentation.orders.orderslist.model.OrderStatus
 
 @Composable
 fun OrderStatusText(

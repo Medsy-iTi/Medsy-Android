@@ -1,4 +1,4 @@
-package com.medsy.presentation.orders.model
+package com.medsy.presentation.orders.orderslist.model
 
 enum class OrderStatus {
     Confirmed,

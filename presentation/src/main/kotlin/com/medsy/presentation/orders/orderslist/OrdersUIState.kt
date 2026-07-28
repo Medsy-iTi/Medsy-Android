@@ -1,8 +1,8 @@
-package com.medsy.presentation.orders
+package com.medsy.presentation.orders.orderslist
 
-import com.medsy.presentation.orders.model.OrderFilter
-import com.medsy.presentation.orders.model.OrderSummary
-import com.medsy.presentation.orders.model.matchesFilter
+import com.medsy.presentation.orders.orderslist.model.OrderFilter
+import com.medsy.presentation.orders.orderslist.model.OrderSummary
+import com.medsy.presentation.orders.orderslist.model.matchesFilter
 
 data class OrdersUIState(
     val isLoading: Boolean = true,

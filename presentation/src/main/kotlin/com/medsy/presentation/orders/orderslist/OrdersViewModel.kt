@@ -1,4 +1,4 @@
-package com.medsy.presentation.orders
+package com.medsy.presentation.orders.orderslist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,9 +7,12 @@ import com.medsy.domain.orders.model.OrderStatusDomain
 import com.medsy.domain.orders.usecase.GetOrdersUseCase
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.common.util.formatOrderDate
-import com.medsy.presentation.orders.model.OrderProductThumbnail
-import com.medsy.presentation.orders.model.OrderStatus
-import com.medsy.presentation.orders.model.OrderSummary
+import com.medsy.presentation.orders.orderslist.OrdersUIEffect
+import com.medsy.presentation.orders.orderslist.OrdersUIIntent
+import com.medsy.presentation.orders.orderslist.OrdersUIState
+import com.medsy.presentation.orders.orderslist.model.OrderProductThumbnail
+import com.medsy.presentation.orders.orderslist.model.OrderStatus
+import com.medsy.presentation.orders.orderslist.model.OrderSummary
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel

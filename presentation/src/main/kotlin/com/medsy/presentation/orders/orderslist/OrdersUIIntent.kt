@@ -1,6 +1,6 @@
-package com.medsy.presentation.orders
+package com.medsy.presentation.orders.orderslist
 
-import com.medsy.presentation.orders.model.OrderFilter
+import com.medsy.presentation.orders.orderslist.model.OrderFilter
 
 sealed interface OrdersUIIntent {
     data class FilterSelected(val filter: OrderFilter) : OrdersUIIntent

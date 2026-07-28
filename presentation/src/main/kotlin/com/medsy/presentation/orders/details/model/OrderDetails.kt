@@ -1,6 +1,6 @@
 package com.medsy.presentation.orders.details.model
 
-import com.medsy.presentation.orders.model.OrderStatus
+import com.medsy.presentation.orders.orderslist.model.OrderStatus
 
 enum class FulfillmentType {
     Pickup,
