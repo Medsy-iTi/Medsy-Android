@@ -511,6 +511,9 @@
     <string name="orders_products_count_format">%1$d products</string>
     <string name="orders_product_image_desc">Product image</string>
     <string name="orders_empty_state">No orders found</string>
+    <string name="orders_error_load">We couldn’t load your orders.</string>
+    <string name="orders_error_retry">Retry</string>
+
 
     <!--   Order Details (M-25)   -->
     <string name="order_details_title_format">Order #%1$s</string>

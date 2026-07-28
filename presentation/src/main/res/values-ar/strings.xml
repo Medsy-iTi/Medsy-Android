@@ -514,6 +514,9 @@
     <string name="orders_products_count_format">%1$d منتجات</string>
     <string name="orders_product_image_desc">صورة المنتج</string>
     <string name="orders_empty_state">لا توجد طلبات</string>
+    <string name="orders_error_load">تعذر تحميل طلباتك.</string>
+    <string name="orders_error_retry">إعادة المحاولة</string>
+
 
 
     <!--   Order Details (M-25)   -->

@@ -25,12 +25,13 @@ class OrdersViewModel @Inject constructor(
     private val getOrdersUseCase: GetOrdersUseCase
 ) : ViewModel() {
     private var hasLoadedInitialData = false
+    private val allFetchedOrders = mutableListOf<OrderSummary>()
 
     private val _state = MutableStateFlow(OrdersUIState())
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                loadOrders()
+                reloadOrders()
                 hasLoadedInitialData = true
             }
         }
@@ -51,19 +52,49 @@ class OrdersViewModel @Inject constructor(
 
             is OrdersUIIntent.OrderClicked ->
                 sendEffect(OrdersUIEffect.NavigateToOrderDetails(intent.orderId))
+
+            OrdersUIIntent.LoadNextPage -> {
+                loadNextPage()
+            }
+
+            OrdersUIIntent.Retry -> {
+                reloadOrders()
+            }
         }
     }
 
-    private fun loadOrders() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessageRes = null) }
+    private fun reloadOrders() {
+        _state.update {
+            it.copy(
+                isLoading = true,
+                currentPage = 0,
+                errorMessageRes = null
+            )
+        }
+        allFetchedOrders.clear()
+        fetchPage(0)
+    }
 
-            val result = getOrdersUseCase(page = 0, size = 10, sort = null)
+    private fun loadNextPage() {
+        val currentState = _state.value
+        if (currentState.isLoading || currentState.isLoadMore || currentState.isLastPage) return
+
+        android.util.Log.d("OrdersViewModel", "Loading next page of orders: ${currentState.currentPage + 1}")
+        _state.update { it.copy(isLoadMore = true) }
+        fetchPage(currentState.currentPage + 1)
+    }
+
+    private fun fetchPage(page: Int,sort: List<String>? = listOf("id,desc")) {
+        viewModelScope.launch {
+            val result = getOrdersUseCase(
+                page = page,
+                size = 10,
+                sort = sort
+            )
 
             result.fold(
                 onSuccess = { pageDomain ->
                     val uiOrders = pageDomain.content.map { domainOrder ->
-
                         val presentationStatus = when (domainOrder.status) {
                             OrderStatusDomain.Confirmed -> OrderStatus.Confirmed
                             OrderStatusDomain.Delivered -> OrderStatus.Delivered
@@ -85,20 +116,33 @@ class OrdersViewModel @Inject constructor(
                                 )
                             }
                         )
-                    }.reversed()
+                    }
 
-                    _state.update {
-                        it.copy(
+                    if (page == 0) {
+                        allFetchedOrders.clear()
+                    }
+                    allFetchedOrders.addAll(uiOrders)
+
+                    android.util.Log.d("OrdersViewModel", "Loaded ${uiOrders.size} orders for page $page. Total loaded: ${allFetchedOrders.size}")
+
+                    _state.update { currentState ->
+                        currentState.copy(
                             isLoading = false,
-                            orders = uiOrders,
+                            isLoadMore = false,
+                            currentPage = pageDomain.pageNumber,
+                            totalPages = pageDomain.totalPages,
+                            isLastPage = pageDomain.last,
+                            orders = allFetchedOrders.toList(),
                             errorMessageRes = null
                         )
                     }
                 },
                 onError = { error ->
-                    _state.update {
-                        it.copy(
+                    android.util.Log.e("OrdersViewModel", "Error loading page $page: $error")
+                    _state.update { currentState ->
+                        currentState.copy(
                             isLoading = false,
+                            isLoadMore = false,
                             errorMessageRes = error.toMessageRes()
                         )
                     }
