@@ -3,5 +3,6 @@
     <string name="app_name">ميدسي</string>
     <string name="home">الرئيسية</string>
     <string name="cart">السلة</string>
+    <string name="orders">الطلبات</string>
     <string name="profile">الملف الشخصي</string>
 </resources>

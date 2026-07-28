@@ -22,6 +22,13 @@ enum class BottomBarDestination(
         selectedIcon = RPresentation.drawable.cart,
         route = Route.NestedNav.Cart
     ),
+    Orders(
+        title = RApp.string.orders,
+        icon = RPresentation.drawable.orderlist,
+        selectedIcon = RPresentation.drawable.orderlist,
+        route = Route.NestedNav.Orders
+    ),
+
     Profile(
         title = RApp.string.profile,
         icon = RPresentation.drawable.person,

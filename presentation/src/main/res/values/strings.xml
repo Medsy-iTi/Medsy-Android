@@ -492,4 +492,46 @@
     <string name="offers_track_order">Track Order</string>
     <string name="offers_back_to_home">Back to Home</string>
     <string name="offers_edit_address">Edit</string>
+
+
+    <!--  My Orders  -->
+    <string name="orders_title">My Orders</string>
+    <string name="order_number_format">#%1$s</string>
+    <string name="orders_filter_all">All</string>
+    <string name="orders_filter_active">Active</string>
+    <string name="orders_filter_finished">Finished</string>
+    <string name="orders_filter_cancelled">Cancelled</string>
+    <string name="orders_status_placed">Placed</string>
+    <string name="orders_status_confirmed">Order confirmed</string>
+    <string name="orders_status_delivering">Delivering</string>
+    <string name="orders_status_delivered">Delivered</string>
+    <string name="orders_status_cancelled">Cancelled</string>
+    <string name="orders_from_pharmacy_format">From %1$s</string>
+    <string name="orders_cancelled_note">Order was cancelled</string>
+    <string name="orders_products_count_format">%1$d products</string>
+    <string name="orders_product_image_desc">Product image</string>
+    <string name="orders_empty_state">No orders found</string>
+    <string name="orders_error_load">We couldn’t load your orders.</string>
+    <string name="orders_error_retry">Retry</string>
+
+
+    <!--   Order Details (M-25)   -->
+    <string name="order_details_title_format">Order #%1$s</string>
+    <string name="order_details_fulfillment_pickup">Pickup</string>
+    <string name="order_details_prescription_title">Prescription Image</string>
+    <string name="order_details_customer_note_title">Customer Notes</string>
+    <string name="order_details_pharmacy_note_title">Pharmacy Notes</string>
+    <string name="order_details_no_notes">No notes provided</string>
+    <string name="order_details_fulfillment_delivery">Delivery</string>
+    <string name="order_details_pharmacy_label">Pharmacy</string>
+    <string name="order_details_alternative_to_format">Alternative to %1$s</string>
+    <string name="order_details_qty_x_price_format">%1$d x %2$d EGP</string>
+    <string name="order_details_items_title">Items</string>
+    <string name="order_details_summary_title">Order Summary</string>
+    <string name="order_details_items_subtotal">Items subtotal</string>
+    <string name="order_details_delivery_fee">Delivery fee</string>
+    <string name="order_details_final_total">Total</string>
+    <string name="order_details_reorder">Reorder</string>
+    <string name="order_details_error_load">We couldn\'t load this order\'s details.</string>
+
 </resources>
