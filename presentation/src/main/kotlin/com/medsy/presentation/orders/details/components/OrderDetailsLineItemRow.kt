@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,13 +39,14 @@ fun OrderDetailsLineItemRow(
                 .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
         ) {
-            if (item.imageUrl != null) {
-                AsyncImage(
-                    model = item.imageUrl,
-                    contentDescription = stringResource(R.string.orders_product_image_desc),
-                    modifier = Modifier.size(56.dp),
-                )
-            }
+            AsyncImage(
+                model = item.imageUrl,
+                contentDescription = stringResource(R.string.orders_product_image_desc),
+                modifier = Modifier.size(56.dp),
+                placeholder = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
+                error = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
+                fallback = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
+            )
         }
 
         Column(

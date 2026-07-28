@@ -20,8 +20,6 @@ data class OrderProductThumbnail(
 
 data class OrderSummary(
     val id: String,
-    // TODO: replace with a real formatted date once the backend provides
-    // order timestamps — kept as a plain label for now (e.g. "Today").
     val dateLabel: String,
     val status: OrderStatus,
     val pharmacyName: String?,

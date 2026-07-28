@@ -6,6 +6,7 @@ import com.medsy.domain.common.fold
 import com.medsy.domain.orders.model.OrderStatusDomain
 import com.medsy.domain.orders.usecase.GetOrdersUseCase
 import com.medsy.presentation.common.util.toMessageRes
+import com.medsy.presentation.common.util.formatOrderDate
 import com.medsy.presentation.orders.model.OrderProductThumbnail
 import com.medsy.presentation.orders.model.OrderStatus
 import com.medsy.presentation.orders.model.OrderSummary
@@ -109,7 +110,7 @@ class OrdersViewModel @Inject constructor(
 
                         OrderSummary(
                             id = domainOrder.id.toString(),
-                            dateLabel = domainOrder.dateLabel,
+                            dateLabel = formatOrderDate(domainOrder.dateLabel),
                             status = presentationStatus,
                             pharmacyName = domainOrder.pharmacyName,
                             total = domainOrder.total.toInt(),

@@ -7,6 +7,7 @@ import com.medsy.domain.orders.model.OrderStatusDomain
 import com.medsy.domain.orders.usecase.GetOrderByIdUseCase
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
+import com.medsy.presentation.common.util.formatOrderDate
 import com.medsy.presentation.orders.details.model.FulfillmentType
 import com.medsy.presentation.orders.details.model.OrderDetails
 import com.medsy.presentation.orders.details.model.OrderLineItem
@@ -104,7 +105,7 @@ class OrderDetailsViewModel @Inject constructor(
                     val orderDetails = OrderDetails(
                         id = domainOrder.id,
                         status = presentationStatus,
-                        dateLabel = domainOrder.date,
+                        dateLabel = formatOrderDate(domainOrder.date),
                         fulfillmentType = FulfillmentType.Delivery,
                         pharmacy = domainOrder.pharmacyId?.let {
                             OrderPharmacyInfo(
