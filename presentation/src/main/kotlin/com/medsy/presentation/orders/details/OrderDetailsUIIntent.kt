@@ -6,4 +6,5 @@ sealed interface OrderDetailsUIIntent {
     data object PharmacyClicked : OrderDetailsUIIntent
     data object ReorderClicked : OrderDetailsUIIntent
     data object Refresh : OrderDetailsUIIntent
+    data class LineItemClicked(val productId: String) : OrderDetailsUIIntent
 }

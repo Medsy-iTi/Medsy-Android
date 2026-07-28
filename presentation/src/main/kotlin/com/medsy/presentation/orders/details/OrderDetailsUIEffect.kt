@@ -6,4 +6,6 @@ sealed interface OrderDetailsUIEffect {
     data class NavigateToPharmacyProfile(val pharmacyId: Long) : OrderDetailsUIEffect
 
     data class ReorderRequested(val orderId: String) : OrderDetailsUIEffect
+
+    data class NavigateToProductDetails(val productId: String) : OrderDetailsUIEffect
 }

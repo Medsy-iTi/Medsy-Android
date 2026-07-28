@@ -50,6 +50,7 @@ fun OrderDetailsRoot(
     onNavigateBack: () -> Unit,
     onNavigateToPharmacyProfile: (Long) -> Unit,
     onReorder: (String) -> Unit,
+    onNavigateToProductDetails: (String) -> Unit,
     viewModel: OrderDetailsViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(orderId) {
@@ -65,6 +66,8 @@ fun OrderDetailsRoot(
                 is OrderDetailsUIEffect.NavigateToPharmacyProfile ->
                     onNavigateToPharmacyProfile(effect.pharmacyId)
                 is OrderDetailsUIEffect.ReorderRequested -> onReorder(effect.orderId)
+                is OrderDetailsUIEffect.NavigateToProductDetails ->
+                    onNavigateToProductDetails(effect.productId)
             }
         }
     }
@@ -218,7 +221,10 @@ private fun OrderDetailsContent(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         order.lineItems.forEachIndexed { index, lineItem ->
-                            OrderDetailsLineItemRow(item = lineItem)
+                            OrderDetailsLineItemRow(
+                                item = lineItem,
+                                onClick = { onIntent(OrderDetailsUIIntent.LineItemClicked(lineItem.productId.toString())) }
+                            )
                             if (index < order.lineItems.lastIndex) {
                                 HorizontalDivider(
                                     modifier = Modifier.padding(vertical = 12.dp),

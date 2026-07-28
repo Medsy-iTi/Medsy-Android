@@ -66,6 +66,9 @@ class OrderDetailsViewModel @Inject constructor(
 
             OrderDetailsUIIntent.ReorderClicked ->
                 sendEffect(OrderDetailsUIEffect.ReorderRequested(orderId))
+
+            is OrderDetailsUIIntent.LineItemClicked ->
+                sendEffect(OrderDetailsUIEffect.NavigateToProductDetails(intent.productId))
         }
     }
 

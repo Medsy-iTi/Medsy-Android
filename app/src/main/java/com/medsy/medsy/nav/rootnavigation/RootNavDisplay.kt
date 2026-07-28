@@ -201,6 +201,9 @@ fun RootNavDisplay() {
                     onReorder = {
                         /* TODO: reorder behavior is owned by M-27 */
                     },
+                    onNavigateToProductDetails = { productId ->
+                        rootBackStack.navigateSingleTop(Route.ProductDetails(id = productId))
+                    },
                 )
             }
 
