@@ -6,6 +6,7 @@ import com.medsy.presentation.orders.model.matchesFilter
 
 data class OrdersUIState(
     val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
     val isLoadMore: Boolean = false,
     val selectedFilter: OrderFilter = OrderFilter.All,
     val orders: List<OrderSummary> = emptyList(),

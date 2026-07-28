@@ -60,13 +60,18 @@ class OrdersViewModel @Inject constructor(
             OrdersUIIntent.Retry -> {
                 reloadOrders()
             }
+
+            OrdersUIIntent.Refresh -> {
+                reloadOrders(isPullToRefresh = true)
+            }
         }
     }
 
-    private fun reloadOrders() {
+    private fun reloadOrders(isPullToRefresh: Boolean = false) {
         _state.update {
             it.copy(
-                isLoading = true,
+                isLoading = !isPullToRefresh,
+                isRefreshing = isPullToRefresh,
                 currentPage = 0,
                 errorMessageRes = null
             )
@@ -84,7 +89,7 @@ class OrdersViewModel @Inject constructor(
         fetchPage(currentState.currentPage + 1)
     }
 
-    private fun fetchPage(page: Int,sort: List<String>? = listOf("id,desc")) {
+    private fun fetchPage(page: Int, sort: List<String>? = listOf("id,desc")) {
         viewModelScope.launch {
             val result = getOrdersUseCase(
                 page = page,
@@ -128,6 +133,7 @@ class OrdersViewModel @Inject constructor(
                     _state.update { currentState ->
                         currentState.copy(
                             isLoading = false,
+                            isRefreshing = false,
                             isLoadMore = false,
                             currentPage = pageDomain.pageNumber,
                             totalPages = pageDomain.totalPages,
@@ -142,6 +148,7 @@ class OrdersViewModel @Inject constructor(
                     _state.update { currentState ->
                         currentState.copy(
                             isLoading = false,
+                            isRefreshing = false,
                             isLoadMore = false,
                             errorMessageRes = error.toMessageRes()
                         )

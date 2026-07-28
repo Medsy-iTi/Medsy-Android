@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -92,13 +93,19 @@ fun OrderDetailsScreen(
             )
         },
     ) { paddingValues ->
-        OrderDetailsContent(
-            state = state,
-            onIntent = onIntent,
+        PullToRefreshBox(
+            isRefreshing = state.isRefreshing,
+            onRefresh = { onIntent(OrderDetailsUIIntent.Refresh) },
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize(),
-        )
+                .fillMaxSize()
+        ) {
+            OrderDetailsContent(
+                state = state,
+                onIntent = onIntent,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
 

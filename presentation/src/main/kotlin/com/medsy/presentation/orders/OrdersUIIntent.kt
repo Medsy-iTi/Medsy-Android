@@ -7,4 +7,5 @@ sealed interface OrdersUIIntent {
     data class OrderClicked(val orderId: String) : OrdersUIIntent
     data object LoadNextPage : OrdersUIIntent
     data object Retry : OrdersUIIntent
+    data object Refresh : OrdersUIIntent
 }

@@ -53,7 +53,9 @@ class OrderDetailsViewModel @Inject constructor(
             OrderDetailsUIIntent.BackClicked ->
                 sendEffect(OrderDetailsUIEffect.NavigateBack)
 
-            OrderDetailsUIIntent.RetryClicked -> loadOrderDetails()
+            OrderDetailsUIIntent.RetryClicked -> loadOrderDetails(isPullToRefresh = false)
+
+            OrderDetailsUIIntent.Refresh -> loadOrderDetails(isPullToRefresh = true)
 
             OrderDetailsUIIntent.PharmacyClicked -> {
                 _state.value.order?.pharmacy?.id?.let { pharmacyId ->
@@ -66,14 +68,24 @@ class OrderDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun loadOrderDetails() {
+    private fun loadOrderDetails(isPullToRefresh: Boolean = false) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessageRes = null) }
+            _state.update {
+                it.copy(
+                    isLoading = !isPullToRefresh,
+                    isRefreshing = isPullToRefresh,
+                    errorMessageRes = null
+                )
+            }
 
             val idAsLong = orderId.toLongOrNull()
             if (idAsLong == null) {
                 _state.update {
-                    it.copy(isLoading = false, errorMessageRes = R.string.order_details_error_load)
+                    it.copy(
+                        isLoading = false,
+                        isRefreshing = false,
+                        errorMessageRes = R.string.order_details_error_load
+                    )
                 }
                 return@launch
             }
@@ -124,6 +136,7 @@ class OrderDetailsViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
+                            isRefreshing = false,
                             order = orderDetails,
                             errorMessageRes = null
                         )
@@ -133,6 +146,7 @@ class OrderDetailsViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
+                            isRefreshing = false,
                             errorMessageRes = error.toMessageRes()
                         )
                     }

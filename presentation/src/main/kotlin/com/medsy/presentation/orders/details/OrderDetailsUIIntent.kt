@@ -5,4 +5,5 @@ sealed interface OrderDetailsUIIntent {
     data object RetryClicked : OrderDetailsUIIntent
     data object PharmacyClicked : OrderDetailsUIIntent
     data object ReorderClicked : OrderDetailsUIIntent
+    data object Refresh : OrderDetailsUIIntent
 }
