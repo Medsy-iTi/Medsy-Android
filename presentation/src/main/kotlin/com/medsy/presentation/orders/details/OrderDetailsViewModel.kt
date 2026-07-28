@@ -3,16 +3,10 @@ package com.medsy.presentation.orders.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.common.fold
-import com.medsy.domain.orders.model.OrderStatusDomain
 import com.medsy.domain.orders.usecase.GetOrderByIdUseCase
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
-import com.medsy.presentation.common.util.formatOrderDate
-import com.medsy.presentation.orders.details.model.FulfillmentType
 import com.medsy.presentation.orders.details.model.OrderDetails
-import com.medsy.presentation.orders.details.model.OrderLineItem
-import com.medsy.presentation.orders.details.model.OrderPharmacyInfo
-import com.medsy.presentation.orders.model.OrderStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -98,50 +92,11 @@ class OrderDetailsViewModel @Inject constructor(
 
             result.fold(
                 onSuccess = { domainOrder ->
-                    val presentationStatus = when (domainOrder.status) {
-                        OrderStatusDomain.Confirmed -> OrderStatus.Confirmed
-                        OrderStatusDomain.Delivered -> OrderStatus.Delivered
-                        OrderStatusDomain.Cancelled -> OrderStatus.Cancelled
-                        OrderStatusDomain.Pending -> OrderStatus.Confirmed
-                    }
-
-                    val orderDetails = OrderDetails(
-                        id = domainOrder.id,
-                        status = presentationStatus,
-                        dateLabel = formatOrderDate(domainOrder.date),
-                        fulfillmentType = FulfillmentType.Delivery,
-                        pharmacy = domainOrder.pharmacyId?.let {
-                            OrderPharmacyInfo(
-                                id = it,
-                                name = domainOrder.pharmacyName ?: "",
-                                address = domainOrder.pharmacyAddress,
-                                phone = domainOrder.pharmacyPhone
-                            )
-                        },
-                        lineItems = domainOrder.items.map { item ->
-                            OrderLineItem(
-                                id = item.id,
-                                medicineName = item.productName ?: "",
-                                imageUrl = item.imageUrl,
-                                quantity = item.quantity,
-                                unitPrice = item.unitPrice,
-                                alternativeToMedicineName = null,
-                                productId = item.productId
-                            )
-                        },
-                        itemsSubtotal = domainOrder.subTotal,
-                        deliveryFee = domainOrder.deliveryFee,
-                        finalTotal = domainOrder.total,
-                        prescriptionImage = domainOrder.prescriptionImage,
-                        customerNote = domainOrder.customerNote,
-                        pharmacyNote = domainOrder.pharmacyNote
-                    )
-
                     _state.update {
                         it.copy(
                             isLoading = false,
                             isRefreshing = false,
-                            order = orderDetails,
+                            order = domainOrder.toPresentation(),
                             errorMessageRes = null
                         )
                     }
