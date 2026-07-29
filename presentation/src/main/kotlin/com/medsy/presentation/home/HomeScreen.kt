@@ -35,7 +35,7 @@ fun HomeRoot(
     onMedicineImageSearchClick: () -> Unit,
     onViewAllCategoriesClick: () -> Unit,
     onCategoryClick: (Int, String) -> Unit,
-    onViewOffersClick: () -> Unit,
+    onViewOffersClick: (Long) -> Unit,
 
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -126,7 +126,7 @@ fun HomeRoot(
                 is HomeUIEffect.NavigateToUploadPrescription -> onUploadPrescriptionClick()
                 is HomeUIEffect.NavigateToMedicineImageSearch -> onMedicineImageSearchClick()
                 is HomeUIEffect.NavigateToCategories -> onViewAllCategoriesClick()
-                is HomeUIEffect.NavigateToOffers -> onViewOffersClick()
+                is HomeUIEffect.NavigateToOffers -> onViewOffersClick(effect.requestId)
             }
         }
     }
@@ -180,16 +180,16 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(18.dp))
 
-        if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
+        state.activeSearchStatuses.firstOrNull()?.let { status ->
             Box(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth()
             ) {
                 ActiveSearchCard(
-                    status = state.activeSearchStatus,
-                    onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
-                    onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
+                    status = status,
+                    onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation(status.requestId)) },
+                    onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick(status.requestId)) },
                     onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) }
                 )
             }

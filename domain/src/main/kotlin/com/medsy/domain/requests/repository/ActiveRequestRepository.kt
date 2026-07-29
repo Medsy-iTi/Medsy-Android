@@ -4,7 +4,8 @@ import com.medsy.domain.requests.model.MedicineRequest
 import kotlinx.coroutines.flow.Flow
 
 interface ActiveRequestRepository {
-    fun observeActiveRequest(): Flow<MedicineRequest?>
-    suspend fun setActiveRequest(request: MedicineRequest)
-    suspend fun clearActiveRequest()
+    fun observeActiveRequests(): Flow<List<MedicineRequest>>
+    suspend fun addActiveRequest(request: MedicineRequest)
+    suspend fun removeActiveRequest(requestId: Long)
+    suspend fun clearActiveRequests()
 }

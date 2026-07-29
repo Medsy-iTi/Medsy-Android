@@ -51,17 +51,26 @@ import com.medsy.presentation.offers.components.OfferTopAppBar
 
 @Composable
 fun AvailableOffersRoot(
+    requestId: Long,
     onNavigateBack: () -> Unit,
-    onNavigateToOfferDetails: () -> Unit,
+    onNavigateToOfferDetails: (String) -> Unit,
     viewModel: OffersViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(requestId) {
+        viewModel.onIntent(OffersUIIntent.LoadOffers(requestId))
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OffersUIEffect.NavigateBack -> onNavigateBack()
-                is OffersUIEffect.NavigateToOfferDetails -> onNavigateToOfferDetails()
+                is OffersUIEffect.NavigateToOfferDetails -> {
+                    state.selectedOffer?.id?.let { offerId ->
+                        onNavigateToOfferDetails(offerId)
+                    }
+                }
                 else -> Unit
             }
         }
@@ -88,10 +97,10 @@ fun AvailableOffersScreen(
                     title = stringResource(R.string.offers_available_title),
                     onBackClick = { onIntent(OffersUIIntent.NavigateBack) },
                     actions = {
-                        IconButton(onClick = { onIntent(OffersUIIntent.RefreshOffers) }) {
+                        IconButton(onClick = { onIntent(OffersUIIntent.LoadOffers(state.requestId ?: -1L)) }) {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
-                                contentDescription = "Refresh",
+                                contentDescription = stringResource(R.string.content_desc_refresh),
                                 tint = MaterialTheme.colorScheme.onBackground
                             )
                         }

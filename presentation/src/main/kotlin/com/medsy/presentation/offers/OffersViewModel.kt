@@ -3,6 +3,7 @@ package com.medsy.presentation.offers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.common.MedsyResult
+import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.offers.model.OfferType
 import com.medsy.domain.offers.usecase.AcceptOfferUseCase
 import com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
@@ -18,7 +19,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,13 +39,10 @@ class OffersViewModel @Inject constructor(
     private val _effect = Channel<OffersUIEffect>()
     val effect = _effect.receiveAsFlow()
 
-    init {
-        loadOffers()
-    }
-
     fun onIntent(intent: OffersUIIntent) {
         when (intent) {
-            OffersUIIntent.RefreshOffers -> loadOffers()
+            is OffersUIIntent.LoadOffers -> loadOffers(intent.requestId)
+            is OffersUIIntent.LoadOfferDetails -> loadOffers(intent.requestId, intent.offerId)
             is OffersUIIntent.SelectOffer -> {
                 val selected = _state.value.availableOffers.find { it.id == intent.offerId }
                 _state.update { it.copy(selectedOffer = selected) }
@@ -70,9 +67,11 @@ class OffersViewModel @Inject constructor(
             _state.update { it.copy(isConfirmingOrder = true) }
             val result = acceptOfferUseCase(requestId, selectedItemIds)
             when (result) {
-                is com.medsy.domain.common.MedsyResult.Success -> {
-                    activeRequestRepository.clearActiveRequest()
-                    val orderIdStr = "#MS-$requestId"
+                is MedsyResult.Success -> {
+                    activeRequestRepository.removeActiveRequest(requestId)
+                    val firstOrder = result.data.orders.firstOrNull()
+                    val orderIdStr = "#MS-${selectedOffer.id}"
+                    val pharmacyName = firstOrder?.pharmacyName ?: _state.value.selectedOffer?.pharmacyName.orEmpty()
                     _state.update { 
                         it.copy(
                             isConfirmingOrder = false, 
@@ -80,45 +79,22 @@ class OffersViewModel @Inject constructor(
                             orderId = orderIdStr
                         ) 
                     }
-                    val offer = _state.value.selectedOffer
                     sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
                         orderIdStr,
-                        offer?.pharmacyName.orEmpty()
+                        pharmacyName
                     ))
                 }
                 is MedsyResult.Error -> {
-                    // Fallback to order confirmation even on error since backend accept offer might not be fully integrated
-                    activeRequestRepository.clearActiveRequest()
-                    val orderIdStr = "#MS-$requestId"
-                    _state.update { 
-                        it.copy(
-                            isConfirmingOrder = false, 
-                            orderConfirmed = true,
-                            orderId = orderIdStr
-                        ) 
-                    }
-                    val offer = _state.value.selectedOffer
-                    sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
-                        orderIdStr,
-                        offer?.pharmacyName.orEmpty()
-                    ))
+                    _state.update { it.copy(isConfirmingOrder = false) }
+                    sendEffect(OffersUIEffect.ShowError(result.error.toMessageRes()))
                 }
             }
         }
     }
 
-    private fun loadOffers() {
+    private fun loadOffers(requestId: Long, offerIdToSelect: String? = null) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            
-            val activeRequest = activeRequestRepository.observeActiveRequest().firstOrNull()
-            val requestId = activeRequest?.id
-            
-            if (requestId == null) {
-                _state.update { it.copy(isLoading = false) }
-                return@launch
-            }
-
+            _state.update { it.copy(isLoading = true, requestId = requestId) }
             val requestDetailsResult = getMedicineRequestByIdUseCase(requestId)
             val offersResult = getOffersForRequestUseCase(requestId)
 
@@ -141,10 +117,9 @@ class OffersViewModel @Inject constructor(
                                 var originalName: String? = null
                                 
                                 if (isAvailable && offerItem.productId != reqItem.productId) {
-                                    // Substitute!
                                     isSubstitute = true
                                     originalName = reqItem.productName
-                                    finalImage = null // Clear original image first
+                                    finalImage = null
                                     val prodResult = getProductDetailsUseCase(offerItem.productId, "en")
                                     if (prodResult is MedsyResult.Success) {
                                         finalName = prodResult.data.name
@@ -174,8 +149,8 @@ class OffersViewModel @Inject constructor(
                     
                     PharmacyOffer(
                         id = offer.id.toString(),
-                        pharmacyName = offer.pharmacyId.toString(),
-                        managerName = offer.pharmacistId.toString(),
+                        pharmacyName = offer.pharmacyName ?:"",
+                        managerName = offer.pharmacistName ?:"",
                         price = totalPrice,
                         type = type,
                         medicines = offerMedicines,
@@ -185,10 +160,15 @@ class OffersViewModel @Inject constructor(
                 }.awaitAll()
                 
                 _state.update { 
+                    val selected = if (offerIdToSelect != null) {
+                        pharmacyOffers.find { offer -> offer.id == offerIdToSelect }
+                    } else {
+                        it.selectedOffer ?: pharmacyOffers.firstOrNull()
+                    }
                     it.copy(
                         isLoading = false,
                         availableOffers = pharmacyOffers,
-                        selectedOffer = it.selectedOffer ?: pharmacyOffers.firstOrNull(),
+                        selectedOffer = selected,
                         requestId = requestId
                     ) 
                 }

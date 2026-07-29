@@ -28,9 +28,7 @@ fun ActiveSearchCard(
     onSearchWiderRangeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (status is ActiveSearchStatus.Idle) return
-
-    val isEnded = status is ActiveSearchStatus.SearchEndedNoOffers
+    val isEnded = false
 
     Card(
         modifier = modifier

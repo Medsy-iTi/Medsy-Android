@@ -222,7 +222,7 @@ fun OrderConfirmationScreen(
                             color = MaterialTheme.colorScheme.onBackground
                         )
                         Text(
-                            text = "أمام برج النيل، الدور 3، شقة 12",
+                            text = stringResource(R.string.offers_delivery_address_mock),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -239,7 +239,7 @@ fun OrderConfirmationScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "30 - 45 دقيقة",
+                            text = stringResource(R.string.offers_estimated_time_mock),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onBackground

@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.presentation.R
 import com.medsy.presentation.home.ActiveSearchStatus
+import java.util.Locale
 
 @Composable
 fun ActiveSearchTimer(status: ActiveSearchStatus) {
@@ -24,13 +25,11 @@ fun ActiveSearchTimer(status: ActiveSearchStatus) {
         is ActiveSearchStatus.Searching -> status.remainingTimeSeconds
         is ActiveSearchStatus.FirstOfferArrived -> status.remainingTimeSeconds
         is ActiveSearchStatus.MultipleOffersArrived -> status.remainingTimeSeconds
-        else -> 0
     }
     
     val minutes = remainingTime / 60
     val seconds = remainingTime % 60
-    val timeString = String.format("%02d:%02d", minutes, seconds)
-    
+    val timeString = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
     val isExpiringSoon = remainingTime <= 60
 
     Row(

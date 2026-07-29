@@ -24,10 +24,32 @@ class OffersRepositoryImpl @Inject constructor(
         remoteDataSource.getOffersForRequest(requestId, page, size)
             .map { it.toDomain() }
 
+    override fun observeOffersWithPolling(
+        requestId: Long,
+        pollIntervalMillis: Long
+    ): kotlinx.coroutines.flow.Flow<MedsyResult<OffersPage, MedsyError.Remote>> = kotlinx.coroutines.flow.flow {
+        while (true) {
+            emit(getOffersForRequest(requestId))
+            kotlinx.coroutines.delay(pollIntervalMillis)
+        }
+    }
+
     override suspend fun acceptOffer(
         requestId: Long,
         selectedRequestItemIds: List<Long>,
-    ): EmptyMedsyResult<MedsyError.Remote> =
+    ): MedsyResult<com.medsy.domain.offers.model.ConfirmOfferResult, MedsyError.Remote> =
         remoteDataSource.acceptOffer(requestId, selectedRequestItemIds)
-            .asEmptyDataResult()
+            .map { dto ->
+                com.medsy.domain.offers.model.ConfirmOfferResult(
+                    requestId = dto.requestId,
+                    orders = dto.orders.map { orderDto ->
+                        com.medsy.domain.offers.model.PharmacyOrder(
+                            orderId = orderDto.orderId,
+                            pharmacyId = orderDto.pharmacyId,
+                            pharmacyName = orderDto.pharmacyName,
+                            itemIds = orderDto.itemIds
+                        )
+                    }
+                )
+            }
 }

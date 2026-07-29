@@ -25,16 +25,20 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import com.medsy.designsystem.components.MedsyShimmer
 import com.medsy.designsystem.components.MedsyShimmerPlaceholder
+import com.medsy.designsystem.components.showError
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,17 +56,28 @@ import com.medsy.presentation.offers.components.PriceSummarySection
 
 @Composable
 fun OrderReviewRoot(
+    requestId: Long,
+    offerId: String,
     onNavigateBack: () -> Unit,
     onNavigateToOrderConfirmation: (String, String) -> Unit,
     viewModel: OffersViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+
+    LaunchedEffect(requestId) {
+        viewModel.onIntent(OffersUIIntent.LoadOfferDetails(requestId, offerId))
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OffersUIEffect.NavigateBack -> onNavigateBack()
                 is OffersUIEffect.NavigateToOrderConfirmation -> onNavigateToOrderConfirmation(effect.orderId, effect.pharmacyName)
+                is OffersUIEffect.ShowError -> {
+                    snackbarHostState.showError(androidx.core.content.ContextCompat.getString(context, effect.messageRes))
+                }
                 else -> Unit
             }
         }
@@ -70,6 +85,7 @@ fun OrderReviewRoot(
 
     OrderReviewScreen(
         state = state,
+        snackbarHostState = snackbarHostState,
         onIntent = viewModel::onIntent
     )
 }
@@ -77,11 +93,10 @@ fun OrderReviewRoot(
 @Composable
 fun OrderReviewScreen(
     state: OffersState,
-    onIntent: (OffersUIIntent) -> Unit
+    onIntent: (OffersUIIntent) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     val offer = state.selectedOffer
-    val snackbarHostState =
-        androidx.compose.runtime.remember { androidx.compose.material3.SnackbarHostState() }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -227,7 +242,7 @@ fun OrderReviewScreen(
                                         textAlign = TextAlign.Start
                                     )
                                     Text(
-                                        text = "أمام برج النيل، الدور 3، شقة 12",
+                                        text = stringResource(R.string.offers_delivery_address_mock),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         textAlign = TextAlign.Start

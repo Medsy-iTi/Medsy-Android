@@ -43,7 +43,7 @@ class SubmitProductsRequestUseCase @Inject constructor(
 
         return cartRepository.submitProductsRequest(normalizedRequest)
             .onSuccess { requestId ->
-                activeRequestRepository.setActiveRequest(
+                activeRequestRepository.addActiveRequest(
                     MedicineRequest(
                         id = requestId,
                         createdAtMillis = System.currentTimeMillis()

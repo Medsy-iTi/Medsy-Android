@@ -5,6 +5,8 @@ import com.medsy.data.cart.remote.AddCartItemRequestDto
 import com.medsy.data.cart.remote.CartDto
 import com.medsy.data.cart.remote.MedicineRequestDto
 import com.medsy.data.cart.remote.ProductsRequestDto
+import com.medsy.data.offers.remote.ConfirmRequestDto
+import com.medsy.data.offers.remote.ConfirmRequestResponseDto
 import com.medsy.data.offers.remote.OffersPageDto
 import com.medsy.data.productdetails.remote.ProductDetailsDto
 import com.medsy.data.profile.remote.dto.CustomerDto
@@ -132,8 +134,8 @@ interface ApiService {
     @POST("api/v1/requests/{requestId}/confirm")
     suspend fun confirmRequest(
         @Path("requestId") requestId: Long,
-        @retrofit2.http.Body request: com.medsy.data.offers.remote.ConfirmRequestDto
-    ): Response<ApiResponse<Any>>
+        @Body request: ConfirmRequestDto
+    ): Response<ApiResponse<ConfirmRequestResponseDto>>
 
     @GET("api/v1/requests/{id}")
     suspend fun getRequestById(

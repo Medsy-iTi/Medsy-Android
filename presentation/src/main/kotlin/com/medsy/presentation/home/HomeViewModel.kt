@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import com.medsy.domain.profile.usecase.GetProfileUseCase
-import com.medsy.domain.requests.usecase.ObserveActiveRequestUseCase
-import com.medsy.domain.requests.usecase.ClearActiveRequestUseCase
-import com.medsy.domain.requests.usecase.GetMedicineRequestByIdUseCase
+import com.medsy.domain.requests.usecase.ObserveActiveRequestsWithStatusUseCase
+import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
+import com.medsy.domain.requests.model.ActiveRequestStatus
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.presentation.R
@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -29,19 +27,14 @@ import kotlin.time.Duration.Companion.milliseconds
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getProfileUseCase: GetProfileUseCase,
-    private val observeActiveRequestUseCase: ObserveActiveRequestUseCase,
-    private val clearActiveRequestUseCase: ClearActiveRequestUseCase,
-    private val getOffersForRequestUseCase: com.medsy.domain.offers.usecase.GetOffersForRequestUseCase,
-    private val getMedicineRequestByIdUseCase: GetMedicineRequestByIdUseCase
+    private val observeActiveRequestsWithStatusUseCase: ObserveActiveRequestsWithStatusUseCase,
+    private val removeActiveRequestUseCase: RemoveActiveRequestUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
 
     private val _effect = Channel<HomeUIEffect>()
     val effect = _effect.receiveAsFlow()
-
-    private var countdownJob: Job? = null
-    private var mockPollingJob: Job? = null
 
     init {
         _state.update {
@@ -116,95 +109,32 @@ class HomeViewModel @Inject constructor(
 
     private fun observeActiveRequest() {
         viewModelScope.launch {
-            observeActiveRequestUseCase().collectLatest { request ->
-                countdownJob?.cancel()
-                mockPollingJob?.cancel()
-
-                if (request == null) {
-                    _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Idle) }
-                } else {
-                    countdownJob = launch {
-                        while (true) {
-                            val elapsedMillis = System.currentTimeMillis() - request.createdAtMillis
-                            val remainingSeconds = (900 - (elapsedMillis / 1000)).toInt() // 15 minutes = 900 sec
-
-                            if (remainingSeconds <= 0) {
-                                clearActiveRequestUseCase()
-                                break
-                            }
-
-                            _state.update {
-                                val currentStatus = it.activeSearchStatus
-                                if (currentStatus is ActiveSearchStatus.FirstOfferArrived) {
-                                    it.copy(activeSearchStatus = currentStatus.copy(remainingTimeSeconds = remainingSeconds))
-                                } else if (currentStatus is ActiveSearchStatus.MultipleOffersArrived) {
-                                    it.copy(activeSearchStatus = currentStatus.copy(remainingTimeSeconds = remainingSeconds))
-                                } else {
-                                    it.copy(
-                                        activeSearchStatus = ActiveSearchStatus.Searching(
-                                            requestId = request.id,
-                                            remainingTimeSeconds = remainingSeconds
-                                        )
-                                    )
-                                }
-                            }
-                            delay(1000.milliseconds)
+            observeActiveRequestsWithStatusUseCase().collectLatest { statuses ->
+                _state.update { s ->
+                    val uiStatuses = statuses.map { domainStatus ->
+                        when (domainStatus) {
+                            is ActiveRequestStatus.Searching -> ActiveSearchStatus.Searching(
+                                requestId = domainStatus.requestId,
+                                remainingTimeSeconds = domainStatus.remainingTimeSeconds
+                            )
+                            is ActiveRequestStatus.FirstOfferArrived -> ActiveSearchStatus.FirstOfferArrived(
+                                requestId = domainStatus.requestId,
+                                remainingTimeSeconds = domainStatus.remainingTimeSeconds,
+                                minPrice = domainStatus.minPrice,
+                                foundCount = domainStatus.foundCount,
+                                totalCount = domainStatus.totalCount
+                            )
+                            is ActiveRequestStatus.MultipleOffersArrived -> ActiveSearchStatus.MultipleOffersArrived(
+                                requestId = domainStatus.requestId,
+                                remainingTimeSeconds = domainStatus.remainingTimeSeconds,
+                                minPrice = domainStatus.minPrice,
+                                totalOffers = domainStatus.totalOffers,
+                                foundCount = domainStatus.foundCount,
+                                totalCount = domainStatus.totalCount
+                            )
                         }
                     }
-
-                    // Real API polling
-                    var originalRequestMinPrice = 0
-                    val reqResult = getMedicineRequestByIdUseCase(request.id)
-                    if (reqResult is com.medsy.domain.common.MedsyResult.Success) {
-                        originalRequestMinPrice = reqResult.data.items.sumOf { it.unitPrice * it.quantity }.toInt()
-                    }
-
-                    mockPollingJob = launch {
-                        while (true) {
-                            delay(5000.milliseconds) // Poll every 5 seconds
-                            val offersResult = getOffersForRequestUseCase(request.id)
-                            if (offersResult is com.medsy.domain.common.MedsyResult.Success) {
-                                val offers = offersResult.data.content
-                                if (offers.isNotEmpty()) {
-                                    val totalCount = offers.maxOfOrNull { it.items.size } ?: 0
-                                    val minPrice = originalRequestMinPrice
-                                    val maxFoundCount = offers.maxOfOrNull { it.items.size } ?: 0
-
-                                    _state.update { s ->
-                                        val currentStatus = s.activeSearchStatus
-                                        val remaining = when (currentStatus) {
-                                            is ActiveSearchStatus.Searching -> currentStatus.remainingTimeSeconds
-                                            is ActiveSearchStatus.FirstOfferArrived -> currentStatus.remainingTimeSeconds
-                                            is ActiveSearchStatus.MultipleOffersArrived -> currentStatus.remainingTimeSeconds
-                                            else -> 900
-                                        }
-                                        if (offers.size == 1) {
-                                            s.copy(
-                                                activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(
-                                                    requestId = request.id,
-                                                    remainingTimeSeconds = remaining,
-                                                    minPrice = minPrice,
-                                                    foundCount = maxFoundCount,
-                                                    totalCount = totalCount
-                                                )
-                                            )
-                                        } else {
-                                            s.copy(
-                                                activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(
-                                                    requestId = request.id,
-                                                    remainingTimeSeconds = remaining,
-                                                    minPrice = minPrice,
-                                                    totalOffers = offers.size,
-                                                    foundCount = maxFoundCount,
-                                                    totalCount = totalCount
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    s.copy(activeSearchStatuses = uiStatuses)
                 }
             }
         }
@@ -232,13 +162,13 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeUIIntent.OnStartSearchSimulation -> { /* Deprecated */ }
-            HomeUIIntent.OnCancelSearchSimulation -> {
+            is HomeUIIntent.OnCancelSearchSimulation -> {
                 viewModelScope.launch {
-                    clearActiveRequestUseCase()
+                    removeActiveRequestUseCase(intent.requestId)
                 }
             }
-            HomeUIIntent.OnViewOffersClick -> {
-                sendEffect(HomeUIEffect.NavigateToOffers)
+            is HomeUIIntent.OnViewOffersClick -> {
+                sendEffect(HomeUIEffect.NavigateToOffers(intent.requestId))
             }
 
             HomeUIIntent.OnSearchWiderRangeClick -> { /* Refresh/Widen Search */ }

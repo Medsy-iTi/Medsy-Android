@@ -4,6 +4,7 @@ import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.offers.model.OffersPage
+import kotlinx.coroutines.flow.Flow
 
 interface OffersRepository {
     suspend fun getOffersForRequest(
@@ -12,8 +13,13 @@ interface OffersRepository {
         size: Int = 20,
     ): MedsyResult<OffersPage, MedsyError.Remote>
 
+    fun observeOffersWithPolling(
+        requestId: Long,
+        pollIntervalMillis: Long = 5000
+    ): Flow<MedsyResult<OffersPage, MedsyError.Remote>>
+
     suspend fun acceptOffer(
         requestId: Long,
         selectedRequestItemIds: List<Long>,
-    ): EmptyMedsyResult<MedsyError.Remote>
+    ): MedsyResult<com.medsy.domain.offers.model.ConfirmOfferResult, MedsyError.Remote>
 }

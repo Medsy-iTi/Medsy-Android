@@ -91,7 +91,7 @@ fun OfferCard(
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(
-                            text = "من",
+                            text = stringResource(R.string.offers_from),
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

@@ -82,34 +82,5 @@ fun ActiveSearchContent(
                 textAlign = TextAlign.Center
             )
         }
-        is ActiveSearchStatus.SearchEndedNoOffers -> {
-            Button(
-                onClick = onSearchWiderRangeClick,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSurfaceVariant) 
-            ) {
-                Text(
-                    text = stringResource(R.string.home_search_status_search_wider),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            TextButton(
-                onClick = onCancelClick, 
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(R.string.home_search_status_cancel),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-        else -> {}
     }
 }

@@ -162,8 +162,8 @@ fun RootNavDisplay() {
                     openProducts = { categoryId, categoryName ->
                         rootBackStack.navigateSingleTop(Route.Products(categoryId, categoryName))
                     },
-                    openOffers = {
-                        rootBackStack.navigateSingleTop(Route.AvailableOffers)
+                    openOffers = { requestId ->
+                        rootBackStack.navigateSingleTop(Route.AvailableOffers(requestId))
                     },
                     openPrescription = { attachmentOnly, isMedicineSearch ->
                         rootBackStack.navigateSingleTop(
@@ -284,19 +284,29 @@ fun RootNavDisplay() {
                 )
             }
             entry<Route.AvailableOffers> {
+                val args = it
                 AvailableOffersRoot(
+                    requestId = args.requestId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToOfferDetails = { rootBackStack.navigateSingleTop(Route.OfferDetails) }
+                    onNavigateToOfferDetails = { offerId -> 
+                        rootBackStack.navigateSingleTop(Route.OfferDetails(args.requestId, offerId)) 
+                    }
                 )
             }
             entry<Route.OfferDetails> {
+                val args = it
                 OfferDetailsRoot(
+                    requestId = args.requestId,
+                    offerId = args.offerId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToOrderReview = { rootBackStack.navigateSingleTop(Route.OrderReview) }
+                    onNavigateToOrderReview = { reqId, offId -> rootBackStack.navigateSingleTop(Route.OrderReview(reqId, offId)) }
                 )
             }
             entry<Route.OrderReview> {
+                val args = it
                 OrderReviewRoot(
+                    requestId = args.requestId,
+                    offerId = args.offerId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToOrderConfirmation = { orderId, pharmacyName ->
                         rootBackStack.navigateSingleTop(Route.OrderConfirmation(orderId, pharmacyName)) 

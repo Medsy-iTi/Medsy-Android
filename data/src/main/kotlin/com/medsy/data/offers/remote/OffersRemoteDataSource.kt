@@ -19,8 +19,8 @@ class OffersRemoteDataSource @Inject constructor(
             apiService.getOffersForRequest(requestId, page, size)
         }
 
-    suspend fun acceptOffer(requestId: Long, selectedRequestItemIds: List<Long>): MedsyResult<Unit, MedsyError.Remote> {
-        return safeEmptyRestCall {
+    suspend fun acceptOffer(requestId: Long, selectedRequestItemIds: List<Long>): MedsyResult<ConfirmRequestResponseDto, MedsyError.Remote> {
+        return safeApiCall {
             apiService.confirmRequest(requestId, ConfirmRequestDto(selectedRequestItemIds))
         }
     }
