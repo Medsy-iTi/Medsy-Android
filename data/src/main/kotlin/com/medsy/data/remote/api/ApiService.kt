@@ -2,16 +2,19 @@ package com.medsy.data.remote.api
 
 
 import com.medsy.data.cart.remote.AddCartItemRequestDto
+import com.medsy.data.cart.remote.BulkCartItemsRequestDto
 import com.medsy.data.cart.remote.CartDto
+import com.medsy.data.cart.remote.ProductsRequestDto
+import com.medsy.data.orders.model.OrderDetailsDto
 import com.medsy.data.productdetails.remote.ProductDetailsDto
 import com.medsy.data.pharmacyprofile.remote.PharmacyProfileDto
 import com.medsy.data.profile.remote.dto.CustomerDto
 import com.medsy.data.profile.remote.dto.UpdateCustomerProfileRequestDto
 import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.dtos.products.ProductsDataDto
+import com.medsy.data.orders.model.OrderPageDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.remote.ProductsPageDto
-import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.data.prescription.remote.AiInterceptor
 import com.medsy.data.prescription.remote.dto.AnalyzedMedicineImageDto
 import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
@@ -59,6 +62,11 @@ interface ApiService {
         @Body request: AddCartItemRequestDto,
     ): Response<ApiResponse<CartDto>>
 
+    @POST("api/v1/cart/items/bulk")
+    suspend fun addCartItemsBulk(
+        @Body request: BulkCartItemsRequestDto,
+    ): Response<ApiResponse<CartDto>>
+
     @PATCH("api/v1/cart/items/{cartItemId}")
     suspend fun setCartItemQuantity(
         @Path("cartItemId") cartItemId: Long,
@@ -73,9 +81,11 @@ interface ApiService {
     @DELETE("api/v1/cart")
     suspend fun clearCart(): Response<ApiResponse<Any>>
 
+    @Multipart
     @POST("api/v1/requests")
     suspend fun submitProductsRequest(
-        @Body request: ProductsRequest,
+        @Part("request") request: ProductsRequestDto,
+        @Part prescription: MultipartBody.Part?,
     ): Response<ApiResponse<Any>>
 
     @GET("api/v1/categories")
@@ -123,4 +133,17 @@ interface ApiService {
         @Path("id") id: Int,
         @Header("lang") language: String
     ): Response<ApiResponse<ProductDetailsDto>>
+
+
+    @GET("api/v1/orders")
+    suspend fun getCurrentCustomerOrders(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: List<String>?
+    ): Response<ApiResponse<OrderPageDataDto>>
+
+    @GET("api/v1/orders/{id}")
+    suspend fun getOrderById(
+        @Path("id") id: Long
+    ): Response<ApiResponse<OrderDetailsDto>>
 }

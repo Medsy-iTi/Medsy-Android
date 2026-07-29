@@ -2,6 +2,7 @@ package com.medsy.domain.cart.repository
 
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartDraft
+import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
@@ -18,6 +19,8 @@ interface CartRepository {
         quantity: Int,
     ): MedsyResult<Cart, MedsyError.Remote>
 
+    suspend fun addItemsBulk(items: List<CartItemInput>): EmptyMedsyResult<MedsyError.Remote>
+
     suspend fun setItemQuantity(
         cartItemId: Long,
         quantity: Int,
@@ -28,7 +31,7 @@ interface CartRepository {
 
     suspend fun submitProductsRequest(
         request: ProductsRequest,
-    ): EmptyMedsyResult<MedsyError.Remote>
+    ): EmptyMedsyResult<MedsyError>
 
     suspend fun updateNote(note: String): EmptyMedsyResult<MedsyError.Local>
     suspend fun attachPrescription(

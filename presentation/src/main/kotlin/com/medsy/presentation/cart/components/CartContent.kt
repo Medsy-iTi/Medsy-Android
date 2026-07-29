@@ -47,7 +47,7 @@ internal fun CartContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             if (state.items.isEmpty()) {
-                item { CartEmptyMessage() }
+                item { CartEmptyState() }
             } else {
                 items(state.items, key = CartItem::id) { item ->
                     CartItemCard(

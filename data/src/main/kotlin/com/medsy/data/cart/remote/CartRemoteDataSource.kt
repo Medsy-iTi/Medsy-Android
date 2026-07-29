@@ -3,11 +3,11 @@ package com.medsy.data.cart.remote
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.network.safeApiCall
 import com.medsy.data.remote.network.safeEmptyRestCall
-import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import javax.inject.Inject
+import okhttp3.MultipartBody
 
 class CartRemoteDataSource @Inject constructor(
     private val apiService: ApiService,
@@ -24,6 +24,17 @@ class CartRemoteDataSource @Inject constructor(
                 AddCartItemRequestDto(
                     productId = productId,
                     quantity = quantity,
+                )
+            )
+        }
+
+    suspend fun addItemsBulk(
+        items: List<CartItemInputDto>,
+    ): EmptyMedsyResult<MedsyError.Remote> =
+        safeEmptyRestCall {
+            apiService.addCartItemsBulk(
+                BulkCartItemsRequestDto(
+                    items = items
                 )
             )
         }
@@ -47,10 +58,14 @@ class CartRemoteDataSource @Inject constructor(
         safeEmptyRestCall(apiService::clearCart)
 
     suspend fun submitProductsRequest(
-        request: ProductsRequest
+        request: ProductsRequestDto,
+        prescription: MultipartBody.Part?,
     ): EmptyMedsyResult<MedsyError.Remote> =
         safeEmptyRestCall {
-            apiService.submitProductsRequest(request)
+            apiService.submitProductsRequest(
+                request = request,
+                prescription = prescription,
+            )
         }
 
 }
