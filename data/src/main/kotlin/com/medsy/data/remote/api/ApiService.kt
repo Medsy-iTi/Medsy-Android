@@ -2,6 +2,7 @@ package com.medsy.data.remote.api
 
 
 import com.medsy.data.cart.remote.AddCartItemRequestDto
+import com.medsy.data.cart.remote.BulkCartItemsRequestDto
 import com.medsy.data.cart.remote.CartDto
 import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.data.orders.model.OrderDetailsDto
@@ -53,6 +54,11 @@ interface ApiService {
     @POST("api/v1/cart/items")
     suspend fun addCartItem(
         @Body request: AddCartItemRequestDto,
+    ): Response<ApiResponse<CartDto>>
+
+    @POST("api/v1/cart/items/bulk")
+    suspend fun addCartItemsBulk(
+        @Body request: BulkCartItemsRequestDto,
     ): Response<ApiResponse<CartDto>>
 
     @PATCH("api/v1/cart/items/{cartItemId}")

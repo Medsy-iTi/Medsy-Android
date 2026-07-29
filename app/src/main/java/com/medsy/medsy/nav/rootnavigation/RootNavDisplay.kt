@@ -199,7 +199,8 @@ fun RootNavDisplay() {
                         /* TODO: navigate to Pharmacy Profile (M-26) once that screen/route exists */
                     },
                     onReorder = {
-                        /* TODO: reorder behavior is owned by M-27 */
+                        requestedNestedDestination = Route.NestedNav.Cart
+                        rootBackStack.popIfCurrentIs<Route.OrderDetails>()
                     },
                     onNavigateToProductDetails = { productId ->
                         rootBackStack.navigateSingleTop(Route.ProductDetails(id = productId))

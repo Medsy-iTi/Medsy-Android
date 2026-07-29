@@ -378,13 +378,13 @@
     <string name="cart_request_title">إكمال الطلب</string>
     <string name="cart_request_subtitle">بعض التفاصيل الأخيرة قبل إرسال طلبك إلى الصيدليات</string>
     <string name="cart_request_order_summary">ملخص الطلب</string>
-<!--    <plurals name="cart_request_item_count">-->
-<!--        <item quantity="one">دواء واحد</item>-->
-<!--        <item quantity="two">دواءان</item>-->
-<!--        <item quantity="few">%d أدوية</item>-->
-<!--        <item quantity="many">%d دواءً</item>-->
-<!--        <item quantity="other">%d دواء</item>-->
-<!--    </plurals>-->
+    <!--    <plurals name="cart_request_item_count">-->
+    <!--        <item quantity="one">دواء واحد</item>-->
+    <!--        <item quantity="two">دواءان</item>-->
+    <!--        <item quantity="few">%d أدوية</item>-->
+    <!--        <item quantity="many">%d دواءً</item>-->
+    <!--        <item quantity="other">%d دواء</item>-->
+    <!--    </plurals>-->
     <string name="cart_request_prescription_attached">الروشتة مرفقة</string>
     <string name="cart_request_fulfillment_title">كيف ترغب في استلام الطلب؟</string>
     <string name="cart_request_fulfillment_description">اختر التوصيل إلى عنوانك أو الاستلام من الصيدلية التي ستحددها لاحقًا.</string>
@@ -518,7 +518,6 @@
     <string name="orders_error_retry">إعادة المحاولة</string>
 
 
-
     <!--   Order Details (M-25)   -->
     <string name="order_details_title_format">طلب #%1$s</string>
     <string name="order_details_fulfillment_pickup">استلام من الصيدلية</string>
@@ -537,4 +536,5 @@
     <string name="order_details_final_total">الإجمالي</string>
     <string name="order_details_reorder">إعادة الطلب</string>
     <string name="order_details_error_load">تعذر تحميل تفاصيل هذا الطلب.</string>
+    <string name="reordered_products">تم اضافة المنتجات الى السله بنجاح.</string>
 </resources>

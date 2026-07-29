@@ -9,6 +9,11 @@ data class AddCartItemRequestDto(
 )
 
 @JsonClass(generateAdapter = true)
+data class BulkCartItemsRequestDto(
+    val items: List<CartItemInputDto>
+)
+
+@JsonClass(generateAdapter = true)
 data class CartItemInputDto(
     val productId: Int,
     val quantity: Int,

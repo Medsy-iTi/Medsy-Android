@@ -2,11 +2,14 @@ package com.medsy.presentation.orders.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.common.fold
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
 import com.medsy.domain.orders.usecase.GetOrderByIdUseCase
+import com.medsy.domain.orders.usecase.ReOrderUseCase
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
-import com.medsy.presentation.orders.details.model.OrderDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderDetailsViewModel @Inject constructor(
-    private val getOrderByIdUseCase: GetOrderByIdUseCase
+    private val getOrderByIdUseCase: GetOrderByIdUseCase,
+    private val reOrderUseCase: ReOrderUseCase,
 ) : ViewModel() {
 
     private var orderId: String = ""
@@ -58,11 +62,34 @@ class OrderDetailsViewModel @Inject constructor(
                 }
             }
 
-            OrderDetailsUIIntent.ReorderClicked ->
-                sendEffect(OrderDetailsUIEffect.ReorderRequested(orderId))
+            OrderDetailsUIIntent.ReorderClicked -> {
+                reOrder()
+            }
 
             is OrderDetailsUIIntent.LineItemClicked ->
                 sendEffect(OrderDetailsUIEffect.NavigateToProductDetails(intent.productId))
+        }
+    }
+
+    private fun reOrder() {
+        val currentOrder = state.value.order ?: return
+        val items = currentOrder.lineItems.map {
+            CartItemInput(
+                productId = it.productId.toInt(),
+                quantity = it.quantity,
+            )
+        }
+        viewModelScope.launch {
+            _state.update { it.copy(isReordering = true) }
+            reOrderUseCase(items)
+                .onSuccess {
+                    _state.update { it.copy(isReordering = false) }
+                    sendEffect(OrderDetailsUIEffect.ReorderRequested)
+                }
+                .onError { error ->
+                    _state.update { it.copy(isReordering = false) }
+                    sendEffect(OrderDetailsUIEffect.ShowErrorSnackbar(error.toMessageRes()))
+                }
         }
     }
 
