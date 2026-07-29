@@ -45,7 +45,8 @@ class CategoriesViewModel @Inject constructor(
                     allCategories = domainCategories.map {
                         CategoryUi(
                             id = it.id.toString(),
-                            name = it.name
+                            name = it.name,
+                            imageRes = it.image
                         )
                     }
                     _state.update {

@@ -101,7 +101,9 @@ class HomeViewModel @Inject constructor(
                 result.onSuccess { domainCategories ->
                     val uiCategories = domainCategories.take(9).map {
                         CategoryUi(
-                            id = it.id.toString(), name = it.name
+                            id = it.id.toString(),
+                            name = it.name,
+                            imageRes = it.image
                         )
                     }
                     _state.update {

@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.home.CategoryUi
 
@@ -38,7 +39,6 @@ fun CategoryGridCard(
 ) {
 
     val isDark = androidx.compose.foundation.isSystemInDarkTheme()
-    val icon = Icons.Default.MedicalServices
 
     Column(
         modifier = Modifier
@@ -57,16 +57,24 @@ fun CategoryGridCard(
     ) {
         Box(
             modifier = Modifier
-                .size(56.dp)
+                .size(72.dp)
                 .background(containerColor, RoundedCornerShape(14.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = contentColor,
-                modifier = Modifier.size(28.dp)
-            )
+            if (category.imageRes != null) {
+                androidx.compose.foundation.Image(
+                    painter = painterResource(id = category.imageRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(50.dp)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.MedicalServices,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(36.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))

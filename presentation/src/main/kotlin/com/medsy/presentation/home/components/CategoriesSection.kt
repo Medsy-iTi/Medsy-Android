@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.home.CategoryUi
@@ -52,7 +53,6 @@ fun CategoriesSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Create a list with categories
         val allItems = categories.mapIndexed { index, cat ->
             val colorScheme = categoryColorSchemes[index % categoryColorSchemes.size]
             CategoryItemData(
@@ -60,7 +60,7 @@ fun CategoriesSection(
                 name = cat.name,
                 bgCol = colorScheme.first,
                 iconCol = colorScheme.second,
-                icon = Icons.Default.MedicalServices,
+                imageRes = cat.imageRes,
                 onClick = { onCategoryClick(cat.id) }
             )
         }
@@ -91,7 +91,7 @@ private data class CategoryItemData(
     val name: String,
     val bgCol: androidx.compose.ui.graphics.Color,
     val iconCol: androidx.compose.ui.graphics.Color,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val imageRes: Int?,
     val onClick: () -> Unit
 )
 
@@ -119,12 +119,20 @@ private fun CategoryGridItem(
                 .background(item.bgCol, RoundedCornerShape(20.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = item.icon,
-                contentDescription = null,
-                tint = item.iconCol,
-                modifier = Modifier.size(36.dp)
-            )
+            if (item.imageRes != null) {
+                androidx.compose.foundation.Image(
+                    painter = painterResource(id = item.imageRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(70.dp)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.MedicalServices,
+                    contentDescription = null,
+                    tint = item.iconCol,
+                    modifier = Modifier.size(42.dp)
+                )
+            }
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
