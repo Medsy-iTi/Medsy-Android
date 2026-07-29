@@ -452,6 +452,25 @@
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>
     </plurals>
+  
+    <!-- Pharmacy profile -->
+    <string name="pharmacy_profile_title">Pharmacy profile</string>
+    <string name="pharmacy_profile_verified">Verified</string>
+    <string name="pharmacy_profile_contact_title">Contact information</string>
+    <string name="pharmacy_profile_phone">Phone number</string>
+    <string name="pharmacy_profile_address">Address</string>
+    <string name="pharmacy_profile_call">Call pharmacy</string>
+    <string name="pharmacy_profile_location">Pharmacy location</string>
+    <string name="pharmacy_profile_directions">Get directions</string>
+    <string name="pharmacy_profile_location_unavailable">The pharmacy location is not available right now.</string>
+    <string name="pharmacy_profile_map_description">Map showing the location of %1$s</string>
+    <string name="pharmacy_profile_not_available">Not available</string>
+    <string name="pharmacy_profile_retry">Try again</string>
+    <string name="pharmacy_profile_invalid_id">The pharmacy ID is invalid.</string>
+    <string name="pharmacy_profile_call_short">Call</string>
+    <string name="pharmacy_profile_address_title">Pharmacy address</string>
+    <string name="pharmacy_profile_directions_short">Directions</string>
+    <string name="pharmacy_profile_share">Share</string>
 
     <!-- Offers Flow -->
     <string name="offers_available_title">Available Offers</string>

@@ -39,14 +39,17 @@ sealed interface Route : NavKey {
         data object Profile : Route
 
 
-
     }
 
     @Serializable
     data class ProductDetails(val id: String) : Route
 
     @Serializable
+    data class PharmacyProfile(val pharmacyId: Long) : Route
+
+    @Serializable
     data class OrderDetails(val orderId: String) : Route
+
     @Serializable
     data class AiChat(val initialPrompt: String? = null) : Route
 

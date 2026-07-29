@@ -12,8 +12,9 @@ plugins {
 val medsyLocalProperties = Properties().apply {
     load(rootProject.file("local.properties").inputStream())
 }
+
 require(!medsyLocalProperties.getProperty("MAPS_API_KEY").isNullOrBlank()) {
-    "Missing MAPS_API_KEY. Add it to the gitignored local.properties file."
+    "MAPS_API_KEY must be configured in the gitignored local.properties file."
 }
 
 android {

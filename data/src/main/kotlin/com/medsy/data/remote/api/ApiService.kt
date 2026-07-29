@@ -7,6 +7,7 @@ import com.medsy.data.cart.remote.CartDto
 import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.data.orders.model.OrderDetailsDto
 import com.medsy.data.productdetails.remote.ProductDetailsDto
+import com.medsy.data.pharmacyprofile.remote.PharmacyProfileDto
 import com.medsy.data.profile.remote.dto.CustomerDto
 import com.medsy.data.profile.remote.dto.UpdateCustomerProfileRequestDto
 import com.medsy.data.remote.dtos.categories.CategoriesDataDto
@@ -34,6 +35,11 @@ import retrofit2.http.Query
 
 
 interface ApiService {
+    @GET("api/v1/pharmacies/{id}")
+    suspend fun getPharmacyById(
+        @Path("id") id: Long,
+    ): Response<ApiResponse<PharmacyProfileDto>>
+  
     @Multipart
     @Headers("${AiInterceptor.AI_KEY_FLAG}: true")
     @POST("api/v1/prescriptions/analyze")
