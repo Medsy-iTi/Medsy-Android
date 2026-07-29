@@ -7,7 +7,7 @@ import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.offers.model.OfferType
 import com.medsy.domain.offers.usecase.AcceptOfferUseCase
 import com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
-import com.medsy.domain.requests.repository.ActiveRequestRepository
+import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
 import com.medsy.domain.requests.usecase.GetMedicineRequestByIdUseCase
 import com.medsy.domain.productdetails.usecase.GetProductDetailsUseCase
 import com.medsy.presentation.offers.model.OfferMedicine
@@ -30,7 +30,7 @@ class OffersViewModel @Inject constructor(
     private val getMedicineRequestByIdUseCase: GetMedicineRequestByIdUseCase,
     private val getProductDetailsUseCase: GetProductDetailsUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
-    private val activeRequestRepository: ActiveRequestRepository
+    private val removeActiveRequestUseCase: RemoveActiveRequestUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(OffersState())
@@ -68,7 +68,7 @@ class OffersViewModel @Inject constructor(
             val result = acceptOfferUseCase(requestId, selectedItemIds)
             when (result) {
                 is MedsyResult.Success -> {
-                    activeRequestRepository.removeActiveRequest(requestId)
+                    removeActiveRequestUseCase(requestId)
                     val firstOrder = result.data.orders.firstOrNull()
                     val orderIdStr = "#MS-${selectedOffer.id}"
                     val pharmacyName = firstOrder?.pharmacyName ?: _state.value.selectedOffer?.pharmacyName.orEmpty()
