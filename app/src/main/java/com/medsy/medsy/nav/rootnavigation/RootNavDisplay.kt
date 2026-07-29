@@ -189,6 +189,7 @@ fun RootNavDisplay() {
                 )
 
             }
+
             entry<Route.AiChat> {
                 AiChatRoot(
                     onNext = { rootBackStack.removeLastOrNull() }
@@ -198,8 +199,8 @@ fun RootNavDisplay() {
                 OrderDetailsRoot(
                     orderId = route.orderId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToPharmacyProfile = {
-                        /* TODO: navigate to Pharmacy Profile (M-26) once that screen/route exists */
+                    onNavigateToPharmacyProfile = { id ->
+                        rootBackStack.navigateSingleTop(Route.PharmacyProfile(id))
                     },
                     onReorder = {
                         requestedNestedDestination = Route.NestedNav.Cart
