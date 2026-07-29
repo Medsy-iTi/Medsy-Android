@@ -41,6 +41,7 @@ import com.medsy.presentation.categories.components.CategoriesTopBar
 import com.medsy.presentation.categories.components.CategoryGridCard
 import com.medsy.presentation.categories.components.CategoriesShimmer
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material3.Text
 
 
 @Composable
@@ -97,7 +98,7 @@ fun CategoriesScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     placeholder = {
-                        androidx.compose.material3.Text(
+                        Text(
                             text = stringResource(R.string.categories_search_hint),
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

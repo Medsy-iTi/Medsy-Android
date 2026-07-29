@@ -3,7 +3,6 @@ package com.medsy.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
-import com.medsy.domain.profile.usecase.GetProfileUseCase
 import com.medsy.domain.profile.usecase.ObserveProfileUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
@@ -25,7 +24,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getProfileUseCase: GetProfileUseCase,
     private val observeProfileUseCase: ObserveProfileUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
@@ -39,7 +37,7 @@ class HomeViewModel @Inject constructor(
     init {
         _state.update {
             it.copy(
-                notificationCount = 1,
+                notificationCount = HomeConstants.MOCKED_NOTIFICATION_COUNT,
                 banners = listOf(
                     PromoBannerUi(
                         id = "1",
@@ -82,19 +80,9 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-
-        viewModelScope.launch {
-            getProfileUseCase().onSuccess { profile ->
-                profile.homeAddress?.let { address ->
-                    _state.update { it.copy(deliveryAddress = address) }
-                }
-            }
-        }
     }
 
     private fun fetchCategories() {
-        if (_state.value.categories.isNotEmpty()) return
-
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getCategoriesUseCase(page = 0, size = 20).collectLatest { result ->
@@ -168,7 +156,7 @@ class HomeViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     activeSearchStatus = ActiveSearchStatus.Searching(
-                        stage = 1,
+                        stage = HomeConstants.SEARCH_STAGE_ONE,
                         elapsedTime = elapsed
                     )
                 )
@@ -179,7 +167,7 @@ class HomeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         activeSearchStatus = ActiveSearchStatus.Searching(
-                            stage = 1,
+                            stage = HomeConstants.SEARCH_STAGE_ONE,
                             elapsedTime = elapsed
                         )
                     )
@@ -189,7 +177,7 @@ class HomeViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     activeSearchStatus = ActiveSearchStatus.Searching(
-                        stage = 2,
+                        stage = HomeConstants.SEARCH_STAGE_TWO,
                         elapsedTime = elapsed
                     )
                 )
@@ -200,7 +188,7 @@ class HomeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         activeSearchStatus = ActiveSearchStatus.Searching(
-                            stage = 2,
+                            stage = HomeConstants.SEARCH_STAGE_TWO,
                             elapsedTime = elapsed
                         )
                     )
@@ -210,7 +198,7 @@ class HomeViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     activeSearchStatus = ActiveSearchStatus.Searching(
-                        stage = 3,
+                        stage = HomeConstants.SEARCH_STAGE_THREE,
                         elapsedTime = elapsed
                     )
                 )
@@ -221,7 +209,7 @@ class HomeViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         activeSearchStatus = ActiveSearchStatus.Searching(
-                            stage = 3,
+                            stage = HomeConstants.SEARCH_STAGE_THREE,
                             elapsedTime = elapsed
                         )
                     )

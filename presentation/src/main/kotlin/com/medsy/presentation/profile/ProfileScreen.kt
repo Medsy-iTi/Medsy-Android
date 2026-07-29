@@ -39,7 +39,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.medsy.designsystem.ui.theme.extendedColors
-import com.medsy.domain.common.preferences.model.AppLanguage
+import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.preferences.model.ThemeMode
 import com.medsy.presentation.R
 import com.medsy.presentation.profile.components.ProfileHeaderCard
@@ -349,7 +349,7 @@ fun ProfileScreen(
 
 
 @Composable
-private fun isArabic() = Locale.current.language == "ar"
+private fun isArabic() = Locale.current.language == LocaleConstants.ARABIC_TAG
 
 @Composable
 private fun getCurrentLanguage(): String = stringResource(

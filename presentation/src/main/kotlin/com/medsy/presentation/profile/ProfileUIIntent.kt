@@ -1,6 +1,6 @@
 package com.medsy.presentation.profile
 
-import com.medsy.domain.common.preferences.model.AppLanguage
+import AppLanguage
 import com.medsy.domain.common.preferences.model.ThemeMode
 
 sealed interface ProfileUIIntent {
