@@ -370,6 +370,9 @@
     <string name="cart_note_saved">تم حفظ الملاحظة</string>
     <string name="cart_save">حفظ</string>
     <string name="cart_cancel">إلغاء</string>
+    <string name="cart_remove_item_title">حذف الدواء؟</string>
+    <string name="cart_remove_item_message">سيؤدي هذا إلى حذف هذا الدواء من عربة الطلب.</string>
+    <string name="cart_remove_item_confirm">حذف</string>
     <string name="cart_total_price">إجمالي السعر</string>
     <string name="cart_price_egp">%1$s جنيه</string>
     <string name="cart_continue">متابعة الطلب</string>
@@ -377,7 +380,7 @@
     <string name="cart_clear_title">إفراغ سلة الطلب؟</string>
     <string name="cart_clear_message">سيؤدي ذلك إلى إزالة جميع الأدوية والروشتة وملاحظة الصيدلي.</string>
     <string name="cart_clear_confirm">إفراغ</string>
-    <string name="cart_cleared">تم إفراغ السلة</string>
+    <string name="cart_cleared">تم إفراغ السلة بنجاح</string>
     <!--  Active Search Status  -->
     <string name="cart_request_title">إكمال الطلب</string>
     <string name="cart_request_subtitle">بعض التفاصيل الأخيرة قبل إرسال طلبك إلى الصيدليات</string>

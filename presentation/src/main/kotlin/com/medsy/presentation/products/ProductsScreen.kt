@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showSuccess
+import com.medsy.designsystem.components.showError
 import com.medsy.presentation.R
 import com.medsy.presentation.products.components.ProductGridCard
 import com.medsy.presentation.products.components.ProductsTopBar
@@ -47,16 +50,20 @@ fun ProductsRoot(
             when (effect) {
                 is ProductsUIEffect.NavigateBack -> onBackClick()
                 is ProductsUIEffect.NavigateToProductDetails -> onProductClick(effect.productId)
-                is ProductsUIEffect.ShowMessage ->
-                    snackbarHostState.showSnackbar(
-                        ContextCompat.getString(context, effect.messageRes)
-                    )
+                is ProductsUIEffect.ShowMessage -> {
+                    val message = ContextCompat.getString(context, effect.messageRes)
+                    if (effect.messageRes == R.string.products_added_to_cart) {
+                        snackbarHostState.showSuccess(message)
+                    } else {
+                        snackbarHostState.showError(message)
+                    }
+                }
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
     ) { padding ->
         ProductsScreen(
             state = state,

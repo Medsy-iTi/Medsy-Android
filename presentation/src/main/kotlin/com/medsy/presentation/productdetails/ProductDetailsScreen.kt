@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showError
+import com.medsy.designsystem.components.showSuccess
 import com.medsy.presentation.R
 import com.medsy.presentation.productdetails.components.PharmacistNoticeCard
 import com.medsy.presentation.productdetails.components.ProductBottomActions
@@ -57,20 +58,23 @@ fun ProductDetailsRoot(
             when (effect) {
                 ProductDetailsUIEffect.NavigateBack -> onNavigateBack()
                 ProductDetailsUIEffect.NavigateToPharmacistChat -> onNavigateToPharmacistChat()
-                ProductDetailsUIEffect.OpenShareSheet -> { /* trigger platform share sheet */
+                ProductDetailsUIEffect.OpenShareSheet -> {
                 }
 
                 is ProductDetailsUIEffect.ShowMessage -> {
-                    snackbarHostState.showSnackbar(
-                        ContextCompat.getString(context, effect.messageRes)
-                    )
+                    val message = ContextCompat.getString(context, effect.messageRes)
+                    if (effect.messageRes == R.string.product_details_added_to_cart) {
+                        snackbarHostState.showSuccess(message)
+                    } else {
+                        snackbarHostState.showError(message)
+                    }
                 }
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         ProductDetailsScreen(
             state = state,
@@ -126,9 +130,7 @@ fun ProductDetailsScreen(
             ProductImageCarousel(
                 imageUrls = product.imageUrls,
                 selectedIndex = state.selectedImageIndex,
-                isFavorite = state.isFavorite,
                 onPageChanged = { onIntent(ProductDetailsUIIntent.ImagePageChanged(it)) },
-                onFavoriteClick = { onIntent(ProductDetailsUIIntent.FavoriteClicked) },
                 placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)
             )
 

@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -18,6 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showInfo
 import com.medsy.presentation.cart.components.CartClearDialog
 import com.medsy.presentation.cart.components.CartContent
 import com.medsy.presentation.cart.components.CartError
@@ -43,7 +44,7 @@ fun CartRoot(
                 CartUIEffect.OpenMakeRequest -> onOpenCartRequest()
                 CartUIEffect.OpenMedicineSearch -> onMedicineSearch()
                 is CartUIEffect.ShowMessage ->
-                    snackbarHostState.showSnackbar(
+                    snackbarHostState.showInfo(
                         ContextCompat.getString(
                             context,
                             effect.messageRes,
@@ -58,7 +59,7 @@ fun CartRoot(
             state = state,
             onIntent = viewModel::onIntent,
         )
-        SnackbarHost(
+        MedsySnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier.align(Alignment.BottomCenter)
         )
@@ -98,6 +99,18 @@ fun CartScreen(
         CartClearDialog(
             onConfirm = { onIntent(CartUIIntent.ClearCartConfirmed) },
             onDismiss = { onIntent(CartUIIntent.ClearCartDismissed) },
+        )
+    }
+
+    if (state.itemToRemove != null) {
+        com.medsy.designsystem.components.MedsyAlertDialog(
+            onDismissRequest = { onIntent(CartUIIntent.RemoveItemDismissed) },
+            onConfirm = { onIntent(CartUIIntent.RemoveItemConfirmed) },
+            title = stringResource(com.medsy.presentation.R.string.cart_remove_item_title),
+            description = stringResource(com.medsy.presentation.R.string.cart_remove_item_message),
+            confirmText = stringResource(com.medsy.presentation.R.string.cart_remove_item_confirm),
+            dismissText = stringResource(com.medsy.presentation.R.string.cart_cancel),
+            isDestructive = true
         )
     }
 

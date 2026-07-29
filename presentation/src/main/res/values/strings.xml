@@ -374,6 +374,9 @@
     <string name="cart_note_saved">Note saved</string>
     <string name="cart_save">Save</string>
     <string name="cart_cancel">Cancel</string>
+    <string name="cart_remove_item_title">Remove medicine?</string>
+    <string name="cart_remove_item_message">This will remove this medicine from your request cart.</string>
+    <string name="cart_remove_item_confirm">Remove</string>
     <string name="cart_total_price">Total price</string>
     <string name="cart_price_egp">%1$s EGP</string>
     <string name="cart_continue">Continue request</string>
@@ -381,7 +384,7 @@
     <string name="cart_clear_title">Clear request cart?</string>
     <string name="cart_clear_message">This removes all medicines, the prescription, and the pharmacist note.</string>
     <string name="cart_clear_confirm">Clear</string>
-    <string name="cart_cleared">Cart cleared</string>
+    <string name="cart_cleared">Cart cleared successfully</string>
     <!--  Active Search Status  -->
     <string name="cart_request_title">Complete request</string>
     <string name="cart_request_subtitle">A few final details before pharmacies receive your request</string>

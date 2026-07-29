@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,9 +31,7 @@ import com.medsy.presentation.R
 fun ProductImageCarousel(
     imageUrls: List<String>,
     selectedIndex: Int,
-    isFavorite: Boolean,
     onPageChanged: (Int) -> Unit,
-    onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
     placeholder: Painter? = null
 ) {
@@ -57,6 +56,7 @@ fun ProductImageCarousel(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(240.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(MaterialTheme.colorScheme.surface),
                     contentAlignment = Alignment.Center,
@@ -67,26 +67,12 @@ fun ProductImageCarousel(
                         placeholder = placeholder,
                         error = placeholder,
                         fallback = placeholder,
+                        modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
                 }
             }
 
-//            IconButton(
-//                onClick = onFavoriteClick,
-//                modifier = Modifier
-//                    .align(Alignment.TopEnd)
-//                    .padding(top = 8.dp, end = 16.dp)
-//                    .clip(CircleShape)
-//                    .background(MaterialTheme.colorScheme.surface)
-//                    .size(40.dp),
-//            ) {
-//                Icon(
-//                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-//                    contentDescription = stringResource(R.string.search_favorite_desc),
-//                    tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
-//                )
-//            }
         }
 
         if (imageUrls.size > 1) {

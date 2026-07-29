@@ -7,6 +7,8 @@ sealed interface CartUIIntent {
     data class IncreaseQuantityClicked(val cartItemId: Long) : CartUIIntent
     data class DecreaseQuantityClicked(val cartItemId: Long) : CartUIIntent
     data class RemoveItemClicked(val cartItemId: Long) : CartUIIntent
+    data object RemoveItemConfirmed : CartUIIntent
+    data object RemoveItemDismissed : CartUIIntent
     data object ClearCartClicked : CartUIIntent
     data object ClearCartConfirmed : CartUIIntent
     data object ClearCartDismissed : CartUIIntent
