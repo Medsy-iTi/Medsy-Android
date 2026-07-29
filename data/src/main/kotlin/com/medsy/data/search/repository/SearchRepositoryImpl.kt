@@ -1,7 +1,6 @@
 package com.medsy.data.search.repository
 
-import com.medsy.data.remote.api.ApiService
-import com.medsy.data.remote.network.safeApiCall
+import com.medsy.data.remote.datasource.search.SearchRemoteDataSource
 import com.medsy.data.search.mapper.toDomain
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
@@ -11,7 +10,7 @@ import com.medsy.domain.search.repository.SearchRepository
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
-    private val apiService: ApiService
+    private val remoteDataSource: SearchRemoteDataSource
 ) : SearchRepository {
 
     override suspend fun getProducts(
@@ -19,11 +18,9 @@ class SearchRepositoryImpl @Inject constructor(
         size: Int,
         sort: List<String>?,
         categoryId: Int?
-
     ): MedsyResult<SearchProductsPage, MedsyError.Remote> =
-        safeApiCall {
-            apiService.getProducts(page, size, sort,categoryId)
-        }.map { it.toDomain() }
+        remoteDataSource.getProducts(page, size, sort, categoryId)
+            .map { it.toDomain() }
 
     override suspend fun searchProducts(
         keyword: String,
@@ -31,7 +28,6 @@ class SearchRepositoryImpl @Inject constructor(
         size: Int,
         sort: List<String>?,
     ): MedsyResult<SearchProductsPage, MedsyError.Remote> =
-        safeApiCall {
-            apiService.searchProducts(keyword, page, size, sort)
-        }.map { it.toDomain() }
+        remoteDataSource.searchProducts(keyword, page, size, sort)
+            .map { it.toDomain() }
 }

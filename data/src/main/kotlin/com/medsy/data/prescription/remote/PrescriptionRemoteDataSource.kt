@@ -5,7 +5,7 @@ import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
 import com.medsy.data.productdetails.remote.ProductDetailsDto
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.network.safeApiCall
-import com.medsy.data.search.remote.ProductsPageDto
+import com.medsy.data.search.dto.ProductsPageDto
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import okhttp3.MultipartBody
