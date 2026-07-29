@@ -1,5 +1,6 @@
 package com.medsy.presentation.home.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
@@ -89,8 +91,8 @@ fun CategoriesSection(
 private data class CategoryItemData(
     val id: String,
     val name: String,
-    val bgCol: androidx.compose.ui.graphics.Color,
-    val iconCol: androidx.compose.ui.graphics.Color,
+    val bgCol: Color,
+    val iconCol:Color,
     val imageRes: Int?,
     val onClick: () -> Unit
 )
@@ -111,19 +113,19 @@ private fun CategoryGridItem(
                 .fillMaxWidth()
                 .aspectRatio(1.1f)
                 .shadow(
-                    elevation = if (isDark) 12.dp else 6.dp, // Higher elevation in dark mode
+                    elevation = if (isDark) 12.dp else 6.dp,
                     shape = RoundedCornerShape(20.dp),
                     ambientColor = MaterialTheme.colorScheme.primary,
                     spotColor = MaterialTheme.colorScheme.primary
                 )
-                .background(item.bgCol, RoundedCornerShape(20.dp)),
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)),
             contentAlignment = Alignment.Center
         ) {
             if (item.imageRes != null) {
-                androidx.compose.foundation.Image(
+            Image(
                     painter = painterResource(id = item.imageRes),
                     contentDescription = null,
-                    modifier = Modifier.size(70.dp)
+                    modifier = Modifier.fillMaxSize()
                 )
             } else {
                 Icon(

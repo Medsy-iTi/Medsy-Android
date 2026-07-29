@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -57,22 +58,25 @@ fun CategoryGridCard(
     ) {
         Box(
             modifier = Modifier
-                .size(72.dp)
-                .background(containerColor, RoundedCornerShape(14.dp)),
+                .size(90.dp)
+                .background(
+                    if (category.imageRes != null) Color.Transparent else containerColor,
+                    RoundedCornerShape(14.dp)
+                ),
             contentAlignment = Alignment.Center
         ) {
             if (category.imageRes != null) {
                 androidx.compose.foundation.Image(
                     painter = painterResource(id = category.imageRes),
                     contentDescription = null,
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier.fillMaxSize()
                 )
             } else {
                 Icon(
                     imageVector = Icons.Default.MedicalServices,
                     contentDescription = null,
                     tint = contentColor,
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier.size(42.dp)
                 )
             }
         }
