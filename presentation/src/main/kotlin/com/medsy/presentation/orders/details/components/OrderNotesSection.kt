@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -60,7 +61,7 @@ fun OrderNoteSection(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Icon(
-                imageVector = Icons.Outlined.Chat,
+                imageVector = Icons.AutoMirrored.Outlined.Chat,
                 contentDescription = null,
                 tint = if (hasNote) {
                     MaterialTheme.colorScheme.primary
