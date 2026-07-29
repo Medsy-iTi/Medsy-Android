@@ -28,6 +28,7 @@ import com.medsy.presentation.offers.confirmation.OrderConfirmationRoot
 import com.medsy.presentation.offers.details.OfferDetailsRoot
 import com.medsy.presentation.offers.review.OrderReviewRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
+import com.medsy.presentation.orders.details.OrderDetailsRoot
 import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.products.ProductsRoot
@@ -162,6 +163,9 @@ fun RootNavDisplay() {
                     openProducts = { categoryId, categoryName ->
                         rootBackStack.navigateSingleTop(Route.Products(categoryId, categoryName))
                     },
+                    openOrderDetails = { orderId ->
+                        rootBackStack.navigateSingleTop(Route.OrderDetails(orderId))
+                    },
                     openOffers = { requestId ->
                         rootBackStack.navigateSingleTop(Route.AvailableOffers(requestId))
                     },
@@ -177,16 +181,30 @@ fun RootNavDisplay() {
                     onRequestedDestinationHandled = {
                         requestedNestedDestination = null
                     },
-                    openProductDetails = {
-                        rootBackStack.navigateSingleTop(Route.ProductDetails(it.toString()))
-                    }
                 )
+
             }
             entry<Route.AiChat> {
                 AiChatRoot(
                     onNext = { rootBackStack.removeLastOrNull() }
                 )
             }
+            entry<Route.OrderDetails> { route ->
+                OrderDetailsRoot(
+                    orderId = route.orderId,
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onNavigateToPharmacyProfile = {
+                        /* TODO: navigate to Pharmacy Profile (M-26) once that screen/route exists */
+                    },
+                    onReorder = {
+                        /* TODO: reorder behavior is owned by M-27 */
+                    },
+                    onNavigateToProductDetails = { productId ->
+                        rootBackStack.navigateSingleTop(Route.ProductDetails(id = productId))
+                    },
+                )
+            }
+
             entry<Route.ProductDetails> { route ->
                 ProductDetailsRoot(
                     productId = route.id,

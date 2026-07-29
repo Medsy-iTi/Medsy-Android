@@ -22,6 +22,7 @@ import com.medsy.medsy.nav.rootnavigation.Route
 import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.home.HomeRoot
+import com.medsy.presentation.orders.orderslist.OrdersRoot
 import com.medsy.presentation.profile.ProfileRoot
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -40,8 +41,8 @@ fun NestedNavDisplay(
     openCartRequest: () -> Unit,
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
-    openProductDetails: () -> Unit,
-) {
+    openOrderDetails: (String) -> Unit,
+    ) {
 
     val nestedBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -49,6 +50,7 @@ fun NestedNavDisplay(
                 polymorphic(NavKey::class) {
                     subclass(Route.NestedNav.Home::class, Route.NestedNav.Home.serializer())
                     subclass(Route.NestedNav.Cart::class, Route.NestedNav.Cart.serializer())
+                    subclass(Route.NestedNav.Orders::class, Route.NestedNav.Orders.serializer())
                     subclass(Route.NestedNav.Profile::class, Route.NestedNav.Profile.serializer())
                 }
             }
@@ -135,6 +137,12 @@ fun NestedNavDisplay(
                         onOpenCartRequest = openCartRequest,
                     )
                 }
+                entry<Route.NestedNav.Orders> {
+                    OrdersRoot(
+                        onOrderClick = openOrderDetails,
+                    )
+                }
+
                 entry<Route.NestedNav.Profile> {
                     ProfileRoot(
                         onNavigateToPersonalDetails = openPersonalDetails,
