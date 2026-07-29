@@ -5,7 +5,7 @@ import com.medsy.data.prescription.remote.dto.ExtractedMedicineDto
 import com.medsy.data.prescription.remote.dto.MedicineCandidateDto
 import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
 import com.medsy.data.productdetails.remote.ProductDetailsDto
-import com.medsy.data.search.remote.ProductDto
+import com.medsy.data.search.dto.ProductDto
 import com.medsy.domain.prescription.model.ExtractedMedicine
 import com.medsy.domain.prescription.model.MatchStatus
 import com.medsy.domain.prescription.model.Medicine
