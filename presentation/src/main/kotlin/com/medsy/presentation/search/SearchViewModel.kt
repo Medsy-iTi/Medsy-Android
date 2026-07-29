@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
+import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.fold
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -252,7 +254,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun SearchProduct.toUi(): SearchProductUi {
-        val isArabic = java.util.Locale.getDefault().language == "ar"
+        val isArabic = Locale.getDefault().language == LocaleConstants.ARABIC_TAG
         val localizedName = if (isArabic && arabicName.isNotBlank()) arabicName else name
         val subtitle = if (scientificName.isNotBlank() && company.isNotBlank()) {
             "$scientificName · $company"

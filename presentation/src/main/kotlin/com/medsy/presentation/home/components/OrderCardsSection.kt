@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 
 @Composable
@@ -17,6 +18,8 @@ fun OrderCardsSection(
     onSearchMedicineClick: () -> Unit,
     onUploadPrescriptionClick: () -> Unit
 ) {
+    val extendedColors = MaterialTheme.extendedColors
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.home_section_order),
@@ -35,6 +38,8 @@ fun OrderCardsSection(
                 title = stringResource(R.string.home_card_search_title),
                 subtitle = stringResource(R.string.home_card_search_desc),
                 iconRes = R.drawable.ic_search,
+                containerColor = extendedColors.blueContainer,
+                contentColor = extendedColors.blueContent,
                 onClick = onSearchMedicineClick
             )
 
@@ -43,6 +48,8 @@ fun OrderCardsSection(
                 title = stringResource(R.string.home_card_upload_title),
                 subtitle = stringResource(R.string.home_card_upload_desc),
                 iconRes = R.drawable.ic_camera_home,
+                containerColor = extendedColors.categoryContainerBg,
+                contentColor = extendedColors.onCategoryContainer,
                 onClick = onUploadPrescriptionClick
             )
         }

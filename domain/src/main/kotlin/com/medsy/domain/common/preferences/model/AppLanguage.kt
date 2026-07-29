@@ -1,6 +1,6 @@
-package com.medsy.domain.common.preferences.model
+import com.medsy.domain.common.LocaleConstants
 
 enum class AppLanguage(val tag: String) {
-    Arabic("ar"),
-    English("en"),
+    Arabic(LocaleConstants.ARABIC_TAG),
+    English(LocaleConstants.ENGLISH_TAG),
 }

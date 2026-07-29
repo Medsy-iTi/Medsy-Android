@@ -3,6 +3,7 @@ package com.medsy.presentation.productdetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
+import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
@@ -31,7 +32,6 @@ class ProductDetailsViewModel @Inject constructor(
     private var productId: Int = -1
     private var hasLoadedInitialData = false
 
-    /** Called once from the nav entry, before the ViewModel is observed. */
     fun init(rawId: String) {
         productId = rawId.toIntOrNull() ?: -1
         if (!hasLoadedInitialData) {
@@ -76,13 +76,18 @@ class ProductDetailsViewModel @Inject constructor(
             }
             return
         }
+
+        if (_state.value.product?.id == productId.toString()) return
+
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageRes = null) }
-            val language = if (Locale.getDefault().language == "ar") "ar" else "en"
+            val language = if (Locale.getDefault().language == LocaleConstants.ARABIC_TAG) {
+                LocaleConstants.ARABIC_TAG
+            } else {
+                LocaleConstants.ENGLISH_TAG
+            }
 
-            val result = getProductDetailsUseCase(productId, language)
-
-            when (result) {
+            when (val result = getProductDetailsUseCase(productId, language)) {
                 is MedsyResult.Success -> {
                     val details = result.data
                     _state.update {
@@ -150,6 +155,8 @@ class ProductDetailsViewModel @Inject constructor(
             manufacturer = company,
             type = form.orEmpty(),
             category = consumerCategory.orEmpty(),
+            scientificName = scientificName,
+            scientificCategory = scientificCategory.orEmpty(),
             route = route,
             isFavorite = false
         )

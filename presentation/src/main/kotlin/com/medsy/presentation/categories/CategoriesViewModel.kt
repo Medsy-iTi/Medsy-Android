@@ -36,6 +36,8 @@ class CategoriesViewModel @Inject constructor(
     }
 
     private fun fetchCategories() {
+        if (_state.value.categories.isNotEmpty()) return
+
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getCategoriesUseCase(page = 0, size = 100).collectLatest { result ->
@@ -43,7 +45,8 @@ class CategoriesViewModel @Inject constructor(
                     allCategories = domainCategories.map {
                         CategoryUi(
                             id = it.id.toString(),
-                            name = it.name
+                            name = it.name,
+                            imageRes = it.image
                         )
                     }
                     _state.update {

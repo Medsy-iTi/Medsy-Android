@@ -94,6 +94,7 @@ internal fun CartPrescriptionSection(
                 Icon(
                     Icons.Filled.DeleteOutline,
                     contentDescription = stringResource(R.string.cart_remove_prescription),
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
         }
