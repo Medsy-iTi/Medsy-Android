@@ -12,7 +12,9 @@ import com.medsy.domain.search.usecase.SearchProductsUseCase
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -29,6 +31,10 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val allFetchedProducts = mutableListOf<SearchProduct>()
+
+    private var searchJob: Job? = null
+    private var fetchJob: Job? = null
+    private val SEARCH_DEBOUNCE_MILLIS = 300L
 
 
     private val _state = MutableStateFlow(SearchState())
@@ -50,13 +56,13 @@ class SearchViewModel @Inject constructor(
     fun onIntent(intent: SearchUIIntent) {
         when (intent) {
             is SearchUIIntent.QueryChanged -> {
-                _state.value = _state.value.copy(query = intent.value)
-                updateProductsUiList()
+                _state.update { it.copy(query = intent.value) }
+                search(intent.value)
             }
 
             SearchUIIntent.ClearQueryClicked -> {
-                _state.value = _state.value.copy(query = "")
-                updateProductsUiList()
+                _state.update { it.copy(query = "") }
+                search("")
             }
 
             SearchUIIntent.BackClicked -> sendEffect(SearchUIEffect.NavigateBack)
@@ -160,12 +166,29 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    private fun search(query: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            if (query.isNotBlank()) {
+                delay(SEARCH_DEBOUNCE_MILLIS)
+            }
+            reloadProductsInternal()
+        }
+    }
+
     private fun reloadProducts() {
-        _state.value = _state.value.copy(
-            isLoading = true,
-            currentPage = 0,
-            errorMessage = null
-        )
+        searchJob?.cancel()
+        reloadProductsInternal()
+    }
+
+    private fun reloadProductsInternal() {
+        _state.update { currentState ->
+            currentState.copy(
+                isLoading = true,
+                currentPage = 0,
+                errorMessage = null
+            )
+        }
         allFetchedProducts.clear()
         fetchPage(0)
     }
@@ -174,13 +197,15 @@ class SearchViewModel @Inject constructor(
         val currentState = _state.value
         if (currentState.isLoading || currentState.isLoadMore || currentState.isLastPage) return
 
-        _state.value = _state.value.copy(isLoadMore = true)
+        _state.update { it.copy(isLoadMore = true) }
         fetchPage(currentState.currentPage + 1)
     }
 
     private fun fetchPage(page: Int) {
-        viewModelScope.launch {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
             val result = searchProductsUseCase(
+                query = _state.value.query,
                 page = page,
                 size = 20,
                 sort = listOf(_state.value.selectedSort.apiValue),
@@ -219,20 +244,11 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun updateProductsUiList() {
-        val query = _state.value.query
-        val filtered = allFetchedProducts.filter { product ->
-            val matchesQuery = query.isBlank() ||
-                    product.name.contains(query, ignoreCase = true) ||
-                    product.arabicName.contains(query, ignoreCase = true) ||
-                    product.scientificName.contains(query, ignoreCase = true)
-
-
-            matchesQuery
+        _state.update { currentState ->
+            currentState.copy(
+                products = allFetchedProducts.map { it.toUi() }
+            )
         }
-
-        _state.value = _state.value.copy(
-            products = filtered.map { it.toUi() }
-        )
     }
 
     private fun SearchProduct.toUi(): SearchProductUi {
