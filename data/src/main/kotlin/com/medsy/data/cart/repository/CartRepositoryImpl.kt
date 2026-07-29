@@ -7,6 +7,7 @@ import com.medsy.data.cart.remote.CartRemoteDataSource
 import com.medsy.data.common.media.PrescriptionImageStorage
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartDraft
+import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.cart.repository.CartRepository
 import com.medsy.domain.common.EmptyMedsyResult
@@ -35,6 +36,11 @@ class CartRepositoryImpl @Inject constructor(
         quantity: Int,
     ): MedsyResult<Cart, MedsyError.Remote> =
         remoteDataSource.addItem(productId, quantity).map { it.toDomain() }
+
+    override suspend fun addItemsBulk(
+        items: List<CartItemInput>,
+    ): EmptyMedsyResult<MedsyError.Remote> =
+        remoteDataSource.addItemsBulk(items.map { it.toDto() })
 
     override suspend fun setItemQuantity(
         cartItemId: Long,

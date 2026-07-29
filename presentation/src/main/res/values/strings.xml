@@ -533,5 +533,6 @@
     <string name="order_details_final_total">Total</string>
     <string name="order_details_reorder">Reorder</string>
     <string name="order_details_error_load">We couldn\'t load this order\'s details.</string>
+    <string name="reordered_products">Products added to cart successfully.</string>
 
 </resources>

@@ -28,6 +28,17 @@ class CartRemoteDataSource @Inject constructor(
             )
         }
 
+    suspend fun addItemsBulk(
+        items: List<CartItemInputDto>,
+    ): EmptyMedsyResult<MedsyError.Remote> =
+        safeEmptyRestCall {
+            apiService.addCartItemsBulk(
+                BulkCartItemsRequestDto(
+                    items = items
+                )
+            )
+        }
+
     suspend fun setItemQuantity(
         cartItemId: Long,
         quantity: Int,

@@ -6,7 +6,13 @@ import com.medsy.data.cart.remote.CartItemDto
 import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartItem
+import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.cart.model.ProductsRequest
+
+fun CartItemInput.toDto(): CartItemInputDto = CartItemInputDto(
+    productId = productId,
+    quantity = quantity,
+)
 
 fun CartDto.toDomain(): Cart = Cart(
     id = id,
