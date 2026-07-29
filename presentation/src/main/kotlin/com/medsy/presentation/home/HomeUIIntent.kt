@@ -15,4 +15,5 @@ sealed interface HomeUIIntent {
     object OnCancelSearchSimulation : HomeUIIntent
     object OnViewOffersClick : HomeUIIntent
     object OnSearchWiderRangeClick : HomeUIIntent
+    object RefreshData : HomeUIIntent
 }

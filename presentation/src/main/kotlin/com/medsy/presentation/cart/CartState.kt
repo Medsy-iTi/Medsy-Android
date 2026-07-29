@@ -13,6 +13,7 @@ data class CartState(
     val updatingItemIds: Set<Long> = emptySet(),
     val isClearing: Boolean = false,
     val isClearDialogVisible: Boolean = false,
+    val itemToRemove: Long? = null,
     val isNoteDialogVisible: Boolean = false,
     val noteInput: String = "",
     @StringRes val errorMessageRes: Int? = null,

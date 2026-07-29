@@ -4,6 +4,8 @@
 
     <!-- App -->
     <string name="app_name">ميدسي</string>
+    <string name="splash_logo_description">شعار ميدسي</string>
+    <string name="splash_tagline">صحتك، أولويتنا</string>
     <string name="app_name_prefix">ميد</string>
     <string name="app_name_suffix">سي</string>
     <string name="medsy_logo_content_desc">شعار ميدسي</string>
@@ -181,7 +183,7 @@
     <string name="search_filter_chip_price">السعر</string>
     <string name="search_filter_chip_most_relevant">الأكثر صلة</string>
     <string name="search_results_count">%1$d نتيجة</string>
-    <string name="search_price_egp">%1$d جنيه</string>
+    <string name="search_price_egp">%1$s جنيه</string>
     <string name="search_favorite_desc">أضف للمفضلة</string>
     <string name="search_add_to_cart_desc">أضف إلى السلة</string>
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
@@ -209,6 +211,8 @@
     <string name="product_details_pharmacist_notice">لا يتم صرف هذا الدواء إلا بعد مراجعة الصيدلي لتحديد الجرعة المناسبة لحالتك.</string>
     <string name="product_details_info_title">معلومات المنتج</string>
     <string name="product_details_label_manufacturer">الشركة المنتجة</string>
+    <string name="product_details_label_scientific_name">الاسم العلمي</string>
+    <string name="product_details_label_scientific_category">الفئة العلمية</string>
     <string name="product_details_label_type">النوع</string>
     <string name="product_details_label_category">فئة الدواء</string>
     <string name="product_details_label_dispensing_method">طريقة الصرف</string>
@@ -366,6 +370,9 @@
     <string name="cart_note_saved">تم حفظ الملاحظة</string>
     <string name="cart_save">حفظ</string>
     <string name="cart_cancel">إلغاء</string>
+    <string name="cart_remove_item_title">حذف الدواء؟</string>
+    <string name="cart_remove_item_message">سيؤدي هذا إلى حذف هذا الدواء من عربة الطلب.</string>
+    <string name="cart_remove_item_confirm">حذف</string>
     <string name="cart_total_price">إجمالي السعر</string>
     <string name="cart_price_egp">%1$s جنيه</string>
     <string name="cart_continue">متابعة الطلب</string>
@@ -373,7 +380,7 @@
     <string name="cart_clear_title">إفراغ سلة الطلب؟</string>
     <string name="cart_clear_message">سيؤدي ذلك إلى إزالة جميع الأدوية والروشتة وملاحظة الصيدلي.</string>
     <string name="cart_clear_confirm">إفراغ</string>
-    <string name="cart_cleared">تم إفراغ السلة</string>
+    <string name="cart_cleared">تم إفراغ السلة بنجاح</string>
     <!--  Active Search Status  -->
     <string name="cart_request_title">إكمال الطلب</string>
     <string name="cart_request_subtitle">بعض التفاصيل الأخيرة قبل إرسال طلبك إلى الصيدليات</string>

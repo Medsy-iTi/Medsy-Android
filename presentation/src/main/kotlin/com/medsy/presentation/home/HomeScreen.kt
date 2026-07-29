@@ -3,12 +3,12 @@ package com.medsy.presentation.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,6 +31,11 @@ fun HomeRoot(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val locale = LocalConfiguration.current.locales[0]
+
+    LaunchedEffect(locale) {
+        viewModel.onIntent(HomeUIIntent.RefreshData)
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
@@ -63,83 +68,87 @@ fun HomeScreen(
     state: HomeUIState,
     onIntent: (HomeUIIntent) -> Unit
 ) {
-    val scrollState = rememberScrollState()
+    if (state.isLoading) {
+        HomeShimmer()
+    } else {
+        val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-            .verticalScroll(scrollState)
-            .padding(vertical = 24.dp)
-    ) {
-        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            HomeTopBar(
-                deliveryAddress = state.deliveryAddress,
-                notificationCount = state.notificationCount,
-                onAddressClick = { onIntent(HomeUIIntent.OnAddressClick) },
-                onNotificationClick = { onIntent(HomeUIIntent.OnNotificationClick) }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            MedsySearchBar(
-                hint = stringResource(R.string.home_search_hint),
-                onSearchClick = { onIntent(HomeUIIntent.OnSearchFieldClick) }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        PromoBannerCarousel(
-            banners = state.banners,
-            currentIndex = state.currentBannerIndex,
-            onPromoClick = { onIntent(HomeUIIntent.OnPromoClick) }
-        )
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-            ) {
-                ActiveSearchCard(
-                    status = state.activeSearchStatus,
-                    onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
-                    onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
-                    onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+                .verticalScroll(scrollState)
+                .padding(vertical = 24.dp)
+        ) {
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                HomeTopBar(
+                    deliveryAddress = state.deliveryAddress,
+                    notificationCount = state.notificationCount,
+                    onAddressClick = { onIntent(HomeUIIntent.OnAddressClick) },
+                    onNotificationClick = { onIntent(HomeUIIntent.OnNotificationClick) }
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                MedsySearchBar(
+                    hint = stringResource(R.string.home_search_hint),
+                    onSearchClick = { onIntent(HomeUIIntent.OnSearchFieldClick) }
+                )
+            }
+
             Spacer(modifier = Modifier.height(18.dp))
-        }
 
-        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            OrderCardsSection(
-                onSearchMedicineClick = { onIntent(HomeUIIntent.OnSearchMedicineClick) },
-                onUploadPrescriptionClick = { onIntent(HomeUIIntent.OnUploadPrescriptionClick) }
+            PromoBannerCarousel(
+                banners = state.banners,
+                currentIndex = state.currentBannerIndex,
+                onPromoClick = { onIntent(HomeUIIntent.OnPromoClick) }
             )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            if (state.activeSearchStatus !is ActiveSearchStatus.Idle) {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                ) {
+                    ActiveSearchCard(
+                        status = state.activeSearchStatus,
+                        onCancelClick = { onIntent(HomeUIIntent.OnCancelSearchSimulation) },
+                        onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick) },
+                        onSearchWiderRangeClick = { onIntent(HomeUIIntent.OnSearchWiderRangeClick) }
+                    )
+                }
+                Spacer(modifier = Modifier.height(18.dp))
+            }
+
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                OrderCardsSection(
+                    onSearchMedicineClick = { onIntent(HomeUIIntent.OnSearchMedicineClick) },
+                    onUploadPrescriptionClick = { onIntent(HomeUIIntent.OnUploadPrescriptionClick) }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                CategoriesSection(
+                    categories = state.categories,
+                    onViewAllClick = { onIntent(HomeUIIntent.OnViewAllCategoriesClick) },
+                    onCategoryClick = { onIntent(HomeUIIntent.OnCategoryClick(it)) }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                FastDeliveryBanner()
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            CategoriesSection(
-                categories = state.categories,
-                onViewAllClick = { onIntent(HomeUIIntent.OnViewAllCategoriesClick) },
-                onCategoryClick = { onIntent(HomeUIIntent.OnCategoryClick(it)) }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            FastDeliveryBanner()
-        }
-
-        Spacer(modifier = Modifier.height(6.dp))
     }
 }
 

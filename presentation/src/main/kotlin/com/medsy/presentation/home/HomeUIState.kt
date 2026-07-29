@@ -45,5 +45,6 @@ data class PromoBannerUi(
 
 data class CategoryUi(
     val id: String,
-    val name: String
+    val name: String,
+    val imageRes: Int? = null
 )

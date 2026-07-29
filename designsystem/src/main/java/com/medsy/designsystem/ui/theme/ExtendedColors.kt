@@ -59,7 +59,16 @@ data class ExtendedColors(
     val prescriptionGalleryContainer: Color,
     val prescriptionGalleryContent: Color,
     val prescriptionScanBorder: Color,
-)
+) {
+    val categoryColors: List<Pair<Color, Color>>
+        get() = listOf(
+            categoryContainerBg to onCategoryContainer,
+            blueContainer to blueContent,
+            orangeContainer to orangeContent,
+            pinkContainer to pinkContent,
+            purpleContainer to purpleContent,
+        )
+}
 
 internal val LocalExtendedColors = staticCompositionLocalOf {
     lightExtendedColors

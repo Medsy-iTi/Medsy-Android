@@ -9,9 +9,9 @@ object LoginConstants {
     val LogoWidth = 140.dp
     val SpacerLogoText = 16.dp
     val SpacerTextForm = 24.dp
-    val SpacerInput = 16.dp
-    val SpacerInputButton = 24.dp
-    val SpacerOr = 24.dp
+    val SpacerInput = 8.dp
+    val SpacerInputButton = 16.dp
+    val SpacerOr = 16.dp
     val SpacerSocial = 16.dp
 
     val SocialButtonHeight = 56.dp

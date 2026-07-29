@@ -88,6 +88,8 @@ class ProductsViewModel @Inject constructor(
     }
 
     private fun fetchProducts(categoryId: Int) {
+        if (_state.value.products.isNotEmpty() && _state.value.categoryId == categoryId) return
+
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getProductsByCategoryUseCase(categoryId).collectLatest { result ->
