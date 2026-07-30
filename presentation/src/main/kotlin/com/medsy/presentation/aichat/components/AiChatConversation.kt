@@ -115,13 +115,12 @@ private fun AssistantResponse(
     onIntent: (AiChatUIIntent) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(0.9f),
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(0.82f),
+            modifier = Modifier.fillMaxWidth(0.9f),
             verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.Start
         ) {
             AiChatAvatar(size = 28.dp)
             Spacer(Modifier.width(8.dp))
@@ -148,7 +147,7 @@ private fun AssistantResponse(
             }
         }
         response.products.forEach { product ->
-            AiProductResultCard(
+            AiChatProductCard(
                 product = product,
                 onOpenProduct = {
                     onIntent(AiChatUIIntent.ProductClicked(product.productId))
