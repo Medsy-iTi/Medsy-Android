@@ -1,6 +1,8 @@
 package com.medsy.data.remote.api
 
 
+import com.medsy.data.aichat.remote.CatalogAnswerDto
+import com.medsy.data.aichat.remote.CatalogQuestionRequestDto
 import com.medsy.data.cart.remote.AddCartItemRequestDto
 import com.medsy.data.cart.remote.BulkCartItemsRequestDto
 import com.medsy.data.cart.remote.CartDto
@@ -35,6 +37,11 @@ import retrofit2.http.Query
 
 
 interface ApiService {
+    @POST("api/v1/ai/catalog/ask")
+    suspend fun askCatalog(
+        @Body request: CatalogQuestionRequestDto,
+    ): Response<ApiResponse<CatalogAnswerDto>>
+
     @GET("api/v1/pharmacies/{id}")
     suspend fun getPharmacyById(
         @Path("id") id: Long,
