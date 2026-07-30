@@ -22,7 +22,7 @@ import com.medsy.medsy.nav.rootnavigation.Route
 import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.home.HomeRoot
-import com.medsy.presentation.orders.OrdersRoot
+import com.medsy.presentation.orders.orderslist.OrdersRoot
 import com.medsy.presentation.profile.ProfileRoot
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -38,10 +38,11 @@ fun NestedNavDisplay(
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
     openOffers: () -> Unit,
-    openPrescription: (Boolean) -> Unit,
+    openPrescription: (Boolean, Boolean) -> Unit,
     openCartRequest: () -> Unit,
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
+    openOrderDetails: (String) -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -132,7 +133,8 @@ fun NestedNavDisplay(
                         onSearchClick = { openSearch() },
                         onNotificationClick = { /* Handle notification click */ },
                         onAddressClick = { /* Handle address click */ },
-                        onUploadPrescriptionClick = { openPrescription(false) },
+                        onUploadPrescriptionClick = { openPrescription(false, false) },
+                        onMedicineImageSearchClick = { openPrescription(false, true) },
                         onViewAllCategoriesClick = { openCategories() },
                         onCategoryClick = { categoryId, categoryName ->
                             openProducts(categoryId, categoryName)
@@ -142,12 +144,15 @@ fun NestedNavDisplay(
                 }
                 entry<Route.NestedNav.Cart> {
                     CartRoot(
-                        onAddPrescription = { openPrescription(true) },
+                        onAddPrescription = { openPrescription(true, false) },
+                        onMedicineSearch = { openPrescription(false, true) },
                         onOpenCartRequest = openCartRequest,
                     )
                 }
                 entry<Route.NestedNav.Orders> {
-                    OrdersRoot()
+                    OrdersRoot(
+                        onOrderClick = openOrderDetails,
+                    )
                 }
                 entry<Route.NestedNav.Profile> {
                     ProfileRoot(

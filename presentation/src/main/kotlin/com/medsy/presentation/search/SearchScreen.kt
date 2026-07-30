@@ -42,6 +42,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
 import com.medsy.presentation.search.components.ProductResultCard
+import com.medsy.presentation.search.components.SearchCategoryBottomSheet
 import com.medsy.presentation.search.components.SearchEmptyState
 import com.medsy.presentation.search.components.SearchFilterChips
 import com.medsy.presentation.search.components.SearchInputBar
@@ -51,19 +52,33 @@ import com.medsy.presentation.search.components.SearchTopBar
 
 @Composable
 fun SearchRoot(
+    initialQuery: String? = null,
     onBack: () -> Unit,
     onNext: (String) -> Unit,
+    onProductSelected: ((String) -> Unit)? = null,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    LaunchedEffect(initialQuery) {
+        if (initialQuery != null) {
+            viewModel.onIntent(SearchUIIntent.QueryChanged(initialQuery))
+        }
+    }
+
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 SearchUIEffect.NavigateBack -> onBack()
-                is SearchUIEffect.NavigateToProductDetails -> onNext(effect.productId)
+                is SearchUIEffect.NavigateToProductDetails -> {
+                    if (onProductSelected != null) {
+                        onProductSelected(effect.productId)
+                    } else {
+                        onNext(effect.productId)
+                    }
+                }
                 is SearchUIEffect.ShowMessage ->
                     snackbarHostState.showSnackbar(
                         ContextCompat.getString(context, effect.messageRes)
@@ -179,7 +194,13 @@ fun SearchScreen(
                                 isFavorite = product.id in state.favoriteProductIds,
                                 onClick = { onIntent(SearchUIIntent.ProductClicked(product.id)) },
                                 onFavoriteClick = { onIntent(SearchUIIntent.FavoriteClicked(product.id)) },
-                                onAddToCartClick = { onIntent(SearchUIIntent.AddToCartClicked(product.id)) },
+                                onAddToCartClick = {
+                                    onIntent(
+                                        SearchUIIntent.AddToCartClicked(
+                                            product.id
+                                        )
+                                    )
+                                },
                             )
                         }
 
@@ -211,6 +232,15 @@ fun SearchScreen(
             selectedOption = state.selectedSort,
             optionLabelRes = { it.labelResId },
             onOptionClick = { onIntent(SearchUIIntent.SortOptionSelected(it)) },
+            onDismissRequest = { onIntent(SearchUIIntent.DismissBottomSheet) }
+        )
+    }
+
+    if (state.isCategoryBottomSheetOpen) {
+        SearchCategoryBottomSheet(
+            categories = state.categories,
+            selectedCategory = state.selectedCategory,
+            onCategorySelected = { onIntent(SearchUIIntent.CategoryOptionSelected(it)) },
             onDismissRequest = { onIntent(SearchUIIntent.DismissBottomSheet) }
         )
     }

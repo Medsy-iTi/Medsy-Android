@@ -13,13 +13,16 @@ data class CartState(
     val updatingItemIds: Set<Long> = emptySet(),
     val isClearing: Boolean = false,
     val isClearDialogVisible: Boolean = false,
+    val itemToRemove: Long? = null,
     val isNoteDialogVisible: Boolean = false,
     val noteInput: String = "",
     @StringRes val errorMessageRes: Int? = null,
 ) {
     val hasContent: Boolean
-        get() = canContinue || draft.pharmacistNote.isNotBlank()
+        get() = items.isNotEmpty() ||
+                draft.prescriptionImage != null ||
+                draft.pharmacistNote.isNotBlank()
 
     val canContinue: Boolean
-        get() = items.isNotEmpty() || draft.prescriptionImage != null
+        get() = items.isNotEmpty()
 }

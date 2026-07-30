@@ -10,10 +10,16 @@ class SearchProductsUseCase @Inject constructor(
     private val repository: SearchRepository
 ) {
     suspend operator fun invoke(
+        query: String? = null,
         page: Int,
         size: Int,
-        sort: List<String>?
+        sort: List<String>?,
+        categoryId: Int? = null
     ): MedsyResult<SearchProductsPage, MedsyError.Remote> {
-        return repository.getProducts(page, size, sort)
+        return if (!query.isNullOrBlank()) {
+            repository.searchProducts(query, page, size, sort)
+        } else {
+            repository.getProducts(page, size, sort, categoryId)
+        }
     }
 }

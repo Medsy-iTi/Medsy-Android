@@ -3,6 +3,8 @@
 
     <!-- App -->
     <string name="app_name">Medesy</string>
+    <string name="splash_logo_description">Medesy Logo</string>
+    <string name="splash_tagline">Your health, our priority</string>
     <string name="medsy_logo_content_desc">Medesy Logo</string>
     <string name="app_name_prefix">Med</string>
     <string name="app_name_suffix">sy</string>
@@ -166,6 +168,13 @@
     <string name="profile_location_disclaimer_title">Add your delivery location</string>
     <string name="profile_location_disclaimer_message">Choose your location on the map to help nearby pharmacies serve you accurately.</string>
     <string name="profile_location_disclaimer_action">Open personal details</string>
+    <string name="profile_location_picker_title">Select location</string>
+    <string name="profile_location_confirm">Confirm location</string>
+    <string name="profile_location_use_current">Use current location</string>
+    <string name="profile_location_permission_denied">Location permission was not granted. You can still choose a location manually on the map.</string>
+    <string name="profile_location_unavailable">Your current location is unavailable. You can still choose a location manually on the map.</string>
+    <string name="profile_location_maps_unavailable">Google Maps is unavailable on this device.</string>
+    <string name="profile_location_selected_marker">Selected delivery location</string>
     <string name="profile_location_card_title">Map location</string>
     <string name="profile_location_card_selected">Location selected</string>
     <string name="profile_location_card_not_selected">Location not selected</string>
@@ -181,7 +190,7 @@
     <string name="search_filter_chip_price">Price</string>
     <string name="search_filter_chip_most_relevant">Most relevant</string>
     <string name="search_results_count">%1$d results</string>
-    <string name="search_price_egp">%1$d EGP</string>
+    <string name="search_price_egp">%1$s EGP</string>
     <string name="search_favorite_desc">Add to favorites</string>
     <string name="search_add_to_cart_desc">Add to cart</string>
     <string name="search_added_to_cart">Added to cart</string>
@@ -209,6 +218,8 @@
     <string name="product_details_pharmacist_notice">This medicine is dispensed only after pharmacist review to determine the appropriate dose for your condition.</string>
     <string name="product_details_info_title">Product Information</string>
     <string name="product_details_label_manufacturer">Manufacturer</string>
+    <string name="product_details_label_scientific_name">Scientific Name</string>
+    <string name="product_details_label_scientific_category">Scientific Category</string>
     <string name="product_details_label_type">Type</string>
     <string name="product_details_label_category">Drug Category</string>
     <string name="product_details_label_usage_method">Usage Method</string>
@@ -293,6 +304,11 @@
     <string name="prescription_return_home">Return to home</string>
     <string name="prescription_media_error">The selected image could not be opened. Please try another image.</string>
     <string name="prescription_error_generic">Something went wrong. Please try again.</string>
+    <string name="medicine_search_upload_title">Search by photo</string>
+    <string name="medicine_search_reading_title">Analyzing photo</string>
+    <string name="medicine_search_upload_failed_title">Photo search failed</string>
+    <string name="medicine_search_upload_failed_description">We couldn\'t identify the medicine. Please check your connection or try a clearer photo.</string>
+    <string name="medicine_search_review_button">Search for medicine</string>
     <!-- Auth Strings -->
     <string name="auth_email">Email</string>
     <string name="auth_password">Password</string>
@@ -339,7 +355,9 @@
     <!-- Cart -->
     <string name="cart_title">Request cart</string>
     <string name="cart_clear_description">Clear cart</string>
-    <string name="cart_empty">Your cart has no medicines yet.</string>
+    <string name="cart_empty">Your medicine cart is empty</string>
+    <string name="cart_empty_badge">Empty cart</string>
+    <string name="cart_empty_supporting">Add at least one medicine to continue. Prescriptions and notes are supporting details.</string>
     <string name="cart_remove_item_description">Remove medicine</string>
     <string name="cart_decrease_quantity">Decrease quantity</string>
     <string name="cart_increase_quantity">Increase quantity</string>
@@ -356,6 +374,9 @@
     <string name="cart_note_saved">Note saved</string>
     <string name="cart_save">Save</string>
     <string name="cart_cancel">Cancel</string>
+    <string name="cart_remove_item_title">Remove medicine?</string>
+    <string name="cart_remove_item_message">This will remove this medicine from your request cart.</string>
+    <string name="cart_remove_item_confirm">Remove</string>
     <string name="cart_total_price">Total price</string>
     <string name="cart_price_egp">%1$s EGP</string>
     <string name="cart_continue">Continue request</string>
@@ -363,7 +384,8 @@
     <string name="cart_clear_title">Clear request cart?</string>
     <string name="cart_clear_message">This removes all medicines, the prescription, and the pharmacist note.</string>
     <string name="cart_clear_confirm">Clear</string>
-    <string name="cart_cleared">Cart cleared</string>
+    <string name="cart_cleared">Cart cleared successfully</string>
+    <!--  Active Search Status  -->
     <string name="cart_request_title">Complete request</string>
     <string name="cart_request_subtitle">A few final details before pharmacies receive your request</string>
     <string name="cart_request_order_summary">Request summary</string>
@@ -398,10 +420,14 @@
     <string name="cart_request_visa_description">Pay by card</string>
     <string name="cart_request_submit">Submit medicine request</string>
     <string name="cart_request_retry">Retry</string>
-    <string name="cart_request_empty_request">Add at least one medicine or a prescription before submitting.</string>
+    <string name="cart_request_empty_request">Add at least one medicine before submitting. Prescriptions and notes only support the request.</string>
     <string name="cart_request_back">Back to cart</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>
+    <string name="search_category_title">Category</string>
+    <string name="search_category_all">All</string>
+    <string name="search_category_reset">Reset</string>
+    <string name="search_category_apply">Apply</string>
     <string name="home_search_status_searching_desc">Matching your request with nearby pharmacies</string>
     <string name="home_search_status_time">Search time</string>
     <string name="home_search_status_stage_1">Stage 1</string>
@@ -429,11 +455,29 @@
     <string name="home_search_status_search_wider">Search in a wider range</string>
     <string name="home_search_status_cancel">Cancel request</string>
     <string name="home_search_status_offers_available_format">%1$d offers available — you can compare</string>
-
     <plurals name="home_search_status_medicines">
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>
     </plurals>
+
+    <!-- Pharmacy profile -->
+    <string name="pharmacy_profile_title">Pharmacy profile</string>
+    <string name="pharmacy_profile_verified">Verified</string>
+    <string name="pharmacy_profile_contact_title">Contact information</string>
+    <string name="pharmacy_profile_phone">Phone number</string>
+    <string name="pharmacy_profile_address">Address</string>
+    <string name="pharmacy_profile_call">Call pharmacy</string>
+    <string name="pharmacy_profile_location">Pharmacy location</string>
+    <string name="pharmacy_profile_directions">Get directions</string>
+    <string name="pharmacy_profile_location_unavailable">The pharmacy location is not available right now.</string>
+    <string name="pharmacy_profile_map_description">Map showing the location of %1$s</string>
+    <string name="pharmacy_profile_not_available">Not available</string>
+    <string name="pharmacy_profile_retry">Try again</string>
+    <string name="pharmacy_profile_invalid_id">The pharmacy ID is invalid.</string>
+    <string name="pharmacy_profile_call_short">Call</string>
+    <string name="pharmacy_profile_address_title">Pharmacy address</string>
+    <string name="pharmacy_profile_directions_short">Directions</string>
+    <string name="pharmacy_profile_share">Share</string>
 
     <!-- Offers Flow -->
     <string name="offers_available_title">Available Offers</string>
@@ -454,7 +498,7 @@
     <string name="offers_pharmacist_comment">Pharmacist Comment</string>
     <string name="offers_view_prescription">View Prescription</string>
     <string name="offers_choose_offer">Choose this Offer</string>
-    
+
     <string name="offers_order_review_title">Order Review</string>
     <string name="offers_delivery_address">Delivery Address</string>
     <string name="offers_delivery_details">Delivery Details</string>
@@ -463,17 +507,60 @@
     <string name="offers_total_medicines_price">Total Medicines Price</string>
     <string name="offers_total">Total</string>
     <string name="offers_confirm_order">Confirm Order</string>
-    
+
     <string name="offers_success_title">Order Confirmed Successfully!</string>
     <string name="offers_order_number">Order Number</string>
     <string name="offers_delivery_to">Delivery To</string>
     <string name="offers_estimated_time">Estimated Preparation Time</string>
     <string name="offers_payment_method">Payment Method</string>
     <string name="offers_cash_on_delivery">Cash on Delivery</string>
-    <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.</string>
+    <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.\nSearch in a wider range to find more pharmacies.</string>
     <string name="offers_track_order">Track Order</string>
     <string name="offers_back_to_home">Back to Home</string>
     <string name="offers_edit_address">Edit</string>
+
+
+    <!--  My Orders  -->
+    <string name="orders_title">My Orders</string>
+    <string name="order_number_format">#%1$s</string>
+    <string name="orders_filter_all">All</string>
+    <string name="orders_filter_active">Active</string>
+    <string name="orders_filter_finished">Finished</string>
+    <string name="orders_filter_cancelled">Cancelled</string>
+    <string name="orders_status_placed">Placed</string>
+    <string name="orders_status_confirmed">Order confirmed</string>
+    <string name="orders_status_delivering">Delivering</string>
+    <string name="orders_status_delivered">Delivered</string>
+    <string name="orders_status_cancelled">Cancelled</string>
+    <string name="orders_from_pharmacy_format">From %1$s</string>
+    <string name="orders_cancelled_note">Order was cancelled</string>
+    <string name="orders_products_count_format">%1$d products</string>
+    <string name="orders_product_image_desc">Product image</string>
+    <string name="orders_empty_state">No orders found</string>
+    <string name="orders_error_load">We couldn’t load your orders.</string>
+    <string name="orders_error_retry">Retry</string>
+
+
+    <!--   Order Details (M-25)   -->
+    <string name="order_details_title_format">Order #%1$s</string>
+    <string name="order_details_fulfillment_pickup">Pickup</string>
+    <string name="order_details_prescription_title">Prescription Image</string>
+    <string name="order_details_customer_note_title">Customer Notes</string>
+    <string name="order_details_pharmacy_note_title">Pharmacy Notes</string>
+    <string name="order_details_no_notes">No notes provided</string>
+    <string name="order_details_fulfillment_delivery">Delivery</string>
+    <string name="order_details_pharmacy_label">Pharmacy</string>
+    <string name="order_details_alternative_to_format">Alternative to %1$s</string>
+    <string name="order_details_qty_x_price_format">%1$d x %2$d EGP</string>
+    <string name="order_details_items_title">Items</string>
+    <string name="order_details_summary_title">Order Summary</string>
+    <string name="order_details_items_subtotal">Items subtotal</string>
+    <string name="order_details_delivery_fee">Delivery fee</string>
+    <string name="order_details_final_total">Total</string>
+    <string name="order_details_reorder">Reorder</string>
+    <string name="order_details_error_load">We couldn\'t load this order\'s details.</string>
+    <string name="reordered_products">Products added to cart successfully.</string>
+
     <!-- Medsy AI chat -->
     <string name="ai_chat_title">Medsy AI</string>
     <string name="ai_chat_online">Online · always here to help</string>

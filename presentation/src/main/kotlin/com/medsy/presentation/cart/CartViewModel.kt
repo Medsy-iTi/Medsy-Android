@@ -69,7 +69,20 @@ class CartViewModel @Inject constructor(
             CartUIIntent.RetryClicked -> loadCart()
             is CartUIIntent.IncreaseQuantityClicked -> changeQuantity(intent.cartItemId, 1)
             is CartUIIntent.DecreaseQuantityClicked -> changeQuantity(intent.cartItemId, -1)
-            is CartUIIntent.RemoveItemClicked -> removeItem(intent.cartItemId)
+            is CartUIIntent.RemoveItemClicked ->
+                _state.update { it.copy(itemToRemove = intent.cartItemId) }
+
+            CartUIIntent.RemoveItemConfirmed -> {
+                val itemId = _state.value.itemToRemove
+                if (itemId != null) {
+                    _state.update { it.copy(itemToRemove = null) }
+                    removeItem(itemId)
+                }
+            }
+
+            CartUIIntent.RemoveItemDismissed ->
+                _state.update { it.copy(itemToRemove = null) }
+
             CartUIIntent.ClearCartClicked ->
                 _state.update { it.copy(isClearDialogVisible = true) }
 
@@ -95,7 +108,13 @@ class CartViewModel @Inject constructor(
                 )
             }
 
-            CartUIIntent.SubmitCartClicked -> sendEffect(CartUIEffect.OpenMakeRequest)
+            CartUIIntent.SubmitCartClicked -> {
+                if (_state.value.canContinue) {
+                    sendEffect(CartUIEffect.OpenMakeRequest)
+                }
+            }
+
+            CartUIIntent.SearchMedicineClicked -> sendEffect(CartUIEffect.OpenMedicineSearch)
         }
     }
 

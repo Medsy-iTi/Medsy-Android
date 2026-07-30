@@ -37,11 +37,17 @@ sealed interface Route : NavKey {
         data object Profile : Route
     }
 
-    @Serializable
-    data object AiChat : Route
 
     @Serializable
     data class ProductDetails(val id: String) : Route
+
+    data class PharmacyProfile(val pharmacyId: Long) : Route
+
+    @Serializable
+    data class OrderDetails(val orderId: String) : Route
+
+    @Serializable
+    data class AiChat(val initialPrompt: String? = null) : Route
 
     @Serializable
     data object Settings : Route
@@ -55,7 +61,7 @@ sealed interface Route : NavKey {
     ) : Route
 
     @Serializable
-    data object SearchNav : Route
+    data class SearchNav(val initialQuery: String? = null, val localItemId: String? = null) : Route
 
     @Serializable
     data object Categories : Route
@@ -63,6 +69,9 @@ sealed interface Route : NavKey {
     @Serializable
     data class Prescription(
         val attachmentOnly: Boolean = false,
+        val isMedicineSearch: Boolean = false,
+        val resultLocalItemId: String? = null,
+        val resultProductId: Int? = null,
     ) : Route
 
     @Serializable

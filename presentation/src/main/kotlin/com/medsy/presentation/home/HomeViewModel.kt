@@ -3,7 +3,7 @@ package com.medsy.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
-import com.medsy.domain.profile.usecase.GetProfileUseCase
+import com.medsy.domain.profile.usecase.ObserveProfileUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.presentation.R
@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getProfileUseCase: GetProfileUseCase
+    private val observeProfileUseCase: ObserveProfileUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
@@ -35,10 +35,10 @@ class HomeViewModel @Inject constructor(
     private var searchSimulationJob: Job? = null
 
     init {
-
         _state.update {
             it.copy(
-                notificationCount = 1, deliveryAddress = "شارع النيل، المعادي", banners = listOf(
+                notificationCount = HomeConstants.MOCKED_NOTIFICATION_COUNT,
+                banners = listOf(
                     PromoBannerUi(
                         id = "1",
                         titleRes = R.string.home_promo_title_one,
@@ -63,17 +63,22 @@ class HomeViewModel @Inject constructor(
                         imageRes = R.drawable.banner3,
                         imageContentDescRes = R.string.home_banner_image_desc_three
                     ),
-                ), categories = emptyList()
+                ),
+                categories = emptyList()
             )
         }
         fetchCategories()
-        preloadProfile()
+        observeProfileData()
         startSearchSimulation()
     }
 
-    private fun preloadProfile() {
+    private fun observeProfileData() {
         viewModelScope.launch {
-            getProfileUseCase()
+            observeProfileUseCase().collectLatest { profile ->
+                profile?.homeAddress?.let { address ->
+                    _state.update { it.copy(deliveryAddress = address) }
+                }
+            }
         }
     }
 
@@ -82,9 +87,11 @@ class HomeViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getCategoriesUseCase(page = 0, size = 20).collectLatest { result ->
                 result.onSuccess { domainCategories ->
-                    val uiCategories = domainCategories.take(7).map {
+                    val uiCategories = domainCategories.take(9).map {
                         CategoryUi(
-                            id = it.id.toString(), name = it.name
+                            id = it.id.toString(),
+                            name = it.name,
+                            imageRes = it.image
                         )
                     }
                     _state.update {
@@ -113,9 +120,7 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeUIIntent.OnSearchMedicineClick -> {
-                // Now handled by the intent below or directly starting simulation.
-                // Let's change the intent triggered from UI. Wait, we changed UI to emit OnStartSearchSimulation
-                // But let's handle OnStartSearchSimulation here.
+                sendEffect(HomeUIEffect.NavigateToMedicineImageSearch)
             }
 
             HomeUIIntent.OnUploadPrescriptionClick -> sendEffect(HomeUIEffect.NavigateToUploadPrescription)
@@ -124,16 +129,23 @@ class HomeViewModel @Inject constructor(
             HomeUIIntent.OnPromoClick -> {}
             HomeUIIntent.OnViewAllCategoriesClick -> sendEffect(HomeUIEffect.NavigateToCategories)
             is HomeUIIntent.OnCategoryClick -> {
-                val categoryName = _state.value.categories.find { it.id == intent.categoryId }?.name ?: ""
+                val categoryName =
+                    _state.value.categories.find { it.id == intent.categoryId }?.name ?: ""
                 sendEffect(HomeUIEffect.NavigateToCategory(intent.categoryId, categoryName))
             }
+
             HomeUIIntent.OnStartSearchSimulation -> startSearchSimulation()
             HomeUIIntent.OnCancelSearchSimulation -> cancelSearchSimulation()
             HomeUIIntent.OnViewOffersClick -> {
                 cancelSearchSimulation()
                 sendEffect(HomeUIEffect.NavigateToOffers)
             }
+
             HomeUIIntent.OnSearchWiderRangeClick -> startSearchSimulation()
+            HomeUIIntent.RefreshData -> {
+                fetchCategories()
+                observeProfileData()
+            }
         }
     }
 
@@ -141,47 +153,113 @@ class HomeViewModel @Inject constructor(
         searchSimulationJob?.cancel()
         searchSimulationJob = viewModelScope.launch {
             var elapsed = 0
-            // Stage 1
-            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 1, elapsedTime = elapsed)) }
+            _state.update {
+                it.copy(
+                    activeSearchStatus = ActiveSearchStatus.Searching(
+                        stage = HomeConstants.SEARCH_STAGE_ONE,
+                        elapsedTime = elapsed
+                    )
+                )
+            }
             repeat(3) {
                 delay(1000)
                 elapsed++
-                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 1, elapsedTime = elapsed)) }
+                _state.update {
+                    it.copy(
+                        activeSearchStatus = ActiveSearchStatus.Searching(
+                            stage = HomeConstants.SEARCH_STAGE_ONE,
+                            elapsedTime = elapsed
+                        )
+                    )
+                }
             }
-            
-            // Stage 2
-            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 2, elapsedTime = elapsed)) }
+
+            _state.update {
+                it.copy(
+                    activeSearchStatus = ActiveSearchStatus.Searching(
+                        stage = HomeConstants.SEARCH_STAGE_TWO,
+                        elapsedTime = elapsed
+                    )
+                )
+            }
             repeat(5) {
                 delay(1000)
                 elapsed++
-                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 2, elapsedTime = elapsed)) }
+                _state.update {
+                    it.copy(
+                        activeSearchStatus = ActiveSearchStatus.Searching(
+                            stage = HomeConstants.SEARCH_STAGE_TWO,
+                            elapsedTime = elapsed
+                        )
+                    )
+                }
             }
-            
-            // Stage 3
-            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 3, elapsedTime = elapsed)) }
+
+            _state.update {
+                it.copy(
+                    activeSearchStatus = ActiveSearchStatus.Searching(
+                        stage = HomeConstants.SEARCH_STAGE_THREE,
+                        elapsedTime = elapsed
+                    )
+                )
+            }
             repeat(6) {
                 delay(1000)
                 elapsed++
-                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Searching(stage = 3, elapsedTime = elapsed)) }
+                _state.update {
+                    it.copy(
+                        activeSearchStatus = ActiveSearchStatus.Searching(
+                            stage = HomeConstants.SEARCH_STAGE_THREE,
+                            elapsedTime = elapsed
+                        )
+                    )
+                }
             }
-            
-            // First Offer
-            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(elapsedTime = elapsed, minPrice = 48)) }
+
+            _state.update {
+                it.copy(
+                    activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(
+                        elapsedTime = elapsed,
+                        minPrice = 48
+                    )
+                )
+            }
             repeat(3) {
                 delay(1000)
                 elapsed++
-                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(elapsedTime = elapsed, minPrice = 48)) }
+                _state.update {
+                    it.copy(
+                        activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(
+                            elapsedTime = elapsed,
+                            minPrice = 48
+                        )
+                    )
+                }
             }
-            
-            // Multiple Offers
-            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(elapsedTime = elapsed, minPrice = 36, totalOffers = 3)) }
+
+            _state.update {
+                it.copy(
+                    activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(
+                        elapsedTime = elapsed,
+                        minPrice = 36,
+                        totalOffers = 3
+                    )
+                )
+            }
             repeat(3) {
                 delay(1000)
                 elapsed++
-                _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(elapsedTime = elapsed, minPrice = 36, totalOffers = 3)) }
+                _state.update {
+                    it.copy(
+                        activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(
+                            elapsedTime = elapsed,
+                            minPrice = 36,
+                            totalOffers = 3
+                        )
+                    )
+                }
             }
-            
-            // Search ended
+
             _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.SearchEndedNoOffers) }
         }
     }

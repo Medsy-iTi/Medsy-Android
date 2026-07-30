@@ -27,7 +27,7 @@ enum class BottomBarDestination(
         title = RApp.string.ai_chat,
         icon = RPresentation.drawable.home,
         selectedIcon = RPresentation.drawable.home,
-        route = Route.AiChat,
+        route = Route.AiChat(),
         isProminent = true,
     ),
     Orders(

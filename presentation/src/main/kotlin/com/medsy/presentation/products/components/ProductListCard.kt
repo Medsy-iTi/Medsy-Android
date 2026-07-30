@@ -37,13 +37,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import com.medsy.designsystem.components.MedsyShimmerPlaceholder
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.PriceFormatter
 import com.medsy.presentation.products.ProductUi
 import java.util.regex.Pattern
 
@@ -54,7 +57,9 @@ fun ProductListCard(
     onAddToCart: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val strength = remember(product.name) {
+    val locale = LocalConfiguration.current.locales[0]
+    
+    val strength = remember(product.name, locale) {
         val pattern =
             Pattern.compile("(\\d+([/.]\\d+)?\\s?(MG|مجم|ML|مل|%|G|جم))", Pattern.CASE_INSENSITIVE)
         val matcher = pattern.matcher(product.name)
@@ -84,33 +89,39 @@ fun ProductListCard(
                     .height(180.dp)
                     .background(Color.White)
             ) {
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = product.imageUrl,
                     contentDescription = product.name,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp),
-                    contentScale = ContentScale.Fit
-                )
-
-                Surface(
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .size(36.dp)
-                        .align(Alignment.TopEnd),
-                    shape = CircleShape,
-                    color = Color.White,
-                    shadowElevation = 4.dp
-                ) {
-                    IconButton(onClick = { /* TODO: Favorite */ }) {
-                        Icon(
-                            imageVector = Icons.Default.FavoriteBorder,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(20.dp)
+                    contentScale = ContentScale.Fit,
+                    loading = {
+                        MedsyShimmerPlaceholder(
+                            modifier = Modifier.fillMaxSize(),
+                            shape = RoundedCornerShape(16.dp)
                         )
                     }
-                }
+                )
+
+//                Surface(
+//                    modifier = Modifier
+//                        .padding(12.dp)
+//                        .size(36.dp)
+//                        .align(Alignment.TopEnd),
+//                    shape = CircleShape,
+//                    color = Color.White,
+//                    shadowElevation = 4.dp
+//                ) {
+//                    IconButton(onClick = { /* TODO: Favorite */ }) {
+//                        Icon(
+//                            imageVector = Icons.Default.FavoriteBorder,
+//                            contentDescription = null,
+//                            tint = MaterialTheme.colorScheme.primary,
+//                            modifier = Modifier.size(20.dp)
+//                        )
+//                    }
+//                }
 
                 strength?.let {
                     Surface(
@@ -193,8 +204,11 @@ fun ProductListCard(
                         }
                     }
 
+                    val formattedPrice = remember(product.price, locale) {
+                        PriceFormatter.formatPrice(product.price.toDouble(), locale)
+                    }
                     Text(
-                        text = "${product.price} ${stringResource(R.string.currency_egp)}",
+                        text = stringResource(R.string.search_price_egp, formattedPrice),
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.onPrimary,

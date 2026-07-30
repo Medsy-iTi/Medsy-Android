@@ -1,13 +1,13 @@
 package com.medsy.presentation.profile
 
+import AppLanguage
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.medsy.domain.common.MedsyResult
+import com.medsy.domain.cart.usecase.ClearCartDraftUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
-import com.medsy.domain.common.preferences.model.AppLanguage
 import com.medsy.domain.common.preferences.model.ThemeMode
 import com.medsy.domain.common.preferences.usecase.ObserveUserPreferencesUseCase
 import com.medsy.domain.common.preferences.usecase.SetThemeModeUseCase
@@ -31,6 +31,7 @@ class ProfileViewModel @Inject constructor(
     private val observeUserPreferencesUseCase: ObserveUserPreferencesUseCase,
     private val setThemeModeUseCase: SetThemeModeUseCase,
     private val logoutUseCase: LogoutUseCase,
+    private val clearCartDraftUseCase: ClearCartDraftUseCase
 ) : ViewModel() {
 
     private var hasCompletedInitialLoad = false
@@ -108,17 +109,27 @@ class ProfileViewModel @Inject constructor(
     private fun logout() {
         _state.update { it.copy(isLogoutLoading = true) }
         viewModelScope.launch {
-            val errorMessageRes = when (val result = logoutUseCase()) {
-                is MedsyResult.Success -> null
-                is MedsyResult.Error -> result.error.toMessageRes()
-            }
-            _state.update {
-                it.copy(
-                    isLogoutLoading = false,
-                    activeSheet = null,
-                    errorMessageRes = errorMessageRes,
-                )
-            }
+            clearCartDraftUseCase()
+            logoutUseCase()
+                .onSuccess {
+                    _state.update {
+                        it.copy(
+                            isLogoutLoading = false,
+                            activeSheet = null,
+                            errorMessageRes = null,
+                        )
+                    }
+                }
+                .onError { error ->
+                    _state.update {
+                        it.copy(
+                            isLogoutLoading = false,
+                            activeSheet = null,
+                            errorMessageRes = error.toMessageRes(),
+                        )
+                    }
+                }
+
             _effect.send(ProfileUIEffect.NavigateToLogin)
         }
     }

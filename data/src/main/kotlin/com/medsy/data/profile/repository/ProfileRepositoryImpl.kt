@@ -9,6 +9,9 @@ import com.medsy.domain.common.map
 import com.medsy.domain.profile.model.Profile
 import com.medsy.domain.profile.model.UpdateProfileParams
 import com.medsy.domain.profile.repository.ProfileRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,12 +20,14 @@ class ProfileRepositoryImpl @Inject constructor(
     private val remoteDataSource: ProfileRemoteDataSource,
 ) : ProfileRepository {
 
-    private var cachedProfile: Profile? = null
+    private val _profileFlow = MutableStateFlow<Profile?>(null)
+
+    override fun observeProfile(): Flow<Profile?> = _profileFlow.asStateFlow()
 
     override suspend fun getCurrentProfile(): MedsyResult<Profile, MedsyError.Remote> {
-        cachedProfile?.let { return MedsyResult.Success(it) }
-        return remoteDataSource.getCurrentProfile().map { 
-            it.toDomain().also { profile -> cachedProfile = profile }
+        _profileFlow.value?.let { return MedsyResult.Success(it) }
+        return remoteDataSource.getCurrentProfile().map {
+            it.toDomain().also { profile -> _profileFlow.value = profile }
         }
     }
 
@@ -30,7 +35,7 @@ class ProfileRepositoryImpl @Inject constructor(
         params: UpdateProfileParams,
     ): MedsyResult<Profile, MedsyError.Remote> = remoteDataSource.updateCurrentProfile(
         request = params.toDto(),
-    ).map { 
-        it.toDomain().also { profile -> cachedProfile = profile }
+    ).map {
+        it.toDomain().also { profile -> _profileFlow.value = profile }
     }
 }
