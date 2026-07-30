@@ -500,7 +500,7 @@
     <string name="offers_requested_medicines">Requested Medicines</string>
     <string name="offers_available">Available</string>
     <string name="offers_pharmacist_comment">Pharmacist Comment</string>
-    <string name="offers_substitute_for">Substitute for %1$s</string>
+    <string name="offers_substitute_for">Substitute</string>
     <string name="offers_view_prescription">View Prescription</string>
     <string name="offers_choose_offer">Choose this Offer</string>
     <string name="offers_order_review_title">Order Review</string>

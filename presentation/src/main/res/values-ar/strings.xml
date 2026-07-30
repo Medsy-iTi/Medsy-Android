@@ -422,7 +422,7 @@
     <string name="offers_available_empty">لا توجد عروض متاحة بعد</string>
     <string name="offers_edit_address">تعديل</string>
     <string name="offers_pharmacist_note_title">ملاحظة الصيدلي</string>
-    <string name="offers_substitute_for">بديل لـ %1$s</string>
+    <string name="offers_substitute_for">بديل لدوائك</string>
     <string name="offers_confirm_order_error">فشل تأكيد الطلب. يرجى المحاولة مرة أخرى.</string>
     <string name="offers_load_error">فشل تحميل العروض. يرجى المحاولة مرة أخرى.</string>
     <string name="offers_error_retry">إعادة المحاولة</string>

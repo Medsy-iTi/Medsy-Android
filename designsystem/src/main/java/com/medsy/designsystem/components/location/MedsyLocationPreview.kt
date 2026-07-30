@@ -19,6 +19,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 private const val LocationPreviewZoom = 16f
 
@@ -37,7 +38,7 @@ fun MedsyLocationPreview(
 
     key(latitude, longitude) {
         val position = LatLng(latitude, longitude)
-        val markerState = rememberMarkerState(position = position)
+        val markerState = rememberUpdatedMarkerState(position = position)
         val cameraPositionState = rememberCameraPositionState {
             this.position = CameraPosition.fromLatLngZoom(position, LocationPreviewZoom)
         }

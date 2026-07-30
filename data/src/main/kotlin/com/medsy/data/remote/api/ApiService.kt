@@ -23,9 +23,7 @@ import com.medsy.data.remote.dtos.products.ProductsDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.dto.ProductsPageDto
 import com.medsy.domain.cart.model.ProductsRequest
-import com.medsy.data.prescription.remote.AiInterceptor
-import com.medsy.data.prescription.remote.dto.AnalyzedMedicineImageDto
-import com.medsy.data.prescription.remote.dto.PrescriptionAnalysisDto
+
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body

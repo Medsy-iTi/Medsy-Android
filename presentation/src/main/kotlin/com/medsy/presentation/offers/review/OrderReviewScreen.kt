@@ -137,10 +137,6 @@ fun OrderReviewScreen(
                     }
                 }
             }
-                        }
-                    }
-                }
-            }
         ) { paddingValues ->
             Box(
                 modifier = Modifier
