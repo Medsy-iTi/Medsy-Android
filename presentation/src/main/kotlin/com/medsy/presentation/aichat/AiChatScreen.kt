@@ -3,33 +3,27 @@ package com.medsy.presentation.aichat
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.medsy.domain.aichat.model.AiChatImageKind
 import com.medsy.presentation.R
-import com.medsy.presentation.aichat.components.AiChatAttachmentSheet
 import com.medsy.presentation.aichat.components.AiChatComposer
 import com.medsy.presentation.aichat.components.AiChatConversation
 import com.medsy.presentation.aichat.components.AiChatNewChatDialog
@@ -40,37 +34,13 @@ import java.util.Locale
 @Composable
 fun AiChatRoot(
     onNavigateBack: () -> Unit,
+    onOpenProduct: (Int) -> Unit,
     viewModel: AiChatViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    var cameraTarget by remember { mutableStateOf<Pair<AiChatImageKind, String>?>(null) }
-    var galleryKind by remember { mutableStateOf<AiChatImageKind?>(null) }
 
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-    ) { success ->
-        val target = cameraTarget
-        viewModel.onIntent(
-            AiChatUIIntent.ImageSelected(
-                kind = target?.first ?: AiChatImageKind.PRESCRIPTION,
-                uri = target?.second?.takeIf { success },
-            )
-        )
-        cameraTarget = null
-    }
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-    ) { uri ->
-        viewModel.onIntent(
-            AiChatUIIntent.ImageSelected(
-                kind = galleryKind ?: AiChatImageKind.PRESCRIPTION,
-                uri = uri?.toString(),
-            )
-        )
-        galleryKind = null
-    }
     val voiceLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
     ) { result ->
@@ -87,16 +57,6 @@ fun AiChatRoot(
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is AiChatUIEffect.LaunchCamera -> {
-                    cameraTarget = effect.kind to effect.uri
-                    cameraLauncher.launch(Uri.parse(effect.uri))
-                }
-                is AiChatUIEffect.LaunchGallery -> {
-                    galleryKind = effect.kind
-                    galleryLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
                 AiChatUIEffect.LaunchVoiceInput -> try {
                     voiceLauncher.launch(
                         Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
@@ -104,7 +64,10 @@ fun AiChatRoot(
                                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM,
                             )
-                            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault().toLanguageTag())
+                            putExtra(
+                                RecognizerIntent.EXTRA_LANGUAGE,
+                                Locale.getDefault().toLanguageTag(),
+                            )
                             putExtra(
                                 RecognizerIntent.EXTRA_PROMPT,
                                 ContextCompat.getString(context, R.string.ai_chat_voice_prompt),
@@ -116,42 +79,8 @@ fun AiChatRoot(
                         ContextCompat.getString(context, R.string.ai_chat_voice_unavailable)
                     )
                 }
-                is AiChatUIEffect.DialPhone -> try {
-                    context.startActivity(
-                        Intent(Intent.ACTION_DIAL, Uri.parse("tel:${effect.phoneNumber}"))
-                    )
-                } catch (_: ActivityNotFoundException) {
-                    snackbarHostState.showSnackbar(
-                        ContextCompat.getString(context, R.string.ai_chat_dialer_unavailable)
-                    )
-                }
-                is AiChatUIEffect.OpenDirections -> {
-                    val uri = Uri.parse(
-                        "geo:${effect.latitude},${effect.longitude}?q=${effect.latitude},${effect.longitude}(${Uri.encode(effect.label)})"
-                    )
-                    try {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-                    } catch (_: ActivityNotFoundException) {
-                        snackbarHostState.showSnackbar(
-                            ContextCompat.getString(context, R.string.ai_chat_maps_unavailable)
-                        )
-                    }
-                }
-                is AiChatUIEffect.OpenMapSearch -> {
-                    val query = ContextCompat.getString(context, effect.queryRes)
-                    try {
-                        context.startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("geo:0,0?q=${Uri.encode(query)}"),
-                            )
-                        )
-                    } catch (_: ActivityNotFoundException) {
-                        snackbarHostState.showSnackbar(
-                            ContextCompat.getString(context, R.string.ai_chat_maps_unavailable)
-                        )
-                    }
-                }
+
+                is AiChatUIEffect.OpenProduct -> onOpenProduct(effect.productId)
                 is AiChatUIEffect.ShowMessage -> snackbarHostState.showSnackbar(
                     ContextCompat.getString(context, effect.messageRes)
                 )
@@ -190,7 +119,6 @@ fun AiChatScreen(
                 value = state.input,
                 enabled = !state.isResponding,
                 onValueChange = { onIntent(AiChatUIIntent.InputChanged(it)) },
-                onAttachment = { onIntent(AiChatUIIntent.AttachmentClicked) },
                 onVoice = { onIntent(AiChatUIIntent.VoiceClicked) },
                 onSend = { onIntent(AiChatUIIntent.SendClicked) },
             )
@@ -199,7 +127,7 @@ fun AiChatScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(androidx.compose.material3.MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(padding),
         ) {
             if (state.messages.isEmpty()) {
@@ -210,13 +138,6 @@ fun AiChatScreen(
         }
     }
 
-    if (state.isAttachmentMenuVisible) {
-        AiChatAttachmentSheet(
-            onDismiss = { onIntent(AiChatUIIntent.DismissAttachmentMenu) },
-            onCamera = { onIntent(AiChatUIIntent.CameraClicked(it)) },
-            onGallery = { onIntent(AiChatUIIntent.GalleryClicked(it)) },
-        )
-    }
     if (state.isNewChatDialogVisible) {
         AiChatNewChatDialog(
             onDismiss = { onIntent(AiChatUIIntent.DismissNewChat) },

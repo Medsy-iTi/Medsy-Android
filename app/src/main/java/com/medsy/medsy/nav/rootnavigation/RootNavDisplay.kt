@@ -195,6 +195,11 @@ fun RootNavDisplay() {
             entry<Route.AiChat> {
                 AiChatRoot(
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onOpenProduct = { productId ->
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = productId.toString())
+                        )
+                    },
                 )
             }
             entry<Route.OrderDetails> { route ->

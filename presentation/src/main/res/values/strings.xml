@@ -565,9 +565,19 @@
     <string name="ai_chat_title">Medsy AI</string>
     <string name="ai_chat_online">Online · always here to help</string>
     <string name="ai_chat_new_chat_description">Start a new chat</string>
-    <string name="ai_chat_greeting">Hi Omar, how are you feeling today?</string>
-    <string name="ai_chat_welcome_supporting">Tell me your symptoms, ask about a medicine, or send a photo of a prescription.</string>
-    <string name="ai_chat_disclaimer">Information only — not a medical diagnosis. Always confirm with a pharmacist or doctor.</string>
+    <string name="ai_chat_greeting">Ask Medsy about medicines</string>
+    <string name="ai_chat_welcome_supporting">Ask about uses, ingredients, alternatives, or matching products from the Medsy catalog.</string>
+    <string name="ai_chat_disclaimer">Catalog information only — not a diagnosis or prescription. Confirm that a medicine is suitable for you with a pharmacist or doctor.</string>
+    <string name="ai_chat_catalog_prompt_info">Tell me about Panadol Extra</string>
+    <string name="ai_chat_catalog_prompt_paracetamol">Which catalog products contain paracetamol?</string>
+    <string name="ai_chat_catalog_prompt_cough">Recommend catalog products for a dry cough</string>
+    <string name="ai_chat_catalog_prompt_cheaper">Find a cheaper paracetamol product</string>
+    <string name="ai_chat_catalog_products_title">Matching catalog products</string>
+    <string name="ai_chat_catalog_no_products">No matching catalog products were returned for this answer.</string>
+    <string name="ai_chat_catalog_product_badge">MEDSY CATALOG</string>
+    <string name="ai_chat_catalog_empty_answer">I could not produce a catalog-grounded answer for that question.</string>
+    <string name="ai_chat_catalog_error_title">Couldn’t reach Medsy AI</string>
+    <string name="ai_chat_catalog_retry">Try again</string>
     <string name="ai_chat_prompt_headache">I have a headache — what can I take?</string>
     <string name="ai_chat_prompt_pharmacies">Find pharmacies near me</string>
     <string name="ai_chat_prompt_prescription">Read my prescription photo</string>
@@ -600,9 +610,10 @@
     <string name="ai_chat_specialty_body">If the headaches keep returning after screen use, consider seeing an ophthalmologist for an eye check.</string>
     <string name="ai_chat_otc_badge">SUGGESTED · OVER THE COUNTER</string>
     <string name="ai_chat_add_to_cart">Add to cart</string>
+    <string name="ai_chat_view_product_details">View product details</string>
     <string name="ai_chat_add_all_to_cart">Add detected medicines to cart</string>
     <string name="ai_chat_medicine_confirmation">Check allergies, other medicines, pregnancy, age restrictions, and the pack leaflet with a pharmacist first.</string>
-    <string name="ai_chat_price_egp">%1$d EGP</string>
+    <string name="ai_chat_price_egp">%1$.2f EGP</string>
     <string name="ai_chat_pharmacy_distance">%1$.1f km away</string>
     <string name="ai_chat_open">OPEN</string>
     <string name="ai_chat_call">Call</string>
@@ -644,8 +655,8 @@
     <string name="ai_chat_emergency_user_message">My father has chest pain spreading to his left arm and he is sweating a lot</string>
     <string name="ai_chat_try_another_image">Try another image</string>
     <string name="ai_chat_unsupported_actions">Try a quick action, attach a photo, or tap the microphone.</string>
-    <string name="ai_chat_typing">Medsy AI is thinking…</string>
-    <string name="ai_chat_input_hint">Describe how you feel…</string>
+    <string name="ai_chat_typing">Searching the Medsy catalog…</string>
+    <string name="ai_chat_input_hint">Ask about a medicine…</string>
     <string name="ai_chat_attach_description">Attach a photo</string>
     <string name="ai_chat_voice_description">Speak your message</string>
     <string name="ai_chat_send_description">Send message</string>
@@ -666,7 +677,7 @@
     <string name="ai_chat_voice_unavailable">Speech recognition is not available on this device.</string>
     <string name="ai_chat_dialer_unavailable">No phone app is available.</string>
     <string name="ai_chat_maps_unavailable">No maps app is available.</string>
-    <string name="ai_chat_action_error">The mock assistant could not complete that action. Please try again.</string>
+    <string name="ai_chat_action_error">Medsy AI could not complete that action. Please try again.</string>
     <string name="ai_chat_added_to_cart">Medicine added to cart</string>
     <string name="ai_chat_reorder_added">Your usual medicines were added to cart</string>
 

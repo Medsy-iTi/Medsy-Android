@@ -566,9 +566,19 @@
     <string name="ai_chat_title">ميدسي AI</string>
     <string name="ai_chat_online">متصل · دائمًا هنا للمساعدة</string>
     <string name="ai_chat_new_chat_description">بدء محادثة جديدة</string>
-    <string name="ai_chat_greeting">مرحبًا عمر، كيف تشعر اليوم؟</string>
-    <string name="ai_chat_welcome_supporting">أخبرني بأعراضك، أو اسأل عن دواء، أو أرسل صورة روشتة.</string>
-    <string name="ai_chat_disclaimer">للمعلومات فقط — وليس تشخيصًا طبيًا. تأكد دائمًا من الصيدلي أو الطبيب.</string>
+    <string name="ai_chat_greeting">اسأل ميدسي عن الأدوية</string>
+    <string name="ai_chat_welcome_supporting">اسأل عن الاستخدامات أو المواد الفعالة أو البدائل أو المنتجات المطابقة في كتالوج ميدسي.</string>
+    <string name="ai_chat_disclaimer">معلومات الكتالوج للتوعية فقط وليست تشخيصًا أو وصفة طبية. تأكد من ملاءمة الدواء لك مع صيدلي أو طبيب.</string>
+    <string name="ai_chat_catalog_prompt_info">أخبرني عن بانادول إكسترا</string>
+    <string name="ai_chat_catalog_prompt_paracetamol">ما منتجات الكتالوج التي تحتوي على باراسيتامول؟</string>
+    <string name="ai_chat_catalog_prompt_cough">رشح منتجات من الكتالوج للكحة الجافة</string>
+    <string name="ai_chat_catalog_prompt_cheaper">ابحث عن منتج باراسيتامول أرخص</string>
+    <string name="ai_chat_catalog_products_title">منتجات مطابقة من الكتالوج</string>
+    <string name="ai_chat_catalog_no_products">لم يتم إرجاع منتجات مطابقة من الكتالوج لهذه الإجابة.</string>
+    <string name="ai_chat_catalog_product_badge">كتالوج ميدسي</string>
+    <string name="ai_chat_catalog_empty_answer">تعذر إنشاء إجابة مستندة إلى كتالوج الأدوية لهذا السؤال.</string>
+    <string name="ai_chat_catalog_error_title">تعذر الاتصال بميدسي AI</string>
+    <string name="ai_chat_catalog_retry">حاول مرة أخرى</string>
     <string name="ai_chat_prompt_headache">لدي صداع — ماذا يمكنني أن أتناول؟</string>
     <string name="ai_chat_prompt_pharmacies">ابحث عن صيدليات قريبة</string>
     <string name="ai_chat_prompt_prescription">اقرأ صورة الروشتة</string>
@@ -601,9 +611,10 @@
     <string name="ai_chat_specialty_body">إذا تكرر الصداع بعد استخدام الشاشات، ففكر في زيارة طبيب عيون لفحص النظر.</string>
     <string name="ai_chat_otc_badge">مقترح · بدون روشتة</string>
     <string name="ai_chat_add_to_cart">أضف إلى السلة</string>
+    <string name="ai_chat_view_product_details">عرض تفاصيل المنتج</string>
     <string name="ai_chat_add_all_to_cart">أضف الأدوية المكتشفة إلى السلة</string>
     <string name="ai_chat_medicine_confirmation">تحقق أولًا من الحساسية والأدوية الأخرى والحمل والعمر ونشرة العبوة مع الصيدلي.</string>
-    <string name="ai_chat_price_egp">%1$d جنيه</string>
+    <string name="ai_chat_price_egp">%1$.2f جنيه</string>
     <string name="ai_chat_pharmacy_distance">على بعد %1$.1f كم</string>
     <string name="ai_chat_open">مفتوحة</string>
     <string name="ai_chat_call">اتصال</string>
@@ -645,8 +656,8 @@
     <string name="ai_chat_emergency_user_message">والدي لديه ألم في الصدر ممتد إلى ذراعه اليسرى ويتعرق كثيرًا</string>
     <string name="ai_chat_try_another_image">جرّب صورة أخرى</string>
     <string name="ai_chat_unsupported_actions">جرّب إجراءً سريعًا أو أرفق صورة أو اضغط على الميكروفون.</string>
-    <string name="ai_chat_typing">ميدسي AI يفكر…</string>
-    <string name="ai_chat_input_hint">صف ما تشعر به…</string>
+    <string name="ai_chat_typing">جارٍ البحث في كتالوج ميدسي…</string>
+    <string name="ai_chat_input_hint">اسأل عن دواء…</string>
     <string name="ai_chat_attach_description">إرفاق صورة</string>
     <string name="ai_chat_voice_description">تحدث برسالتك</string>
     <string name="ai_chat_send_description">إرسال الرسالة</string>
@@ -667,7 +678,7 @@
     <string name="ai_chat_voice_unavailable">التعرف على الصوت غير متاح على هذا الجهاز.</string>
     <string name="ai_chat_dialer_unavailable">لا يوجد تطبيق هاتف متاح.</string>
     <string name="ai_chat_maps_unavailable">لا يوجد تطبيق خرائط متاح.</string>
-    <string name="ai_chat_action_error">تعذر على المساعد التجريبي إكمال الإجراء. حاول مرة أخرى.</string>
+    <string name="ai_chat_action_error">تعذر على ميدسي AI إكمال الإجراء. حاول مرة أخرى.</string>
     <string name="ai_chat_added_to_cart">تمت إضافة الدواء إلى السلة</string>
     <string name="ai_chat_reorder_added">تمت إضافة أدويتك المعتادة إلى السلة</string>
 
