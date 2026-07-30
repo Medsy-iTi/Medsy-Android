@@ -14,30 +14,30 @@ fun CategoryDto.toDomain(): Category {
 
 private fun getCategoryImageRes(id: Int): Int? {
     return when (id) {
-        1 -> null // MENTAL HEALTH (Pending AI 3D Generation)
+        1 -> R.drawable.ic_cat_mental_health // AI Generated 3D
         2 -> R.drawable.ic_cat_pain_relief // AI Generated 3D
         3 -> R.drawable.ic_cat_cold_cough // AI Generated 3D
-        4 -> null // BRAIN & NERVES (Pending AI 3D Generation)
+        4 -> R.drawable.ic_cat_brain_nerves // AI Generated 3D
         5 -> R.drawable.ic_cat_skin_care // AI Generated 3D
         6 -> R.drawable.ic_cat_heart_blood_pressure // AI Generated 3D
-        7 -> null // ANTIVIRALS (Pending AI 3D Generation)
-        8 -> null // CANCER & IMMUNITY (Pending AI 3D Generation)
-        9 -> null // ALLERGY (Pending AI 3D Generation)
+        7 -> R.drawable.ic_cat_antivirals // AI Generated 3D
+        8 -> R.drawable.ic_cat_cancer_immunity // AI Generated 3D
+        9 -> R.drawable.ic_cat_allergy // AI Generated 3D
         10 -> R.drawable.ic_cat_stomach_digestion // AI Generated 3D
-        11 -> null // ANTIPARASITICS (Pending AI 3D Generation)
+        11 -> R.drawable.ic_cat_antiparasitics // AI Generated 3D
         12 -> R.drawable.ic_cat_vitamins_supplements // AI Generated 3D
         13 -> R.drawable.ic_cat_antibiotics // AI Generated 3D
         14 -> R.drawable.ic_cat_diabetes // AI Generated 3D
-        15 -> null // URINARY & KIDNEY (Pending AI 3D Generation)
-        16 -> null // WOMEN'S HEALTH (Pending AI 3D Generation)
-        17 -> null // MEN'S HEALTH (Pending AI 3D Generation)
-        18 -> null // GOUT (Pending AI 3D Generation)
-        19 -> null // CHOLESTEROL (Pending AI 3D Generation)
-        20 -> null // LIVER & GALLBLADDER (Pending AI 3D Generation)
-        21 -> null // ANTIFUNGALS (Pending AI 3D Generation)
-        22 -> null // ASTHMA & BREATHING (Pending AI 3D Generation)
-        23 -> null // HEMORRHOIDS & VEINS (Pending AI 3D Generation)
-        24 -> null // EYE CARE (Pending AI 3D Generation)
+        15 -> R.drawable.ic_cat_urinary_kidney // AI Generated 3D
+        16 -> R.drawable.ic_cat_womens_health // AI Generated 3D
+        17 -> R.drawable.ic_cat_mens_health // AI Generated 3D
+        18 -> R.drawable.ic_cat_gout // AI Generated 3D
+        19 -> R.drawable.ic_cat_cholesterol // AI Generated 3D
+        20 -> null // LIVER & GALLBLADDER (Pending)
+        21 -> null // ANTIFUNGALS (Pending)
+        22 -> null // ASTHMA & BREATHING (Pending)
+        23 -> null // HEMORRHOIDS & VEINS (Pending)
+        24 -> null // EYE CARE (Pending)
         else -> null
     }
 }
