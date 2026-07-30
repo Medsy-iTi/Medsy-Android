@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface AiChatRepository {
     fun observeSession(): Flow<AiChatSession>
 
-    suspend fun submit(action: AiChatAction): EmptyMedsyResult<MedsyError.Local>
+    suspend fun submit(action: AiChatAction): EmptyMedsyResult<MedsyError.Remote>
 
     fun resetSession()
 }

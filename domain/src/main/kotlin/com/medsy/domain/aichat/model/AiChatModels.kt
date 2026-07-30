@@ -3,8 +3,6 @@ package com.medsy.domain.aichat.model
 data class AiChatSession(
     val messages: List<AiChatMessage> = emptyList(),
     val isResponding: Boolean = false,
-    val isAiCallInProgress: Boolean = false,
-    val isReminderConfirmed: Boolean = false,
 )
 
 data class AiChatMessage(
@@ -19,62 +17,36 @@ enum class AiChatSender {
 }
 
 sealed interface AiChatContent {
-    data class UserScenario(val scenario: AiChatScenario) : AiChatContent
     data class UserText(val value: String) : AiChatContent
+
     data class AssistantResponse(
-        val scenario: AiChatScenario,
-        val medicines: List<AiMedicine> = emptyList(),
-        val pharmacies: List<AiPharmacy> = emptyList(),
+        val answer: String,
+        val products: List<AiCatalogProduct>,
     ) : AiChatContent
 }
 
-enum class AiChatScenario {
-    HEADACHE_TRIAGE,
-    NEARBY_PHARMACIES,
-    PRESCRIPTION_IMAGE,
-    MEDICINE_IMAGE,
-    MEDICINE_INFORMATION,
-    INTERACTION_CHECK,
-    DOSE_REMINDER,
-    REORDER_MEDICINES,
-    ORDER_TRACKING,
-    CHEAPER_EQUIVALENT,
-    EMERGENCY,
-    UNREADABLE_IMAGE,
-    NO_MEDICINE_FOUND,
-    UNSUPPORTED,
-}
-
-enum class AiChatImageKind {
-    PRESCRIPTION,
-    MEDICINE,
-}
-
-data class AiMedicine(
+data class AiCatalogProduct(
     val productId: Int,
     val name: String,
-    val activeIngredient: String,
-    val priceEgp: Int,
-    val confidencePercent: Int? = null,
+    val productName: String,
+    val scientificName: String?,
+    val strength: String?,
+    val packSize: String?,
+    val form: String?,
+    val priceEgp: Double?,
+    val company: String?,
+    val route: String?,
+    val description: String?,
+    val imageUrl: String?,
 )
 
-data class AiPharmacy(
-    val name: String,
-    val distanceKm: Double,
-    val phoneNumber: String,
-    val latitude: Double,
-    val longitude: Double,
-    val isOpen: Boolean,
+data class AiChatAction(
+    val question: String,
+    val language: AiChatLanguage,
+    val limit: Int,
 )
 
-sealed interface AiChatAction {
-    data class SelectScenario(val scenario: AiChatScenario) : AiChatAction
-    data class SendText(val text: String) : AiChatAction
-    data class ImageSelected(
-        val kind: AiChatImageKind,
-        val uri: String,
-    ) : AiChatAction
-    data object StartAiCall : AiChatAction
-    data object EndAiCall : AiChatAction
-    data object ConfirmReminder : AiChatAction
+enum class AiChatLanguage {
+    ENGLISH,
+    ARABIC,
 }

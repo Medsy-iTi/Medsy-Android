@@ -11,5 +11,5 @@ class SubmitAiChatActionUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         action: AiChatAction,
-    ): EmptyMedsyResult<MedsyError.Local> = repository.submit(action)
+    ): EmptyMedsyResult<MedsyError.Remote> = repository.submit(action)
 }
