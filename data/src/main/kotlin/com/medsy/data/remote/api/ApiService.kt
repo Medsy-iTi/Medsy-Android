@@ -141,6 +141,11 @@ interface ApiService {
         @Body request: ConfirmRequestDto
     ): Response<ApiResponse<ConfirmRequestResponseDto>>
 
+    @GET("api/v1/requests/{requestId}/result")
+    suspend fun getRequestResult(
+        @Path("requestId") requestId: Long,
+    ): Response<ApiResponse<com.medsy.data.offers.remote.RequestResultDto>>
+
     @GET("api/v1/requests/{id}")
     suspend fun getRequestById(
         @Path("id") id: Long,

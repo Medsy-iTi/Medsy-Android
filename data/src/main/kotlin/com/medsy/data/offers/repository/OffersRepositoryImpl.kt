@@ -8,6 +8,7 @@ import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.map
 import com.medsy.domain.common.asEmptyDataResult
 import com.medsy.domain.offers.model.OffersPage
+import com.medsy.domain.offers.model.RequestResult
 import com.medsy.domain.offers.repository.OffersRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,4 +53,9 @@ class OffersRepositoryImpl @Inject constructor(
                     }
                 )
             }
+
+    override suspend fun getRequestResult(
+        requestId: Long,
+    ): MedsyResult<RequestResult, MedsyError.Remote> =
+        remoteDataSource.getRequestResult(requestId).map { it.toDomain() }
 }

@@ -4,6 +4,7 @@ import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.offers.model.OffersPage
+import com.medsy.domain.offers.model.RequestResult
 import kotlinx.coroutines.flow.Flow
 
 interface OffersRepository {
@@ -22,4 +23,8 @@ interface OffersRepository {
         requestId: Long,
         selectedRequestItemIds: List<Long>,
     ): MedsyResult<com.medsy.domain.offers.model.ConfirmOfferResult, MedsyError.Remote>
+
+    suspend fun getRequestResult(
+        requestId: Long,
+    ): MedsyResult<RequestResult, MedsyError.Remote>
 }
