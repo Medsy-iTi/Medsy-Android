@@ -11,9 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -26,6 +26,8 @@ import com.medsy.presentation.home.PromoBannerUi
 fun PromoBannerCarousel(
     banners: List<PromoBannerUi>, currentIndex: Int, onPromoClick: () -> Unit
 ) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+
     if (banners.isNotEmpty()) {
         val pagerState = rememberPagerState(pageCount = { banners.size })
 
@@ -37,6 +39,12 @@ fun PromoBannerCarousel(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .height(210.dp)
+                    .shadow(
+                        elevation = if (isDark) 16.dp else 8.dp,
+                        shape = RoundedCornerShape(16.dp),
+                        ambientColor = MaterialTheme.colorScheme.primary,
+                        spotColor = MaterialTheme.colorScheme.primary
+                    )
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onPromoClick() }) {
                 Image(

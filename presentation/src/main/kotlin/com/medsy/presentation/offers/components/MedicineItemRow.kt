@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +37,7 @@ import androidx.compose.runtime.remember
 import coil3.compose.AsyncImage
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.PriceFormatter
 import com.medsy.presentation.offers.model.OfferMedicine
 
 @Composable
@@ -44,6 +46,7 @@ fun MedicineItemRow(
     modifier: Modifier = Modifier,
     isSingleLinePrice: Boolean = false
 ) {
+    val locale = LocalConfiguration.current.locales[0]
     var isExpanded by remember { mutableStateOf(false) }
 
     Row(
@@ -84,8 +87,11 @@ fun MedicineItemRow(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val formattedPrice = remember(medicine.price, locale) {
+                    PriceFormatter.formatPrice(medicine.price, locale)
+                }
                 Text(
-                    text = "${medicine.price} ${stringResource(R.string.currency_egp)}",
+                    text = stringResource(R.string.search_price_egp, formattedPrice),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -97,8 +103,11 @@ fun MedicineItemRow(
             Column(
                 horizontalAlignment = Alignment.End
             ) {
+                val formattedPrice = remember(medicine.price, locale) {
+                    PriceFormatter.formatPrice(medicine.price, locale)
+                }
                 Text(
-                    text = "${medicine.price} ${stringResource(R.string.currency_egp)}",
+                    text = stringResource(R.string.search_price_egp, formattedPrice),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,

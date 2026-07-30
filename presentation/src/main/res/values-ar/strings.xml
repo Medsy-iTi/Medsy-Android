@@ -4,6 +4,8 @@
 
     <!-- App -->
     <string name="app_name">ميدسي</string>
+    <string name="splash_logo_description">شعار ميدسي</string>
+    <string name="splash_tagline">صحتك، أولويتنا</string>
     <string name="app_name_prefix">ميد</string>
     <string name="app_name_suffix">سي</string>
     <string name="medsy_logo_content_desc">شعار ميدسي</string>
@@ -183,7 +185,7 @@
     <string name="search_filter_chip_price">السعر</string>
     <string name="search_filter_chip_most_relevant">الأكثر صلة</string>
     <string name="search_results_count">%1$d نتيجة</string>
-    <string name="search_price_egp">%1$d جنيه</string>
+    <string name="search_price_egp">%1$s جنيه</string>
     <string name="search_favorite_desc">أضف للمفضلة</string>
     <string name="search_add_to_cart_desc">أضف إلى السلة</string>
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
@@ -211,6 +213,8 @@
     <string name="product_details_pharmacist_notice">لا يتم صرف هذا الدواء إلا بعد مراجعة الصيدلي لتحديد الجرعة المناسبة لحالتك.</string>
     <string name="product_details_info_title">معلومات المنتج</string>
     <string name="product_details_label_manufacturer">الشركة المنتجة</string>
+    <string name="product_details_label_scientific_name">الاسم العلمي</string>
+    <string name="product_details_label_scientific_category">الفئة العلمية</string>
     <string name="product_details_label_type">النوع</string>
     <string name="product_details_label_category">فئة الدواء</string>
     <string name="product_details_label_dispensing_method">طريقة الصرف</string>
@@ -368,6 +372,9 @@
     <string name="cart_note_saved">تم حفظ الملاحظة</string>
     <string name="cart_save">حفظ</string>
     <string name="cart_cancel">إلغاء</string>
+    <string name="cart_remove_item_title">حذف الدواء؟</string>
+    <string name="cart_remove_item_message">سيؤدي هذا إلى حذف هذا الدواء من عربة الطلب.</string>
+    <string name="cart_remove_item_confirm">حذف</string>
     <string name="cart_total_price">إجمالي السعر</string>
     <string name="cart_price_egp">%1$s جنيه</string>
     <string name="cart_continue">متابعة الطلب</string>
@@ -375,18 +382,18 @@
     <string name="cart_clear_title">إفراغ سلة الطلب؟</string>
     <string name="cart_clear_message">سيؤدي ذلك إلى إزالة جميع الأدوية والروشتة وملاحظة الصيدلي.</string>
     <string name="cart_clear_confirm">إفراغ</string>
-    <string name="cart_cleared">تم إفراغ السلة</string>
+    <string name="cart_cleared">تم إفراغ السلة بنجاح</string>
     <!--  Active Search Status  -->
     <string name="cart_request_title">إكمال الطلب</string>
     <string name="cart_request_subtitle">بعض التفاصيل الأخيرة قبل إرسال طلبك إلى الصيدليات</string>
     <string name="cart_request_order_summary">ملخص الطلب</string>
-<!--    <plurals name="cart_request_item_count">-->
-<!--        <item quantity="one">دواء واحد</item>-->
-<!--        <item quantity="two">دواءان</item>-->
-<!--        <item quantity="few">%d أدوية</item>-->
-<!--        <item quantity="many">%d دواءً</item>-->
-<!--        <item quantity="other">%d دواء</item>-->
-<!--    </plurals>-->
+    <!--    <plurals name="cart_request_item_count">-->
+    <!--        <item quantity="one">دواء واحد</item>-->
+    <!--        <item quantity="two">دواءان</item>-->
+    <!--        <item quantity="few">%d أدوية</item>-->
+    <!--        <item quantity="many">%d دواءً</item>-->
+    <!--        <item quantity="other">%d دواء</item>-->
+    <!--    </plurals>-->
     <string name="cart_request_prescription_attached">الروشتة مرفقة</string>
     <string name="cart_request_fulfillment_title">كيف ترغب في استلام الطلب؟</string>
     <string name="cart_request_fulfillment_description">اختر التوصيل إلى عنوانك أو الاستلام من الصيدلية التي ستحددها لاحقًا.</string>
@@ -483,6 +490,24 @@
         <item quantity="many">دواءً</item>
         <item quantity="other">أدوية</item>
     </plurals>
+    <!-- Pharmacy profile -->
+    <string name="pharmacy_profile_title">ملف الصيدلية</string>
+    <string name="pharmacy_profile_verified">موثقة</string>
+    <string name="pharmacy_profile_contact_title">معلومات التواصل</string>
+    <string name="pharmacy_profile_phone">رقم الهاتف</string>
+    <string name="pharmacy_profile_address">العنوان</string>
+    <string name="pharmacy_profile_call">الاتصال بالصيدلية</string>
+    <string name="pharmacy_profile_location">موقع الصيدلية</string>
+    <string name="pharmacy_profile_directions">الاتجاهات</string>
+    <string name="pharmacy_profile_location_unavailable">موقع الصيدلية غير متاح حاليًا.</string>
+    <string name="pharmacy_profile_map_description">خريطة تعرض موقع %1$s</string>
+    <string name="pharmacy_profile_not_available">غير متاح</string>
+    <string name="pharmacy_profile_retry">إعادة المحاولة</string>
+    <string name="pharmacy_profile_invalid_id">رقم الصيدلية غير صالح.</string>
+    <string name="pharmacy_profile_call_short">اتصال</string>
+    <string name="pharmacy_profile_address_title">عنوان الصيدلية</string>
+    <string name="pharmacy_profile_directions_short">الاتجاهات</string>
+    <string name="pharmacy_profile_share">مشاركة</string>
 
     <!-- Offers Flow -->
     <string name="offers_available_title">العروض المتاحة</string>
@@ -546,5 +571,5 @@
     <string name="order_details_final_total">الإجمالي</string>
     <string name="order_details_reorder">إعادة الطلب</string>
     <string name="order_details_error_load">تعذر تحميل تفاصيل هذا الطلب.</string>
-
+    <string name="reordered_products">تم اضافة المنتجات الى السله بنجاح.</string>
 </resources>

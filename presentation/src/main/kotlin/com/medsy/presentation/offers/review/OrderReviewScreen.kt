@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.presentation.R
+import com.medsy.presentation.common.util.PriceFormatter
 import com.medsy.presentation.offers.OffersState
 import com.medsy.presentation.offers.OffersUIEffect
 import com.medsy.presentation.offers.OffersUIIntent
@@ -97,6 +99,7 @@ fun OrderReviewScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     val offer = state.selectedOffer
+    val locale = LocalConfiguration.current.locales[0]
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -130,6 +133,10 @@ fun OrderReviewScreen(
                                     color = MaterialTheme.colorScheme.onPrimary
                                 )
                             }
+                        }
+                    }
+                }
+            }
                         }
                     }
                 }
@@ -273,7 +280,7 @@ fun OrderReviewScreen(
                                 Spacer(modifier = Modifier.weight(1f))
 
                                 Text(
-                                    text = state.deliveryFee.toString(),
+                                    text = PriceFormatter.formatPrice(state.deliveryFee, locale),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onBackground

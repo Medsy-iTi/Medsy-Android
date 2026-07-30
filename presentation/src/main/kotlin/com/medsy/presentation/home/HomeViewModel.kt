@@ -3,7 +3,7 @@ package com.medsy.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
-import com.medsy.domain.profile.usecase.GetProfileUseCase
+import com.medsy.domain.profile.usecase.ObserveProfileUseCase
 import com.medsy.domain.requests.usecase.ObserveActiveRequestsWithStatusUseCase
 import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
 import com.medsy.domain.requests.model.ActiveRequestStatus
@@ -26,7 +26,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getProfileUseCase: GetProfileUseCase,
+    private val observeProfileUseCase: ObserveProfileUseCase,
     private val observeActiveRequestsWithStatusUseCase: ObserveActiveRequestsWithStatusUseCase,
     private val removeActiveRequestUseCase: RemoveActiveRequestUseCase
 ) : ViewModel() {
@@ -39,7 +39,9 @@ class HomeViewModel @Inject constructor(
     init {
         _state.update {
             it.copy(
-                notificationCount = 1, deliveryAddress = "", banners = listOf(
+                notificationCount = 1, 
+                deliveryAddress = "", 
+                banners = listOf(
                     PromoBannerUi(
                         id = "1",
                         titleRes = R.string.home_promo_title_one,
@@ -64,17 +66,22 @@ class HomeViewModel @Inject constructor(
                         imageRes = R.drawable.banner3,
                         imageContentDescRes = R.string.home_banner_image_desc_three
                     ),
-                ), categories = emptyList()
+                ),
+                categories = emptyList()
             )
         }
         fetchCategories()
-        preloadProfile()
+        observeProfileData()
         observeActiveRequest()
     }
 
-    private fun preloadProfile() {
+    private fun observeProfileData() {
         viewModelScope.launch {
-            getProfileUseCase()
+            observeProfileUseCase().collectLatest { profile ->
+                profile?.homeAddress?.let { address ->
+                    _state.update { it.copy(deliveryAddress = address) }
+                }
+            }
         }
     }
 
@@ -83,9 +90,11 @@ class HomeViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, errorMessageRes = null) }
             getCategoriesUseCase(page = 0, size = 20).collectLatest { result ->
                 result.onSuccess { domainCategories ->
-                    val uiCategories = domainCategories.take(7).map {
+                    val uiCategories = domainCategories.take(9).map {
                         CategoryUi(
-                            id = it.id.toString(), name = it.name
+                            id = it.id.toString(),
+                            name = it.name,
+                            imageRes = it.image
                         )
                     }
                     _state.update {
@@ -175,8 +184,13 @@ class HomeViewModel @Inject constructor(
             is HomeUIIntent.OnAddressResolved -> {
                 _state.update { it.copy(deliveryAddress = intent.address) }
             }
+            HomeUIIntent.RefreshData -> {
+                fetchCategories()
+                observeProfileData()
+            }
         }
     }
+
 
     private fun sendEffect(effect: HomeUIEffect) {
         viewModelScope.launch {

@@ -8,17 +8,17 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -28,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SnackbarVisuals
@@ -44,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.extendedColors
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -64,6 +62,7 @@ private class MedsySnackbarVisuals(
 fun MedsySnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    alignment: Alignment = Alignment.BottomCenter,
 ) {
     val currentData = hostState.currentSnackbarData
     var lastData by remember { mutableStateOf<SnackbarData?>(null) }
@@ -71,7 +70,7 @@ fun MedsySnackbarHost(
 
     LaunchedEffect(currentData) {
         if (currentData != null) {
-            delay(2500L.milliseconds)
+            delay(1800L.milliseconds)
             currentData.dismiss()
         }
     }
@@ -80,21 +79,22 @@ fun MedsySnackbarHost(
         modifier = modifier
             .fillMaxWidth()
             .statusBarsPadding()
+            .navigationBarsPadding()
             .imePadding()
-            .padding(horizontal = 20.dp),
-        contentAlignment = Alignment.TopCenter,
+            .padding(horizontal = 20.dp, vertical = 80.dp),
+        contentAlignment = alignment,
     ) {
         AnimatedVisibility(
             visible = currentData != null,
             enter = slideInVertically(
-                initialOffsetY = { -it },
+                initialOffsetY = { if (alignment == Alignment.TopCenter) -it else it },
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioMediumBouncy,
                     stiffness = Spring.StiffnessMediumLow,
                 )
             ) + fadeIn(animationSpec = tween(150)),
             exit = slideOutVertically(
-                targetOffsetY = { -it },
+                targetOffsetY = { if (alignment == Alignment.TopCenter) -it else it },
                 animationSpec = tween(220),
             ) + fadeOut(animationSpec = tween(180)),
         ) {
@@ -110,55 +110,59 @@ private fun MedsySnackbarBanner(data: SnackbarData) {
     val visuals = data.visuals
     val type = (visuals as? MedsySnackbarVisuals)?.type ?: MedsySnackbarType.Error
 
-    val baseColor = when (type) {
-        MedsySnackbarType.Success -> MaterialTheme.extendedColors.success
-        MedsySnackbarType.Error   -> MaterialTheme.colorScheme.error
-        MedsySnackbarType.Info    -> MaterialTheme.colorScheme.onSurfaceVariant
+    val isError = type == MedsySnackbarType.Error
+    
+    val backgroundColor = if (isError) {
+        MaterialTheme.colorScheme.error
+    } else {
+        MaterialTheme.colorScheme.surface
+    }
+    val contentColor = if (isError) {
+        MaterialTheme.colorScheme.onError
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+
+    val iconColor = when (type) {
+        MedsySnackbarType.Success -> MaterialTheme.colorScheme.primary
+        MedsySnackbarType.Error -> MaterialTheme.colorScheme.onError
+        MedsySnackbarType.Info -> MaterialTheme.colorScheme.secondary
     }
     val icon = when (type) {
         MedsySnackbarType.Success -> Icons.Filled.CheckCircle
-        MedsySnackbarType.Error   -> Icons.Filled.Error
-        MedsySnackbarType.Info    -> Icons.Filled.Info
+        MedsySnackbarType.Error -> Icons.Filled.Error
+        MedsySnackbarType.Info -> Icons.Filled.Info
     }
 
     Surface(
         shape = RoundedCornerShape(28.dp),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
-        border = androidx.compose.foundation.BorderStroke(
-            width = 1.dp,
-            color = baseColor.copy(alpha = 0.35f),
-        ),
-        shadowElevation = 12.dp,
-        tonalElevation = 4.dp,
-        modifier = Modifier.fillMaxWidth(),
+        color = backgroundColor,
+        shadowElevation = 8.dp,
+        border = if (!isError) androidx.compose.foundation.BorderStroke(
+            1.dp, 
+            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+        ) else null,
+        modifier = Modifier.wrapContentWidth(),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
         ) {
-            Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .background(baseColor.copy(alpha = 0.16f), CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = baseColor,
-                    modifier = Modifier.size(22.dp),
-                )
-            }
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = iconColor,
+                modifier = Modifier.size(20.dp),
+            )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(10.dp))
 
             Text(
                 text = visuals.message,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                ),
-                modifier = Modifier.weight(1f),
+                    fontWeight = FontWeight.Bold,
+                    color = contentColor,
+                )
             )
         }
     }

@@ -134,6 +134,7 @@ fun NestedNavDisplay(
                 entry<Route.NestedNav.Cart> {
                     CartRoot(
                         onAddPrescription = { openPrescription(true, false) },
+                        onMedicineSearch = { openPrescription(false, true) },
                         onOpenCartRequest = openCartRequest,
                     )
                 }

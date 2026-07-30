@@ -3,11 +3,7 @@ package com.medsy.presentation.cart
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -21,14 +17,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showInfo
 import com.medsy.presentation.cart.components.CartClearDialog
 import com.medsy.presentation.cart.components.CartContent
 import com.medsy.presentation.cart.components.CartError
 import com.medsy.presentation.cart.components.CartNoteDialog
+import com.medsy.presentation.cart.components.CartShimmer
 
 @Composable
 fun CartRoot(
     onAddPrescription: () -> Unit,
+    onMedicineSearch: () -> Unit,
     onOpenCartRequest: () -> Unit,
     viewModel: CartViewModel = hiltViewModel(),
 ) {
@@ -42,8 +42,9 @@ fun CartRoot(
             when (effect) {
                 CartUIEffect.OpenPrescription -> onAddPrescription()
                 CartUIEffect.OpenMakeRequest -> onOpenCartRequest()
+                CartUIEffect.OpenMedicineSearch -> onMedicineSearch()
                 is CartUIEffect.ShowMessage ->
-                    snackbarHostState.showSnackbar(
+                    snackbarHostState.showInfo(
                         ContextCompat.getString(
                             context,
                             effect.messageRes,
@@ -53,13 +54,14 @@ fun CartRoot(
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-    ) { padding ->
+    Box(modifier = Modifier.fillMaxSize()) {
         CartScreen(
             state = state,
             onIntent = viewModel::onIntent,
-            modifier = Modifier.padding(padding),
+        )
+        MedsySnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
         )
     }
 }
@@ -73,12 +75,10 @@ fun CartScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
     ) {
         when {
-            state.isLoading -> CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-            )
+            state.isLoading -> CartShimmer()
 
             state.errorMessageRes != null -> CartError(
                 message = stringResource(state.errorMessageRes),
@@ -99,6 +99,18 @@ fun CartScreen(
         CartClearDialog(
             onConfirm = { onIntent(CartUIIntent.ClearCartConfirmed) },
             onDismiss = { onIntent(CartUIIntent.ClearCartDismissed) },
+        )
+    }
+
+    if (state.itemToRemove != null) {
+        com.medsy.designsystem.components.MedsyAlertDialog(
+            onDismissRequest = { onIntent(CartUIIntent.RemoveItemDismissed) },
+            onConfirm = { onIntent(CartUIIntent.RemoveItemConfirmed) },
+            title = stringResource(com.medsy.presentation.R.string.cart_remove_item_title),
+            description = stringResource(com.medsy.presentation.R.string.cart_remove_item_message),
+            confirmText = stringResource(com.medsy.presentation.R.string.cart_remove_item_confirm),
+            dismissText = stringResource(com.medsy.presentation.R.string.cart_cancel),
+            isDestructive = true
         )
     }
 

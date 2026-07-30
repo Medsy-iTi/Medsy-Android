@@ -18,19 +18,25 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -49,7 +55,7 @@ fun OrderDetailsRoot(
     orderId: String,
     onNavigateBack: () -> Unit,
     onNavigateToPharmacyProfile: (Long) -> Unit,
-    onReorder: (String) -> Unit,
+    onReorder: () -> Unit,
     onNavigateToProductDetails: (String) -> Unit,
     viewModel: OrderDetailsViewModel = hiltViewModel(),
 ) {
@@ -58,6 +64,8 @@ fun OrderDetailsRoot(
     }
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collectLatest { effect ->
@@ -65,9 +73,19 @@ fun OrderDetailsRoot(
                 OrderDetailsUIEffect.NavigateBack -> onNavigateBack()
                 is OrderDetailsUIEffect.NavigateToPharmacyProfile ->
                     onNavigateToPharmacyProfile(effect.pharmacyId)
-                is OrderDetailsUIEffect.ReorderRequested -> onReorder(effect.orderId)
+
+                is OrderDetailsUIEffect.ReorderRequested -> {
+                    onReorder()
+                }
+
                 is OrderDetailsUIEffect.NavigateToProductDetails ->
                     onNavigateToProductDetails(effect.productId)
+
+                is OrderDetailsUIEffect.ShowErrorSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = ContextCompat.getString(context, effect.messageRes)
+                    )
+                }
             }
         }
     }
@@ -75,6 +93,7 @@ fun OrderDetailsRoot(
     OrderDetailsScreen(
         orderId = orderId,
         state = state,
+        snackbarHostState = snackbarHostState,
         onIntent = viewModel::onIntent,
     )
 }
@@ -83,31 +102,51 @@ fun OrderDetailsRoot(
 fun OrderDetailsScreen(
     orderId: String,
     state: OrderDetailsUIState,
+    snackbarHostState: SnackbarHostState,
     onIntent: (OrderDetailsUIIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             OrderDetailsTopBar(
                 orderId = orderId,
-                onBackClick = { onIntent(OrderDetailsUIIntent.BackClicked) },
+                onBackClick = {
+                    if (!state.isReordering) {
+                        onIntent(OrderDetailsUIIntent.BackClicked)
+                    }
+                },
             )
         },
     ) { paddingValues ->
-        PullToRefreshBox(
-            isRefreshing = state.isRefreshing,
-            onRefresh = { onIntent(OrderDetailsUIIntent.Refresh) },
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-        ) {
-            OrderDetailsContent(
-                state = state,
-                onIntent = onIntent,
-                modifier = Modifier.fillMaxSize(),
-            )
+        Box(modifier = Modifier.fillMaxSize()) {
+            PullToRefreshBox(
+                isRefreshing = state.isRefreshing,
+                onRefresh = {
+                    if (!state.isReordering) {
+                        onIntent(OrderDetailsUIIntent.Refresh)
+                    }
+                },
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            ) {
+                OrderDetailsContent(
+                    state = state,
+                    onIntent = onIntent,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+
+            if (state.isReordering) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pointerInput(Unit) {}
+                )
+            }
         }
     }
 }
@@ -129,7 +168,9 @@ private fun OrderDetailsContent(
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = stringResource(state.errorMessageRes ?: R.string.order_details_error_load),
+                    text = stringResource(
+                        state.errorMessageRes ?: R.string.order_details_error_load
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -253,6 +294,8 @@ private fun OrderDetailsContent(
         }
 
         OrderDetailsReorderBar(
+            isLoading = state.isReordering,
+            enabled = !state.isReordering,
             onReorderClick = { onIntent(OrderDetailsUIIntent.ReorderClicked) },
         )
     }

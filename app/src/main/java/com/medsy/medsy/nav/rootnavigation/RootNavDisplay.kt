@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -29,6 +30,7 @@ import com.medsy.presentation.offers.details.OfferDetailsRoot
 import com.medsy.presentation.offers.review.OrderReviewRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.orders.details.OrderDetailsRoot
+import com.medsy.presentation.pharmacyprofile.PharmacyProfileRoot
 import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.products.ProductsRoot
@@ -39,6 +41,7 @@ import com.medsy.presentation.splash.SplashRoot
 
 @Composable
 fun RootNavDisplay() {
+    val context = LocalContext.current
     val rootBackStack = rememberNavBackStack(Route.Splash)
     var requestedNestedDestination by remember { mutableStateOf<Route?>(null) }
     var prescriptionSelectionResult by remember { mutableStateOf<Pair<String, Int>?>(null) }
@@ -46,7 +49,7 @@ fun RootNavDisplay() {
     NavDisplay(
         modifier = Modifier.fillMaxSize(),
         backStack = rootBackStack,
-        onBack = { rootBackStack.removeLastOrNull() },
+        onBack = { rootBackStack.onBack(context) },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
@@ -141,7 +144,7 @@ fun RootNavDisplay() {
             entry<Route.NestedNav> {
                 NestedNavDisplay(
                     navigateBack = {
-                        rootBackStack.popIfCurrentIs<Route.NestedNav>()
+                        rootBackStack.onBack(context)
                     },
                     openSearch = {
                         rootBackStack.navigateSingleTop(Route.SearchNav())
@@ -184,6 +187,7 @@ fun RootNavDisplay() {
                 )
 
             }
+
             entry<Route.AiChat> {
                 AiChatRoot(
                     onNext = { rootBackStack.removeLastOrNull() }
@@ -193,11 +197,12 @@ fun RootNavDisplay() {
                 OrderDetailsRoot(
                     orderId = route.orderId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToPharmacyProfile = {
-                        /* TODO: navigate to Pharmacy Profile (M-26) once that screen/route exists */
+                    onNavigateToPharmacyProfile = { id ->
+                        rootBackStack.navigateSingleTop(Route.PharmacyProfile(id))
                     },
                     onReorder = {
-                        /* TODO: reorder behavior is owned by M-27 */
+                        requestedNestedDestination = Route.NestedNav.Cart
+                        rootBackStack.popIfCurrentIs<Route.OrderDetails>()
                     },
                     onNavigateToProductDetails = { productId ->
                         rootBackStack.navigateSingleTop(Route.ProductDetails(id = productId))
@@ -212,6 +217,14 @@ fun RootNavDisplay() {
                     onNavigateToPharmacistChat = {
                         rootBackStack.navigateSingleTop(Route.AiChat(/* required params here */))
                     },
+                )
+            }
+            entry<Route.PharmacyProfile> { route ->
+                PharmacyProfileRoot(
+                    pharmacyId = route.pharmacyId,
+                    onNavigateBack = { rootBackStack.onBack(context) },
+                    onDialPhone = context::openDialer,
+                    onOpenDirections = context::openDirections,
                 )
             }
             entry<Route.Settings> {

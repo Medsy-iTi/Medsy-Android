@@ -3,6 +3,8 @@
 
     <!-- App -->
     <string name="app_name">Medesy</string>
+    <string name="splash_logo_description">Medesy Logo</string>
+    <string name="splash_tagline">Your health, our priority</string>
     <string name="medsy_logo_content_desc">Medesy Logo</string>
     <string name="app_name_prefix">Med</string>
     <string name="app_name_suffix">sy</string>
@@ -190,7 +192,7 @@
     <string name="search_filter_chip_price">Price</string>
     <string name="search_filter_chip_most_relevant">Most relevant</string>
     <string name="search_results_count">%1$d results</string>
-    <string name="search_price_egp">%1$d EGP</string>
+    <string name="search_price_egp">%1$s EGP</string>
     <string name="search_favorite_desc">Add to favorites</string>
     <string name="search_add_to_cart_desc">Add to cart</string>
     <string name="search_added_to_cart">Added to cart</string>
@@ -218,6 +220,8 @@
     <string name="product_details_pharmacist_notice">This medicine is dispensed only after pharmacist review to determine the appropriate dose for your condition.</string>
     <string name="product_details_info_title">Product Information</string>
     <string name="product_details_label_manufacturer">Manufacturer</string>
+    <string name="product_details_label_scientific_name">Scientific Name</string>
+    <string name="product_details_label_scientific_category">Scientific Category</string>
     <string name="product_details_label_type">Type</string>
     <string name="product_details_label_category">Drug Category</string>
     <string name="product_details_label_usage_method">Usage Method</string>
@@ -372,6 +376,9 @@
     <string name="cart_note_saved">Note saved</string>
     <string name="cart_save">Save</string>
     <string name="cart_cancel">Cancel</string>
+    <string name="cart_remove_item_title">Remove medicine?</string>
+    <string name="cart_remove_item_message">This will remove this medicine from your request cart.</string>
+    <string name="cart_remove_item_confirm">Remove</string>
     <string name="cart_total_price">Total price</string>
     <string name="cart_price_egp">%1$s EGP</string>
     <string name="cart_continue">Continue request</string>
@@ -379,7 +386,7 @@
     <string name="cart_clear_title">Clear request cart?</string>
     <string name="cart_clear_message">This removes all medicines, the prescription, and the pharmacist note.</string>
     <string name="cart_clear_confirm">Clear</string>
-    <string name="cart_cleared">Cart cleared</string>
+    <string name="cart_cleared">Cart cleared successfully</string>
     <!--  Active Search Status  -->
     <string name="cart_request_title">Complete request</string>
     <string name="cart_request_subtitle">A few final details before pharmacies receive your request</string>
@@ -454,6 +461,25 @@
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>
     </plurals>
+  
+    <!-- Pharmacy profile -->
+    <string name="pharmacy_profile_title">Pharmacy profile</string>
+    <string name="pharmacy_profile_verified">Verified</string>
+    <string name="pharmacy_profile_contact_title">Contact information</string>
+    <string name="pharmacy_profile_phone">Phone number</string>
+    <string name="pharmacy_profile_address">Address</string>
+    <string name="pharmacy_profile_call">Call pharmacy</string>
+    <string name="pharmacy_profile_location">Pharmacy location</string>
+    <string name="pharmacy_profile_directions">Get directions</string>
+    <string name="pharmacy_profile_location_unavailable">The pharmacy location is not available right now.</string>
+    <string name="pharmacy_profile_map_description">Map showing the location of %1$s</string>
+    <string name="pharmacy_profile_not_available">Not available</string>
+    <string name="pharmacy_profile_retry">Try again</string>
+    <string name="pharmacy_profile_invalid_id">The pharmacy ID is invalid.</string>
+    <string name="pharmacy_profile_call_short">Call</string>
+    <string name="pharmacy_profile_address_title">Pharmacy address</string>
+    <string name="pharmacy_profile_directions_short">Directions</string>
+    <string name="pharmacy_profile_share">Share</string>
 
     <!-- Offers Flow -->
     <string name="offers_available_title">Available Offers</string>
@@ -542,5 +568,6 @@
     <string name="order_details_final_total">Total</string>
     <string name="order_details_reorder">Reorder</string>
     <string name="order_details_error_load">We couldn\'t load this order\'s details.</string>
+    <string name="reordered_products">Products added to cart successfully.</string>
 
 </resources>

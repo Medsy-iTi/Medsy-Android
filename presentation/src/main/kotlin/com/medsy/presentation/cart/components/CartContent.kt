@@ -1,13 +1,12 @@
 package com.medsy.presentation.cart.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,14 +40,24 @@ internal fun CartContent(
             canClear = state.hasContent && !state.isClearing,
             onClear = { onIntent(CartUIIntent.ClearCartClicked) },
         )
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            if (state.items.isEmpty()) {
-                item { CartEmptyState() }
-            } else {
+
+        if (state.items.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CartEmptyState(
+                    onSearchMedicineClick = { onIntent(CartUIIntent.SearchMedicineClicked) }
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(start = 20.dp, top = 16.dp, end = 20.dp, bottom = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
                 items(state.items, key = CartItem::id) { item ->
                     CartItemCard(
                         item = item,
@@ -62,63 +71,32 @@ internal fun CartContent(
                         onRemove = { onIntent(CartUIIntent.RemoveItemClicked(item.id)) },
                     )
                 }
-            }
-            item {
-                CartPrescriptionSection(
-                    image = state.draft.prescriptionImage,
-                    onAdd = { onIntent(CartUIIntent.AddPrescriptionClicked) },
-                    onRemove = { onIntent(CartUIIntent.RemovePrescriptionClicked) },
-                )
-            }
-            item {
-                CartNoteSection(
-                    note = state.draft.pharmacistNote,
-                    onClick = { onIntent(CartUIIntent.AddNoteClicked) },
-                )
-            }
-            item { CartTotalSummary(state.totalPriceEgp) }
-            item {
-                MedsyButton(
-                    onClick = {
-                        onIntent(CartUIIntent.SubmitCartClicked)
-                    },
-                    enabled = state.canContinue,
-                ) {
-                    Text(stringResource(R.string.cart_continue))
+                item {
+                    CartPrescriptionSection(
+                        image = state.draft.prescriptionImage,
+                        onAdd = { onIntent(CartUIIntent.AddPrescriptionClicked) },
+                        onRemove = { onIntent(CartUIIntent.RemovePrescriptionClicked) },
+                    )
+                }
+                item {
+                    CartNoteSection(
+                        note = state.draft.pharmacistNote,
+                        onClick = { onIntent(CartUIIntent.AddNoteClicked) },
+                    )
+                }
+                item { CartTotalSummary(state.totalPriceEgp) }
+                item {
+                    MedsyButton(
+                        onClick = {
+                            onIntent(CartUIIntent.SubmitCartClicked)
+                        },
+                        enabled = state.canContinue,
+                    ) {
+                        Text(stringResource(R.string.cart_continue))
+                    }
                 }
             }
         }
     }
 }
 
-@Composable
-private fun CartTopBar(
-    canClear: Boolean,
-    onClear: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp)
-            .padding(horizontal = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Spacer(modifier = Modifier.size(48.dp))
-        Text(
-            text = stringResource(R.string.cart_title),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.weight(1f),
-        )
-        IconButton(
-            onClick = onClear,
-            enabled = canClear,
-        ) {
-            Icon(
-                imageVector = Icons.Filled.DeleteOutline,
-                contentDescription = stringResource(R.string.cart_clear_description),
-            )
-        }
-    }
-}

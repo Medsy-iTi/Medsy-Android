@@ -1,6 +1,7 @@
 package com.medsy.presentation.cart.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -8,6 +9,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.medsy.designsystem.components.MedsyAlertDialog
 import com.medsy.presentation.R
 
 @Composable
@@ -15,20 +17,14 @@ internal fun CartClearDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    AlertDialog(
+    MedsyAlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.cart_clear_title)) },
-        text = { Text(stringResource(R.string.cart_clear_message)) },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.cart_clear_confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cart_cancel))
-            }
-        },
+        onConfirm = onConfirm,
+        title = stringResource(R.string.cart_clear_title),
+        description = stringResource(R.string.cart_clear_message),
+        confirmText = stringResource(R.string.cart_clear_confirm),
+        dismissText = stringResource(R.string.cart_cancel),
+        isDestructive = true
     )
 }
 
