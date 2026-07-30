@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -112,16 +110,24 @@ private fun MedsySnackbarBanner(data: SnackbarData) {
     val visuals = data.visuals
     val type = (visuals as? MedsySnackbarVisuals)?.type ?: MedsySnackbarType.Error
 
-    val backgroundColor = when (type) {
-        MedsySnackbarType.Success -> MaterialTheme.colorScheme.primary
-        MedsySnackbarType.Error -> MaterialTheme.colorScheme.error
-        MedsySnackbarType.Info -> MaterialTheme.colorScheme.secondary
+    val isError = type == MedsySnackbarType.Error
+    
+    val backgroundColor = if (isError) {
+        MaterialTheme.colorScheme.error
+    } else {
+        MaterialTheme.colorScheme.surface
+    }
+    
+    val contentColor = if (isError) {
+        MaterialTheme.colorScheme.onError
+    } else {
+        MaterialTheme.colorScheme.onSurface
     }
 
-    val contentColor = when (type) {
-        MedsySnackbarType.Success -> MaterialTheme.colorScheme.onPrimary
+    val iconColor = when (type) {
+        MedsySnackbarType.Success -> MaterialTheme.colorScheme.primary
         MedsySnackbarType.Error -> MaterialTheme.colorScheme.onError
-        MedsySnackbarType.Info -> MaterialTheme.colorScheme.onSecondary
+        MedsySnackbarType.Info -> MaterialTheme.colorScheme.secondary
     }
 
     val icon = when (type) {
@@ -134,6 +140,10 @@ private fun MedsySnackbarBanner(data: SnackbarData) {
         shape = RoundedCornerShape(28.dp),
         color = backgroundColor,
         shadowElevation = 8.dp,
+        border = if (!isError) androidx.compose.foundation.BorderStroke(
+            1.dp, 
+            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+        ) else null,
         modifier = Modifier.wrapContentWidth(),
     ) {
         Row(
@@ -143,7 +153,7 @@ private fun MedsySnackbarBanner(data: SnackbarData) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = contentColor,
+                tint = iconColor,
                 modifier = Modifier.size(20.dp),
             )
 
