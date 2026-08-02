@@ -51,34 +51,27 @@ import com.medsy.presentation.offers.OffersViewModel
 
 @Composable
 fun OrderConfirmationRoot(
+    orderId: String,
+    pharmacyName: String,
     onNavigateToTrackOrder: () -> Unit,
-    onNavigateToHome: () -> Unit,
-    viewModel: OffersViewModel = hiltViewModel()
+    onNavigateToHome: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
-    LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                is OffersUIEffect.NavigateToTrackOrder -> onNavigateToTrackOrder()
-                is OffersUIEffect.NavigateToHome -> onNavigateToHome()
-                else -> Unit
-            }
-        }
-    }
-
     OrderConfirmationScreen(
-        state = state,
-        onIntent = viewModel::onIntent
+        orderId = orderId,
+        pharmacyName = pharmacyName,
+        onTrackOrder = onNavigateToTrackOrder,
+        onBackToHome = onNavigateToHome
     )
 }
 
 @Composable
 fun OrderConfirmationScreen(
-    state: OffersState,
-    onIntent: (OffersUIIntent) -> Unit
+    orderId: String,
+    pharmacyName: String,
+    onTrackOrder: () -> Unit,
+    onBackToHome: () -> Unit
 ) {
-    val offer = state.selectedOffer
+    androidx.activity.compose.BackHandler(onBack = onBackToHome)
     
     Scaffold(
         bottomBar = {
@@ -88,7 +81,7 @@ fun OrderConfirmationScreen(
                     .padding(16.dp)
             ) {
                 Button(
-                    onClick = { onIntent(OffersUIIntent.TrackOrder) },
+                    onClick = onTrackOrder,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -108,7 +101,7 @@ fun OrderConfirmationScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Button(
-                    onClick = { onIntent(OffersUIIntent.BackToHome) },
+                    onClick = onBackToHome,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -169,7 +162,7 @@ fun OrderConfirmationScreen(
                     .padding(horizontal = 24.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = state.orderId ?: "#MS-250721-001",
+                    text = orderId,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -206,15 +199,10 @@ fun OrderConfirmationScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         Column(horizontalAlignment = Alignment.Start) {
                             Text(
-                                text = stringResource(R.string.offers_pharmacy_title_format, offer?.pharmacyName.orEmpty()),
+                                text = stringResource(R.string.offers_pharmacy_title_format, pharmacyName),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Text(
-                                text = stringResource(R.string.offers_manager_format, offer?.managerName.orEmpty()),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -234,7 +222,7 @@ fun OrderConfirmationScreen(
                             color = MaterialTheme.colorScheme.onBackground
                         )
                         Text(
-                            text = "أمام برج النيل، الدور 3، شقة 12",
+                            text = stringResource(R.string.offers_delivery_address_mock),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -251,7 +239,7 @@ fun OrderConfirmationScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "30 - 45 دقيقة",
+                            text = stringResource(R.string.offers_estimated_time_mock),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onBackground

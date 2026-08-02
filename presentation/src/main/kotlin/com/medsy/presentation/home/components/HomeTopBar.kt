@@ -40,12 +40,14 @@ fun HomeTopBar(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = "${stringResource(R.string.home_delivery_to)} $deliveryAddress",
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            if (deliveryAddress.isNotBlank()) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "${stringResource(R.string.home_delivery_to)} $deliveryAddress",
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,

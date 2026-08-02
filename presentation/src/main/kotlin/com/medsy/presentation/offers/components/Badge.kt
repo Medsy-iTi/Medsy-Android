@@ -21,17 +21,14 @@ fun Badge(type: OfferType) {
     val backgroundColor = when (type) {
         OfferType.FULL -> MaterialTheme.extendedColors.badgeSuccess
         OfferType.PARTIAL -> MaterialTheme.extendedColors.warning
-        OfferType.COMBINED -> MaterialTheme.extendedColors.purpleContent
     }
     val textColor = when (type) {
         OfferType.FULL -> MaterialTheme.extendedColors.onBadgeSuccess
         OfferType.PARTIAL -> MaterialTheme.extendedColors.onWarning
-        OfferType.COMBINED -> MaterialTheme.colorScheme.surface
     }
     val textRes = when (type) {
         OfferType.FULL -> R.string.offers_badge_full
         OfferType.PARTIAL -> R.string.offers_badge_partial
-        OfferType.COMBINED -> R.string.offers_badge_combined
     }
 
     Box(

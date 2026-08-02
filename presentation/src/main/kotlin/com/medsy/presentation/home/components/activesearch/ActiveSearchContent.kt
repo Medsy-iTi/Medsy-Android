@@ -30,7 +30,12 @@ fun ActiveSearchContent(
 ) {
     when (status) {
         is ActiveSearchStatus.Searching -> {
-            ActiveSearchStages(currentStage = status.stage)
+            val stage = when {
+                status.remainingTimeSeconds > 600 -> 1
+                status.remainingTimeSeconds > 300 -> 2
+                else -> 3
+            }
+            ActiveSearchStages(currentStage = stage)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.home_search_status_notification_note),
@@ -41,42 +46,8 @@ fun ActiveSearchContent(
             )
         }
         is ActiveSearchStatus.FirstOfferArrived -> {
-            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = 2, totalCount = 3, onViewOffersClick = onViewOffersClick) 
+            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = status.foundCount, totalCount = status.totalCount, onViewOffersClick = onViewOffersClick) 
             Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = onViewOffersClick,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Text(
-                    text = stringResource(R.string.home_search_status_continue_and_compare),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            TextButton(
-                onClick = onViewOffersClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(R.string.home_search_status_view_details),
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
             Text(
                 text = stringResource(R.string.home_search_status_auto_stop_note),
                 style = MaterialTheme.typography.bodySmall,
@@ -86,7 +57,7 @@ fun ActiveSearchContent(
             )
         }
         is ActiveSearchStatus.MultipleOffersArrived -> {
-            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = 3, totalCount = 3, onViewOffersClick = onViewOffersClick)
+            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = status.foundCount, totalCount = status.totalCount, onViewOffersClick = onViewOffersClick)
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier
@@ -103,40 +74,6 @@ fun ActiveSearchContent(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = onViewOffersClick,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Text(
-                    text = stringResource(R.string.home_search_status_compare_offers),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            TextButton(
-                onClick = onViewOffersClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(R.string.home_search_status_view_details),
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
             Text(
                 text = stringResource(R.string.home_search_status_auto_stop_note),
                 style = MaterialTheme.typography.bodySmall,
@@ -145,55 +82,5 @@ fun ActiveSearchContent(
                 textAlign = TextAlign.Center
             )
         }
-        is ActiveSearchStatus.SearchEndedNoOffers -> {
-            Button(
-                onClick = onSearchWiderRangeClick,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onSurfaceVariant) 
-            ) {
-                Text(
-                    text = stringResource(R.string.home_search_status_search_wider),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            TextButton(
-                onClick = onViewOffersClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(R.string.home_search_status_view_details),
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-            TextButton(
-                onClick = onCancelClick, 
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(R.string.home_search_status_cancel),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-        else -> {}
     }
 }

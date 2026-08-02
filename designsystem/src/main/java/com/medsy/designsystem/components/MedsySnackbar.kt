@@ -117,7 +117,6 @@ private fun MedsySnackbarBanner(data: SnackbarData) {
     } else {
         MaterialTheme.colorScheme.surface
     }
-    
     val contentColor = if (isError) {
         MaterialTheme.colorScheme.onError
     } else {
@@ -129,7 +128,6 @@ private fun MedsySnackbarBanner(data: SnackbarData) {
         MedsySnackbarType.Error -> MaterialTheme.colorScheme.onError
         MedsySnackbarType.Info -> MaterialTheme.colorScheme.secondary
     }
-
     val icon = when (type) {
         MedsySnackbarType.Success -> Icons.Filled.CheckCircle
         MedsySnackbarType.Error -> Icons.Filled.Error

@@ -150,6 +150,8 @@
     <string name="profile_personal_details_cancel">Cancel</string>
     <string name="profile_personal_details_confirm">Confirm</string>
     <string name="profile_personal_details_save">Save Changes</string>
+    <string name="offers_delivery_address_mock">In front of Nile Tower, 3rd Floor, Apt 12</string>
+    <string name="content_desc_refresh">Refresh</string>
     <string name="profile_personal_details_customer_id">Customer ID</string>
     <string name="profile_personal_details_first_name">First name</string>
     <string name="profile_personal_details_last_name">Last name</string>
@@ -490,15 +492,17 @@
     <string name="offers_missing_medicines">Missing some medicines</string>
     <string name="offers_combined_coverage">Full coverage for your request</string>
     <string name="offers_from_egp">from\n%1$d</string>
+    <string name="offers_from">From</string>
     <string name="offers_price_note">Prices are final from Medsy and match pharmacy prices, only a discount and delivery fee may apply.</string>
-    <string name="offers_pharmacy_title_format">%1$s Pharmacy</string>
-    <string name="offers_manager_format">%1$s (Manager)</string>
+    <string name="offers_pharmacy_title_format">Pharmacy %1$s</string>
+    <string name="offers_manager_format">%1$s</string>
+    <string name="offers_not_available">Not Available</string>
     <string name="offers_requested_medicines">Requested Medicines</string>
     <string name="offers_available">Available</string>
     <string name="offers_pharmacist_comment">Pharmacist Comment</string>
+    <string name="offers_substitute_for">Substitute</string>
     <string name="offers_view_prescription">View Prescription</string>
     <string name="offers_choose_offer">Choose this Offer</string>
-
     <string name="offers_order_review_title">Order Review</string>
     <string name="offers_delivery_address">Delivery Address</string>
     <string name="offers_delivery_details">Delivery Details</string>
@@ -517,8 +521,13 @@
     <string name="offers_notification_note">You will be notified when the order preparation starts.\nYou can track your order status from the home page.\nSearch in a wider range to find more pharmacies.</string>
     <string name="offers_track_order">Track Order</string>
     <string name="offers_back_to_home">Back to Home</string>
+    <string name="offers_available_empty">No offers available yet</string>
     <string name="offers_edit_address">Edit</string>
-
+    <string name="offers_confirm_order_error">Failed to confirm order. Please try again.</string>
+    <string name="offers_load_error">Failed to load offers. Please try again.</string>
+    <string name="offers_error_retry">Retry</string>
+    <string name="offers_pharmacist_note_title">Pharmacist Note</string>
+    <string name="offers_estimated_time_mock">30 - 45 mins</string>
 
     <!--  My Orders  -->
     <string name="orders_title">My Orders</string>

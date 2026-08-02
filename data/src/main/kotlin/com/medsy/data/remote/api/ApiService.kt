@@ -4,7 +4,11 @@ package com.medsy.data.remote.api
 import com.medsy.data.cart.remote.AddCartItemRequestDto
 import com.medsy.data.cart.remote.BulkCartItemsRequestDto
 import com.medsy.data.cart.remote.CartDto
+import com.medsy.data.cart.remote.MedicineRequestDto
 import com.medsy.data.cart.remote.ProductsRequestDto
+import com.medsy.data.offers.remote.ConfirmRequestDto
+import com.medsy.data.offers.remote.ConfirmRequestResponseDto
+import com.medsy.data.offers.remote.OffersPageDto
 import com.medsy.data.orders.model.OrderDetailsDto
 import com.medsy.data.orders.model.OrderPageDataDto
 import com.medsy.data.pharmacyprofile.remote.PharmacyProfileDto
@@ -18,6 +22,8 @@ import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.dtos.products.ProductsDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.dto.ProductsPageDto
+import com.medsy.domain.cart.model.ProductsRequest
+
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -85,8 +91,8 @@ interface ApiService {
     @POST("api/v1/requests")
     suspend fun submitProductsRequest(
         @Part("request") request: ProductsRequestDto,
-        @Part prescription: MultipartBody.Part?,
-    ): Response<ApiResponse<Any>>
+        @Part prescription: MultipartBody.Part? = null,
+    ): Response<ApiResponse<MedicineRequestDto>>
 
     @GET("api/v1/categories")
     suspend fun getCategories(
@@ -127,14 +133,38 @@ interface ApiService {
         @Query("size") size: Int,
         @Query("sort") sort: List<String>?,
     ): Response<ApiResponse<ProductsPageDto>>
-
+    
     @GET("api/v1/products/{id}")
     suspend fun getProductById(
         @Path("id") id: Int,
-        @Header("lang") language: String
+        @Query("lang") lang: String = "en",
     ): Response<ApiResponse<ProductDetailsDto>>
 
+    // Offers endpoints (feature/offer_logic_home)
+    @GET("api/v1/offers/requests/{requestId}")
+    suspend fun getOffersForRequest(
+        @Path("requestId") requestId: Long,
+        @Query("page") page: Int = 0,
+        @Query("size") size: Int = 20,
+    ): Response<ApiResponse<OffersPageDto>>
 
+    @POST("api/v1/requests/{requestId}/confirm")
+    suspend fun confirmRequest(
+        @Path("requestId") requestId: Long,
+        @Body request: ConfirmRequestDto
+    ): Response<ApiResponse<ConfirmRequestResponseDto>>
+
+    @GET("api/v1/requests/{requestId}/result")
+    suspend fun getRequestResult(
+        @Path("requestId") requestId: Long,
+    ): Response<ApiResponse<com.medsy.data.offers.remote.RequestResultDto>>
+
+    @GET("api/v1/requests/{id}")
+    suspend fun getRequestById(
+        @Path("id") id: Long,
+    ): Response<ApiResponse<MedicineRequestDto>>
+
+    // Orders endpoints (develop)
     @GET("api/v1/orders")
     suspend fun getCurrentCustomerOrders(
         @Query("page") page: Int,

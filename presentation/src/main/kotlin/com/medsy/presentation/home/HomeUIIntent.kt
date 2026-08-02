@@ -11,9 +11,10 @@ sealed interface HomeUIIntent {
     data class OnCategoryClick(val categoryId: String) : HomeUIIntent
     
     // Active Search Simulation Intents
-    object OnStartSearchSimulation : HomeUIIntent
-    object OnCancelSearchSimulation : HomeUIIntent
-    object OnViewOffersClick : HomeUIIntent
+    data object OnStartSearchSimulation : HomeUIIntent
+    data class OnCancelSearchSimulation(val requestId: Long) : HomeUIIntent
+    data class OnViewOffersClick(val requestId: Long) : HomeUIIntent
     object OnSearchWiderRangeClick : HomeUIIntent
+    data class OnAddressResolved(val address: String) : HomeUIIntent
     object RefreshData : HomeUIIntent
 }

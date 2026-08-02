@@ -54,13 +54,6 @@ fun ActiveSearchHeader(
             iconBgColor = MaterialTheme.colorScheme.primary
             icon = { Icon(Icons.Rounded.CheckCircle, contentDescription = null, tint = Color.White, modifier = Modifier.size(28.dp)) }
         }
-        is ActiveSearchStatus.SearchEndedNoOffers -> {
-            titleRes = R.string.home_search_status_ended_title
-            descRes = R.string.home_search_status_ended_desc
-            iconBgColor = MaterialTheme.colorScheme.surfaceVariant
-            icon = { Icon(Icons.Rounded.Close, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(28.dp)) }
-        }
-        ActiveSearchStatus.Idle -> return
     }
 
     Row(

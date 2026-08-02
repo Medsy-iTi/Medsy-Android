@@ -143,6 +143,8 @@
     <string name="profile_personal_details_cancel">إلغاء</string>
     <string name="profile_personal_details_confirm">تأكيد</string>
     <string name="profile_personal_details_save">حفظ التغييرات</string>
+    <string name="offers_delivery_address_mock">أمام برج النيل، الدور 3، شقة 12</string>
+    <string name="content_desc_refresh">تحديث</string>
     <string name="profile_personal_details_customer_id">رقم العميل</string>
     <string name="profile_personal_details_first_name">الاسم الأول</string>
     <string name="profile_personal_details_last_name">اسم العائلة</string>
@@ -399,6 +401,32 @@
     <string name="cart_request_delivery_description">التوصيل إلى الموقع المحدد</string>
     <string name="cart_request_pickup">استلام</string>
     <string name="cart_request_pickup_description">استلم الطلب من الصيدلية</string>
+    <string name="offers_delivery_address">عنوان التوصيل</string>
+    <string name="offers_delivery_details">تفاصيل التوصيل</string>
+    <string name="offers_home_delivery">توصيل للمنزل</string>
+    <string name="offers_delivery_fee">رسوم التوصيل</string>
+    <string name="offers_total_medicines_price">إجمالي سعر الأدوية</string>
+    <string name="offers_total">الإجمالي</string>
+    <string name="offers_confirm_order">تأكيد الطلب</string>
+
+    <string name="offers_success_title">تم تأكيد طلبك بنجاح!</string>
+    <string name="offers_order_number">رقم الطلب</string>
+    <string name="offers_delivery_to">التوصيل إلى</string>
+    <string name="offers_estimated_time">وقت التجهيز المتوقع</string>
+    <string name="offers_estimated_time_mock">30 - 45 دقيقة</string>
+    <string name="offers_payment_method">طريقة الدفع</string>
+    <string name="offers_cash_on_delivery">كاش عند الاستلام</string>
+    <string name="offers_notification_note">سيتم إشعارك عند بدء تجهيز الطلب\nيمكنك متابعة حالة الطلب من الصفحة الرئيسية</string>
+    <string name="offers_track_order">تتبع الطلب</string>
+    <string name="offers_back_to_home">العودة للرئيسية</string>
+    <string name="offers_available_empty">لا توجد عروض متاحة بعد</string>
+    <string name="offers_edit_address">تعديل</string>
+    <string name="offers_pharmacist_note_title">ملاحظة الصيدلي</string>
+    <string name="offers_substitute_for">بديل لدوائك</string>
+    <string name="offers_confirm_order_error">فشل تأكيد الطلب. يرجى المحاولة مرة أخرى.</string>
+    <string name="offers_load_error">فشل تحميل العروض. يرجى المحاولة مرة أخرى.</string>
+    <string name="offers_error_retry">إعادة المحاولة</string>
+   <!--  Active Search Status  -->
     <string name="cart_request_address_title">عنوان التوصيل</string>
     <string name="cart_request_default_address">العنوان الافتراضي</string>
     <string name="cart_request_default_badge">افتراضي</string>
@@ -492,35 +520,18 @@
     <string name="offers_missing_medicines">يحتوي على أدوية غير متوفرة</string>
     <string name="offers_combined_coverage">تغطية كاملة للطلب</string>
     <string name="offers_from_egp">من\n%1$d</string>
+    <string name="offers_from">من</string>
     <string name="offers_price_note">الأسعار نهائية من ميدسي ومطابقة لأسعار الصيدلية</string>
     <string name="offers_pharmacy_title_format">صيدلية %1$s</string>
-    <string name="offers_manager_format">%1$s (المدير)</string>
-    <string name="offers_requested_medicines">الأدوية المطلوبة</string>
+    <string name="offers_manager_format">%1$s</string>
     <string name="offers_available">متوفر</string>
-    <string name="offers_pharmacist_comment">تعليق من الصيدلي</string>
+    <string name="offers_not_available">غير متوفر</string>
+    <string name="offers_requested_medicines">الأدوية المطلوبة</string>
     <string name="offers_view_prescription">عرض الروشتة</string>
     <string name="offers_choose_offer">اختار هذا العرض</string>
 
     <string name="offers_order_review_title">مراجعة الطلب</string>
-    <string name="offers_delivery_address">عنوان التوصيل</string>
-    <string name="offers_delivery_details">تفاصيل التوصيل</string>
-    <string name="offers_home_delivery">توصيل للمنزل</string>
-    <string name="offers_delivery_fee">رسوم التوصيل</string>
-    <string name="offers_total_medicines_price">إجمالي سعر الأدوية</string>
-    <string name="offers_total">الإجمالي</string>
-    <string name="offers_confirm_order">تأكيد الطلب</string>
-
-    <string name="offers_success_title">تم تأكيد طلبك بنجاح!</string>
-    <string name="offers_order_number">رقم الطلب</string>
-    <string name="offers_delivery_to">التوصيل إلى</string>
-    <string name="offers_estimated_time">وقت التجهيز المتوقع</string>
-    <string name="offers_payment_method">طريقة الدفع</string>
-    <string name="offers_cash_on_delivery">كاش عند الاستلام</string>
-    <string name="offers_notification_note">سيتم إشعارك عند بدء تجهيز الطلب\nيمكنك متابعة حالة الطلب من الصفحة الرئيسية</string>
-    <string name="offers_track_order">تتبع الطلب</string>
-    <string name="offers_back_to_home">العودة إلى الرئيسية</string>
-    <string name="offers_edit_address">تعديل</string>
-
+    <string name="offers_pharmacist_comment">تعليق الصيدلي</string>
 
     <!--  My Orders  -->
     <string name="orders_title">طلباتي</string>
@@ -541,7 +552,6 @@
     <string name="orders_empty_state">لا توجد طلبات</string>
     <string name="orders_error_load">تعذر تحميل طلباتك.</string>
     <string name="orders_error_retry">إعادة المحاولة</string>
-
 
     <!--   Order Details (M-25)   -->
     <string name="order_details_title_format">طلب #%1$s</string>

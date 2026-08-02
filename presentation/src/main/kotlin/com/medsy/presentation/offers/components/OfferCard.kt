@@ -56,11 +56,7 @@ fun OfferCard(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = if (offer.type == OfferType.COMBINED) {
-                        "عرض من صيدليتين"
-                    } else {
-                        stringResource(R.string.offers_pharmacy_title_format, offer.pharmacyName)
-                    },
+                    text = stringResource(R.string.offers_pharmacy_title_format, offer.pharmacyName),
                     style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -95,7 +91,7 @@ fun OfferCard(
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(
-                            text = "من",
+                            text = stringResource(R.string.offers_from),
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -116,6 +112,5 @@ private fun getOfferSubtitle(type: OfferType): String {
     return when (type) {
         OfferType.FULL -> stringResource(R.string.offers_best_price)
         OfferType.PARTIAL -> stringResource(R.string.offers_missing_medicines)
-        OfferType.COMBINED -> stringResource(R.string.offers_combined_coverage)
     }
 }
