@@ -8,5 +8,5 @@ sealed interface HomeUIEffect {
     object NavigateToMedicineImageSearch : HomeUIEffect
     object NavigateToCategories : HomeUIEffect
     data class NavigateToCategory(val categoryId: String, val categoryName: String) : HomeUIEffect
-    object NavigateToOffers : HomeUIEffect
+    data class NavigateToOffers(val requestId: Long) : HomeUIEffect
 }

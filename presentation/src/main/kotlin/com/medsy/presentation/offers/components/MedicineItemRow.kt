@@ -62,6 +62,7 @@ fun MedicineItemRow(
         Spacer(modifier = Modifier.width(12.dp))
         
         Column(
+            modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
@@ -80,7 +81,7 @@ fun MedicineItemRow(
             )
         }
         
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.width(8.dp))
         
         if (isSingleLinePrice) {
             Row(
@@ -93,7 +94,9 @@ fun MedicineItemRow(
                     text = stringResource(R.string.search_price_egp, formattedPrice),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible
                 )
             }
         } else {
@@ -107,31 +110,44 @@ fun MedicineItemRow(
                     text = stringResource(R.string.search_price_egp, formattedPrice),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible
                 )
                 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 if (medicine.isAvailable) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = stringResource(R.string.offers_available),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.extendedColors.badgeSuccess,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
-                            tint = MaterialTheme.extendedColors.badgeSuccess,
-                            modifier = Modifier.size(14.dp)
-                        )
+                    if (medicine.isSubstitute) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.offers_substitute_for, medicine.originalProductName ?: ""),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.extendedColors.warning,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    } else {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.offers_available),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.extendedColors.badgeSuccess,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.extendedColors.badgeSuccess,
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
                     }
                 } else {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "غير متوفر",
+                            text = stringResource(R.string.offers_not_available),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.error,
                             fontWeight = FontWeight.Bold

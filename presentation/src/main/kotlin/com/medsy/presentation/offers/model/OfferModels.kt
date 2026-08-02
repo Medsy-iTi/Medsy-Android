@@ -2,8 +2,7 @@ package com.medsy.presentation.offers.model
 
 enum class OfferType {
     FULL,
-    PARTIAL,
-    COMBINED
+    PARTIAL
 }
 
 data class PharmacyOffer(
@@ -22,5 +21,8 @@ data class OfferMedicine(
     val packageInfo: String,
     val price: Int,
     val isAvailable: Boolean,
-    val imageUrl: String? = null
+    val quantity: Int = 1,
+    val imageUrl: String? = null,
+    val isSubstitute: Boolean = false,
+    val originalProductName: String? = null
 )

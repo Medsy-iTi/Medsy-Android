@@ -17,19 +17,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.presentation.R
 import com.medsy.presentation.home.ActiveSearchStatus
+import java.util.Locale
 
 @Composable
 fun ActiveSearchTimer(status: ActiveSearchStatus) {
-    val elapsedTime = when (status) {
-        is ActiveSearchStatus.Searching -> status.elapsedTime
-        is ActiveSearchStatus.FirstOfferArrived -> status.elapsedTime
-        is ActiveSearchStatus.MultipleOffersArrived -> status.elapsedTime
-        else -> 0
+    val remainingTime = when (status) {
+        is ActiveSearchStatus.Searching -> status.remainingTimeSeconds
+        is ActiveSearchStatus.FirstOfferArrived -> status.remainingTimeSeconds
+        is ActiveSearchStatus.MultipleOffersArrived -> status.remainingTimeSeconds
     }
     
-    val minutes = elapsedTime / 60
-    val seconds = elapsedTime % 60
-    val timeString = String.format("%02d:%02d", minutes, seconds)
+    val minutes = remainingTime / 60
+    val seconds = remainingTime % 60
+    val timeString = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+    val isExpiringSoon = remainingTime <= 60
 
     Row(
         modifier = Modifier
@@ -44,14 +45,14 @@ fun ActiveSearchTimer(status: ActiveSearchStatus) {
             Icon(
                 imageVector = Icons.Rounded.Schedule,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            tint = if (isExpiringSoon) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(R.string.home_search_status_time),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = if (isExpiringSoon) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
         
@@ -59,7 +60,7 @@ fun ActiveSearchTimer(status: ActiveSearchStatus) {
             text = timeString,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = if (isExpiringSoon) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
 }

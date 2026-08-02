@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import com.medsy.domain.profile.usecase.ObserveProfileUseCase
+import com.medsy.domain.requests.usecase.ObserveActiveRequestsWithStatusUseCase
+import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
+import com.medsy.domain.requests.model.ActiveRequestStatus
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.presentation.R
@@ -16,15 +19,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val observeProfileUseCase: ObserveProfileUseCase
+    private val observeProfileUseCase: ObserveProfileUseCase,
+    private val observeActiveRequestsWithStatusUseCase: ObserveActiveRequestsWithStatusUseCase,
+    private val removeActiveRequestUseCase: RemoveActiveRequestUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
@@ -32,12 +36,11 @@ class HomeViewModel @Inject constructor(
     private val _effect = Channel<HomeUIEffect>()
     val effect = _effect.receiveAsFlow()
 
-    private var searchSimulationJob: Job? = null
-
     init {
         _state.update {
             it.copy(
-                notificationCount = HomeConstants.MOCKED_NOTIFICATION_COUNT,
+                notificationCount = 1, 
+                deliveryAddress = "", 
                 banners = listOf(
                     PromoBannerUi(
                         id = "1",
@@ -69,7 +72,7 @@ class HomeViewModel @Inject constructor(
         }
         fetchCategories()
         observeProfileData()
-        startSearchSimulation()
+        observeActiveRequest()
     }
 
     private fun observeProfileData() {
@@ -113,6 +116,39 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun observeActiveRequest() {
+        viewModelScope.launch {
+            observeActiveRequestsWithStatusUseCase().collectLatest { statuses ->
+                _state.update { s ->
+                    val uiStatuses = statuses.map { domainStatus ->
+                        when (domainStatus) {
+                            is ActiveRequestStatus.Searching -> ActiveSearchStatus.Searching(
+                                requestId = domainStatus.requestId,
+                                remainingTimeSeconds = domainStatus.remainingTimeSeconds
+                            )
+                            is ActiveRequestStatus.FirstOfferArrived -> ActiveSearchStatus.FirstOfferArrived(
+                                requestId = domainStatus.requestId,
+                                remainingTimeSeconds = domainStatus.remainingTimeSeconds,
+                                minPrice = domainStatus.minPrice,
+                                foundCount = domainStatus.foundCount,
+                                totalCount = domainStatus.totalCount
+                            )
+                            is ActiveRequestStatus.MultipleOffersArrived -> ActiveSearchStatus.MultipleOffersArrived(
+                                requestId = domainStatus.requestId,
+                                remainingTimeSeconds = domainStatus.remainingTimeSeconds,
+                                minPrice = domainStatus.minPrice,
+                                totalOffers = domainStatus.totalOffers,
+                                foundCount = domainStatus.foundCount,
+                                totalCount = domainStatus.totalCount
+                            )
+                        }
+                    }
+                    s.copy(activeSearchStatuses = uiStatuses)
+                }
+            }
+        }
+    }
+
     fun onIntent(intent: HomeUIIntent) {
         when (intent) {
             HomeUIIntent.OnSearchFieldClick -> {
@@ -134,14 +170,20 @@ class HomeViewModel @Inject constructor(
                 sendEffect(HomeUIEffect.NavigateToCategory(intent.categoryId, categoryName))
             }
 
-            HomeUIIntent.OnStartSearchSimulation -> startSearchSimulation()
-            HomeUIIntent.OnCancelSearchSimulation -> cancelSearchSimulation()
-            HomeUIIntent.OnViewOffersClick -> {
-                cancelSearchSimulation()
-                sendEffect(HomeUIEffect.NavigateToOffers)
+            HomeUIIntent.OnStartSearchSimulation -> { /* Deprecated */ }
+            is HomeUIIntent.OnCancelSearchSimulation -> {
+                viewModelScope.launch {
+                    removeActiveRequestUseCase(intent.requestId)
+                }
+            }
+            is HomeUIIntent.OnViewOffersClick -> {
+                sendEffect(HomeUIEffect.NavigateToOffers(intent.requestId))
             }
 
-            HomeUIIntent.OnSearchWiderRangeClick -> startSearchSimulation()
+            HomeUIIntent.OnSearchWiderRangeClick -> { /* Refresh/Widen Search */ }
+            is HomeUIIntent.OnAddressResolved -> {
+                _state.update { it.copy(deliveryAddress = intent.address) }
+            }
             HomeUIIntent.RefreshData -> {
                 fetchCategories()
                 observeProfileData()
@@ -149,125 +191,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun startSearchSimulation() {
-        searchSimulationJob?.cancel()
-        searchSimulationJob = viewModelScope.launch {
-            var elapsed = 0
-            _state.update {
-                it.copy(
-                    activeSearchStatus = ActiveSearchStatus.Searching(
-                        stage = HomeConstants.SEARCH_STAGE_ONE,
-                        elapsedTime = elapsed
-                    )
-                )
-            }
-            repeat(3) {
-                delay(1000)
-                elapsed++
-                _state.update {
-                    it.copy(
-                        activeSearchStatus = ActiveSearchStatus.Searching(
-                            stage = HomeConstants.SEARCH_STAGE_ONE,
-                            elapsedTime = elapsed
-                        )
-                    )
-                }
-            }
-
-            _state.update {
-                it.copy(
-                    activeSearchStatus = ActiveSearchStatus.Searching(
-                        stage = HomeConstants.SEARCH_STAGE_TWO,
-                        elapsedTime = elapsed
-                    )
-                )
-            }
-            repeat(5) {
-                delay(1000)
-                elapsed++
-                _state.update {
-                    it.copy(
-                        activeSearchStatus = ActiveSearchStatus.Searching(
-                            stage = HomeConstants.SEARCH_STAGE_TWO,
-                            elapsedTime = elapsed
-                        )
-                    )
-                }
-            }
-
-            _state.update {
-                it.copy(
-                    activeSearchStatus = ActiveSearchStatus.Searching(
-                        stage = HomeConstants.SEARCH_STAGE_THREE,
-                        elapsedTime = elapsed
-                    )
-                )
-            }
-            repeat(6) {
-                delay(1000)
-                elapsed++
-                _state.update {
-                    it.copy(
-                        activeSearchStatus = ActiveSearchStatus.Searching(
-                            stage = HomeConstants.SEARCH_STAGE_THREE,
-                            elapsedTime = elapsed
-                        )
-                    )
-                }
-            }
-
-            _state.update {
-                it.copy(
-                    activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(
-                        elapsedTime = elapsed,
-                        minPrice = 48
-                    )
-                )
-            }
-            repeat(3) {
-                delay(1000)
-                elapsed++
-                _state.update {
-                    it.copy(
-                        activeSearchStatus = ActiveSearchStatus.FirstOfferArrived(
-                            elapsedTime = elapsed,
-                            minPrice = 48
-                        )
-                    )
-                }
-            }
-
-            _state.update {
-                it.copy(
-                    activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(
-                        elapsedTime = elapsed,
-                        minPrice = 36,
-                        totalOffers = 3
-                    )
-                )
-            }
-            repeat(3) {
-                delay(1000)
-                elapsed++
-                _state.update {
-                    it.copy(
-                        activeSearchStatus = ActiveSearchStatus.MultipleOffersArrived(
-                            elapsedTime = elapsed,
-                            minPrice = 36,
-                            totalOffers = 3
-                        )
-                    )
-                }
-            }
-
-            _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.SearchEndedNoOffers) }
-        }
-    }
-
-    private fun cancelSearchSimulation() {
-        searchSimulationJob?.cancel()
-        _state.update { it.copy(activeSearchStatus = ActiveSearchStatus.Idle) }
-    }
 
     private fun sendEffect(effect: HomeUIEffect) {
         viewModelScope.launch {

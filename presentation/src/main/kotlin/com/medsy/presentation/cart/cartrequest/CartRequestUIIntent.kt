@@ -1,7 +1,7 @@
 package com.medsy.presentation.cart.cartrequest
 
 import com.medsy.domain.cart.model.DeliveryMethod
-import com.medsy.domain.cart.model.PaymentMethod
+import com.medsy.domain.cart.model.PaymentOption
 
 sealed interface CartRequestUIIntent {
     data class DeliveryMethodSelected(
@@ -21,7 +21,7 @@ sealed interface CartRequestUIIntent {
     ) : CartRequestUIIntent
 
     data class PaymentOptionSelected(
-        val paymentMethod: PaymentMethod,
+        val paymentOption: PaymentOption,
     ) : CartRequestUIIntent
 
     data object RetryCart : CartRequestUIIntent

@@ -160,10 +160,19 @@ fun SearchScreen(
         ) {
             when {
                 state.isLoading -> {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    com.medsy.designsystem.components.MedsyShimmer(modifier = Modifier.fillMaxSize()) {
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            repeat(5) {
+                                com.medsy.designsystem.components.MedsyShimmerPlaceholder(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp)
+                                        .padding(vertical = 8.dp),
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+                                )
+                            }
+                        }
+                    }
                 }
 
                 state.errorMessage != null -> {

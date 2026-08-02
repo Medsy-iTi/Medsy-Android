@@ -3,8 +3,11 @@ package com.medsy.data.cart.repository
 import com.medsy.data.cart.local.CartDraftStorage
 import com.medsy.data.cart.mapper.toDomain
 import com.medsy.data.cart.mapper.toDto
+import com.medsy.data.cart.remote.CartItemInputDto
 import com.medsy.data.cart.remote.CartRemoteDataSource
+import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.data.common.media.PrescriptionImageStorage
+import com.medsy.data.prescription.remote.PrescriptionImageMimeType
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartDraft
 import com.medsy.domain.cart.model.CartItemInput
@@ -16,10 +19,10 @@ import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.map
 import com.medsy.domain.prescription.model.PrescriptionImage
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
     private val remoteDataSource: CartRemoteDataSource,
@@ -58,28 +61,27 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun submitProductsRequest(
         request: ProductsRequest,
-    ): EmptyMedsyResult<MedsyError> {
-        val prescription = request.prescription?.let { image ->
-            val file = imageStorage.getFile(image)
-            if (!file.isFile || !file.canRead()) {
-                return MedsyResult.Error(MedsyError.Local.MEDIA)
+    ): MedsyResult<Long, MedsyError.Remote> {
+        var multipartImage: MultipartBody.Part? = null
+        if (request.prescriptionImage != null) {
+            val file = imageStorage.getFile(request.prescriptionImage!!)
+            if (file.exists()) {
+                val mimeType = PrescriptionImageMimeType.fromExtension(file.extension).value
+                val requestFile = file.asRequestBody(mimeType.toMediaType())
+                multipartImage = MultipartBody.Part.createFormData("prescription", file.name, requestFile)
             }
-
-            val mediaType = when (file.extension.lowercase()) {
-                "png" -> "image/png"
-                else -> "image/jpeg"
-            }.toMediaType()
-            MultipartBody.Part.createFormData(
-                "prescription",
-                file.name,
-                file.asRequestBody(mediaType),
-            )
         }
-
-        return remoteDataSource.submitProductsRequest(
-            request = request.toDto(),
-            prescription = prescription,
+        
+        val requestDto = ProductsRequestDto(
+            items = request.items.map { CartItemInputDto(it.productId, it.quantity) },
+            notes = request.notes,
+            deliveryMethod = request.deliveryMethod.name,
+            deliveryAddress = request.deliveryAddress,
+            deliveryLatitude = request.deliveryLatitude,
+            deliveryLongitude = request.deliveryLongitude,
+            paymentMethod = request.paymentMethod.name
         )
+        return remoteDataSource.submitProductsRequest(requestDto, multipartImage)
     }
 
     override suspend fun updateNote(

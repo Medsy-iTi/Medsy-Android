@@ -8,4 +8,5 @@
     <string name="location_picker_maps_unavailable">Google Maps is unavailable on this device.</string>
     <string name="location_picker_selected_marker">Selected location</string>
     <string name="location_picker_back">Back</string>
+    <string name="designsystem_network_error">No internet connection. Please check your network and try again.</string>
 </resources>

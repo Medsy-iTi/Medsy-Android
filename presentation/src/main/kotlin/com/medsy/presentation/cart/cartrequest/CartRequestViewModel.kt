@@ -29,9 +29,9 @@ import javax.inject.Inject
 class CartRequestViewModel @Inject constructor(
     private val getCart: GetCartUseCase,
     private val observeCartDraft: ObserveCartDraftUseCase,
+    private val clearCartDraft: ClearCartDraftUseCase,
     private val getProfile: GetProfileUseCase,
     private val submitProductsRequest: SubmitProductsRequestUseCase,
-    private val clearCartDraft: ClearCartDraftUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CartRequestState())
     val state = _state
@@ -89,7 +89,7 @@ class CartRequestViewModel @Inject constructor(
             }
 
             is CartRequestUIIntent.PaymentOptionSelected -> _state.update {
-                it.copy(paymentMethod = intent.paymentMethod)
+                it.copy(paymentOption = intent.paymentOption)
             }
 
             CartRequestUIIntent.RetryCart -> viewModelScope.launch { loadCart() }
@@ -213,12 +213,12 @@ class CartRequestViewModel @Inject constructor(
                         )
                     },
                     notes = currentState.draft.pharmacistNote,
-                    prescription = currentState.draft.prescriptionImage,
+                    prescriptionImage = currentState.draft.prescriptionImage,
                     deliveryMethod = currentState.deliveryMethod,
                     deliveryAddress = address,
                     deliveryLatitude = latitude,
                     deliveryLongitude = longitude,
-                    paymentMethod = currentState.paymentMethod,
+                    paymentMethod = currentState.paymentOption,
                 )
             ).onSuccess {
                 clearCartDraft()

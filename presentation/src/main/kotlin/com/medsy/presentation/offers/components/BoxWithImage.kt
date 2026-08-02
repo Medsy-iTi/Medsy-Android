@@ -30,6 +30,8 @@ fun BoxWithImage(imageUrl: String?) {
         AsyncImage(
             model = imageUrl,
             contentDescription = null,
+            placeholder = painterResource(R.drawable.person),
+            error = painterResource(R.drawable.person),
             modifier = Modifier
                 .size(48.dp)
                 .clip(RoundedCornerShape(8.dp))

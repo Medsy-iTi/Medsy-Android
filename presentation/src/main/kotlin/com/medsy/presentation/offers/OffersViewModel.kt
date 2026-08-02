@@ -2,12 +2,17 @@ package com.medsy.presentation.offers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.medsy.presentation.offers.model.OfferMedicine
-import com.medsy.presentation.offers.model.OfferType
-import com.medsy.presentation.offers.model.PharmacyOffer
+import com.medsy.domain.common.MedsyResult
+import com.medsy.presentation.common.util.toMessageRes
+import com.medsy.domain.offers.usecase.AcceptOfferUseCase
+import com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
+import com.medsy.domain.offers.usecase.GetRequestResultUseCase
+import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
+import com.medsy.presentation.offers.mapper.toPharmacyOffer
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +22,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OffersViewModel @Inject constructor() : ViewModel() {
+class OffersViewModel @Inject constructor(
+    private val getOffersForRequestUseCase: GetOffersForRequestUseCase,
+    private val getRequestResultUseCase: GetRequestResultUseCase,
+    private val acceptOfferUseCase: AcceptOfferUseCase,
+    private val removeActiveRequestUseCase: RemoveActiveRequestUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(OffersState())
     val state: StateFlow<OffersState> = _state.asStateFlow()
@@ -25,13 +35,10 @@ class OffersViewModel @Inject constructor() : ViewModel() {
     private val _effect = Channel<OffersUIEffect>()
     val effect = _effect.receiveAsFlow()
 
-    init {
-        loadMockOffers()
-    }
-
     fun onIntent(intent: OffersUIIntent) {
         when (intent) {
-            OffersUIIntent.RefreshOffers -> loadMockOffers()
+            is OffersUIIntent.LoadOffers -> loadOffers(intent.requestId)
+            is OffersUIIntent.LoadOfferDetails -> loadOffers(intent.requestId, intent.offerId)
             is OffersUIIntent.SelectOffer -> {
                 val selected = _state.value.availableOffers.find { it.id == intent.offerId }
                 _state.update { it.copy(selectedOffer = selected) }
@@ -40,98 +47,79 @@ class OffersViewModel @Inject constructor() : ViewModel() {
             OffersUIIntent.ChooseSelectedOffer -> {
                 sendEffect(OffersUIEffect.NavigateToOrderReview)
             }
-            OffersUIIntent.ConfirmOrder -> {
-                viewModelScope.launch {
-                    _state.update { it.copy(isConfirmingOrder = true) }
-                    delay(1500) // Simulate network call
-                    _state.update { 
-                        it.copy(
-                            isConfirmingOrder = false, 
-                            orderConfirmed = true,
-                            orderId = "#MS-250721-001"
-                        ) 
-                    }
-                    sendEffect(OffersUIEffect.NavigateToOrderConfirmation)
-                }
-            }
+            OffersUIIntent.ConfirmOrder -> confirmOrder()
             OffersUIIntent.TrackOrder -> sendEffect(OffersUIEffect.NavigateToTrackOrder)
             OffersUIIntent.BackToHome -> sendEffect(OffersUIEffect.NavigateToHome)
             OffersUIIntent.NavigateBack -> sendEffect(OffersUIEffect.NavigateBack)
         }
     }
 
-    private fun loadMockOffers() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            delay(1000)
-            
-            val mockMedicines = listOf(
-                OfferMedicine(
-                    id = "1",
-                    name = "بانادول اكسترا",
-                    packageInfo = "20 قرص",
-                    price = 24,
-                    isAvailable = true
-                ),
-                OfferMedicine(
-                    id = "2",
-                    name = "أموكسيسيلين 500 مجم",
-                    packageInfo = "16 كبسولة",
-                    price = 12,
-                    isAvailable = true
-                ),
-                OfferMedicine(
-                    id = "3",
-                    name = "بروفين 400 مجم",
-                    packageInfo = "10 أقراص",
-                    price = 8,
-                    isAvailable = true
-                ),
-                OfferMedicine(
-                    id = "4",
-                    name = "فيتامين سي 1000 مجم",
-                    packageInfo = "10 أقراص",
-                    price = 4,
-                    isAvailable = true
-                )
-            )
+    private fun confirmOrder() {
+        val selectedOffer = _state.value.selectedOffer ?: return
+        val requestId = _state.value.requestId ?: return
+        val selectedItemIds = selectedOffer.medicines.filter { it.isAvailable }.mapNotNull { it.id.toLongOrNull() }
 
-            val mockOffers = listOf(
-                PharmacyOffer(
-                    id = "1",
-                    pharmacyName = "النهضة",
-                    managerName = "محمد أحمد",
-                    price = 48,
-                    type = OfferType.FULL,
-                    medicines = mockMedicines,
-                    pharmacistComment = "مرحباً، جميع الأدوية متوفرة وجاهزة للتجهيز. يرجى الالتزام بالجرعات الموضحة. نتمنى لك الشفاء العاجل 💊"
-                ),
-                PharmacyOffer(
-                    id = "2",
-                    pharmacyName = "الشفاء",
-                    managerName = "علي حسن",
-                    price = 36,
-                    type = OfferType.PARTIAL,
-                    medicines = mockMedicines.mapIndexed { index, med -> 
-                        med.copy(isAvailable = index != 3) // Make the last one unavailable
+        viewModelScope.launch {
+            _state.update { it.copy(isConfirmingOrder = true) }
+            val result = acceptOfferUseCase(requestId, selectedItemIds)
+            when (result) {
+                is MedsyResult.Success -> {
+                    removeActiveRequestUseCase(requestId)
+                    val firstOrder = result.data.orders.firstOrNull()
+                    val orderIdStr = "#MS-${selectedOffer.id}"
+                    val pharmacyName = firstOrder?.pharmacyName ?: _state.value.selectedOffer?.pharmacyName.orEmpty()
+                    _state.update {
+                        it.copy(
+                            isConfirmingOrder = false,
+                            orderConfirmed = true,
+                            orderId = orderIdStr
+                        )
                     }
-                ),
-                PharmacyOffer(
-                    id = "3",
-                    pharmacyName = "من صيدليتين",
-                    managerName = "متعدد",
-                    price = 46,
-                    type = OfferType.COMBINED,
-                    medicines = mockMedicines
-                )
-            )
-            
-            _state.update { 
-                it.copy(
-                    isLoading = false,
-                    availableOffers = mockOffers,
-                    selectedOffer = it.selectedOffer ?: mockOffers.first()
-                ) 
+                    sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
+                        orderIdStr,
+                        pharmacyName
+                    ))
+                }
+                is MedsyResult.Error -> {
+                    _state.update { it.copy(isConfirmingOrder = false) }
+                    sendEffect(OffersUIEffect.ShowError(result.error.toMessageRes()))
+                }
+            }
+        }
+    }
+
+    private fun loadOffers(requestId: Long, offerIdToSelect: String? = null) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, requestId = requestId) }
+
+            val (requestResultResult, offersResult) = coroutineScope {
+                val requestResultDeferred = async { getRequestResultUseCase(requestId) }
+                val offersDeferred = async { getOffersForRequestUseCase(requestId) }
+                Pair(requestResultDeferred.await(), offersDeferred.await())
+            }
+
+            if (requestResultResult is MedsyResult.Success && offersResult is MedsyResult.Success) {
+                val resultItemMap = requestResultResult.data.items.associateBy { it.requestItemId }
+
+                val pharmacyOffers = offersResult.data.content.map { offer ->
+                    offer.toPharmacyOffer(resultItemMap)
+                }
+
+                _state.update {
+                    val selected = if (offerIdToSelect != null) {
+                        pharmacyOffers.find { offer -> offer.id == offerIdToSelect }
+                    } else {
+                        it.selectedOffer ?: pharmacyOffers.firstOrNull()
+                    }
+                    it.copy(
+                        isLoading = false,
+                        availableOffers = pharmacyOffers,
+                        selectedOffer = selected,
+                        requestId = requestId
+                    )
+                }
+            } else {
+                _state.update { it.copy(isLoading = false) }
             }
         }
     }
