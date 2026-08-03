@@ -1,8 +1,8 @@
 package com.medsy.data.remote.mapper
 
 import com.medsy.data.remote.dtos.categories.CategoryDto
-import com.medsy.domain.categories.model.Category
 import com.medsy.designsystem.R
+import com.medsy.domain.categories.model.Category
 
 fun CategoryDto.toDomain(): Category {
     return Category(
@@ -14,30 +14,30 @@ fun CategoryDto.toDomain(): Category {
 
 private fun getCategoryImageRes(id: Int): Int? {
     return when (id) {
-        1 -> R.drawable.ic_cat_mental_health // AI Generated 3D
-        2 -> R.drawable.ic_cat_pain_relief // AI Generated 3D
-        3 -> R.drawable.ic_cat_cold_cough // AI Generated 3D
-        4 -> R.drawable.ic_cat_brain_nerves // AI Generated 3D
-        5 -> R.drawable.ic_cat_skin_care // AI Generated 3D
-        6 -> R.drawable.ic_cat_heart_blood_pressure // AI Generated 3D
-        7 -> R.drawable.ic_cat_antivirals // AI Generated 3D
-        8 -> R.drawable.ic_cat_cancer_immunity // AI Generated 3D
-        9 -> R.drawable.ic_cat_allergy // AI Generated 3D
-        10 -> R.drawable.ic_cat_stomach_digestion // AI Generated 3D
-        11 -> R.drawable.ic_cat_antiparasitics // AI Generated 3D
-        12 -> R.drawable.ic_cat_vitamins_supplements // AI Generated 3D
-        13 -> R.drawable.ic_cat_antibiotics // AI Generated 3D
-        14 -> R.drawable.ic_cat_diabetes // AI Generated 3D
-        15 -> R.drawable.ic_cat_urinary_kidney // AI Generated 3D
-        16 -> R.drawable.ic_cat_womens_health // AI Generated 3D
-        17 -> R.drawable.ic_cat_mens_health // AI Generated 3D
-        18 -> R.drawable.ic_cat_gout // AI Generated 3D
-        19 -> R.drawable.ic_cat_cholesterol // AI Generated 3D
-        20 -> null // LIVER & GALLBLADDER (Pending)
-        21 -> null // ANTIFUNGALS (Pending)
-        22 -> null // ASTHMA & BREATHING (Pending)
-        23 -> null // HEMORRHOIDS & VEINS (Pending)
-        24 -> null // EYE CARE (Pending)
+        1 -> R.drawable.ic_cat_mental_health
+        2 -> R.drawable.ic_cat_pain_relief
+        3 -> R.drawable.ic_cat_cold_cough
+        4 -> R.drawable.ic_cat_brain_nerves
+        5 -> R.drawable.ic_cat_skin_care
+        6 -> R.drawable.ic_cat_heart_blood_pressure
+        7 -> R.drawable.ic_cat_antivirals
+        8 -> R.drawable.ic_cat_cancer_immunity
+        9 -> R.drawable.ic_cat_allergy
+        10 -> R.drawable.ic_cat_stomach_digestion
+        11 -> R.drawable.ic_cat_antiparasitics
+        12 -> R.drawable.ic_cat_vitamins_supplements
+        13 -> R.drawable.ic_cat_antibiotics
+        14 -> R.drawable.ic_cat_diabetes
+        15 -> R.drawable.ic_cat_urinary_kidney
+        16 -> R.drawable.ic_cat_womens_health
+        17 -> R.drawable.ic_cat_mens_health
+        18 -> R.drawable.ic_cat_gout
+        19 -> R.drawable.ic_cat_cholesterol
+        20 -> R.drawable.ic_cat_liver_gallbladder
+        21 -> R.drawable.ic_cat_antifungals
+        22 -> R.drawable.ic_cat_asthma_breathing
+        23 -> R.drawable.ic_cat_hemorrhoids_veins
+        24 -> R.drawable.ic_cat_eye_care
         else -> null
     }
 }
