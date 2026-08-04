@@ -6,7 +6,7 @@ data class SearchProduct(
     val arabicName: String,
     val scientificName: String,
     val price: Double,
-    val imageUrl: String,
+    val imageUrl: String?,
     val categoryId: Int,
     val categoryName: String,
     val company: String,

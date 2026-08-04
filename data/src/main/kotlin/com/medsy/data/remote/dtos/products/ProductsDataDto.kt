@@ -1,5 +1,6 @@
 package com.medsy.data.remote.dtos.products
 
+import com.medsy.data.search.dto.ProductDto
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
