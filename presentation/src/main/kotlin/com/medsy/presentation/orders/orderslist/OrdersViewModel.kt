@@ -93,7 +93,7 @@ class OrdersViewModel @Inject constructor(
         fetchPage(currentState.currentPage + 1)
     }
 
-    private fun fetchPage(page: Int, sort: List<String>? = listOf("id,desc")) {
+    private fun fetchPage(page: Int, sort: List<String>? = null) {
         viewModelScope.launch {
             val result = getOrdersUseCase(
                 page = page,
