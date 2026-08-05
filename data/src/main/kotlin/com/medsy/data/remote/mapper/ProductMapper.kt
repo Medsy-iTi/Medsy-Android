@@ -1,6 +1,6 @@
 package com.medsy.data.remote.mapper
 
-import com.medsy.data.remote.dtos.products.ProductDto
+import com.medsy.data.search.dto.ProductDto
 import com.medsy.domain.products.model.Product
 
 fun ProductDto.toDomain(): Product {

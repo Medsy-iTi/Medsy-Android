@@ -10,7 +10,7 @@ data class ProductDto(
     @Json(name = "arabicName") val arabicName: String?,
     @Json(name = "scientificName") val scientificName: String,
     @Json(name = "price") val price: Double,
-    @Json(name = "imageUrl") val imageUrl: String,
+    @Json(name = "imageUrl") val imageUrl: String?,
     @Json(name = "categoryId") val categoryId: Int,
     @Json(name = "consumerCategory") val categoryName: String,
     @Json(name = "company") val company: String,
