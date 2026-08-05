@@ -1,8 +1,6 @@
 package com.medsy.data.remote.api
 
 
-import com.medsy.data.aichat.remote.CatalogAnswerDto
-import com.medsy.data.aichat.remote.CatalogQuestionRequestDto
 import com.medsy.data.cart.remote.AddCartItemRequestDto
 import com.medsy.data.cart.remote.BulkCartItemsRequestDto
 import com.medsy.data.cart.remote.CartDto
@@ -24,14 +22,11 @@ import com.medsy.data.remote.dtos.categories.CategoriesDataDto
 import com.medsy.data.remote.dtos.products.ProductsDataDto
 import com.medsy.data.remote.network.ApiResponse
 import com.medsy.data.search.dto.ProductsPageDto
-import com.medsy.domain.cart.model.ProductsRequest
-
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
@@ -43,10 +38,6 @@ import retrofit2.http.Query
 
 
 interface ApiService {
-    @POST("api/v1/ai/catalog/ask")
-    suspend fun askCatalog(
-        @Body request: CatalogQuestionRequestDto,
-    ): Response<ApiResponse<CatalogAnswerDto>>
 
     @GET("api/v1/pharmacies/{id}")
     suspend fun getPharmacyById(
@@ -140,7 +131,7 @@ interface ApiService {
         @Query("size") size: Int,
         @Query("sort") sort: List<String>?,
     ): Response<ApiResponse<ProductsPageDto>>
-    
+
     @GET("api/v1/products/{id}")
     suspend fun getProductById(
         @Path("id") id: Int,
