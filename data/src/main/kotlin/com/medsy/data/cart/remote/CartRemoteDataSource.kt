@@ -1,18 +1,19 @@
 package com.medsy.data.cart.remote
 
+import com.medsy.data.aichat.remote.AiService
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.network.safeApiCall
 import com.medsy.data.remote.network.safeEmptyRestCall
-import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.common.EmptyMedsyResult
-import okhttp3.MultipartBody
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.map
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class CartRemoteDataSource @Inject constructor(
     private val apiService: ApiService,
+    private val aiService: AiService,
 ) {
     suspend fun getCart(): MedsyResult<CartDto, MedsyError.Remote> =
         safeApiCall(apiService::getCart)
@@ -58,6 +59,9 @@ class CartRemoteDataSource @Inject constructor(
 
     suspend fun clearCart(): EmptyMedsyResult<MedsyError.Remote> =
         safeEmptyRestCall(apiService::clearCart)
+
+    suspend fun getCartInteractions(): MedsyResult<CartInteractionsDto, MedsyError.Remote> =
+        safeApiCall(aiService::getCartInteractions)
 
     suspend fun submitProductsRequest(
         request: ProductsRequestDto,

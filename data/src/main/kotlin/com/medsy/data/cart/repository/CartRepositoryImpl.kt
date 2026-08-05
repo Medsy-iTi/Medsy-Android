@@ -11,6 +11,7 @@ import com.medsy.data.prescription.remote.PrescriptionImageMimeType
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartDraft
 import com.medsy.domain.cart.model.CartItemInput
+import com.medsy.domain.cart.model.InteractionWarning
 import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.cart.repository.CartRepository
 import com.medsy.domain.common.EmptyMedsyResult
@@ -58,6 +59,9 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun clearCart(): EmptyMedsyResult<MedsyError.Remote> =
         remoteDataSource.clearCart()
+
+    override suspend fun getCartInteractions(): MedsyResult<List<InteractionWarning>, MedsyError.Remote> =
+        remoteDataSource.getCartInteractions().map { it.toDomain() }
 
     override suspend fun submitProductsRequest(
         request: ProductsRequest,
