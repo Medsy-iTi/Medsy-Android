@@ -41,6 +41,7 @@ import com.medsy.presentation.splash.SplashRoot
 
 @Composable
 fun RootNavDisplay() {
+
     val context = LocalContext.current
     val rootBackStack = rememberNavBackStack(Route.Splash)
     var requestedNestedDestination by remember { mutableStateOf<Route?>(null) }
@@ -177,20 +178,40 @@ fun RootNavDisplay() {
                             Route.Prescription(attachmentOnly, isMedicineSearch)
                         )
                     },
+                    openAiChat = {
+                        rootBackStack.navigateSingleTop(Route.AiChat())
+                    },
                     openCartRequest = {
                         rootBackStack.navigateSingleTop(Route.CartRequest)
                     },
                     requestedDestination = requestedNestedDestination,
                     onRequestedDestinationHandled = {
                         requestedNestedDestination = null
-                    },
+                    }
                 )
-
             }
-
-            entry<Route.AiChat> {
+            entry<Route.AiChat> { route ->
                 AiChatRoot(
-                    onNext = { rootBackStack.removeLastOrNull() }
+                    initialPrompt = route.initialPrompt,
+                    onNavigateBack = { rootBackStack.removeLastOrNull() },
+                    onOpenProduct = { productId ->
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = productId.toString())
+                        )
+                    },
+                    onOpenCategory = { categoryId, categoryName ->
+                        rootBackStack.navigateSingleTop(
+                            Route.Products(categoryId, categoryName)
+                        )
+                    },
+                    onOpenCartTab = {
+                        requestedNestedDestination = Route.NestedNav.Cart
+                        rootBackStack.popIfCurrentIs<Route.AiChat>()
+                    },
+                    onOpenCartRequest = {
+                        rootBackStack.navigateSingleTop(Route.CartRequest)
+                    },
+                    onDial = context::openDialer,
                 )
             }
             entry<Route.OrderDetails> { route ->
@@ -215,7 +236,8 @@ fun RootNavDisplay() {
                     productId = route.id,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToPharmacistChat = {
-                        rootBackStack.navigateSingleTop(Route.AiChat(/* required params here */))
+                        rootBackStack.removeLastOrNull()
+                        rootBackStack.navigateSingleTop(Route.AiChat())
                     },
                 )
             }
@@ -319,8 +341,8 @@ fun RootNavDisplay() {
                 AvailableOffersRoot(
                     requestId = args.requestId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToOfferDetails = { offerId -> 
-                        rootBackStack.navigateSingleTop(Route.OfferDetails(args.requestId, offerId)) 
+                    onNavigateToOfferDetails = { offerId ->
+                        rootBackStack.navigateSingleTop(Route.OfferDetails(args.requestId, offerId))
                     }
                 )
             }
@@ -330,7 +352,11 @@ fun RootNavDisplay() {
                     requestId = args.requestId,
                     offerId = args.offerId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToOrderReview = { reqId, offId -> rootBackStack.navigateSingleTop(Route.OrderReview(reqId, offId)) }
+                    onNavigateToOrderReview = { reqId, offId ->
+                        rootBackStack.navigateSingleTop(
+                            Route.OrderReview(reqId, offId)
+                        )
+                    }
                 )
             }
             entry<Route.OrderReview> {
@@ -340,7 +366,12 @@ fun RootNavDisplay() {
                     offerId = args.offerId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToOrderConfirmation = { orderId, pharmacyName ->
-                        rootBackStack.navigateSingleTop(Route.OrderConfirmation(orderId, pharmacyName)) 
+                        rootBackStack.navigateSingleTop(
+                            Route.OrderConfirmation(
+                                orderId,
+                                pharmacyName
+                            )
+                        )
                     }
                 )
             }

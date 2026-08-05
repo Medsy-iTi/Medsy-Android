@@ -1,6 +1,7 @@
 package com.medsy.data.di
 
 import com.medsy.data.BuildConfig
+import com.medsy.data.aichat.remote.AiService
 import com.medsy.data.prescription.remote.AiInterceptor
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.auth.AuthInterceptor
@@ -12,12 +13,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.Locale
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -93,4 +94,9 @@ object NetworkModule {
         return retrofit.create(AuthApi::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideAiService(retrofit: Retrofit): AiService {
+        return retrofit.create(AiService::class.java)
+    }
 }

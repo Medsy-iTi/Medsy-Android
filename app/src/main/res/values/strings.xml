@@ -2,6 +2,7 @@
     <string name="app_name">Medsy</string>
     <string name="home">Home</string>
     <string name="cart">Cart</string>
+    <string name="ai_chat">Medsy AI</string>
     <string name="orders">Orders</string>
     <string name="profile">Profile</string>
 </resources>

@@ -33,6 +33,7 @@ fun NestedNavDisplay(
     navigateBack: () -> Unit,
     openPersonalDetails: (startInEditMode: Boolean) -> Unit,
     openLogin: () -> Unit,
+    openAiChat: () -> Unit,
     openSearch: () -> Unit,
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
@@ -42,7 +43,7 @@ fun NestedNavDisplay(
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
     openOrderDetails: (String) -> Unit,
-    ) {
+) {
 
     val nestedBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -76,23 +77,33 @@ fun NestedNavDisplay(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             ) {
-                BottomBarDestination.entries.forEach { destination ->
+                BottomBarDestination.entries.forEachIndexed { index, destination ->
                     val isSelected = nestedBackStack.lastOrNull() == destination.route
-                    BottomNavigationButton(
-                        onClick = {
-                            nestedBackStack.apply {
-                                clear()
-                                if (destination.route != Route.NestedNav.Home) {
-                                    navigateSingleTop(Route.NestedNav.Home)
+
+                    if (index != 2) {
+                        BottomNavigationButton(
+                            onClick = {
+                                nestedBackStack.apply {
+                                    clear()
+                                    if (destination.route != Route.NestedNav.Home) {
+                                        navigateSingleTop(Route.NestedNav.Home)
+                                    }
+                                    navigateSingleTop(destination.route)
                                 }
-                                navigateSingleTop(destination.route)
-                            }
-                        },
-                        icon = if (isSelected) destination.selectedIcon else destination.icon,
-                        modifier = Modifier.weight(1f),
-                        selected = isSelected,
-                        label = destination.title
-                    )
+                            },
+                            icon = if (isSelected) destination.selectedIcon else destination.icon,
+                            modifier = Modifier.weight(1f),
+                            selected = isSelected,
+                            label = destination.title,
+                        )
+                    } else {
+                        AiChatNavigationButton(
+                            onClick = openAiChat,
+                            modifier = Modifier.weight(1f),
+                            selected = isSelected,
+                            label = destination.title,
+                        )
+                    }
                 }
             }
         }
@@ -143,7 +154,6 @@ fun NestedNavDisplay(
                         onOrderClick = openOrderDetails,
                     )
                 }
-
                 entry<Route.NestedNav.Profile> {
                     ProfileRoot(
                         onNavigateToPersonalDetails = openPersonalDetails,

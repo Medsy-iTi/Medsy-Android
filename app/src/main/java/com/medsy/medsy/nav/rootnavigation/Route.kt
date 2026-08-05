@@ -30,16 +30,13 @@ sealed interface Route : NavKey {
         @Serializable
         data object Cart : Route
 
-
         @Serializable
         data object Orders : Route
 
-
         @Serializable
         data object Profile : Route
-
-
     }
+
 
     @Serializable
     data class ProductDetails(val id: String) : Route

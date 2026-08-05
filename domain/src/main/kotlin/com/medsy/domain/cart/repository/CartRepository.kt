@@ -3,6 +3,7 @@ package com.medsy.domain.cart.repository
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartDraft
 import com.medsy.domain.cart.model.CartItemInput
+import com.medsy.domain.cart.model.InteractionWarning
 import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
@@ -28,6 +29,9 @@ interface CartRepository {
 
     suspend fun removeItem(cartItemId: Long): MedsyResult<Cart, MedsyError.Remote>
     suspend fun clearCart(): EmptyMedsyResult<MedsyError.Remote>
+
+    /** AI drug-interaction warnings for the current cart contents. */
+    suspend fun getCartInteractions(): MedsyResult<List<InteractionWarning>, MedsyError.Remote>
 
     suspend fun submitProductsRequest(
         request: ProductsRequest,

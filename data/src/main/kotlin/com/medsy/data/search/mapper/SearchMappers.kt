@@ -12,7 +12,7 @@ fun ProductDto.toDomain(): SearchProduct {
         arabicName = arabicName ?: "",
         scientificName = scientificName,
         price = price,
-        imageUrl = imageUrl,
+        imageUrl = imageUrl ?: "",
         categoryId = categoryId,
         categoryName = categoryName,
         company = company,

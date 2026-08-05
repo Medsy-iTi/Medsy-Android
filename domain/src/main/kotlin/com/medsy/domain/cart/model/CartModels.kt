@@ -56,3 +56,21 @@ sealed interface AddCartItemsOutcome {
         val addedItemsCount: Int,
     ) : AddCartItemsOutcome
 }
+
+data class InteractionWarning(
+    val severity: InteractionSeverity,
+    val title: String,
+    val advice: String,
+    val involvedProducts: List<InteractionProduct>,
+)
+
+enum class InteractionSeverity {
+    HIGH,
+    MODERATE,
+}
+
+data class InteractionProduct(
+    val productId: Long,
+    val productName: String,
+    val ingredient: String,
+)

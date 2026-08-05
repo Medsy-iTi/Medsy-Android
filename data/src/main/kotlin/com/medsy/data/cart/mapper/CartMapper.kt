@@ -1,8 +1,8 @@
 package com.medsy.data.cart.mapper
 
 import com.medsy.data.cart.remote.CartDto
-import com.medsy.data.cart.remote.CartItemInputDto
 import com.medsy.data.cart.remote.CartItemDto
+import com.medsy.data.cart.remote.CartItemInputDto
 import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartItem
@@ -38,8 +38,11 @@ fun ProductsRequest.toDto(): ProductsRequestDto = ProductsRequestDto(
 private fun CartItemDto.toDomain(): CartItem = CartItem(
     id = id,
     productId = productId,
-    productName = productName,
-    imageUrl = imageUrl,
+    productName = productName
+        ?: product?.name
+        ?: product?.productName
+            .orEmpty(),
+    imageUrl = imageUrl ?: product?.imageUrl.orEmpty(),
     unitPriceEgp = unitPrice,
     quantity = quantity,
     subtotalEgp = subtotal,

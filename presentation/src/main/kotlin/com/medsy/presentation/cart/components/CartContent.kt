@@ -71,6 +71,14 @@ internal fun CartContent(
                         onRemove = { onIntent(CartUIIntent.RemoveItemClicked(item.id)) },
                     )
                 }
+                if (state.interactionWarnings.isNotEmpty() || state.isCheckingInteractions) {
+                    item(key = "interaction_warnings") {
+                        CartInteractionsSection(
+                            warnings = state.interactionWarnings,
+                            isChecking = state.isCheckingInteractions,
+                        )
+                    }
+                }
                 item {
                     CartPrescriptionSection(
                         image = state.draft.prescriptionImage,
