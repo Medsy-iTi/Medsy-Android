@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AddAPhoto
+import androidx.compose.material.icons.outlined.AddShoppingCart
+import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.HealthAndSafety
-import androidx.compose.material.icons.outlined.LocalPharmacy
 import androidx.compose.material.icons.outlined.Medication
-import androidx.compose.material.icons.outlined.SyncAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -70,12 +72,14 @@ fun AiChatWelcome(
         item {
             QuickActionRow(
                 first = QuickAction(
-                    label = R.string.ai_chat_catalog_prompt_info,
-                    icon = Icons.Outlined.Medication,
+                    label = R.string.ai_chat_quick_symptom,
+                    question = R.string.ai_chat_quick_symptom_question,
+                    icon = Icons.Outlined.HealthAndSafety,
                 ),
                 second = QuickAction(
-                    label = R.string.ai_chat_catalog_prompt_paracetamol,
-                    icon = Icons.Outlined.HealthAndSafety,
+                    label = R.string.ai_chat_quick_add_cart,
+                    question = R.string.ai_chat_quick_add_cart_question,
+                    icon = Icons.Outlined.AddShoppingCart,
                 ),
                 onIntent = onIntent,
             )
@@ -83,12 +87,29 @@ fun AiChatWelcome(
         item {
             QuickActionRow(
                 first = QuickAction(
-                    label = R.string.ai_chat_catalog_prompt_cough,
-                    icon = Icons.Outlined.LocalPharmacy,
+                    label = R.string.ai_chat_quick_reminder,
+                    question = R.string.ai_chat_quick_reminder_question,
+                    icon = Icons.Outlined.Alarm,
                 ),
                 second = QuickAction(
-                    label = R.string.ai_chat_catalog_prompt_cheaper,
-                    icon = Icons.Outlined.SyncAlt,
+                    label = R.string.ai_chat_quick_categories,
+                    question = R.string.ai_chat_quick_categories_question,
+                    icon = Icons.Outlined.Category,
+                ),
+                onIntent = onIntent,
+            )
+        }
+        item {
+            QuickActionRow(
+                first = QuickAction(
+                    label = R.string.ai_chat_quick_usage,
+                    question = R.string.ai_chat_quick_usage_question,
+                    icon = Icons.Outlined.Medication,
+                ),
+                second = QuickAction(
+                    label = R.string.ai_chat_quick_photo,
+                    question = null,
+                    icon = Icons.Outlined.AddAPhoto,
                 ),
                 onIntent = onIntent,
             )
@@ -98,6 +119,8 @@ fun AiChatWelcome(
 
 private data class QuickAction(
     @StringRes val label: Int,
+    /** null = the chip performs an action (photo attach) instead of asking. */
+    @StringRes val question: Int?,
     val icon: ImageVector,
 )
 
@@ -122,10 +145,15 @@ private fun QuickActionCard(
     modifier: Modifier,
     onIntent: (AiChatUIIntent) -> Unit,
 ) {
-    val question = stringResource(action.label)
+    val label = stringResource(action.label)
+    val question = action.question?.let { stringResource(it) }
     Card(
         modifier = modifier.clickable {
-            onIntent(AiChatUIIntent.QuickActionClicked(question))
+            if (question != null) {
+                onIntent(AiChatUIIntent.QuickActionClicked(question))
+            } else {
+                onIntent(AiChatUIIntent.AttachClicked)
+            }
         },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
@@ -140,7 +168,7 @@ private fun QuickActionCard(
             )
             Spacer(Modifier.height(10.dp))
             Text(
-                text = question,
+                text = label,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.SemiBold,
                 minLines = 2,

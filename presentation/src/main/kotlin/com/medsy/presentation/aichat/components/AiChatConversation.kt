@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,12 +29,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.domain.aichat.model.AiChatContent
+import com.medsy.domain.aichat.model.AiChatIntent
 import com.medsy.domain.aichat.model.AiChatMessage
+import com.medsy.domain.aichat.model.AiChatMessageAction
 import com.medsy.presentation.R
 import com.medsy.presentation.aichat.AiChatState
 import com.medsy.presentation.aichat.AiChatUIIntent
@@ -49,8 +56,8 @@ fun AiChatConversation(
         state.errorMessageRes,
     ) {
         val hasFooter = state.isResponding || state.errorMessageRes != null
-        val lastIndex = state.messages.size + if (hasFooter) 1 else 0
-        if (lastIndex > 0) listState.animateScrollToItem(lastIndex)
+        val lastIndex = state.messages.size - 1 + if (hasFooter) 1 else 0
+        if (lastIndex >= 0) listState.animateScrollToItem(lastIndex)
     }
 
     LazyColumn(
@@ -59,45 +66,43 @@ fun AiChatConversation(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        item(key = "disclaimer") { AiChatDisclaimer() }
         items(state.messages, key = AiChatMessage::id) { message ->
             AiChatMessageItem(message = message, onIntent = onIntent)
         }
         if (state.isResponding) {
-            item(key = "typing") { TypingIndicator() }
+            item(key = "typing") { AiChatTypingIndicator() }
         }
         state.errorMessageRes?.let { messageRes ->
-            item(key = "catalog_error") {
-                CatalogRetryCard(messageRes = messageRes, onIntent = onIntent)
+            item(key = "send_error") {
+                SendRetryCard(messageRes = messageRes, onIntent = onIntent)
             }
         }
     }
 }
 
 @Composable
-private fun AiChatMessageItem(
+private fun LazyItemScope.AiChatMessageItem(
     message: AiChatMessage,
     onIntent: (AiChatUIIntent) -> Unit,
 ) {
+    val itemModifier = Modifier.animateItem()
     when (val content = message.content) {
-        is AiChatContent.UserText -> UserBubble(content.value)
-        is AiChatContent.AssistantResponse -> AssistantResponse(
-            response = content,
+        is AiChatContent.UserText -> UserBubble(content, itemModifier)
+        is AiChatContent.AssistantMessage -> AssistantMessageItem(
+            content = content,
             onIntent = onIntent,
+            modifier = itemModifier,
         )
     }
 }
 
 @Composable
-private fun UserBubble(text: String) {
+private fun UserBubble(content: AiChatContent.UserText, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.End,
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onPrimary,
+        Column(
             modifier = Modifier
                 .fillMaxWidth(0.82f)
                 .background(
@@ -105,48 +110,95 @@ private fun UserBubble(text: String) {
                     RoundedCornerShape(18.dp, 18.dp, 4.dp, 18.dp),
                 )
                 .padding(horizontal = 14.dp, vertical = 11.dp),
-        )
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            content.imageUri?.let { uri ->
+                AsyncImage(
+                    model = uri,
+                    contentDescription = stringResource(R.string.ai_chat_sent_photo_description),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                )
+            }
+            if (content.value.isNotBlank()) {
+                Text(
+                    text = content.value,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun AssistantResponse(
-    response: AiChatContent.AssistantResponse,
+private fun AssistantMessageItem(
+    content: AiChatContent.AssistantMessage,
     onIntent: (AiChatUIIntent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    val isReminder = content.intent in REMINDER_INTENTS
     Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(0.9f),
             verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Start
         ) {
             AiChatAvatar(size = 28.dp)
             Spacer(Modifier.width(8.dp))
-            Column(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                AssistantBubble(
-                    text = response.answer.takeIf(String::isNotBlank)
-                        ?: stringResource(R.string.ai_chat_catalog_empty_answer)
-                )
-                if (response.products.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.ai_chat_catalog_no_products),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                } else {
-                    Text(
-                        text = stringResource(R.string.ai_chat_catalog_products_title),
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
+            val answer = content.answer.takeIf(String::isNotBlank)
+                ?: stringResource(R.string.ai_chat_catalog_empty_answer)
+            if (isReminder) {
+                AiChatReminderCard(answer = answer)
+            } else {
+                AssistantBubble(text = answer)
             }
         }
-        response.products.forEach { product ->
+
+        when (content.intent) {
+            AiChatIntent.EMERGENCY -> if (content.emergencyNumbers.isNotEmpty()) {
+                AiChatEmergencyCard(
+                    numbers = content.emergencyNumbers,
+                    onCall = { onIntent(AiChatUIIntent.EmergencyCallClicked(it)) },
+                )
+            }
+
+            AiChatIntent.DOCTOR_SPECIALIZATION -> if (content.doctorSpecializations.isNotEmpty()) {
+                AiChatSpecializationCard(specializations = content.doctorSpecializations)
+            }
+
+            AiChatIntent.CATEGORY_BROWSE -> content.categories.forEach { category ->
+                AiChatCategoryCard(
+                    category = category,
+                    onClick = {
+                        onIntent(AiChatUIIntent.CategoryClicked(category.id, category.name))
+                    },
+                )
+            }
+
+            else -> Unit
+        }
+
+        when (val action = content.action) {
+            is AiChatMessageAction.AddedToCart -> AiChatCartSuccessCard(
+                action = action,
+                onViewCart = { onIntent(AiChatUIIntent.ViewCartClicked) },
+            )
+
+            AiChatMessageAction.CreateRequest -> AiChatConfirmRequestCard(
+                onConfirm = { onIntent(AiChatUIIntent.ConfirmRequestClicked) },
+            )
+
+            null -> Unit
+        }
+
+        content.products.forEach { product ->
             AiChatProductCard(
                 product = product,
                 onOpenProduct = {
@@ -157,14 +209,17 @@ private fun AssistantResponse(
                 },
             )
         }
+
+        content.disclaimer?.let { disclaimer ->
+            AiChatMessageDisclaimer(text = disclaimer)
+        }
     }
 }
 
 @Composable
 private fun AssistantBubble(text: String) {
-    Text(
+    ChatMarkdownText(
         text = text,
-        style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
             .background(
@@ -176,26 +231,7 @@ private fun AssistantBubble(text: String) {
 }
 
 @Composable
-private fun TypingIndicator() {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        AiChatAvatar(size = 28.dp)
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = stringResource(R.string.ai_chat_typing),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
-                .background(
-                    MaterialTheme.colorScheme.surfaceContainerLow,
-                    RoundedCornerShape(16.dp),
-                )
-                .padding(horizontal = 14.dp, vertical = 10.dp),
-        )
-    }
-}
-
-@Composable
-private fun CatalogRetryCard(
+private fun SendRetryCard(
     @StringRes messageRes: Int,
     onIntent: (AiChatUIIntent) -> Unit,
 ) {
@@ -219,7 +255,7 @@ private fun CatalogRetryCard(
                 color = MaterialTheme.extendedColors.onWarningContainer,
             )
             OutlinedButton(
-                onClick = { onIntent(AiChatUIIntent.RetryCatalogQuestion) },
+                onClick = { onIntent(AiChatUIIntent.RetrySend) },
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Icon(Icons.Outlined.Refresh, contentDescription = null)
@@ -229,3 +265,9 @@ private fun CatalogRetryCard(
         }
     }
 }
+
+private val REMINDER_INTENTS = setOf(
+    AiChatIntent.SET_REMINDER,
+    AiChatIntent.DELETE_REMINDER,
+    AiChatIntent.LIST_REMINDERS,
+)
