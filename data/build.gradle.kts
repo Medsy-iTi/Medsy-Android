@@ -62,6 +62,7 @@ dependencies {
 
     // OkHttp
     implementation(libs.okhttp)
+    implementation(libs.okhttp.sse)
     implementation(libs.logging.interceptor)
 
     // Security

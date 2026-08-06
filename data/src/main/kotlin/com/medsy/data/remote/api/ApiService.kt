@@ -8,7 +8,7 @@ import com.medsy.data.cart.remote.MedicineRequestDto
 import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.data.offers.remote.ConfirmRequestDto
 import com.medsy.data.offers.remote.ConfirmRequestResponseDto
-import com.medsy.data.offers.remote.OffersPageDto
+
 import com.medsy.data.orders.model.OrderDetailsDto
 import com.medsy.data.orders.model.OrderPageDataDto
 import com.medsy.data.pharmacyprofile.remote.PharmacyProfileDto
@@ -138,13 +138,6 @@ interface ApiService {
         @Query("lang") lang: String = "en",
     ): Response<ApiResponse<ProductDetailsDto>>
 
-    // Offers endpoints (feature/offer_logic_home)
-    @GET("api/v1/offers/requests/{requestId}")
-    suspend fun getOffersForRequest(
-        @Path("requestId") requestId: Long,
-        @Query("page") page: Int = 0,
-        @Query("size") size: Int = 20,
-    ): Response<ApiResponse<OffersPageDto>>
 
     @POST("api/v1/requests/{requestId}/confirm")
     suspend fun confirmRequest(
