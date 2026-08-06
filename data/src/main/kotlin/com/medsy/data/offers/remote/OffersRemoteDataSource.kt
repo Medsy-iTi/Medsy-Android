@@ -7,24 +7,72 @@ import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import javax.inject.Inject
 
+import com.medsy.data.BuildConfig
+import com.squareup.moshi.Moshi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.sse.EventSource
+import okhttp3.sse.EventSourceListener
+import okhttp3.sse.EventSources
+
 class OffersRemoteDataSource @Inject constructor(
     private val apiService: ApiService,
+    private val okHttpClient: OkHttpClient,
+    private val moshi: Moshi
 ) {
-    suspend fun getOffersForRequest(
-        requestId: Long,
-        page: Int = 0,
-        size: Int = 20,
-    ): MedsyResult<OffersPageDto, MedsyError.Remote> =
-        safeApiCall {
-            apiService.getOffersForRequest(requestId, page, size)
-        }
 
-    suspend fun acceptOffer(requestId: Long, selectedRequestItemIds: List<Long>): MedsyResult<ConfirmRequestResponseDto, MedsyError.Remote> {
+    suspend fun acceptOffer(requestId: Long, selectedItems: List<SelectedRequestItemDto>): MedsyResult<ConfirmRequestResponseDto, MedsyError.Remote> {
         return safeApiCall {
-            apiService.confirmRequest(requestId, ConfirmRequestDto(selectedRequestItemIds))
+            apiService.confirmRequest(requestId, ConfirmRequestDto(selectedItems))
         }
     }
 
     suspend fun getRequestResult(requestId: Long): MedsyResult<RequestResultDto, MedsyError.Remote> =
         safeApiCall { apiService.getRequestResult(requestId) }
+
+    fun streamRequestResult(requestId: Long): Flow<RequestResultDto> = callbackFlow {
+        val request = Request.Builder()
+            .url("${BuildConfig.BASE_URL}api/v1/requests/$requestId/stream")
+            .header("Accept", "text/event-stream")
+            .build()
+            
+        val factory = EventSources.createFactory(okHttpClient)
+        val adapter = moshi.adapter(RequestResultDto::class.java)
+
+        val listener = object : EventSourceListener() {
+            override fun onEvent(
+                eventSource: EventSource,
+                id: String?,
+                type: String?,
+                data: String
+            ) {
+                try {
+                    // Standard events like "snapshot" and "request-item-updated" carry RequestResultDto payload
+                    val resultDto = adapter.fromJson(data)
+                    if (resultDto != null) {
+                        trySend(resultDto)
+                    }
+                } catch (e: Exception) {
+                    // Ignore parsing errors for non-data events or malformed JSON
+                }
+            }
+
+            override fun onClosed(eventSource: EventSource) {
+                close()
+            }
+
+            override fun onFailure(eventSource: EventSource, t: Throwable?, response: okhttp3.Response?) {
+                close(t)
+            }
+        }
+
+        val eventSource = factory.newEventSource(request, listener)
+        
+        awaitClose {
+            eventSource.cancel()
+        }
+    }
 }
