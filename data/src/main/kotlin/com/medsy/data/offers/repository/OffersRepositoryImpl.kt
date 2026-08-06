@@ -7,7 +7,6 @@ import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.map
 import com.medsy.domain.common.asEmptyDataResult
-import com.medsy.domain.offers.model.OffersPage
 import com.medsy.domain.offers.model.RequestResult
 import com.medsy.domain.offers.repository.OffersRepository
 import kotlinx.coroutines.flow.map

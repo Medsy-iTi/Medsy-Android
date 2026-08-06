@@ -21,10 +21,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import com.medsy.domain.offers.model.SelectedRequestItem
+import com.medsy.domain.offers.usecase.StreamRequestResultUseCase
+import kotlinx.coroutines.flow.catch
+
 @HiltViewModel
 class OffersViewModel @Inject constructor(
-    private val getOffersForRequestUseCase: GetOffersForRequestUseCase,
-    private val getRequestResultUseCase: GetRequestResultUseCase,
+    private val streamRequestResultUseCase: StreamRequestResultUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
     private val removeActiveRequestUseCase: RemoveActiveRequestUseCase
 ) : ViewModel() {
@@ -38,13 +41,16 @@ class OffersViewModel @Inject constructor(
     fun onIntent(intent: OffersUIIntent) {
         when (intent) {
             is OffersUIIntent.LoadOffers -> loadOffers(intent.requestId)
-            is OffersUIIntent.LoadOfferDetails -> loadOffers(intent.requestId, intent.offerId)
-            is OffersUIIntent.SelectOffer -> {
-                val selected = _state.value.availableOffers.find { it.id == intent.offerId }
-                _state.update { it.copy(selectedOffer = selected) }
-                sendEffect(OffersUIEffect.NavigateToOfferDetails)
+            is OffersUIIntent.ToggleItemSelection -> {
+                val currentSet = _state.value.selectedItemIds
+                val newSet = if (currentSet.contains(intent.requestItemId)) {
+                    currentSet - intent.requestItemId
+                } else {
+                    currentSet + intent.requestItemId
+                }
+                _state.update { it.copy(selectedItemIds = newSet) }
             }
-            OffersUIIntent.ChooseSelectedOffer -> {
+            OffersUIIntent.ProceedToReview -> {
                 sendEffect(OffersUIEffect.NavigateToOrderReview)
             }
             OffersUIIntent.ConfirmOrder -> confirmOrder()
@@ -55,24 +61,31 @@ class OffersViewModel @Inject constructor(
     }
 
     private fun confirmOrder() {
-        val selectedOffer = _state.value.selectedOffer ?: return
+        val requestResult = _state.value.requestResult ?: return
         val requestId = _state.value.requestId ?: return
-        val selectedItemIds = selectedOffer.medicines.filter { it.isAvailable }.mapNotNull { it.id.toLongOrNull() }
+        val selectedItemIds = _state.value.selectedItemIds
+
+        if (selectedItemIds.isEmpty()) return
+
+        val selectedItems = requestResult.items
+            .filter { selectedItemIds.contains(it.requestItemId) }
+            .map { SelectedRequestItem(it.requestItemId, it.productId) }
 
         viewModelScope.launch {
             _state.update { it.copy(isConfirmingOrder = true) }
-            val result = acceptOfferUseCase(requestId, selectedItemIds)
+            val result = acceptOfferUseCase(requestId, selectedItems)
             when (result) {
                 is MedsyResult.Success -> {
                     removeActiveRequestUseCase(requestId)
                     val firstOrder = result.data.orders.firstOrNull()
-                    val orderIdStr = "#MS-${selectedOffer.id}"
-                    val pharmacyName = firstOrder?.pharmacyName ?: _state.value.selectedOffer?.pharmacyName.orEmpty()
+                    val orderIdStr = "#MS-${firstOrder?.orderId ?: requestId}"
+                    val pharmacyName = firstOrder?.pharmacyName.orEmpty()
                     _state.update {
                         it.copy(
                             isConfirmingOrder = false,
                             orderConfirmed = true,
-                            orderId = orderIdStr
+                            orderId = orderIdStr,
+                            pharmacyName = pharmacyName
                         )
                     }
                     sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
@@ -88,39 +101,31 @@ class OffersViewModel @Inject constructor(
         }
     }
 
-    private fun loadOffers(requestId: Long, offerIdToSelect: String? = null) {
+    private fun loadOffers(requestId: Long) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, requestId = requestId) }
-
-            val (requestResultResult, offersResult) = coroutineScope {
-                val requestResultDeferred = async { getRequestResultUseCase(requestId) }
-                val offersDeferred = async { getOffersForRequestUseCase(requestId) }
-                Pair(requestResultDeferred.await(), offersDeferred.await())
-            }
-
-            if (requestResultResult is MedsyResult.Success && offersResult is MedsyResult.Success) {
-                val resultItemMap = requestResultResult.data.items.associateBy { it.requestItemId }
-
-                val pharmacyOffers = offersResult.data.content.map { offer ->
-                    offer.toPharmacyOffer(resultItemMap)
+            
+            streamRequestResultUseCase(requestId)
+                .catch { e ->
+                    // Handle error if needed, but error handling is usually via generic interceptor or UI effect
+                    _state.update { it.copy(isLoading = false) }
                 }
-
-                _state.update {
-                    val selected = if (offerIdToSelect != null) {
-                        pharmacyOffers.find { offer -> offer.id == offerIdToSelect }
-                    } else {
-                        it.selectedOffer ?: pharmacyOffers.firstOrNull()
+                .collect { result ->
+                    val allAvailableIds = result.items.filter { it.isAvailable }.map { it.requestItemId }.toSet()
+                    
+                    _state.update {
+                        // By default, select all available items if not yet interacted
+                        val initialSelected = if (it.selectedItemIds.isEmpty() && it.requestResult == null) allAvailableIds else it.selectedItemIds
+                        // Retain selected items that are still available
+                        val validSelected = initialSelected.intersect(allAvailableIds)
+                        
+                        it.copy(
+                            isLoading = false,
+                            requestResult = result,
+                            selectedItemIds = validSelected
+                        )
                     }
-                    it.copy(
-                        isLoading = false,
-                        availableOffers = pharmacyOffers,
-                        selectedOffer = selected,
-                        requestId = requestId
-                    )
                 }
-            } else {
-                _state.update { it.copy(isLoading = false) }
-            }
         }
     }
 

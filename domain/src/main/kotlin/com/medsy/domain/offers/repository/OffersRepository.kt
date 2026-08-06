@@ -3,7 +3,6 @@ package com.medsy.domain.offers.repository
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
-import com.medsy.domain.offers.model.OffersPage
 import com.medsy.domain.offers.model.RequestResult
 import kotlinx.coroutines.flow.Flow
 
