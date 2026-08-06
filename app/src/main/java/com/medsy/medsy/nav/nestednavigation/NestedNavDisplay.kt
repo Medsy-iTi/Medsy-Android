@@ -1,5 +1,6 @@
 package com.medsy.medsy.nav.nestednavigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -17,7 +18,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
+import com.medsy.medsy.nav.rootnavigation.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.rootnavigation.Route
 import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
 import com.medsy.presentation.cart.CartRoot
@@ -121,11 +122,32 @@ fun NestedNavDisplay(
                 }
             },
             transitionSpec = {
-                fadeIn(
-                    tween(NAVIGATION_DURATION_MILLIS)
-                ) togetherWith fadeOut(
-                    tween(NAVIGATION_DURATION_MILLIS)
-                )
+                fadeIn(tween(NAVIGATION_DURATION_MILLIS)) togetherWith
+                        fadeOut(tween(NAVIGATION_DURATION_MILLIS))
+            },
+            popTransitionSpec = {
+                (slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(NAVIGATION_DURATION_MILLIS),
+                    initialOffset = { it / 3 },
+                ) + fadeIn(tween(NAVIGATION_DURATION_MILLIS))) togetherWith
+                        (slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(NAVIGATION_DURATION_MILLIS),
+                            targetOffset = { it / 3 },
+                        ) + fadeOut(tween(NAVIGATION_DURATION_MILLIS)))
+            },
+            predictivePopTransitionSpec = { _ ->
+                (slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(NAVIGATION_DURATION_MILLIS),
+                    initialOffset = { it / 3 },
+                ) + fadeIn(tween(NAVIGATION_DURATION_MILLIS))) togetherWith
+                        (slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(NAVIGATION_DURATION_MILLIS),
+                            targetOffset = { it / 3 },
+                        ) + fadeOut(tween(NAVIGATION_DURATION_MILLIS)))
             },
             entryProvider = entryProvider {
                 entry<Route.NestedNav.Home> {

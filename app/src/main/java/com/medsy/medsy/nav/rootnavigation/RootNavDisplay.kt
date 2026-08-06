@@ -1,7 +1,8 @@
 package com.medsy.medsy.nav.rootnavigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -16,7 +17,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
@@ -39,6 +39,8 @@ import com.medsy.presentation.search.SearchRoot
 import com.medsy.presentation.settings.SettingsRoot
 import com.medsy.presentation.splash.SplashRoot
 
+const val NAVIGATION_DURATION_MILLIS = 350
+
 @Composable
 fun RootNavDisplay() {
 
@@ -56,22 +58,16 @@ fun RootNavDisplay() {
             rememberViewModelStoreNavEntryDecorator()
         ),
         transitionSpec = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(NAVIGATION_DURATION_MILLIS)
-            ) togetherWith slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(NAVIGATION_DURATION_MILLIS)
-            )
+            fadeIn(tween(NAVIGATION_DURATION_MILLIS)) togetherWith
+                    fadeOut(tween(NAVIGATION_DURATION_MILLIS))
         },
         popTransitionSpec = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(NAVIGATION_DURATION_MILLIS)
-            ) togetherWith slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(NAVIGATION_DURATION_MILLIS)
-            )
+            fadeIn(tween(NAVIGATION_DURATION_MILLIS)) togetherWith
+                    fadeOut(tween(NAVIGATION_DURATION_MILLIS))
+        },
+        predictivePopTransitionSpec = { _ ->
+            fadeIn(tween(NAVIGATION_DURATION_MILLIS)) togetherWith
+                    fadeOut(tween(NAVIGATION_DURATION_MILLIS))
         },
         entryProvider = entryProvider {
             entry<Route.Splash> {
