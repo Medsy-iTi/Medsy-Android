@@ -17,38 +17,20 @@ data class OfferSummary(
 
 class ObserveOffersSummaryUseCase @Inject constructor(
     private val offersRepository: OffersRepository,
-    private val getMedicineRequestByIdUseCase: GetMedicineRequestByIdUseCase,
 ) {
     operator fun invoke(requestId: Long): Flow<OfferSummary?> {
-        return offersRepository.observeOffersWithPolling(requestId).map { result ->
-            if (result is MedsyResult.Success) {
-                val offers = result.data.content
-                if (offers.isNotEmpty()) {
-                    val reqResult = getMedicineRequestByIdUseCase(requestId)
-                    var totalCount = 0
-                    var originalItemsMap = mapOf<Long, com.medsy.domain.requests.model.MedicineRequestItem>()
-                    if (reqResult is MedsyResult.Success) {
-                        totalCount = reqResult.data.items.size
-                        originalItemsMap = reqResult.data.items.associateBy { it.id }
-                    }
-                    val maxFoundCount = offers.maxOfOrNull { it.items.size } ?: 0
-                    val minPrice = offers.minOfOrNull { offer ->
-                        offer.items.sumOf { offerItem ->
-                            val reqItem = originalItemsMap[offerItem.requestItemId]
-                            (reqItem?.unitPrice ?: 0.0) * (reqItem?.quantity ?: 1)
-                        }.toInt()
-                    } ?: 0
+        return offersRepository.streamRequestResult(requestId).map { result ->
+            val totalCount = result.items.size
+            val foundCount = result.items.count { it.isAvailable }
+            val minPrice = result.totalPrice.toInt()
 
-                    return@map OfferSummary(
-                        requestId = requestId,
-                        minPrice = minPrice,
-                        foundCount = maxFoundCount,
-                        totalCount = totalCount,
-                        totalOffers = offers.size
-                    )
-                }
-            }
-            null
+            OfferSummary(
+                requestId = requestId,
+                minPrice = minPrice,
+                foundCount = foundCount,
+                totalCount = totalCount,
+                totalOffers = 1 // Aggregated by backend
+            )
         }
     }
 }
