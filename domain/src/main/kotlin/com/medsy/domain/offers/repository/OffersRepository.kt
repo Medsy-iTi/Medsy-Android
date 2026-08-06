@@ -8,23 +8,16 @@ import com.medsy.domain.offers.model.RequestResult
 import kotlinx.coroutines.flow.Flow
 
 interface OffersRepository {
-    suspend fun getOffersForRequest(
-        requestId: Long,
-        page: Int = 0,
-        size: Int = 20,
-    ): MedsyResult<OffersPage, MedsyError.Remote>
-
-    fun observeOffersWithPolling(
-        requestId: Long,
-        pollIntervalMillis: Long = 5000
-    ): Flow<MedsyResult<OffersPage, MedsyError.Remote>>
-
     suspend fun acceptOffer(
         requestId: Long,
-        selectedRequestItemIds: List<Long>,
+        selectedItems: List<com.medsy.domain.offers.model.SelectedRequestItem>,
     ): MedsyResult<com.medsy.domain.offers.model.ConfirmOfferResult, MedsyError.Remote>
 
     suspend fun getRequestResult(
         requestId: Long,
     ): MedsyResult<RequestResult, MedsyError.Remote>
+
+    fun streamRequestResult(
+        requestId: Long,
+    ): Flow<RequestResult>
 }
