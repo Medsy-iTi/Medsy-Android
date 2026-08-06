@@ -12,6 +12,6 @@ class AcceptOfferUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         requestId: Long,
-        selectedRequestItemIds: List<Long>,
-    ): MedsyResult<ConfirmOfferResult, MedsyError.Remote> = repository.acceptOffer(requestId, selectedRequestItemIds)
+        selectedItems: List<com.medsy.domain.offers.model.SelectedRequestItem>,
+    ): MedsyResult<ConfirmOfferResult, MedsyError.Remote> = repository.acceptOffer(requestId, selectedItems)
 }
