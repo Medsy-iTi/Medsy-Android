@@ -11,33 +11,6 @@ import com.medsy.domain.offers.model.OffersPage
 import com.medsy.domain.offers.model.RequestResult
 import com.medsy.domain.offers.model.RequestResultItem
 
-fun OfferDto.toDomain(): Offer = Offer(
-    id = id,
-    requestId = requestId,
-    pharmacyId = pharmacyId,
-    pharmacistId = pharmacistId,
-    pharmacyName = pharmacyName,
-    pharmacistName = pharmacistName,
-    status = status,
-    distanceKm = distanceKm,
-    items = items.map { it.toDomain() }
-)
-
-fun OfferItemDto.toDomain(): OfferItem = OfferItem(
-    id = id,
-    requestItemId = requestItemId,
-    productId = productId
-)
-
-fun OffersPageDto.toDomain(): OffersPage = OffersPage(
-    content = content.map { it.toDomain() },
-    pageNumber = pageNumber,
-    pageSize = pageSize,
-    totalElements = totalElements,
-    totalPages = totalPages,
-    last = last
-)
-
 fun RequestResultDto.toDomain(): RequestResult = RequestResult(
     items = medicineRequestResultItemList.map { it.toDomain() },
     totalPrice = totalPrice,
@@ -46,9 +19,24 @@ fun RequestResultDto.toDomain(): RequestResult = RequestResult(
 fun RequestResultItemDto.toDomain(): RequestResultItem = RequestResultItem(
     requestItemId = requestItemId,
     productId = productId,
-    productName = productName,
-    imageUrl = imageUrl,
     unitPrice = unitPrice,
     isAlternative = alternative,
     isAvailable = available,
+    product = product?.toDomain(),
+    alternatives = alternatives.map { it.toDomain() }
+)
+
+fun com.medsy.data.offers.remote.ResultProductDto.toDomain(): com.medsy.domain.offers.model.ResultProduct = com.medsy.domain.offers.model.ResultProduct(
+    id = id,
+    name = name,
+    productName = productName,
+    strength = strength,
+    packSize = packSize,
+    form = form,
+    price = price,
+    scientificName = scientificName,
+    company = company,
+    route = route,
+    description = description,
+    imageUrl = imageUrl
 )
