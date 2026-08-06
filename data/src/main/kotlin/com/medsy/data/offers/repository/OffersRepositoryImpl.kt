@@ -17,29 +17,11 @@ import javax.inject.Singleton
 class OffersRepositoryImpl @Inject constructor(
     private val remoteDataSource: OffersRemoteDataSource,
 ) : OffersRepository {
-    override suspend fun getOffersForRequest(
-        requestId: Long,
-        page: Int,
-        size: Int,
-    ): MedsyResult<OffersPage, MedsyError.Remote> =
-        remoteDataSource.getOffersForRequest(requestId, page, size)
-            .map { it.toDomain() }
-
-    override fun observeOffersWithPolling(
-        requestId: Long,
-        pollIntervalMillis: Long
-    ): kotlinx.coroutines.flow.Flow<MedsyResult<OffersPage, MedsyError.Remote>> = kotlinx.coroutines.flow.flow {
-        while (true) {
-            emit(getOffersForRequest(requestId))
-            kotlinx.coroutines.delay(pollIntervalMillis)
-        }
-    }
-
     override suspend fun acceptOffer(
         requestId: Long,
-        selectedRequestItemIds: List<Long>,
+        selectedItems: List<com.medsy.domain.offers.model.SelectedRequestItem>,
     ): MedsyResult<com.medsy.domain.offers.model.ConfirmOfferResult, MedsyError.Remote> =
-        remoteDataSource.acceptOffer(requestId, selectedRequestItemIds)
+        remoteDataSource.acceptOffer(requestId, selectedItems.map { com.medsy.data.offers.remote.SelectedRequestItemDto(it.requestItemId, it.productId) })
             .map { dto ->
                 com.medsy.domain.offers.model.ConfirmOfferResult(
                     requestId = dto.requestId,
@@ -58,4 +40,9 @@ class OffersRepositoryImpl @Inject constructor(
         requestId: Long,
     ): MedsyResult<RequestResult, MedsyError.Remote> =
         remoteDataSource.getRequestResult(requestId).map { it.toDomain() }
+
+    override fun streamRequestResult(
+        requestId: Long,
+    ): kotlinx.coroutines.flow.Flow<RequestResult> =
+        remoteDataSource.streamRequestResult(requestId).map { it.toDomain() }
 }
