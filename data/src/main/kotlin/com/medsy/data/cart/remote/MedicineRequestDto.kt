@@ -1,5 +1,6 @@
 package com.medsy.data.cart.remote
 
+import com.medsy.data.offers.remote.ResultProductDto
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
@@ -22,11 +23,7 @@ data class MedicineRequestDto(
 data class MedicineRequestItemDto(
     val id: Long,
     val productId: Int,
-    val imageUrl: String?,
-    val productName: String,
-    val strength: String?,
-    val packSize: String?,
-    val form: String?,
+    val product: ResultProductDto?,
     val quantity: Int,
     val unitPrice: Double
 )

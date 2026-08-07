@@ -59,7 +59,6 @@ import com.medsy.presentation.offers.components.PriceSummarySection
 @Composable
 fun OrderReviewRoot(
     requestId: Long,
-    offerId: String,
     onNavigateBack: () -> Unit,
     onNavigateToOrderConfirmation: (String, String) -> Unit,
     viewModel: OffersViewModel = hiltViewModel()
@@ -69,7 +68,7 @@ fun OrderReviewRoot(
     val context = LocalContext.current
 
     LaunchedEffect(requestId) {
-        viewModel.onIntent(OffersUIIntent.LoadOfferDetails(requestId, offerId))
+        viewModel.onIntent(OffersUIIntent.LoadOffers(requestId))
     }
 
     LaunchedEffect(viewModel) {
@@ -98,7 +97,9 @@ fun OrderReviewScreen(
     onIntent: (OffersUIIntent) -> Unit,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
-    val offer = state.selectedOffer
+    val result = state.requestResult
+    val selectedItems = result?.items?.filter { it.requestItemId in state.selectedItemIds } ?: emptyList()
+    val medicinesPrice = selectedItems.sumOf { it.unitPrice }
     val locale = LocalConfiguration.current.locales[0]
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -106,11 +107,12 @@ fun OrderReviewScreen(
             topBar = {
                 OfferTopAppBar(
                     title = stringResource(R.string.offers_order_review_title),
-                    onBackClick = { onIntent(OffersUIIntent.NavigateBack) }
+                    onBackClick = { onIntent(OffersUIIntent.NavigateBack) },
+                    actions = {}
                 )
             },
             bottomBar = {
-                if (offer != null) {
+                if (result != null && selectedItems.isNotEmpty()) {
                     Box(modifier = Modifier.padding(16.dp)) {
                         com.medsy.designsystem.components.MedsyButton(
                             onClick = { onIntent(OffersUIIntent.ConfirmOrder) },
@@ -143,37 +145,13 @@ fun OrderReviewScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                if (state.isLoading || offer == null) {
+                if (state.isLoading && result == null) {
                     MedsyShimmer(modifier = Modifier.fillMaxSize()) {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(16.dp)
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(MaterialTheme.colorScheme.surface)
-                                    .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                MedsyShimmerPlaceholder(
-                                    modifier = Modifier.size(44.dp),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Column {
-                                    MedsyShimmerPlaceholder(
-                                        modifier = Modifier.height(20.dp).fillMaxWidth(0.5f)
-                                    )
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    MedsyShimmerPlaceholder(
-                                        modifier = Modifier.height(14.dp).fillMaxWidth(0.3f)
-                                    )
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(24.dp))
                             MedsyShimmerPlaceholder(
                                 modifier = Modifier.height(24.dp).fillMaxWidth(0.4f)
                             )
@@ -193,7 +171,6 @@ fun OrderReviewScreen(
                         contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
                     ) {
 
-
                         item {
                             Text(
                                 text = stringResource(R.string.offers_requested_medicines),
@@ -204,7 +181,7 @@ fun OrderReviewScreen(
                             )
                         }
 
-                        items(offer.medicines.filter { it.isAvailable }) { medicine ->
+                        items(selectedItems, key = { it.requestItemId }) { medicine ->
                             MedicineItemRow(medicine = medicine, isSingleLinePrice = true)
                         }
 
@@ -276,7 +253,7 @@ fun OrderReviewScreen(
                                 Spacer(modifier = Modifier.weight(1f))
 
                                 Text(
-                                    text = PriceFormatter.formatPrice(state.deliveryFee, locale),
+                                    text = PriceFormatter.formatPrice(state.deliveryFee.toDouble(), locale),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onBackground
@@ -291,8 +268,8 @@ fun OrderReviewScreen(
                             Spacer(modifier = Modifier.height(32.dp))
 
                             PriceSummarySection(
-                                medicinesPrice = offer.price,
-                                deliveryFee = state.deliveryFee
+                                medicinesPrice = medicinesPrice,
+                                deliveryFee = state.deliveryFee.toDouble()
                             )
                         }
                     }

@@ -5,10 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.medsy.domain.common.MedsyResult
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.domain.offers.usecase.AcceptOfferUseCase
-import com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
-import com.medsy.domain.offers.usecase.GetRequestResultUseCase
 import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
-import com.medsy.presentation.offers.mapper.toPharmacyOffer
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -21,8 +21,8 @@ import com.medsy.presentation.common.util.PriceFormatter
 
 @Composable
 fun PriceSummarySection(
-    medicinesPrice: Int,
-    deliveryFee: Int,
+    medicinesPrice: Double,
+    deliveryFee: Double,
     modifier: Modifier = Modifier
 ) {
     val locale = LocalConfiguration.current.locales[0]

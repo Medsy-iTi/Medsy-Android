@@ -14,7 +14,7 @@ import com.medsy.presentation.R
 import com.medsy.presentation.common.util.PriceFormatter
 
 @Composable
-fun PriceRow(label: String, price: Int) {
+fun PriceRow(label: String, price: Double) {
     val locale = LocalConfiguration.current.locales[0]
     Row(
         modifier = Modifier.fillMaxWidth(),

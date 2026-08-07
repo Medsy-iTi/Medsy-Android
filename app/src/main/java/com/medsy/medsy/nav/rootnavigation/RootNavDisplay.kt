@@ -26,7 +26,6 @@ import com.medsy.presentation.cart.cartrequest.CartRequestRoot
 import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.offers.available.AvailableOffersRoot
 import com.medsy.presentation.offers.confirmation.OrderConfirmationRoot
-import com.medsy.presentation.offers.details.OfferDetailsRoot
 import com.medsy.presentation.offers.review.OrderReviewRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.orders.details.OrderDetailsRoot
@@ -341,21 +340,8 @@ fun RootNavDisplay() {
                 AvailableOffersRoot(
                     requestId = args.requestId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToOfferDetails = { offerId ->
-                        rootBackStack.navigateSingleTop(Route.OfferDetails(args.requestId, offerId))
-                    }
-                )
-            }
-            entry<Route.OfferDetails> {
-                val args = it
-                OfferDetailsRoot(
-                    requestId = args.requestId,
-                    offerId = args.offerId,
-                    onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToOrderReview = { reqId, offId ->
-                        rootBackStack.navigateSingleTop(
-                            Route.OrderReview(reqId, offId)
-                        )
+                    onNavigateToOrderReview = { 
+                        rootBackStack.navigateSingleTop(Route.OrderReview(args.requestId))
                     }
                 )
             }
@@ -363,7 +349,6 @@ fun RootNavDisplay() {
                 val args = it
                 OrderReviewRoot(
                     requestId = args.requestId,
-                    offerId = args.offerId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToOrderConfirmation = { orderId, pharmacyName ->
                         rootBackStack.navigateSingleTop(

@@ -82,10 +82,7 @@ sealed interface Route : NavKey {
     data class AvailableOffers(val requestId: Long) : Route
     
     @Serializable
-    data class OfferDetails(val requestId: Long, val offerId: String) : Route
-    
-    @Serializable
-    data class OrderReview(val requestId: Long, val offerId: String) : Route
+    data class OrderReview(val requestId: Long) : Route
     
     @Serializable
     data class OrderConfirmation(val orderId: String, val pharmacyName: String) : Route

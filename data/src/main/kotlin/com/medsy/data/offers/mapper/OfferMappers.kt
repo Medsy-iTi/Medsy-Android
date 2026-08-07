@@ -1,13 +1,7 @@
 package com.medsy.data.offers.mapper
 
-import com.medsy.data.offers.remote.OfferDto
-import com.medsy.data.offers.remote.OfferItemDto
-import com.medsy.data.offers.remote.OffersPageDto
 import com.medsy.data.offers.remote.RequestResultDto
 import com.medsy.data.offers.remote.RequestResultItemDto
-import com.medsy.domain.offers.model.Offer
-import com.medsy.domain.offers.model.OfferItem
-import com.medsy.domain.offers.model.OffersPage
 import com.medsy.domain.offers.model.RequestResult
 import com.medsy.domain.offers.model.RequestResultItem
 

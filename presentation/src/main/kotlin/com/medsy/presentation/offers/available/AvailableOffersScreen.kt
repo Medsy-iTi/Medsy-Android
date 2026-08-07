@@ -32,7 +32,6 @@ import com.medsy.domain.offers.model.RequestResultItem
 fun AvailableOffersRoot(
     requestId: Long,
     onNavigateBack: () -> Unit,
-    onNavigateToOfferDetails: (String) -> Unit, // Might not need this anymore
     onNavigateToOrderReview: () -> Unit,
     viewModel: OffersViewModel = hiltViewModel()
 ) {
@@ -82,7 +81,7 @@ fun AvailableOffersScreen(
                             onClick = { onIntent(OffersUIIntent.ProceedToReview) },
                             modifier = Modifier.fillMaxWidth().height(50.dp)
                         ) {
-                            Text(text = stringResource(R.string.offers_review_order))
+                            Text(text = stringResource(R.string.offers_order_review_title))
                         }
                     }
                 }

@@ -23,11 +23,11 @@ fun MedicineRequestDto.toDomain(): MedicineRequestDetails = MedicineRequestDetai
 fun MedicineRequestItemDto.toDomain(): MedicineRequestItem = MedicineRequestItem(
     id = id,
     productId = productId,
-    imageUrl = imageUrl,
-    productName = productName,
-    strength = strength,
-    packSize = packSize,
-    form = form,
+    imageUrl = product?.imageUrl,
+    productName = product?.productName ?: product?.name ?: "",
+    strength = product?.strength,
+    packSize = product?.packSize,
+    form = product?.form,
     quantity = quantity,
     unitPrice = unitPrice
 )

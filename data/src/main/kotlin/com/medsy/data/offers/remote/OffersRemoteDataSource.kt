@@ -2,7 +2,6 @@ package com.medsy.data.offers.remote
 
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.network.safeApiCall
-import com.medsy.data.remote.network.safeEmptyRestCall
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import javax.inject.Inject
@@ -17,6 +16,7 @@ import okhttp3.Request
 import okhttp3.sse.EventSource
 import okhttp3.sse.EventSourceListener
 import okhttp3.sse.EventSources
+import java.util.concurrent.TimeUnit
 
 class OffersRemoteDataSource @Inject constructor(
     private val apiService: ApiService,
@@ -39,7 +39,11 @@ class OffersRemoteDataSource @Inject constructor(
             .header("Accept", "text/event-stream")
             .build()
             
-        val factory = EventSources.createFactory(okHttpClient)
+        val sseClient = okHttpClient.newBuilder()
+            .readTimeout(0, TimeUnit.MILLISECONDS)
+            .build()
+            
+        val factory = EventSources.createFactory(sseClient)
         val adapter = moshi.adapter(RequestResultDto::class.java)
 
         val listener = object : EventSourceListener() {
@@ -50,13 +54,11 @@ class OffersRemoteDataSource @Inject constructor(
                 data: String
             ) {
                 try {
-                    // Standard events like "snapshot" and "request-item-updated" carry RequestResultDto payload
                     val resultDto = adapter.fromJson(data)
                     if (resultDto != null) {
                         trySend(resultDto)
                     }
-                } catch (e: Exception) {
-                    // Ignore parsing errors for non-data events or malformed JSON
+                } catch (_: Exception) {
                 }
             }
 
