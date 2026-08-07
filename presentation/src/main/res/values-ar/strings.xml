@@ -191,6 +191,9 @@
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
     <string name="search_added_to_favorites">تمت إضافة %1$s إلى المفضلة</string>
     <string name="search_removed_from_favorites">تمت إزالة %1$s من المفضلة</string>
+    <string name="profile_my_favourites">المفضلة</string>
+    <string name="profile_my_favourites_subtitle">إدارة منتجاتك المفضلة</string>
+    <string name="favorites_empty">ليس لديك أي منتجات مفضلة بعد.</string>
     <string name="search_empty_title">لا توجد نتائج</string>
     <string name="search_empty_subtitle">جرّب كلمة بحث مختلفة</string>
     <string name="search_sort_title">ترتيب حسب</string>

@@ -198,6 +198,9 @@
     <string name="search_added_to_cart">Added to cart</string>
     <string name="search_added_to_favorites">Added %1$s to favorites</string>
     <string name="search_removed_from_favorites">Removed %1$s from favorites</string>
+    <string name="profile_my_favourites">My Favorites</string>
+    <string name="profile_my_favourites_subtitle">Manage your favorite products</string>
+    <string name="favorites_empty">You have no favorite products yet.</string>
     <string name="search_empty_title">No results found</string>
     <string name="search_empty_subtitle">Try a different search term</string>
     <string name="search_sort_title">Sort By</string>
