@@ -8,7 +8,7 @@ import javax.inject.Inject
 class RemoveFavoriteUseCase @Inject constructor(
     private val favoritesRepository: FavoritesRepository
 ) {
-    suspend operator fun invoke(productId: Int): EmptyMedsyResult<MedsyError.Local> {
-        return favoritesRepository.removeFavorite(productId)
+    suspend operator fun invoke(productId: Int, userId: Long): EmptyMedsyResult<MedsyError.Local> {
+        return favoritesRepository.removeFavorite(productId, userId)
     }
 }

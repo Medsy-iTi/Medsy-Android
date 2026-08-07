@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.favorites.usecase.GetFavoritesUseCase
 import com.medsy.domain.favorites.usecase.RemoveFavoriteUseCase
-import com.medsy.domain.search.model.SearchProduct
+import com.medsy.domain.favorites.model.FavoriteProduct
 import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.onSuccess
 import com.medsy.domain.common.onError
@@ -13,6 +13,8 @@ import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.search.SearchProductUi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import com.medsy.domain.auth.usecase.ObserveSessionUseCase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,9 +30,10 @@ class FavoritesViewModel @Inject constructor(
     private val getFavoritesUseCase: GetFavoritesUseCase,
     private val removeFavoriteUseCase: RemoveFavoriteUseCase,
     private val addCartItem: AddCartItemUseCase,
+    private val observeSessionUseCase: ObserveSessionUseCase,
 ) : ViewModel() {
 
-    private val allFavorites = mutableListOf<SearchProduct>()
+    private val allFavorites = mutableListOf<FavoriteProduct>()
 
     private val _state = MutableStateFlow(FavoritesState())
     val state = _state
@@ -44,7 +47,7 @@ class FavoritesViewModel @Inject constructor(
     val effect = _effect.receiveAsFlow()
 
     init {
-        observeFavorites()
+        observeSessionAndFavorites()
     }
 
     fun onIntent(intent: FavoritesUIIntent) {
@@ -56,10 +59,12 @@ class FavoritesViewModel @Inject constructor(
 
             is FavoritesUIIntent.FavoriteClicked -> {
                 val idInt = intent.productId.toIntOrNull() ?: return
+                val userId = currentUserId
+                if (userId == 0L) return
                 viewModelScope.launch {
                     val product = allFavorites.find { it.id == idInt }
                     val productName = product?.name ?: ""
-                    removeFavoriteUseCase(idInt)
+                    removeFavoriteUseCase(idInt, userId)
                         .onSuccess {
                             sendEffect(
                                 FavoritesUIEffect.ShowMessage(
@@ -94,10 +99,30 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 
-    private fun observeFavorites() {
-        _state.update { it.copy(isLoading = true) }
+    private var currentUserId: Long = 0L
+    private var favoritesJob: Job? = null
+
+    private fun observeSessionAndFavorites() {
         viewModelScope.launch {
-            getFavoritesUseCase().collect { favorites ->
+            observeSessionUseCase().collect { session ->
+                val newUserId = session?.user?.id ?: 0L
+                if (newUserId != currentUserId) {
+                    currentUserId = newUserId
+                    observeFavoritesForUser(newUserId)
+                }
+            }
+        }
+    }
+
+    private fun observeFavoritesForUser(userId: Long) {
+        favoritesJob?.cancel()
+        if (userId == 0L) {
+            _state.update { it.copy(products = emptyList()) }
+            return
+        }
+        _state.update { it.copy(isLoading = true) }
+        favoritesJob = viewModelScope.launch {
+            getFavoritesUseCase(userId).collect { favorites ->
                 allFavorites.clear()
                 allFavorites.addAll(favorites)
                 _state.update { currentState ->
@@ -110,7 +135,7 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 
-    private fun SearchProduct.toUi(): SearchProductUi {
+    private fun FavoriteProduct.toUi(): SearchProductUi {
         val isArabic = Locale.getDefault().language == LocaleConstants.ARABIC_TAG
         val localizedName = if (isArabic && arabicName.isNotBlank()) arabicName else name
         val subtitle = if (scientificName.isNotBlank() && company.isNotBlank()) {

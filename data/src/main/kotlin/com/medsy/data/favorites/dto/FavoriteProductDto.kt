@@ -1,13 +1,9 @@
-package com.medsy.data.local.database.entity
+package com.medsy.data.favorites.dto
 
-import androidx.room.Entity
+import com.squareup.moshi.JsonClass
 
-@Entity(
-    tableName = "favorite_products",
-    primaryKeys = ["userId", "id"]
-)
-data class FavoriteProductEntity(
-    val userId: Long,
+@JsonClass(generateAdapter = true)
+data class FavoriteProductDto(
     val id: Int,
     val name: String,
     val arabicName: String,

@@ -1,13 +1,6 @@
-package com.medsy.data.local.database.entity
+package com.medsy.domain.favorites.model
 
-import androidx.room.Entity
-
-@Entity(
-    tableName = "favorite_products",
-    primaryKeys = ["userId", "id"]
-)
-data class FavoriteProductEntity(
-    val userId: Long,
+data class FavoriteProduct(
     val id: Int,
     val name: String,
     val arabicName: String,

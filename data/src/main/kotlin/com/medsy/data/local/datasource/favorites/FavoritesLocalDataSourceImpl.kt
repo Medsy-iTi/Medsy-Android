@@ -11,19 +11,19 @@ class FavoritesLocalDataSourceImpl @Inject constructor(
     private val favoriteProductDao: FavoriteProductDao
 ) : FavoritesLocalDataSource {
 
-    override fun getAllFavorites(): Flow<List<FavoriteProductEntity>> {
-        return favoriteProductDao.getAllFavorites()
+    override fun getAllFavorites(userId: Long): Flow<List<FavoriteProductEntity>> {
+        return favoriteProductDao.getAllFavorites(userId)
     }
 
     override suspend fun addFavorite(entity: FavoriteProductEntity) {
         favoriteProductDao.insertFavorite(entity)
     }
 
-    override suspend fun removeFavorite(productId: Int) {
-        favoriteProductDao.deleteFavoriteById(productId)
+    override suspend fun removeFavorite(userId: Long, productId: Int) {
+        favoriteProductDao.deleteFavoriteById(userId, productId)
     }
 
-    override suspend fun isFavorite(productId: Int): Boolean {
-        return favoriteProductDao.isFavorite(productId)
+    override suspend fun isFavorite(userId: Long, productId: Int): Boolean {
+        return favoriteProductDao.isFavorite(userId, productId)
     }
 }

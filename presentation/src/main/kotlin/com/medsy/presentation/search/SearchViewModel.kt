@@ -13,6 +13,8 @@ import com.medsy.domain.search.usecase.SearchProductsUseCase
 import com.medsy.domain.favorites.usecase.GetFavoritesUseCase
 import com.medsy.domain.favorites.usecase.AddFavoriteUseCase
 import com.medsy.domain.favorites.usecase.RemoveFavoriteUseCase
+import com.medsy.domain.favorites.model.FavoriteProduct
+import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +38,7 @@ class SearchViewModel @Inject constructor(
     private val getFavoritesUseCase: GetFavoritesUseCase,
     private val addFavoriteUseCase: AddFavoriteUseCase,
     private val removeFavoriteUseCase: RemoveFavoriteUseCase,
+    private val observeSessionUseCase: ObserveSessionUseCase,
 ) : ViewModel() {
 
     private val allFetchedProducts = mutableListOf<SearchProduct>()
@@ -59,7 +62,7 @@ class SearchViewModel @Inject constructor(
     init {
         reloadProducts()
         loadCategories()
-        observeFavorites()
+        observeSessionAndFavorites()
     }
 
     fun onIntent(intent: SearchUIIntent) {
@@ -275,9 +278,29 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    private fun observeFavorites() {
+    private var currentUserId: Long = 0L
+    private var favoritesJob: Job? = null
+
+    private fun observeSessionAndFavorites() {
         viewModelScope.launch {
-            getFavoritesUseCase().collect { favorites ->
+            observeSessionUseCase().collect { session ->
+                val newUserId = session?.user?.id ?: 0L
+                if (newUserId != currentUserId) {
+                    currentUserId = newUserId
+                    observeFavoritesForUser(newUserId)
+                }
+            }
+        }
+    }
+
+    private fun observeFavoritesForUser(userId: Long) {
+        favoritesJob?.cancel()
+        if (userId == 0L) {
+            _state.update { it.copy(favoriteProductIds = emptySet()) }
+            return
+        }
+        favoritesJob = viewModelScope.launch {
+            getFavoritesUseCase(userId).collect { favorites ->
                 _state.update { currentState ->
                     currentState.copy(
                         favoriteProductIds = favorites.map { it.id.toString() }.toSet()
@@ -289,6 +312,9 @@ class SearchViewModel @Inject constructor(
 
     private fun toggleFavorite(productId: String) {
         val idInt = productId.toIntOrNull() ?: return
+        val userId = currentUserId
+        if (userId == 0L) return
+
         val currentFavorites = _state.value.favoriteProductIds
         val isFav = productId in currentFavorites
 
@@ -296,7 +322,7 @@ class SearchViewModel @Inject constructor(
             if (isFav) {
                 val product = allFetchedProducts.find { it.id == idInt }
                 val productName = product?.name ?: ""
-                removeFavoriteUseCase(idInt)
+                removeFavoriteUseCase(idInt, userId)
                     .onSuccess {
                         sendEffect(
                             SearchUIEffect.ShowMessage(
@@ -308,7 +334,7 @@ class SearchViewModel @Inject constructor(
             } else {
                 val product = allFetchedProducts.find { it.id == idInt }
                 if (product != null) {
-                    addFavoriteUseCase(product)
+                    addFavoriteUseCase(product.toFavorite(), userId)
                         .onSuccess {
                             sendEffect(
                                 SearchUIEffect.ShowMessage(
@@ -320,6 +346,21 @@ class SearchViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun SearchProduct.toFavorite(): FavoriteProduct {
+        return FavoriteProduct(
+            id = id,
+            name = name,
+            arabicName = arabicName,
+            scientificName = scientificName,
+            price = price,
+            imageUrl = imageUrl,
+            categoryId = categoryId,
+            categoryName = categoryName,
+            company = company,
+            route = route
+        )
     }
 
     private fun sendEffect(effect: SearchUIEffect) {
