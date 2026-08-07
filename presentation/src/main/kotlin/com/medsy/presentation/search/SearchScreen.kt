@@ -23,8 +23,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showSuccess
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -79,16 +80,20 @@ fun SearchRoot(
                         onNext(effect.productId)
                     }
                 }
-                is SearchUIEffect.ShowMessage ->
-                    snackbarHostState.showSnackbar(
+                is SearchUIEffect.ShowMessage -> {
+                    val message = if (effect.args.isEmpty()) {
                         ContextCompat.getString(context, effect.messageRes)
-                    )
+                    } else {
+                        context.getString(effect.messageRes, *effect.args.toTypedArray())
+                    }
+                    snackbarHostState.showSuccess(message)
+                }
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         SearchScreen(
             state = state,

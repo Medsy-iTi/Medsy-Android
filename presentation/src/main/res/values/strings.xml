@@ -196,6 +196,8 @@
     <string name="search_favorite_desc">Add to favorites</string>
     <string name="search_add_to_cart_desc">Add to cart</string>
     <string name="search_added_to_cart">Added to cart</string>
+    <string name="search_added_to_favorites">Added %1$s to favorites</string>
+    <string name="search_removed_from_favorites">Removed %1$s from favorites</string>
     <string name="search_empty_title">No results found</string>
     <string name="search_empty_subtitle">Try a different search term</string>
     <string name="search_sort_title">Sort By</string>

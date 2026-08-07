@@ -10,6 +10,9 @@ import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.domain.search.model.SearchProduct
 import com.medsy.domain.search.usecase.SearchProductsUseCase
+import com.medsy.domain.favorites.usecase.GetFavoritesUseCase
+import com.medsy.domain.favorites.usecase.AddFavoriteUseCase
+import com.medsy.domain.favorites.usecase.RemoveFavoriteUseCase
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +33,9 @@ class SearchViewModel @Inject constructor(
     private val searchProductsUseCase: SearchProductsUseCase,
     private val addCartItem: AddCartItemUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
 ) : ViewModel() {
 
     private val allFetchedProducts = mutableListOf<SearchProduct>()
@@ -53,6 +59,7 @@ class SearchViewModel @Inject constructor(
     init {
         reloadProducts()
         loadCategories()
+        observeFavorites()
     }
 
     fun onIntent(intent: SearchUIIntent) {
@@ -130,11 +137,7 @@ class SearchViewModel @Inject constructor(
                 sendEffect(SearchUIEffect.NavigateToProductDetails(intent.productId))
 
             is SearchUIIntent.FavoriteClicked -> {
-                _state.value = _state.value.copy(
-                    favoriteProductIds = _state.value.favoriteProductIds.let { current ->
-                        if (intent.productId in current) current - intent.productId else current + intent.productId
-                    }
-                )
+                toggleFavorite(intent.productId)
             }
 
             is SearchUIIntent.AddToCartClicked -> addToCart(intent.productId)
@@ -270,6 +273,53 @@ class SearchViewModel @Inject constructor(
             priceEgp = price.toInt(),
             imageUrl = imageUrl
         )
+    }
+
+    private fun observeFavorites() {
+        viewModelScope.launch {
+            getFavoritesUseCase().collect { favorites ->
+                _state.update { currentState ->
+                    currentState.copy(
+                        favoriteProductIds = favorites.map { it.id.toString() }.toSet()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun toggleFavorite(productId: String) {
+        val idInt = productId.toIntOrNull() ?: return
+        val currentFavorites = _state.value.favoriteProductIds
+        val isFav = productId in currentFavorites
+
+        viewModelScope.launch {
+            if (isFav) {
+                val product = allFetchedProducts.find { it.id == idInt }
+                val productName = product?.name ?: ""
+                removeFavoriteUseCase(idInt)
+                    .onSuccess {
+                        sendEffect(
+                            SearchUIEffect.ShowMessage(
+                                R.string.search_removed_from_favorites,
+                                listOf(productName)
+                            )
+                        )
+                    }
+            } else {
+                val product = allFetchedProducts.find { it.id == idInt }
+                if (product != null) {
+                    addFavoriteUseCase(product)
+                        .onSuccess {
+                            sendEffect(
+                                SearchUIEffect.ShowMessage(
+                                    R.string.search_added_to_favorites,
+                                    listOf(product.name)
+                                )
+                            )
+                        }
+                }
+            }
+        }
     }
 
     private fun sendEffect(effect: SearchUIEffect) {

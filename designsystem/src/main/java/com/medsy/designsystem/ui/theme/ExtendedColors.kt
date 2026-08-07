@@ -27,6 +27,8 @@ data class ExtendedColors(
     val infoContainer: Color,
     val onInfoContainer: Color,
 
+    val favoriteRed: Color,
+
     // Category Colors
     val categoryContainerBg: Color,
     val onCategoryContainer: Color,
@@ -89,6 +91,8 @@ internal val lightExtendedColors = ExtendedColors(
     badgeSuccess = Color(0xFF00A86B),
     onBadgeSuccess = Color(0xFFFFFFFF),
 
+    favoriteRed = Color(0xFFFF0000),
+
     warning = Color(0xFF9A5800),
     onWarning = Color(0xFFFFFFFF),
     warningContainer = Color(0xFFFFEDD5),
@@ -138,6 +142,8 @@ internal val darkExtendedColors = ExtendedColors(
 
     badgeSuccess = Color(0xFF00A86B),
     onBadgeSuccess = Color(0xFFFFFFFF),
+
+    favoriteRed = Color(0xFFFF0000),
 
     warning = Color(0xFFFFB86C),
     onWarning = Color(0xFF4A2800),
