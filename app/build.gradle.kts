@@ -29,7 +29,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            "String",
+            "STRIPE_PUBLISHABLE_KEY",
+            "\"${medsyLocalProperties.getProperty("STRIPE_PUBLISHABLE_KEY")}\""
+        )
     }
+
 
     buildTypes {
         release {
@@ -83,4 +89,8 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    //Stripe Sdk
+    implementation(libs.stripe.android)
+
 }

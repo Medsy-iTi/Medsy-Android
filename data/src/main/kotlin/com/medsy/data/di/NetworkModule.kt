@@ -1,6 +1,7 @@
 package com.medsy.data.di
 
 import com.medsy.data.BuildConfig
+import com.medsy.data.payment.remote.PaymentApi
 import com.medsy.data.prescription.remote.AiInterceptor
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.auth.AuthInterceptor
@@ -91,6 +92,11 @@ object NetworkModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+    @Provides
+    @Singleton
+    fun providePaymentApi(retrofit: Retrofit): PaymentApi {
+        return retrofit.create(PaymentApi::class.java)
     }
 
 }

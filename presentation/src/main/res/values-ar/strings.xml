@@ -349,6 +349,8 @@
     <string name="error_server_message">خطأ في السيرفر: %1$s</string>
     <string name="error_unknown">حدث خطأ غير متوقع، يرجى المحاولة لاحقاً.</string>
     <string name="error_invalid_id">رقم المنتج غير صحيح.</string>
+    <string name="error_payment_failed">فشلت عملية الدفع. يرجى المحاولة مرة أخرى.</string>
+    <string name="error_payment_canceled">تم إلغاء عملية الدفع.</string>
 
     <!-- Cart -->
     <string name="cart_title">سلة الطلب</string>

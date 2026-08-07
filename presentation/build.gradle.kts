@@ -62,6 +62,9 @@ dependencies {
     // Lottie
     implementation(libs.lottie.compose)
 
+    // Stripe
+    implementation(libs.stripe.android)
+
     // Location
     implementation(libs.google.play.services.location)
 

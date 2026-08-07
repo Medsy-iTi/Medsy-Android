@@ -7,6 +7,7 @@ import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.domain.offers.usecase.AcceptOfferUseCase
 import com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
 import com.medsy.domain.offers.usecase.GetRequestResultUseCase
+import com.medsy.domain.payment.usecase.CreatePaymentIntentUseCase
 import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
 import com.medsy.presentation.offers.mapper.toPharmacyOffer
 import kotlinx.coroutines.async
@@ -26,7 +27,8 @@ class OffersViewModel @Inject constructor(
     private val getOffersForRequestUseCase: GetOffersForRequestUseCase,
     private val getRequestResultUseCase: GetRequestResultUseCase,
     private val acceptOfferUseCase: AcceptOfferUseCase,
-    private val removeActiveRequestUseCase: RemoveActiveRequestUseCase
+    private val removeActiveRequestUseCase: RemoveActiveRequestUseCase,
+    private val createPaymentIntentUseCase: CreatePaymentIntentUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(OffersState())
@@ -47,45 +49,92 @@ class OffersViewModel @Inject constructor(
             OffersUIIntent.ChooseSelectedOffer -> {
                 sendEffect(OffersUIEffect.NavigateToOrderReview)
             }
-            OffersUIIntent.ConfirmOrder -> confirmOrder()
+            OffersUIIntent.ConfirmOrder -> handleConfirmOrder()
+            OffersUIIntent.PaymentSuccess -> handlePaymentSuccess()
+            is OffersUIIntent.PaymentFailed -> handlePaymentFailed(intent.error)
+            OffersUIIntent.PaymentCanceled -> handlePaymentCanceled()
             OffersUIIntent.TrackOrder -> sendEffect(OffersUIEffect.NavigateToTrackOrder)
             OffersUIIntent.BackToHome -> sendEffect(OffersUIEffect.NavigateToHome)
             OffersUIIntent.NavigateBack -> sendEffect(OffersUIEffect.NavigateBack)
         }
     }
 
-    private fun confirmOrder() {
+    private fun handleConfirmOrder() {
         val selectedOffer = _state.value.selectedOffer ?: return
         val requestId = _state.value.requestId ?: return
-        val selectedItemIds = selectedOffer.medicines.filter { it.isAvailable }.mapNotNull { it.id.toLongOrNull() }
+        val selectedItemIds =
+            selectedOffer.medicines.filter { it.isAvailable }.mapNotNull { it.id.toLongOrNull() }
 
         viewModelScope.launch {
             _state.update { it.copy(isConfirmingOrder = true) }
             val result = acceptOfferUseCase(requestId, selectedItemIds)
             when (result) {
                 is MedsyResult.Success -> {
-                    removeActiveRequestUseCase(requestId)
-                    val firstOrder = result.data.orders.firstOrNull()
-                    val orderIdStr = "#MS-${selectedOffer.id}"
-                    val pharmacyName = firstOrder?.pharmacyName ?: _state.value.selectedOffer?.pharmacyName.orEmpty()
-                    _state.update {
-                        it.copy(
-                            isConfirmingOrder = false,
-                            orderConfirmed = true,
-                            orderId = orderIdStr
-                        )
+                    val orderId = result.data.orders.firstOrNull()?.orderId
+                    if (orderId != null) {
+                        createPaymentIntent(orderId)
+                    } else {
+                        _state.update { it.copy(isConfirmingOrder = false) }
+                        sendEffect(OffersUIEffect.ShowError(com.medsy.presentation.R.string.error_generic))
                     }
-                    sendEffect(OffersUIEffect.NavigateToOrderConfirmation(
-                        orderIdStr,
-                        pharmacyName
-                    ))
                 }
+
                 is MedsyResult.Error -> {
                     _state.update { it.copy(isConfirmingOrder = false) }
                     sendEffect(OffersUIEffect.ShowError(result.error.toMessageRes()))
                 }
             }
         }
+    }
+
+    private fun createPaymentIntent(orderId: Long) {
+        viewModelScope.launch {
+            val result = createPaymentIntentUseCase(orderId)
+            _state.update { it.copy(isConfirmingOrder = false) }
+            when (result) {
+                is MedsyResult.Success -> {
+                    sendEffect(
+                        OffersUIEffect.OpenPaymentSheet(
+                            clientSecret = result.data.clientSecret
+                        )
+                    )
+                }
+
+                is MedsyResult.Error -> {
+                    sendEffect(OffersUIEffect.ShowError(result.error.toMessageRes()))
+                }
+            }
+        }
+    }
+
+    private fun handlePaymentSuccess() {
+        val requestId = _state.value.requestId ?: return
+        val selectedOffer = _state.value.selectedOffer ?: return
+        val orderIdStr = "#MS-${selectedOffer.id}"
+        val pharmacyName = selectedOffer.pharmacyName
+
+        viewModelScope.launch {
+            removeActiveRequestUseCase(requestId)
+            _state.update {
+                it.copy(
+                    orderConfirmed = true,
+                    orderId = orderIdStr
+                )
+            }
+            sendEffect(
+                OffersUIEffect.NavigateToOrderConfirmation(
+                    orderIdStr,
+                    pharmacyName
+                )
+            )
+        }
+    }
+
+    private fun handlePaymentFailed(error: String?) {
+        sendEffect(OffersUIEffect.ShowError(com.medsy.presentation.R.string.error_payment_failed))
+    }
+
+    private fun handlePaymentCanceled() {
     }
 
     private fun loadOffers(requestId: Long, offerIdToSelect: String? = null) {
@@ -129,4 +178,5 @@ class OffersViewModel @Inject constructor(
             _effect.send(effect)
         }
     }
+
 }

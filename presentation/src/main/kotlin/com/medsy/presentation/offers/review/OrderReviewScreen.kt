@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.PriceFormatter
 import com.medsy.presentation.offers.OffersState
@@ -55,6 +56,9 @@ import com.medsy.presentation.offers.OffersViewModel
 import com.medsy.presentation.offers.components.MedicineItemRow
 import com.medsy.presentation.offers.components.OfferTopAppBar
 import com.medsy.presentation.offers.components.PriceSummarySection
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.PaymentSheetResult
+import com.stripe.android.paymentsheet.rememberPaymentSheet
 
 @Composable
 fun OrderReviewRoot(
@@ -68,6 +72,22 @@ fun OrderReviewRoot(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    val paymentSheet = rememberPaymentSheet { paymentResult: PaymentSheetResult ->
+        when (paymentResult) {
+            is PaymentSheetResult.Completed -> {
+                viewModel.onIntent(OffersUIIntent.PaymentSuccess)
+            }
+
+            is PaymentSheetResult.Canceled -> {
+                viewModel.onIntent(OffersUIIntent.PaymentCanceled)
+            }
+
+            is PaymentSheetResult.Failed -> {
+                viewModel.onIntent(OffersUIIntent.PaymentFailed(paymentResult.error.localizedMessage))
+            }
+        }
+    }
+
     LaunchedEffect(requestId) {
         viewModel.onIntent(OffersUIIntent.LoadOfferDetails(requestId, offerId))
     }
@@ -76,10 +96,29 @@ fun OrderReviewRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OffersUIEffect.NavigateBack -> onNavigateBack()
-                is OffersUIEffect.NavigateToOrderConfirmation -> onNavigateToOrderConfirmation(effect.orderId, effect.pharmacyName)
+                is OffersUIEffect.NavigateToOrderConfirmation -> onNavigateToOrderConfirmation(
+                    effect.orderId,
+                    effect.pharmacyName
+                )
+
                 is OffersUIEffect.ShowError -> {
-                    snackbarHostState.showError(androidx.core.content.ContextCompat.getString(context, effect.messageRes))
+                    snackbarHostState.showError(
+                        androidx.core.content.ContextCompat.getString(
+                            context,
+                            effect.messageRes
+                        )
+                    )
                 }
+
+                is OffersUIEffect.OpenPaymentSheet -> {
+                    paymentSheet.presentWithPaymentIntent(
+                        effect.clientSecret,
+                        PaymentSheet.Configuration(
+                            merchantDisplayName = "Medsy"
+                        )
+                    )
+                }
+
                 else -> Unit
             }
         }
@@ -299,7 +338,7 @@ fun OrderReviewScreen(
                 }
             }
         }
-        com.medsy.designsystem.components.MedsySnackbarHost(
+     MedsySnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier.align(Alignment.TopCenter)
         )
