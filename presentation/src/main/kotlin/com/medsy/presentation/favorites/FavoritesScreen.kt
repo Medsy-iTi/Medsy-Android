@@ -1,6 +1,5 @@
 package com.medsy.presentation.favorites
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -77,11 +76,12 @@ fun FavoritesRoot(
 
     Scaffold(
         snackbarHost = { MedsySnackbarHost(snackbarHostState) },
-    ) { paddingValues ->
+    ) { padding ->
+        padding
         FavoritesScreen(
             state = state,
             onIntent = viewModel::onIntent,
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier,
         )
     }
 }
@@ -96,7 +96,6 @@ fun FavoritesScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
     ) {
         CenterAlignedTopAppBar(
             title = {
@@ -117,7 +116,7 @@ fun FavoritesScreen(
                     )
                 }
             },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background
             )
         )

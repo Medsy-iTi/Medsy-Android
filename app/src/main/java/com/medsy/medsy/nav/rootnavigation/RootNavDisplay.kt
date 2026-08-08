@@ -24,6 +24,7 @@ import com.medsy.presentation.auth.otp.OtpRoot
 import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.cart.cartrequest.CartRequestRoot
 import com.medsy.presentation.categories.CategoriesRoot
+import com.medsy.presentation.favorites.FavoritesRoot
 import com.medsy.presentation.offers.available.AvailableOffersRoot
 import com.medsy.presentation.offers.confirmation.OrderConfirmationRoot
 import com.medsy.presentation.offers.details.OfferDetailsRoot
@@ -35,7 +36,6 @@ import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.products.ProductsRoot
 import com.medsy.presentation.profile.personaldetails.PersonalDetailsRoot
-import com.medsy.presentation.favorites.FavoritesRoot
 import com.medsy.presentation.search.SearchRoot
 import com.medsy.presentation.settings.SettingsRoot
 import com.medsy.presentation.splash.SplashRoot
@@ -178,7 +178,7 @@ fun RootNavDisplay() {
                         requestedNestedDestination = null
                     },
                     openFavorites = {
-                        rootBackStack.navigateSingleTop(Route.Favorites)
+                        rootBackStack.push(Route.Favorites)
                     }
                 )
             }
@@ -269,7 +269,7 @@ fun RootNavDisplay() {
                 FavoritesRoot(
                     onBack = { rootBackStack.removeLastOrNull() },
                     onProductSelected = { productId ->
-                        rootBackStack.navigateSingleTop(
+                        rootBackStack.push(
                             Route.ProductDetails(id = productId)
                         )
                     }
