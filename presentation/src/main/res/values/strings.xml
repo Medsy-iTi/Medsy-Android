@@ -220,6 +220,7 @@
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">Share</string>
+    <string name="product_details_favorite_desc">Add to favorites</string>
     <string name="product_details_image_desc">Product image</string>
     <string name="product_details_pack_info_format">%1$s · %2$s</string>
     <string name="product_details_pharmacist_notice">This medicine is dispensed only after pharmacist review to determine the appropriate dose for your condition.</string>

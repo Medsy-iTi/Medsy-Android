@@ -213,6 +213,7 @@
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">مشاركة</string>
+    <string name="product_details_favorite_desc">أضف للمفضلة</string>
     <string name="product_details_image_desc">صورة المنتج</string>
     <string name="product_details_pack_info_format">%1$s - %2$s</string>
     <string name="product_details_pharmacist_notice">لا يتم صرف هذا الدواء إلا بعد مراجعة الصيدلي لتحديد الجرعة المناسبة لحالتك.</string>
