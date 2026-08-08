@@ -17,6 +17,7 @@ data class PharmacyOffer(
 
 data class OfferMedicine(
     val id: String,
+    val productId: Long,
     val name: String,
     val packageInfo: String,
     val price: Int,

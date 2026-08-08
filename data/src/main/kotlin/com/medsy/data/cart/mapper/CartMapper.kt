@@ -38,11 +38,8 @@ fun ProductsRequest.toDto(): ProductsRequestDto = ProductsRequestDto(
 private fun CartItemDto.toDomain(): CartItem = CartItem(
     id = id,
     productId = productId,
-    productName = productName
-        ?: product?.name
-        ?: product?.productName
-            .orEmpty(),
-    imageUrl = imageUrl ?: product?.imageUrl.orEmpty(),
+    productName = product.name.ifBlank { product.productName.orEmpty() },
+    imageUrl = product.imageUrl?.takeIf(String::isNotBlank),
     unitPriceEgp = unitPrice,
     quantity = quantity,
     subtotalEgp = subtotal,
