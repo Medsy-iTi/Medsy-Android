@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,7 +39,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showError
 import com.medsy.designsystem.components.showSuccess
 import com.medsy.presentation.R
 import com.medsy.presentation.search.components.ProductResultCard
@@ -63,7 +70,11 @@ fun FavoritesRoot(
                     } else {
                         context.getString(effect.messageRes, *effect.args.toTypedArray())
                     }
-                    snackbarHostState.showSuccess(message)
+                    if (effect.isError) {
+                        snackbarHostState.showError(message)
+                    } else {
+                        snackbarHostState.showSuccess(message)
+                    }
                 }
             }
         }
@@ -132,11 +143,28 @@ fun FavoritesScreen(
                 }
 
                 state.isEmpty -> {
-                    Text(
-                        text = stringResource(R.string.favorites_empty),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        val emptyComposition by rememberLottieComposition(
+                            LottieCompositionSpec.RawRes(R.raw.empty_animation)
+                        )
+
+                        LottieAnimation(
+                            composition = emptyComposition,
+                            iterations = LottieConstants.IterateForever,
+                            modifier = Modifier.size(200.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = stringResource(R.string.favorites_empty),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
 
                 else -> {
@@ -153,7 +181,13 @@ fun FavoritesScreen(
                                 priceEgp = product.priceEgp,
                                 isFavorite = true,
                                 onClick = { onIntent(FavoritesUIIntent.ProductClicked(product.id)) },
-                                onFavoriteClick = { onIntent(FavoritesUIIntent.FavoriteClicked(product.id)) },
+                                onFavoriteClick = {
+                                    onIntent(
+                                        FavoritesUIIntent.FavoriteClicked(
+                                            product.id
+                                        )
+                                    )
+                                },
                                 onAddToCartClick = {
                                     onIntent(FavoritesUIIntent.AddToCartClicked(product.id))
                                 },

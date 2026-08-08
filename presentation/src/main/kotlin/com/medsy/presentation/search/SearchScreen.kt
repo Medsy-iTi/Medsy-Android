@@ -24,8 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import com.medsy.designsystem.components.MedsySnackbarHost
-import com.medsy.designsystem.components.showSuccess
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,14 +39,17 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showError
+import com.medsy.designsystem.components.showSuccess
 import com.medsy.presentation.R
 import com.medsy.presentation.search.components.ProductResultCard
 import com.medsy.presentation.search.components.SearchCategoryBottomSheet
 import com.medsy.presentation.search.components.SearchEmptyState
 import com.medsy.presentation.search.components.SearchFilterChips
 import com.medsy.presentation.search.components.SearchInputBar
-import com.medsy.presentation.search.components.SearchSelectionBottomSheet
 import com.medsy.presentation.search.components.SearchResultsHeader
+import com.medsy.presentation.search.components.SearchSelectionBottomSheet
 import com.medsy.presentation.search.components.SearchTopBar
 
 @Composable
@@ -80,13 +81,18 @@ fun SearchRoot(
                         onNext(effect.productId)
                     }
                 }
+
                 is SearchUIEffect.ShowMessage -> {
                     val message = if (effect.args.isEmpty()) {
                         ContextCompat.getString(context, effect.messageRes)
                     } else {
                         context.getString(effect.messageRes, *effect.args.toTypedArray())
                     }
-                    snackbarHostState.showSuccess(message)
+                    if (effect.isError) {
+                        snackbarHostState.showError(message)
+                    } else {
+                        snackbarHostState.showSuccess(message)
+                    }
                 }
             }
         }

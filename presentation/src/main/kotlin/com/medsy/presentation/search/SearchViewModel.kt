@@ -2,19 +2,19 @@ package com.medsy.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.fold
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
+import com.medsy.domain.favorites.model.FavoriteProduct
+import com.medsy.domain.favorites.usecase.AddFavoriteUseCase
+import com.medsy.domain.favorites.usecase.GetFavoritesUseCase
+import com.medsy.domain.favorites.usecase.RemoveFavoriteUseCase
 import com.medsy.domain.search.model.SearchProduct
 import com.medsy.domain.search.usecase.SearchProductsUseCase
-import com.medsy.domain.favorites.usecase.GetFavoritesUseCase
-import com.medsy.domain.favorites.usecase.AddFavoriteUseCase
-import com.medsy.domain.favorites.usecase.RemoveFavoriteUseCase
-import com.medsy.domain.favorites.model.FavoriteProduct
-import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -84,14 +84,17 @@ class SearchViewModel @Inject constructor(
                     SearchFilterId.SORT.name -> {
                         _state.value = _state.value.copy(isSortBottomSheetOpen = true)
                     }
+
                     SearchFilterId.PRICE.name -> {
                         _state.value = _state.value.copy(isPriceBottomSheetOpen = true)
                     }
+
                     SearchFilterId.CATEGORY.name -> {
                         _state.value = _state.value.copy(isCategoryBottomSheetOpen = true)
                     }
                 }
             }
+
             is SearchUIIntent.SortOptionSelected -> {
                 _state.update { currentState ->
                     currentState.copy(
@@ -150,7 +153,7 @@ class SearchViewModel @Inject constructor(
     private fun addToCart(rawProductId: String) {
         val productId = rawProductId.toIntOrNull()
         if (productId == null) {
-            sendEffect(SearchUIEffect.ShowMessage(R.string.error_invalid_id))
+            sendEffect(SearchUIEffect.ShowMessage(R.string.error_invalid_id, isError = true))
             return
         }
         viewModelScope.launch {
@@ -159,7 +162,7 @@ class SearchViewModel @Inject constructor(
                     sendEffect(SearchUIEffect.ShowMessage(R.string.search_added_to_cart))
                 }
                 .onError { error ->
-                    sendEffect(SearchUIEffect.ShowMessage(error.toMessageRes()))
+                    sendEffect(SearchUIEffect.ShowMessage(error.toMessageRes(), isError = true))
                 }
         }
     }
@@ -331,6 +334,14 @@ class SearchViewModel @Inject constructor(
                             )
                         )
                     }
+                    .onError { error ->
+                        sendEffect(
+                            SearchUIEffect.ShowMessage(
+                                error.toMessageRes(),
+                                isError = true
+                            )
+                        )
+                    }
             } else {
                 val product = allFetchedProducts.find { it.id == idInt }
                 if (product != null) {
@@ -343,6 +354,15 @@ class SearchViewModel @Inject constructor(
                                 )
                             )
                         }
+                        .onError { error ->
+                            sendEffect(
+                                SearchUIEffect.ShowMessage(
+                                    error.toMessageRes(),
+                                    isError = true
+                                )
+                            )
+                        }
+                    
                 }
             }
         }

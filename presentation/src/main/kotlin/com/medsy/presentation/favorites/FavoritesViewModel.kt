@@ -2,18 +2,18 @@ package com.medsy.presentation.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
+import com.medsy.domain.common.LocaleConstants
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
+import com.medsy.domain.favorites.model.FavoriteProduct
 import com.medsy.domain.favorites.usecase.GetFavoritesUseCase
 import com.medsy.domain.favorites.usecase.RemoveFavoriteUseCase
-import com.medsy.domain.favorites.model.FavoriteProduct
-import com.medsy.domain.common.LocaleConstants
-import com.medsy.domain.common.onSuccess
-import com.medsy.domain.common.onError
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.search.SearchProductUi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,7 +69,16 @@ class FavoritesViewModel @Inject constructor(
                             sendEffect(
                                 FavoritesUIEffect.ShowMessage(
                                     R.string.search_removed_from_favorites,
-                                    listOf(productName)
+                                    listOf(productName),
+                                    isError = false
+                                )
+                            )
+                        }
+                        .onError { error ->
+                            sendEffect(
+                                FavoritesUIEffect.ShowMessage(
+                                    messageRes = error.toMessageRes(),
+                                    isError = true
                                 )
                             )
                         }
@@ -85,7 +94,7 @@ class FavoritesViewModel @Inject constructor(
     private fun addToCart(rawProductId: String) {
         val productId = rawProductId.toIntOrNull()
         if (productId == null) {
-            sendEffect(FavoritesUIEffect.ShowMessage(R.string.error_invalid_id))
+            sendEffect(FavoritesUIEffect.ShowMessage(R.string.error_invalid_id, isError = true))
             return
         }
         viewModelScope.launch {
@@ -94,7 +103,7 @@ class FavoritesViewModel @Inject constructor(
                     sendEffect(FavoritesUIEffect.ShowMessage(R.string.search_added_to_cart))
                 }
                 .onError { error ->
-                    sendEffect(FavoritesUIEffect.ShowMessage(error.toMessageRes()))
+                    sendEffect(FavoritesUIEffect.ShowMessage(error.toMessageRes(), isError = true))
                 }
         }
     }
