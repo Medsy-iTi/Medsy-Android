@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -20,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import com.medsy.designsystem.components.MedsyShimmerPlaceholder
+import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.PriceFormatter
 import com.medsy.presentation.products.ProductUi
@@ -30,7 +34,9 @@ fun ProductGridCard(
     product: ProductUi,
     onClick: () -> Unit,
     onAddToCart: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isFavorite: Boolean = product.isFavorite,
+    onFavoriteClick: (() -> Unit)? = null,
 ) {
     val locale = LocalConfiguration.current.locales[0]
     val isDark = androidx.compose.foundation.isSystemInDarkTheme()
@@ -79,6 +85,21 @@ fun ProductGridCard(
                         )
                     }
                 )
+
+                if (onFavoriteClick != null) {
+                    IconButton(
+                        onClick = onFavoriteClick,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            contentDescription = stringResource(R.string.search_favorite_desc),
+                            tint = if (isFavorite) MaterialTheme.extendedColors.favoriteRed else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
 
                 strength?.let {
                     Surface(

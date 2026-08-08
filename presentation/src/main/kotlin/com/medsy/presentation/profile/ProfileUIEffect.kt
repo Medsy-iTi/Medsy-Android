@@ -5,4 +5,5 @@ sealed interface ProfileUIEffect {
         val startInEditMode: Boolean,
     ) : ProfileUIEffect
     data object NavigateToLogin : ProfileUIEffect
+    data object NavigateToFavorites : ProfileUIEffect
 }

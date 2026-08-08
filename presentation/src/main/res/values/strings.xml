@@ -77,6 +77,10 @@
     <string name="error_forbidden">You don\'t have permission to perform this action.</string>
     <string name="error_not_found">The requested resource was not found.</string>
     <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_database_constraint">Database constraint error.</string>
+    <string name="error_database_full">Storage space is full. Cannot save data.</string>
+    <string name="error_database_corrupt">Database error. Please clear app data or reinstall.</string>
+    <string name="error_database_io">Storage read/write error.</string>
 
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>
@@ -196,6 +200,11 @@
     <string name="search_favorite_desc">Add to favorites</string>
     <string name="search_add_to_cart_desc">Add to cart</string>
     <string name="search_added_to_cart">Added to cart</string>
+    <string name="search_added_to_favorites">Added %1$s to favorites</string>
+    <string name="search_removed_from_favorites">Removed %1$s from favorites</string>
+    <string name="profile_my_favourites">My Favorites</string>
+    <string name="profile_my_favourites_subtitle">Manage your favorite products</string>
+    <string name="favorites_empty">You have no favorite products yet.</string>
     <string name="search_empty_title">No results found</string>
     <string name="search_empty_subtitle">Try a different search term</string>
     <string name="search_sort_title">Sort By</string>
@@ -215,6 +224,7 @@
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">Share</string>
+    <string name="product_details_favorite_desc">Add to favorites</string>
     <string name="product_details_image_desc">Product image</string>
     <string name="product_details_pack_info_format">%1$s · %2$s</string>
     <string name="product_details_pharmacist_notice">This medicine is dispensed only after pharmacist review to determine the appropriate dose for your condition.</string>

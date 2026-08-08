@@ -35,6 +35,7 @@ import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.products.ProductsRoot
 import com.medsy.presentation.profile.personaldetails.PersonalDetailsRoot
+import com.medsy.presentation.favorites.FavoritesRoot
 import com.medsy.presentation.search.SearchRoot
 import com.medsy.presentation.settings.SettingsRoot
 import com.medsy.presentation.splash.SplashRoot
@@ -175,6 +176,9 @@ fun RootNavDisplay() {
                     requestedDestination = requestedNestedDestination,
                     onRequestedDestinationHandled = {
                         requestedNestedDestination = null
+                    },
+                    openFavorites = {
+                        rootBackStack.navigateSingleTop(Route.Favorites)
                     }
                 )
             }
@@ -259,6 +263,16 @@ fun RootNavDisplay() {
                 PersonalDetailsRoot(
                     startInEditMode = route.startInEditMode,
                     onNavigateBack = { rootBackStack.popIfCurrent(route) }
+                )
+            }
+            entry<Route.Favorites> {
+                FavoritesRoot(
+                    onBack = { rootBackStack.removeLastOrNull() },
+                    onProductSelected = { productId ->
+                        rootBackStack.navigateSingleTop(
+                            Route.ProductDetails(id = productId)
+                        )
+                    }
                 )
             }
             entry<Route.SearchNav> { route ->

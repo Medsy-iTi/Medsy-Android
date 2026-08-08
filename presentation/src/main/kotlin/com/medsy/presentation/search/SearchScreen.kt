@@ -85,7 +85,8 @@ fun SearchRoot(
                     snackbarHostState.showMessage(
                         context = context,
                         messageRes = effect.messageRes,
-                        isSuccess = effect.isSuccess
+                        isSuccess = effect.isSuccess,
+                        args = effect.args,
                     )
             }
         }

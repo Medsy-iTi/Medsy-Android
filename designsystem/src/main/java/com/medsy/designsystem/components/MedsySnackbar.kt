@@ -209,9 +209,15 @@ suspend fun SnackbarHostState.showMessage(
     context: Context,
     @StringRes messageRes: Int,
     isSuccess: Boolean,
+    args: List<Any> = emptyList(),
     actionLabel: String? = null,
 ): SnackbarResult? {
-    val message = ContextCompat.getString(context, messageRes)
+    val rawMessage = ContextCompat.getString(context, messageRes)
+    val message = if (args.isEmpty()) {
+        rawMessage
+    } else {
+        rawMessage.format(*args.toTypedArray())
+    }
     return if (isSuccess) {
         showSuccess(message, actionLabel)
     } else {

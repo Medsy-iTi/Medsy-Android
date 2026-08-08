@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
@@ -63,7 +62,8 @@ fun ProductDetailsRoot(
                     snackbarHostState.showMessage(
                         context = context,
                         messageRes = effect.messageRes,
-                        isSuccess = effect.isSuccess
+                        isSuccess = effect.isSuccess,
+                        args = effect.args,
                     )
                 }
             }

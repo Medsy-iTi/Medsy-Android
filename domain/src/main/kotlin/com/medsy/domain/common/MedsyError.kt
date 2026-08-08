@@ -23,6 +23,11 @@ sealed interface MedsyError {
 
     enum class Local : MedsyError {
         MEDIA,
+        DATABASE_CONSTRAINT,
+        DATABASE_FULL,
+        DATABASE_CORRUPT,
+        DATABASE_IO,
+        DATABASE_ERROR,
         UNKNOWN,
     }
 }

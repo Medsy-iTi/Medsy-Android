@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
@@ -54,7 +53,8 @@ fun ProductsRoot(
                     snackbarHostState.showMessage(
                         context = context,
                         messageRes = effect.messageRes,
-                        isSuccess = effect.isSuccess
+                        isSuccess = effect.isSuccess,
+                        args = effect.args,
                     )
                 }
             }
@@ -150,6 +150,10 @@ fun ProductsScreen(
                                 onClick = { onIntent(ProductsUIIntent.OnProductClick(product.id)) },
                                 onAddToCart = {
                                     onIntent(ProductsUIIntent.OnAddToCartClick(product.id))
+                                },
+                                isFavorite = product.isFavorite,
+                                onFavoriteClick = {
+                                    onIntent(ProductsUIIntent.OnFavoriteClick(product.id))
                                 },
                             )
                         }
