@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import com.medsy.designsystem.ui.theme.extendedColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -110,7 +111,7 @@ fun ProductResultCard(
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = stringResource(R.string.search_favorite_desc),
-                    tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,                )
+                    tint = if (isFavorite) MaterialTheme.extendedColors.favoriteRed else MaterialTheme.colorScheme.onSurfaceVariant,                )
             }
 
             Box(

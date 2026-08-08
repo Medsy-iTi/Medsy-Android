@@ -51,8 +51,15 @@ fun ProductsRoot(
                 is ProductsUIEffect.NavigateBack -> onBackClick()
                 is ProductsUIEffect.NavigateToProductDetails -> onProductClick(effect.productId)
                 is ProductsUIEffect.ShowMessage -> {
-                    val message = ContextCompat.getString(context, effect.messageRes)
-                    if (effect.messageRes == R.string.products_added_to_cart) {
+                    val rawMessage = ContextCompat.getString(context, effect.messageRes)
+                    val message = if (effect.args.isNotEmpty()) {
+                        rawMessage.format(*effect.args.toTypedArray())
+                    } else {
+                        rawMessage
+                    }
+                    if (effect.messageRes == R.string.products_added_to_cart ||
+                        effect.messageRes == R.string.search_added_to_favorites
+                    ) {
                         snackbarHostState.showSuccess(message)
                     } else {
                         snackbarHostState.showError(message)
@@ -151,6 +158,10 @@ fun ProductsScreen(
                                 onClick = { onIntent(ProductsUIIntent.OnProductClick(product.id)) },
                                 onAddToCart = {
                                     onIntent(ProductsUIIntent.OnAddToCartClick(product.id))
+                                },
+                                isFavorite = product.isFavorite,
+                                onFavoriteClick = {
+                                    onIntent(ProductsUIIntent.OnFavoriteClick(product.id))
                                 },
                             )
                         }

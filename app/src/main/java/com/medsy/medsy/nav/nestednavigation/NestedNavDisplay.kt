@@ -44,6 +44,7 @@ fun NestedNavDisplay(
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
     openOrderDetails: (String) -> Unit,
+    openFavorites: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -180,6 +181,7 @@ fun NestedNavDisplay(
                     ProfileRoot(
                         onNavigateToPersonalDetails = openPersonalDetails,
                         onNavigateToLogin = openLogin,
+                        onNavigateToFavorites = openFavorites,
                     )
                 }
             }

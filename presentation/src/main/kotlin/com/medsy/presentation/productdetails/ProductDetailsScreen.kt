@@ -62,8 +62,15 @@ fun ProductDetailsRoot(
                 }
 
                 is ProductDetailsUIEffect.ShowMessage -> {
-                    val message = ContextCompat.getString(context, effect.messageRes)
-                    if (effect.messageRes == R.string.product_details_added_to_cart) {
+                    val rawMessage = ContextCompat.getString(context, effect.messageRes)
+                    val message = if (effect.args.isNotEmpty()) {
+                        rawMessage.format(*effect.args.toTypedArray())
+                    } else {
+                        rawMessage
+                    }
+                    if (effect.messageRes == R.string.product_details_added_to_cart ||
+                        effect.messageRes == R.string.search_added_to_favorites
+                    ) {
                         snackbarHostState.showSuccess(message)
                     } else {
                         snackbarHostState.showError(message)
@@ -118,8 +125,9 @@ fun ProductDetailsScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         ProductTopBar(
+            isFavorite = state.isFavorite,
             onBackClick = { onIntent(ProductDetailsUIIntent.BackClicked) },
-            onShareClick = { onIntent(ProductDetailsUIIntent.ShareClicked) },
+            onFavoriteClick = { onIntent(ProductDetailsUIIntent.FavoriteClicked) },
         )
 
         Column(

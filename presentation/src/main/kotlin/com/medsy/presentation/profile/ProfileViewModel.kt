@@ -152,6 +152,10 @@ class ProfileViewModel @Inject constructor(
                 )
             }
 
+            ProfileUIIntent.FavoritesClicked -> {
+                sendEffect(ProfileUIEffect.NavigateToFavorites)
+            }
+
             ProfileUIIntent.AddAddressClicked -> {
                 sendEffect(
                     ProfileUIEffect.NavigateToPersonalDetails(startInEditMode = true)
