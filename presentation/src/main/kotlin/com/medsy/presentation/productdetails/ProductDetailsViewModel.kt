@@ -59,9 +59,11 @@ class ProductDetailsViewModel @Inject constructor(
             is ProductDetailsUIIntent.ImagePageChanged -> _state.update {
                 it.copy(selectedImageIndex = intent.index)
             }
+
             ProductDetailsUIIntent.AddToCartClicked -> addToCart()
             ProductDetailsUIIntent.ConsultPharmacistClicked ->
                 sendEffect(ProductDetailsUIEffect.NavigateToPharmacistChat)
+
             ProductDetailsUIIntent.RetryClicked -> loadProduct()
         }
     }
@@ -99,6 +101,7 @@ class ProductDetailsViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is MedsyResult.Error -> {
                     _state.update {
                         it.copy(
@@ -125,7 +128,8 @@ class ProductDetailsViewModel @Inject constructor(
                     _state.update { it.copy(isAddingToCart = false) }
                     sendEffect(
                         ProductDetailsUIEffect.ShowMessage(
-                            R.string.product_details_added_to_cart
+                            R.string.product_details_added_to_cart,
+                            isSuccess = true
                         )
                     )
                 }
@@ -148,7 +152,7 @@ class ProductDetailsViewModel @Inject constructor(
         return Product(
             id = id.toString(),
             name = name,
-            imageUrls = imageUrl?.let { listOf(it) } ?: emptyList(),            strength = strength.orEmpty(),
+            imageUrls = imageUrl?.let { listOf(it) } ?: emptyList(), strength = strength.orEmpty(),
             packInfo = packSize.orEmpty(),
             price = price.toInt(),
             description = description.orEmpty(),

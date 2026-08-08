@@ -23,7 +23,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,17 +36,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showMessage
 import com.medsy.presentation.R
+import kotlinx.coroutines.flow.collectLatest
 import com.medsy.presentation.search.components.ProductResultCard
 import com.medsy.presentation.search.components.SearchCategoryBottomSheet
 import com.medsy.presentation.search.components.SearchEmptyState
 import com.medsy.presentation.search.components.SearchFilterChips
 import com.medsy.presentation.search.components.SearchInputBar
-import com.medsy.presentation.search.components.SearchSelectionBottomSheet
 import com.medsy.presentation.search.components.SearchResultsHeader
+import com.medsy.presentation.search.components.SearchSelectionBottomSheet
 import com.medsy.presentation.search.components.SearchTopBar
 
 @Composable
@@ -69,7 +70,7 @@ fun SearchRoot(
     }
 
     LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 SearchUIEffect.NavigateBack -> onBack()
                 is SearchUIEffect.NavigateToProductDetails -> {
@@ -79,16 +80,19 @@ fun SearchRoot(
                         onNext(effect.productId)
                     }
                 }
+
                 is SearchUIEffect.ShowMessage ->
-                    snackbarHostState.showSnackbar(
-                        ContextCompat.getString(context, effect.messageRes)
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess
                     )
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
     ) { paddingValues ->
         SearchScreen(
             state = state,

@@ -22,9 +22,9 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
-import com.medsy.designsystem.components.showSuccess
-import com.medsy.designsystem.components.showError
+import com.medsy.designsystem.components.showMessage
 import com.medsy.presentation.R
+import kotlinx.coroutines.flow.collectLatest
 import com.medsy.presentation.products.components.ProductGridCard
 import com.medsy.presentation.products.components.ProductsTopBar
 import com.medsy.presentation.products.components.ProductsShimmer
@@ -46,17 +46,16 @@ fun ProductsRoot(
     }
 
     LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is ProductsUIEffect.NavigateBack -> onBackClick()
                 is ProductsUIEffect.NavigateToProductDetails -> onProductClick(effect.productId)
                 is ProductsUIEffect.ShowMessage -> {
-                    val message = ContextCompat.getString(context, effect.messageRes)
-                    if (effect.messageRes == R.string.products_added_to_cart) {
-                        snackbarHostState.showSuccess(message)
-                    } else {
-                        snackbarHostState.showError(message)
-                    }
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess
+                    )
                 }
             }
         }

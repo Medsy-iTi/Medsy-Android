@@ -78,7 +78,7 @@ class ProductsViewModel @Inject constructor(
             addCartItem(productId)
                 .onSuccess {
                     sendEffect(
-                        ProductsUIEffect.ShowMessage(R.string.products_added_to_cart)
+                        ProductsUIEffect.ShowMessage(R.string.products_added_to_cart, isSuccess = true)
                     )
                 }
                 .onError { error ->

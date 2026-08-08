@@ -40,7 +40,10 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsyButton
+import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.designsystem.components.location.MedsyLocationPickerScreen
+import com.medsy.designsystem.components.showMessage
+import kotlinx.coroutines.flow.collectLatest
 import com.medsy.domain.cart.model.DeliveryMethod
 import com.medsy.domain.cart.model.PaymentOption
 import com.medsy.presentation.R
@@ -62,12 +65,14 @@ fun CartRequestRoot(
     BackHandler(enabled = state.isSubmitting) {}
 
     LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 CartRequestUIEffect.NavigateHome -> onNavigateHome()
                 is CartRequestUIEffect.ShowMessage -> {
-                    snackbarHostState.showSnackbar(
-                        ContextCompat.getString(context, effect.messageRes)
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess
                     )
                 }
             }

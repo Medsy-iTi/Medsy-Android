@@ -23,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -59,6 +58,8 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import com.medsy.designsystem.R
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showError
 import kotlinx.coroutines.launch
 
 private val CairoLocation = LatLng(30.0444, 31.2357)
@@ -127,7 +128,7 @@ fun MedsyLocationPickerScreen(
         if (hasLocationPermission) {
             locationRequestVersion++
         } else {
-            scope.launch { snackbarHostState.showSnackbar(permissionDeniedMessage) }
+            scope.launch { snackbarHostState.showError(permissionDeniedMessage) }
         }
     }
 
@@ -155,7 +156,7 @@ fun MedsyLocationPickerScreen(
         ).addOnSuccessListener { location ->
             isFindingLocation = false
             if (location == null) {
-                scope.launch { snackbarHostState.showSnackbar(locationUnavailableMessage) }
+                scope.launch { snackbarHostState.showError(locationUnavailableMessage) }
                 return@addOnSuccessListener
             }
             val currentPosition = LatLng(location.latitude, location.longitude)
@@ -167,12 +168,12 @@ fun MedsyLocationPickerScreen(
             }
         }.addOnFailureListener {
             isFindingLocation = false
-            scope.launch { snackbarHostState.showSnackbar(locationUnavailableMessage) }
+            scope.launch { snackbarHostState.showError(locationUnavailableMessage) }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {

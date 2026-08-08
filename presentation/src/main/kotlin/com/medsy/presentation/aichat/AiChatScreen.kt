@@ -50,7 +50,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.designsystem.components.showInfo
+import com.medsy.designsystem.components.showMessage
 import com.medsy.presentation.R
+import kotlinx.coroutines.flow.collectLatest
 import com.medsy.presentation.aichat.components.AiChatComposer
 import com.medsy.presentation.aichat.components.AiChatConversation
 import com.medsy.presentation.aichat.components.AiChatNewChatDialog
@@ -102,7 +104,7 @@ fun AiChatRoot(
     )
 
     LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 AiChatUIEffect.LaunchVoiceInput -> try {
                     voiceLauncher.launch(
@@ -148,8 +150,10 @@ fun AiChatRoot(
 
                 AiChatUIEffect.NavigateToCartTab -> onOpenCartTab()
                 AiChatUIEffect.NavigateToCartRequest -> onOpenCartRequest()
-                is AiChatUIEffect.ShowMessage -> snackbarHostState.showInfo(
-                    ContextCompat.getString(context, effect.messageRes)
+                is AiChatUIEffect.ShowMessage -> snackbarHostState.showMessage(
+                    context = context,
+                    messageRes = effect.messageRes,
+                    isSuccess = effect.isSuccess
                 )
             }
         }

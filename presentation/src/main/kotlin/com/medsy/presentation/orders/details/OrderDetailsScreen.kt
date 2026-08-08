@@ -18,7 +18,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,6 +39,8 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showError
 import com.medsy.presentation.R
 import com.medsy.presentation.orders.details.components.OrderDetailsLineItemRow
 import com.medsy.presentation.orders.details.components.OrderDetailsPharmacyCard
@@ -82,7 +83,7 @@ fun OrderDetailsRoot(
                     onNavigateToProductDetails(effect.productId)
 
                 is OrderDetailsUIEffect.ShowErrorSnackbar -> {
-                    snackbarHostState.showSnackbar(
+                    snackbarHostState.showError(
                         message = ContextCompat.getString(context, effect.messageRes)
                     )
                 }
@@ -109,7 +110,7 @@ fun OrderDetailsScreen(
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
         topBar = {
             OrderDetailsTopBar(
                 orderId = orderId,

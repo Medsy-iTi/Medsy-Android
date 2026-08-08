@@ -148,7 +148,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             addCartItem(productId)
                 .onSuccess {
-                    sendEffect(SearchUIEffect.ShowMessage(R.string.search_added_to_cart))
+                    sendEffect(SearchUIEffect.ShowMessage(R.string.search_added_to_cart, isSuccess = true))
                 }
                 .onError { error ->
                     sendEffect(SearchUIEffect.ShowMessage(error.toMessageRes()))

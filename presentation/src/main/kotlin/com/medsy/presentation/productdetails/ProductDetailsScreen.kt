@@ -23,8 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
-import com.medsy.designsystem.components.showError
-import com.medsy.designsystem.components.showSuccess
+import com.medsy.designsystem.components.showMessage
 import com.medsy.presentation.R
 import com.medsy.presentation.productdetails.components.PharmacistNoticeCard
 import com.medsy.presentation.productdetails.components.ProductBottomActions
@@ -61,12 +60,11 @@ fun ProductDetailsRoot(
                 }
 
                 is ProductDetailsUIEffect.ShowMessage -> {
-                    val message = ContextCompat.getString(context, effect.messageRes)
-                    if (effect.messageRes == R.string.product_details_added_to_cart) {
-                        snackbarHostState.showSuccess(message)
-                    } else {
-                        snackbarHostState.showError(message)
-                    }
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess
+                    )
                 }
             }
         }

@@ -219,7 +219,7 @@ class CartViewModel @Inject constructor(
                             errorMessageRes = null,
                         )
                     }
-                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_cleared))
+                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_cleared, isSuccess = true))
                 }
                 .onError { error ->
                     _state.update { it.copy(isClearing = false) }
@@ -233,7 +233,7 @@ class CartViewModel @Inject constructor(
             updateCartNote(_state.value.noteInput.trim())
                 .onSuccess {
                     _state.update { it.copy(isNoteDialogVisible = false) }
-                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_note_saved))
+                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_note_saved, isSuccess = true))
                 }
                 .onError { error ->
                     sendEffect(CartUIEffect.ShowMessage(error.toMessageRes()))
@@ -245,7 +245,7 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             removeCartPrescription()
                 .onSuccess {
-                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_prescription_removed))
+                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_prescription_removed, isSuccess = true))
                 }
                 .onError { error ->
                     sendEffect(CartUIEffect.ShowMessage(error.toMessageRes()))

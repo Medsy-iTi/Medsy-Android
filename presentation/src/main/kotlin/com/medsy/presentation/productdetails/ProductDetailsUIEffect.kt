@@ -4,5 +4,8 @@ sealed interface ProductDetailsUIEffect {
     data object NavigateBack : ProductDetailsUIEffect
     data object OpenShareSheet : ProductDetailsUIEffect
     data object NavigateToPharmacistChat : ProductDetailsUIEffect
-    data class ShowMessage(val messageRes: Int) : ProductDetailsUIEffect
+    data class ShowMessage(
+        val messageRes: Int,
+        val isSuccess: Boolean = false
+    ) : ProductDetailsUIEffect
 }
