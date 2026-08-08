@@ -3,7 +3,15 @@ package com.medsy.presentation.cart.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -16,20 +24,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import com.medsy.designsystem.ui.theme.extendedColors
+import com.medsy.designsystem.components.NullableProductImage
 import com.medsy.domain.cart.model.CartItem
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.PriceFormatter
@@ -58,16 +62,14 @@ internal fun CartItemCard(
         verticalAlignment = Alignment.Top,
     ) {
         // 1. Product Image (Start)
-        AsyncImage(
-            model = item.imageUrl,
+        NullableProductImage(
+            imageUrl = item.imageUrl,
             contentDescription = item.productName,
             modifier = Modifier
                 .size(100.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
             contentScale = ContentScale.Fit,
-            placeholder = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
-            error = painterResource(com.medsy.designsystem.R.drawable.ic_logo_transparent),
         )
 
         // 2. Product Info (Center)
@@ -190,8 +192,8 @@ private fun StepperButton(
             imageVector = icon,
             contentDescription = contentDescription,
             modifier = Modifier.size(16.dp),
-            tint = if (enabled) MaterialTheme.colorScheme.onSurface 
-                   else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            tint = if (enabled) MaterialTheme.colorScheme.onSurface
+            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         )
     }
 }

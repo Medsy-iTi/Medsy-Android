@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -131,7 +130,6 @@ fun ProductDetailsScreen(
                 imageUrls = product.imageUrls,
                 selectedIndex = state.selectedImageIndex,
                 onPageChanged = { onIntent(ProductDetailsUIIntent.ImagePageChanged(it)) },
-                placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)
             )
 
             ProductTitlePriceSection(
