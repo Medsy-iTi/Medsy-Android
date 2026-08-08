@@ -2,6 +2,7 @@ package com.medsy.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.medsy.data.local.database.DatabaseConstants
 import com.medsy.data.local.database.MedsyDatabase
 import com.medsy.data.local.database.dao.FavoriteProductDao
 import dagger.Module
@@ -23,7 +24,7 @@ object DatabaseModule {
         return Room.databaseBuilder(
             context,
             MedsyDatabase::class.java,
-            "medsy_database"
+            DatabaseConstants.DATABASE_NAME
         ).fallbackToDestructiveMigration().build()
     }
 
