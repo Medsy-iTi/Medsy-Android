@@ -20,7 +20,9 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.medsy.medsy.nav.rootnavigation.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.rootnavigation.Route
-import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
+import com.medsy.medsy.nav.rootnavigation.pop
+import com.medsy.medsy.nav.rootnavigation.push
+import com.medsy.medsy.nav.rootnavigation.setRoot
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.home.HomeRoot
 import com.medsy.presentation.orders.orderslist.OrdersRoot
@@ -63,11 +65,10 @@ fun NestedNavDisplay(
     LaunchedEffect(requestedDestination) {
         val destination = requestedDestination ?: return@LaunchedEffect
         nestedBackStack.apply {
-            clear()
+            setRoot(Route.NestedNav.Home)
             if (destination != Route.NestedNav.Home) {
-                navigateSingleTop(Route.NestedNav.Home)
+                push(destination)
             }
-            navigateSingleTop(destination)
         }
         onRequestedDestinationHandled()
     }
@@ -85,11 +86,10 @@ fun NestedNavDisplay(
                         BottomNavigationButton(
                             onClick = {
                                 nestedBackStack.apply {
-                                    clear()
+                                    setRoot(Route.NestedNav.Home)
                                     if (destination.route != Route.NestedNav.Home) {
-                                        navigateSingleTop(Route.NestedNav.Home)
+                                        push(destination.route)
                                     }
-                                    navigateSingleTop(destination.route)
                                 }
                             },
                             icon = if (isSelected) destination.selectedIcon else destination.icon,
@@ -115,9 +115,7 @@ fun NestedNavDisplay(
                 .fillMaxSize(),
             backStack = nestedBackStack,
             onBack = {
-                if (nestedBackStack.lastOrNull() != Route.NestedNav.Home) {
-                    nestedBackStack.removeLastOrNull()
-                } else {
+                if (!nestedBackStack.pop()) {
                     navigateBack()
                 }
             },
