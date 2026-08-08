@@ -36,7 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -56,9 +55,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.designsystem.components.location.MedsyLocationPickerScreen
+import com.medsy.designsystem.components.showError
+import com.medsy.designsystem.components.showSuccess
 import com.medsy.domain.profile.model.Profile
 import com.medsy.presentation.R
 import java.time.Instant
@@ -84,11 +87,15 @@ fun PersonalDetailsRoot(
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
-            val message = when (effect) {
-                PersonalDetailsUIEffect.SaveSucceeded -> saveSuccessMessage
-                is PersonalDetailsUIEffect.SaveFailed -> context.getString(effect.messageRes)
+            when (effect) {
+                PersonalDetailsUIEffect.SaveSucceeded -> snackbarHostState.showSuccess(
+                    saveSuccessMessage
+                )
+
+                is PersonalDetailsUIEffect.SaveFailed -> snackbarHostState.showError(
+                    ContextCompat.getString(context, effect.messageRes)
+                )
             }
-            snackbarHostState.showSnackbar(message)
         }
     }
 
@@ -139,7 +146,7 @@ fun PersonalDetailsScreen(
     var showDatePicker by remember { mutableStateOf(false) }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -433,7 +440,7 @@ private fun PersonalDetailsContent(
                     .fillMaxWidth()
                     .heightIn(min = 56.dp),
                 enabled = state.isEditing && state.hasChanges && !state.isSaving &&
-                    state.isFirstNameValid && state.isLastNameValid,
+                        state.isFirstNameValid && state.isLastNameValid,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

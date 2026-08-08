@@ -5,6 +5,7 @@ import com.medsy.data.remote.network.safeApiCall
 import com.medsy.data.remote.network.safeEmptyRestCall
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
+import com.medsy.domain.offers.model.SelectedOfferItem
 import javax.inject.Inject
 
 class OffersRemoteDataSource @Inject constructor(
@@ -19,9 +20,22 @@ class OffersRemoteDataSource @Inject constructor(
             apiService.getOffersForRequest(requestId, page, size)
         }
 
-    suspend fun acceptOffer(requestId: Long, selectedRequestItemIds: List<Long>): MedsyResult<ConfirmRequestResponseDto, MedsyError.Remote> {
+    suspend fun acceptOffer(
+        requestId: Long,
+        selectedItems: List<SelectedOfferItem>,
+    ): MedsyResult<ConfirmRequestResponseDto, MedsyError.Remote> {
         return safeApiCall {
-            apiService.confirmRequest(requestId, ConfirmRequestDto(selectedRequestItemIds))
+            apiService.confirmRequest(
+                requestId,
+                ConfirmRequestDto(
+                    selectedItems = selectedItems.map { item ->
+                        SelectedItemDto(
+                            requestItemId = item.requestItemId,
+                            productId = item.productId,
+                        )
+                    }
+                )
+            )
         }
     }
 

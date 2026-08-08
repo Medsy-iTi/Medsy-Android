@@ -6,7 +6,6 @@ import com.medsy.data.prescription.mapper.toMedicine
 import com.medsy.data.prescription.remote.PrescriptionImageMimeType
 import com.medsy.data.prescription.remote.PrescriptionRemoteDataSource
 import com.medsy.domain.common.EmptyMedsyResult
-import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.map
@@ -82,9 +81,8 @@ class PrescriptionRepositoryImpl @Inject constructor(
     override suspend fun searchMedicines(
         query: String,
     ): MedsyResult<List<Medicine>, MedsyError.Remote> {
-        val isArabic = java.util.Locale.getDefault().language == LocaleConstants.ARABIC_TAG
         return remoteDataSource.searchProducts(query)
-            .map { page -> page.content.map { it.toMedicine(isArabic) } }
+            .map { page -> page.content.map { it.toMedicine() } }
     }
 
     override suspend fun addPrescriptionToCart(

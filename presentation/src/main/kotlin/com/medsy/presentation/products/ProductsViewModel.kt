@@ -147,7 +147,8 @@ class ProductsViewModel @Inject constructor(
                         sendEffect(
                             ProductsUIEffect.ShowMessage(
                                 R.string.search_removed_from_favorites,
-                                listOf(domainProduct.name)
+                                listOf(domainProduct.name),
+                                isSuccess = true,
                             )
                         )
                     }
@@ -157,7 +158,8 @@ class ProductsViewModel @Inject constructor(
                         sendEffect(
                             ProductsUIEffect.ShowMessage(
                                 R.string.search_added_to_favorites,
-                                listOf(domainProduct.name)
+                                listOf(domainProduct.name),
+                                isSuccess = true,
                             )
                         )
                     }
@@ -170,7 +172,7 @@ class ProductsViewModel @Inject constructor(
             addCartItem(productId)
                 .onSuccess {
                     sendEffect(
-                        ProductsUIEffect.ShowMessage(R.string.products_added_to_cart)
+                        ProductsUIEffect.ShowMessage(R.string.products_added_to_cart, isSuccess = true)
                     )
                 }
                 .onError { error ->

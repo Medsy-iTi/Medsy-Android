@@ -9,5 +9,8 @@ sealed interface PrescriptionUIEffect {
     data class NavigateToSearch(val query: String, val localItemId: String) : PrescriptionUIEffect
     data class NavigateToProductDetails(val productId: String) : PrescriptionUIEffect
     data object PrescriptionAttached : PrescriptionUIEffect
-    data class ShowMessage(val messageRes: Int) : PrescriptionUIEffect
+    data class ShowMessage(
+        val messageRes: Int,
+        val isSuccess: Boolean = false
+    ) : PrescriptionUIEffect
 }

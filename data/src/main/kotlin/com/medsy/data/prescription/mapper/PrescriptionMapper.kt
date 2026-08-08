@@ -67,13 +67,13 @@ fun ProductDetailsDto.toMedicine(): Medicine {
     )
 }
 
-fun ProductDto.toMedicine(isArabic: Boolean): Medicine {
+fun ProductDto.toMedicine(): Medicine {
     return Medicine(
         productId = id,
-        name = if (isArabic && !arabicName.isNullOrBlank()) arabicName else name,
-        strength = scientificName,
-        form = route,
+        name = name,
+        strength = strength ?: scientificName,
+        form = form ?: route,
         price = price.toInt(),
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
     )
 }

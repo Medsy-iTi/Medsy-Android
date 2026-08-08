@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
-import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.fold
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -153,16 +151,21 @@ class SearchViewModel @Inject constructor(
     private fun addToCart(rawProductId: String) {
         val productId = rawProductId.toIntOrNull()
         if (productId == null) {
-            sendEffect(SearchUIEffect.ShowMessage(R.string.error_invalid_id, isError = true))
+            sendEffect(SearchUIEffect.ShowMessage(R.string.error_invalid_id))
             return
         }
         viewModelScope.launch {
             addCartItem(productId)
                 .onSuccess {
-                    sendEffect(SearchUIEffect.ShowMessage(R.string.search_added_to_cart))
+                    sendEffect(
+                        SearchUIEffect.ShowMessage(
+                            R.string.search_added_to_cart,
+                            isSuccess = true
+                        )
+                    )
                 }
                 .onError { error ->
-                    sendEffect(SearchUIEffect.ShowMessage(error.toMessageRes(), isError = true))
+                    sendEffect(SearchUIEffect.ShowMessage(error.toMessageRes()))
                 }
         }
     }
@@ -263,8 +266,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun SearchProduct.toUi(): SearchProductUi {
-        val isArabic = Locale.getDefault().language == LocaleConstants.ARABIC_TAG
-        val localizedName = if (isArabic && arabicName.isNotBlank()) arabicName else name
         val subtitle = if (scientificName.isNotBlank() && company.isNotBlank()) {
             "$scientificName · $company"
         } else if (scientificName.isNotBlank()) {
@@ -274,7 +275,7 @@ class SearchViewModel @Inject constructor(
         }
         return SearchProductUi(
             id = id.toString(),
-            name = localizedName,
+            name = name,
             subtitle = subtitle,
             priceEgp = price.toInt(),
             imageUrl = imageUrl
@@ -332,15 +333,15 @@ class SearchViewModel @Inject constructor(
                         sendEffect(
                             SearchUIEffect.ShowMessage(
                                 R.string.search_removed_from_favorites,
-                                listOf(productName)
+                                listOf(productName),
+                                isSuccess = true,
                             )
                         )
                     }
                     .onError { error ->
                         sendEffect(
                             SearchUIEffect.ShowMessage(
-                                error.toMessageRes(),
-                                isError = true
+                                error.toMessageRes()
                             )
                         )
                     }
@@ -352,19 +353,19 @@ class SearchViewModel @Inject constructor(
                             sendEffect(
                                 SearchUIEffect.ShowMessage(
                                     R.string.search_added_to_favorites,
-                                    listOf(product.name)
+                                    listOf(product.name),
+                                    isSuccess = true,
                                 )
                             )
                         }
                         .onError { error ->
                             sendEffect(
                                 SearchUIEffect.ShowMessage(
-                                    error.toMessageRes(),
-                                    isError = true
+                                    error.toMessageRes()
                                 )
                             )
                         }
-                    
+
                 }
             }
         }
@@ -374,7 +375,7 @@ class SearchViewModel @Inject constructor(
         return FavoriteProduct(
             id = id,
             name = name,
-            arabicName = arabicName,
+            arabicName = name,
             scientificName = scientificName,
             price = price,
             imageUrl = imageUrl,

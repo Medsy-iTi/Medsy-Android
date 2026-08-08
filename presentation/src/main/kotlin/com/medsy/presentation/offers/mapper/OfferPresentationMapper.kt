@@ -11,6 +11,7 @@ fun Offer.toPharmacyOffer(resultItemMap: Map<Long, RequestResultItem>): Pharmacy
         val resultItem = resultItemMap[offerItem.requestItemId]
         OfferMedicine(
             id = offerItem.requestItemId.toString(),
+            productId = offerItem.productId.toLong(),
             name = resultItem?.productName ?: "",
             packageInfo = "",
             price = resultItem?.unitPrice?.toInt() ?: 0,

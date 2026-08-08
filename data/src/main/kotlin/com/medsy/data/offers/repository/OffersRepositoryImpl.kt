@@ -37,9 +37,9 @@ class OffersRepositoryImpl @Inject constructor(
 
     override suspend fun acceptOffer(
         requestId: Long,
-        selectedRequestItemIds: List<Long>,
+        selectedItems: List<com.medsy.domain.offers.model.SelectedOfferItem>,
     ): MedsyResult<com.medsy.domain.offers.model.ConfirmOfferResult, MedsyError.Remote> =
-        remoteDataSource.acceptOffer(requestId, selectedRequestItemIds)
+        remoteDataSource.acceptOffer(requestId, selectedItems)
             .map { dto ->
                 com.medsy.domain.offers.model.ConfirmOfferResult(
                     requestId = dto.requestId,

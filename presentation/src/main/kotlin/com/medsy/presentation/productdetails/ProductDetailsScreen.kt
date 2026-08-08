@@ -17,15 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
-import com.medsy.designsystem.components.showError
-import com.medsy.designsystem.components.showSuccess
+import com.medsy.designsystem.components.showMessage
 import com.medsy.presentation.R
 import com.medsy.presentation.productdetails.components.PharmacistNoticeCard
 import com.medsy.presentation.productdetails.components.ProductBottomActions
@@ -62,19 +59,12 @@ fun ProductDetailsRoot(
                 }
 
                 is ProductDetailsUIEffect.ShowMessage -> {
-                    val rawMessage = ContextCompat.getString(context, effect.messageRes)
-                    val message = if (effect.args.isNotEmpty()) {
-                        rawMessage.format(*effect.args.toTypedArray())
-                    } else {
-                        rawMessage
-                    }
-                    if (effect.messageRes == R.string.product_details_added_to_cart ||
-                        effect.messageRes == R.string.search_added_to_favorites
-                    ) {
-                        snackbarHostState.showSuccess(message)
-                    } else {
-                        snackbarHostState.showError(message)
-                    }
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess,
+                        args = effect.args,
+                    )
                 }
             }
         }
@@ -139,7 +129,6 @@ fun ProductDetailsScreen(
                 imageUrls = product.imageUrls,
                 selectedIndex = state.selectedImageIndex,
                 onPageChanged = { onIntent(ProductDetailsUIIntent.ImagePageChanged(it)) },
-                placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)
             )
 
             ProductTitlePriceSection(

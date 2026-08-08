@@ -73,9 +73,11 @@ class ProductDetailsViewModel @Inject constructor(
             is ProductDetailsUIIntent.ImagePageChanged -> _state.update {
                 it.copy(selectedImageIndex = intent.index)
             }
+
             ProductDetailsUIIntent.AddToCartClicked -> addToCart()
             ProductDetailsUIIntent.ConsultPharmacistClicked ->
                 sendEffect(ProductDetailsUIEffect.NavigateToPharmacistChat)
+
             ProductDetailsUIIntent.RetryClicked -> loadProduct()
         }
     }
@@ -143,6 +145,7 @@ class ProductDetailsViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is MedsyResult.Error -> {
                     _state.update {
                         it.copy(
@@ -168,7 +171,8 @@ class ProductDetailsViewModel @Inject constructor(
                         sendEffect(
                             ProductDetailsUIEffect.ShowMessage(
                                 R.string.search_removed_from_favorites,
-                                listOf(productName)
+                                listOf(productName),
+                                isSuccess = true,
                             )
                         )
                     }
@@ -178,7 +182,8 @@ class ProductDetailsViewModel @Inject constructor(
                         sendEffect(
                             ProductDetailsUIEffect.ShowMessage(
                                 R.string.search_added_to_favorites,
-                                listOf(productName)
+                                listOf(productName),
+                                isSuccess = true,
                             )
                         )
                     }
@@ -196,7 +201,8 @@ class ProductDetailsViewModel @Inject constructor(
                     _state.update { it.copy(isAddingToCart = false) }
                     sendEffect(
                         ProductDetailsUIEffect.ShowMessage(
-                            R.string.product_details_added_to_cart
+                            R.string.product_details_added_to_cart,
+                            isSuccess = true
                         )
                     )
                 }

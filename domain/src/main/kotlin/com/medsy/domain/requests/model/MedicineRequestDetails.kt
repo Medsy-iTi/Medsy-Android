@@ -12,14 +12,15 @@ data class MedicineRequestDetails(
     val createdAt: String,
     val items: List<MedicineRequestItem>,
     val prescriptionUrl: String?,
-    val notes: String?
+    val notes: String?,
+    val paymentMethod: String?,
 )
 
 data class MedicineRequestItem(
     val id: Long,
     val productId: Int,
     val imageUrl: String?,
-    val productName: String,
+    val productName: String?,
     val strength: String?,
     val packSize: String?,
     val form: String?,

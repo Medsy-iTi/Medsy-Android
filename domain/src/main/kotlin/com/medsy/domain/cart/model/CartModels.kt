@@ -12,7 +12,7 @@ data class CartItem(
     val id: Long,
     val productId: Int,
     val productName: String,
-    val imageUrl: String,
+    val imageUrl: String?,
     val unitPriceEgp: Double,
     val quantity: Int,
     val subtotalEgp: Double,

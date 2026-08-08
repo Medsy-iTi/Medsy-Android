@@ -36,13 +36,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
-import com.medsy.designsystem.components.showError
-import com.medsy.designsystem.components.showSuccess
+import com.medsy.designsystem.components.showMessage
 import com.medsy.presentation.R
+import kotlinx.coroutines.flow.collectLatest
 import com.medsy.presentation.search.components.ProductResultCard
 import com.medsy.presentation.search.components.SearchCategoryBottomSheet
 import com.medsy.presentation.search.components.SearchEmptyState
@@ -71,7 +70,7 @@ fun SearchRoot(
     }
 
     LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 SearchUIEffect.NavigateBack -> onBack()
                 is SearchUIEffect.NavigateToProductDetails -> {
@@ -82,24 +81,19 @@ fun SearchRoot(
                     }
                 }
 
-                is SearchUIEffect.ShowMessage -> {
-                    val message = if (effect.args.isEmpty()) {
-                        ContextCompat.getString(context, effect.messageRes)
-                    } else {
-                        context.getString(effect.messageRes, *effect.args.toTypedArray())
-                    }
-                    if (effect.isError) {
-                        snackbarHostState.showError(message)
-                    } else {
-                        snackbarHostState.showSuccess(message)
-                    }
-                }
+                is SearchUIEffect.ShowMessage ->
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess,
+                        args = effect.args,
+                    )
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
     ) { paddingValues ->
         SearchScreen(
             state = state,

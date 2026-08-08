@@ -1,6 +1,5 @@
 package com.medsy.presentation.favorites
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieAnimation
@@ -44,10 +42,10 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.medsy.designsystem.components.MedsySnackbarHost
-import com.medsy.designsystem.components.showError
-import com.medsy.designsystem.components.showSuccess
+import com.medsy.designsystem.components.showMessage
 import com.medsy.presentation.R
 import com.medsy.presentation.search.components.ProductResultCard
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun FavoritesRoot(
@@ -60,21 +58,17 @@ fun FavoritesRoot(
     val context = LocalContext.current
 
     LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 FavoritesUIEffect.NavigateBack -> onBack()
                 is FavoritesUIEffect.NavigateToProductDetails -> onProductSelected(effect.productId)
                 is FavoritesUIEffect.ShowMessage -> {
-                    val message = if (effect.args.isEmpty()) {
-                        ContextCompat.getString(context, effect.messageRes)
-                    } else {
-                        context.getString(effect.messageRes, *effect.args.toTypedArray())
-                    }
-                    if (effect.isError) {
-                        snackbarHostState.showError(message)
-                    } else {
-                        snackbarHostState.showSuccess(message)
-                    }
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess,
+                        args = effect.args,
+                    )
                 }
             }
         }
@@ -82,11 +76,12 @@ fun FavoritesRoot(
 
     Scaffold(
         snackbarHost = { MedsySnackbarHost(snackbarHostState) },
-    ) { paddingValues ->
+    ) { padding ->
+        padding
         FavoritesScreen(
             state = state,
             onIntent = viewModel::onIntent,
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier,
         )
     }
 }
@@ -101,7 +96,6 @@ fun FavoritesScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
     ) {
         CenterAlignedTopAppBar(
             title = {
@@ -122,7 +116,7 @@ fun FavoritesScreen(
                     )
                 }
             },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background
             )
         )

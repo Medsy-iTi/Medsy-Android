@@ -70,15 +70,14 @@ class FavoritesViewModel @Inject constructor(
                                 FavoritesUIEffect.ShowMessage(
                                     R.string.search_removed_from_favorites,
                                     listOf(productName),
-                                    isError = false
+                                    isSuccess = true,
                                 )
                             )
                         }
                         .onError { error ->
                             sendEffect(
                                 FavoritesUIEffect.ShowMessage(
-                                    messageRes = error.toMessageRes(),
-                                    isError = true
+                                    messageRes = error.toMessageRes()
                                 )
                             )
                         }
@@ -94,16 +93,21 @@ class FavoritesViewModel @Inject constructor(
     private fun addToCart(rawProductId: String) {
         val productId = rawProductId.toIntOrNull()
         if (productId == null) {
-            sendEffect(FavoritesUIEffect.ShowMessage(R.string.error_invalid_id, isError = true))
+            sendEffect(FavoritesUIEffect.ShowMessage(R.string.error_invalid_id))
             return
         }
         viewModelScope.launch {
             addCartItem(productId)
                 .onSuccess {
-                    sendEffect(FavoritesUIEffect.ShowMessage(R.string.search_added_to_cart))
+                    sendEffect(
+                        FavoritesUIEffect.ShowMessage(
+                            R.string.search_added_to_cart,
+                            isSuccess = true,
+                        )
+                    )
                 }
                 .onError { error ->
-                    sendEffect(FavoritesUIEffect.ShowMessage(error.toMessageRes(), isError = true))
+                    sendEffect(FavoritesUIEffect.ShowMessage(error.toMessageRes()))
                 }
         }
     }
@@ -147,8 +151,7 @@ class FavoritesViewModel @Inject constructor(
                     }
                     sendEffect(
                         FavoritesUIEffect.ShowMessage(
-                            messageRes = error.toMessageRes(),
-                            isError = true
+                            messageRes = error.toMessageRes()
                         )
                     )
                 }

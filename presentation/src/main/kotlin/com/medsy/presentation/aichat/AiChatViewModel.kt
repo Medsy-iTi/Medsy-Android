@@ -254,7 +254,7 @@ class AiChatViewModel @Inject constructor(
         viewModelScope.launch {
             addCartItem(productId)
                 .onSuccess {
-                    sendEffect(AiChatUIEffect.ShowMessage(R.string.ai_chat_added_to_cart))
+                    sendEffect(AiChatUIEffect.ShowMessage(R.string.ai_chat_added_to_cart, isSuccess = true))
                 }
                 .onError { error ->
                     sendEffect(AiChatUIEffect.ShowMessage(error.toMessageRes()))
