@@ -99,10 +99,12 @@ class ProductDetailsViewModel @Inject constructor(
             return
         }
         favoritesJob = viewModelScope.launch {
-            getFavoritesUseCase(userId).collect { favorites ->
-                val isFav = favorites.any { it.id == productId }
-                _state.update { currentState ->
-                    currentState.copy(isFavorite = isFav)
+            getFavoritesUseCase(userId).collect { result ->
+                result.onSuccess { favorites ->
+                    val isFav = favorites.any { it.id == productId }
+                    _state.update { currentState ->
+                        currentState.copy(isFavorite = isFav)
+                    }
                 }
             }
         }

@@ -303,11 +303,13 @@ class SearchViewModel @Inject constructor(
             return
         }
         favoritesJob = viewModelScope.launch {
-            getFavoritesUseCase(userId).collect { favorites ->
-                _state.update { currentState ->
-                    currentState.copy(
-                        favoriteProductIds = favorites.map { it.id.toString() }.toSet()
-                    )
+            getFavoritesUseCase(userId).collect { result ->
+                result.onSuccess { favorites ->
+                    _state.update { currentState ->
+                        currentState.copy(
+                            favoriteProductIds = favorites.map { it.id.toString() }.toSet()
+                        )
+                    }
                 }
             }
         }

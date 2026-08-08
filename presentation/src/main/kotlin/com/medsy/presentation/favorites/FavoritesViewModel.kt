@@ -126,18 +126,30 @@ class FavoritesViewModel @Inject constructor(
     private fun observeFavoritesForUser(userId: Long) {
         favoritesJob?.cancel()
         if (userId == 0L) {
-            _state.update { it.copy(products = emptyList()) }
+            _state.update { it.copy(products = emptyList(), isLoading = false) }
             return
         }
         _state.update { it.copy(isLoading = true) }
         favoritesJob = viewModelScope.launch {
-            getFavoritesUseCase(userId).collect { favorites ->
-                allFavorites.clear()
-                allFavorites.addAll(favorites)
-                _state.update { currentState ->
-                    currentState.copy(
-                        isLoading = false,
-                        products = favorites.map { it.toUi() }
+            getFavoritesUseCase(userId).collect { result ->
+                result.onSuccess { favorites ->
+                    allFavorites.clear()
+                    allFavorites.addAll(favorites)
+                    _state.update { currentState ->
+                        currentState.copy(
+                            isLoading = false,
+                            products = favorites.map { it.toUi() }
+                        )
+                    }
+                }.onError { error ->
+                    _state.update { currentState ->
+                        currentState.copy(isLoading = false)
+                    }
+                    sendEffect(
+                        FavoritesUIEffect.ShowMessage(
+                            messageRes = error.toMessageRes(),
+                            isError = true
+                        )
                     )
                 }
             }

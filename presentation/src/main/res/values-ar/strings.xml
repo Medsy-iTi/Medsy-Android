@@ -104,6 +104,10 @@
     <string name="error_forbidden">ليس لديك صلاحية لتنفيذ هذا الإجراء.</string>
     <string name="error_not_found">المورد المطلوب غير موجود.</string>
     <string name="error_server">خطأ في الخادم. يرجى المحاولة لاحقاً.</string>
+    <string name="error_database_constraint">خطأ في قيود قاعدة البيانات.</string>
+    <string name="error_database_full">المساحة التخزينية ممتلئة. تعذر حفظ البيانات.</string>
+    <string name="error_database_corrupt">خطأ في قاعدة البيانات. يرجى مسح بيانات التطبيق أو إعادة التثبيت.</string>
+    <string name="error_database_io">خطأ في قراءة أو كتابة وحدة التخزين.</string>
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
 

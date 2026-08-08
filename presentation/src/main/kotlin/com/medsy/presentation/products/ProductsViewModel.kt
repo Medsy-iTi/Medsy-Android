@@ -116,17 +116,19 @@ class ProductsViewModel @Inject constructor(
             return
         }
         favoritesJob = viewModelScope.launch {
-            getFavoritesUseCase(userId).collect { favorites ->
-                val favIds = favorites.map { it.id }.toSet()
-                _state.update { currentState ->
-                    val updatedProducts = currentState.products.map { product ->
-                        product.copy(isFavorite = product.id in favIds)
+            getFavoritesUseCase(userId).collect { result ->
+                result.onSuccess { favorites ->
+                    val favIds = favorites.map { it.id }.toSet()
+                    _state.update { currentState ->
+                        val updatedProducts = currentState.products.map { product ->
+                            product.copy(isFavorite = product.id in favIds)
+                        }
+                        currentState.copy(
+                            favoriteProductIds = favIds,
+                            products = updatedProducts,
+                            filteredProducts = filterProducts(updatedProducts, currentState.searchQuery)
+                        )
                     }
-                    currentState.copy(
-                        favoriteProductIds = favIds,
-                        products = updatedProducts,
-                        filteredProducts = filterProducts(updatedProducts, currentState.searchQuery)
-                    )
                 }
             }
         }
