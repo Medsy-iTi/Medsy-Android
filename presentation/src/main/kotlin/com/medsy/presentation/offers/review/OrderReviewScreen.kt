@@ -59,6 +59,7 @@ import com.medsy.presentation.offers.components.PriceSummarySection
 @Composable
 fun OrderReviewRoot(
     requestId: Long,
+    selectedItemIds: Set<Long>,
     onNavigateBack: () -> Unit,
     onNavigateToOrderConfirmation: (String, String) -> Unit,
     viewModel: OffersViewModel = hiltViewModel()
@@ -68,6 +69,7 @@ fun OrderReviewRoot(
     val context = LocalContext.current
 
     LaunchedEffect(requestId) {
+        viewModel.onIntent(OffersUIIntent.SetSelectedItems(selectedItemIds))
         viewModel.onIntent(OffersUIIntent.LoadOffers(requestId))
     }
 

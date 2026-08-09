@@ -17,4 +17,5 @@ sealed interface HomeUIIntent {
     object OnSearchWiderRangeClick : HomeUIIntent
     data class OnAddressResolved(val address: String) : HomeUIIntent
     object RefreshData : HomeUIIntent
+    object OnResume : HomeUIIntent
 }

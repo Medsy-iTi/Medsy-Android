@@ -2,6 +2,7 @@ package com.medsy.presentation.offers
 
 sealed interface OffersUIIntent {
     data class LoadOffers(val requestId: Long) : OffersUIIntent
+    data class SetSelectedItems(val itemIds: Set<Long>) : OffersUIIntent
     data class ToggleItemSelection(val requestItemId: Long) : OffersUIIntent
     data object ProceedToReview : OffersUIIntent
     data object ConfirmOrder : OffersUIIntent

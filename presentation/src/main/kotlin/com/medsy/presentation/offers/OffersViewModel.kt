@@ -6,8 +6,6 @@ import com.medsy.domain.common.MedsyResult
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.domain.offers.usecase.AcceptOfferUseCase
 import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,8 +45,11 @@ class OffersViewModel @Inject constructor(
                 }
                 _state.update { it.copy(selectedItemIds = newSet) }
             }
+            is OffersUIIntent.SetSelectedItems -> {
+                _state.update { it.copy(selectedItemIds = intent.itemIds) }
+            }
             OffersUIIntent.ProceedToReview -> {
-                sendEffect(OffersUIEffect.NavigateToOrderReview)
+                sendEffect(OffersUIEffect.NavigateToOrderReview(_state.value.selectedItemIds))
             }
             OffersUIIntent.ConfirmOrder -> confirmOrder()
             OffersUIIntent.TrackOrder -> sendEffect(OffersUIEffect.NavigateToTrackOrder)
@@ -65,8 +66,10 @@ class OffersViewModel @Inject constructor(
         if (selectedItemIds.isEmpty()) return
 
         val selectedItems = requestResult.items
-            .filter { selectedItemIds.contains(it.requestItemId) }
-            .map { SelectedRequestItem(it.requestItemId, it.productId) }
+            .filter { selectedItemIds.contains(it.requestItemId) && it.productId != null }
+            .mapNotNull { item ->
+                item.productId?.let { SelectedRequestItem(item.requestItemId, it) }
+            }
 
         viewModelScope.launch {
             _state.update { it.copy(isConfirmingOrder = true) }
@@ -103,17 +106,14 @@ class OffersViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, requestId = requestId) }
             
             streamRequestResultUseCase(requestId)
-                .catch { e ->
-                    // Handle error if needed, but error handling is usually via generic interceptor or UI effect
+                .catch { _ ->
                     _state.update { it.copy(isLoading = false) }
                 }
                 .collect { result ->
                     val allAvailableIds = result.items.filter { it.isAvailable }.map { it.requestItemId }.toSet()
                     
                     _state.update {
-                        // By default, select all available items if not yet interacted
                         val initialSelected = if (it.selectedItemIds.isEmpty() && it.requestResult == null) allAvailableIds else it.selectedItemIds
-                        // Retain selected items that are still available
                         val validSelected = initialSelected.intersect(allAvailableIds)
                         
                         it.copy(

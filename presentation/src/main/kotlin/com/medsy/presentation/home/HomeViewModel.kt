@@ -116,8 +116,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private var activeRequestsJob: kotlinx.coroutines.Job? = null
+
     private fun observeActiveRequest() {
-        viewModelScope.launch {
+        activeRequestsJob?.cancel()
+        activeRequestsJob = viewModelScope.launch {
             observeActiveRequestsWithStatusUseCase().collectLatest { statuses ->
                 _state.update { s ->
                     val uiStatuses = statuses.map { domainStatus ->
@@ -187,6 +190,9 @@ class HomeViewModel @Inject constructor(
             HomeUIIntent.RefreshData -> {
                 fetchCategories()
                 observeProfileData()
+            }
+            HomeUIIntent.OnResume -> {
+                observeActiveRequest()
             }
         }
     }

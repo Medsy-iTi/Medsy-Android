@@ -32,7 +32,7 @@ import com.medsy.domain.offers.model.RequestResultItem
 fun AvailableOffersRoot(
     requestId: Long,
     onNavigateBack: () -> Unit,
-    onNavigateToOrderReview: () -> Unit,
+    onNavigateToOrderReview: (Set<Long>) -> Unit,
     viewModel: OffersViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -45,7 +45,7 @@ fun AvailableOffersRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is OffersUIEffect.NavigateBack -> onNavigateBack()
-                is OffersUIEffect.NavigateToOrderReview -> onNavigateToOrderReview()
+                is OffersUIEffect.NavigateToOrderReview -> onNavigateToOrderReview(effect.selectedItemIds)
                 else -> Unit
             }
         }

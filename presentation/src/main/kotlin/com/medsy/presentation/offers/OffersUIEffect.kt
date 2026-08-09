@@ -3,7 +3,7 @@ package com.medsy.presentation.offers
 import androidx.annotation.StringRes
 
 sealed interface OffersUIEffect {
-    data object NavigateToOrderReview : OffersUIEffect
+    data class NavigateToOrderReview(val selectedItemIds: Set<Long>) : OffersUIEffect
     data class NavigateToOrderConfirmation(
         val orderId: String,
         val pharmacyName: String

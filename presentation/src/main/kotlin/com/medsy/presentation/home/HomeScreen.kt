@@ -117,6 +117,11 @@ fun HomeRoot(
         viewModel.onIntent(HomeUIIntent.RefreshData)
     }
 
+    androidx.lifecycle.compose.LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+        viewModel.onIntent(HomeUIIntent.RefreshData)
+        viewModel.onIntent(HomeUIIntent.OnResume)
+    }
+
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {

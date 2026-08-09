@@ -11,7 +11,7 @@ data class RequestResultDto(
 @JsonClass(generateAdapter = true)
 data class RequestResultItemDto(
     val requestItemId: Long,
-    val productId: Long,
+    val productId: Long?,
     val unitPrice: Double,
     val alternative: Boolean,
     val available: Boolean,

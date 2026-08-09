@@ -7,7 +7,7 @@ data class RequestResult(
 
 data class RequestResultItem(
     val requestItemId: Long,
-    val productId: Long,
+    val productId: Long?,
     val unitPrice: Double,
     val isAlternative: Boolean,
     val isAvailable: Boolean,

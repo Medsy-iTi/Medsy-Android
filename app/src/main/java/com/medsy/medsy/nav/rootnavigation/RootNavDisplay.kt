@@ -340,8 +340,8 @@ fun RootNavDisplay() {
                 AvailableOffersRoot(
                     requestId = args.requestId,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
-                    onNavigateToOrderReview = { 
-                        rootBackStack.navigateSingleTop(Route.OrderReview(args.requestId))
+                    onNavigateToOrderReview = { selectedIds ->
+                        rootBackStack.navigateSingleTop(Route.OrderReview(args.requestId, selectedIds))
                     }
                 )
             }
@@ -349,6 +349,7 @@ fun RootNavDisplay() {
                 val args = it
                 OrderReviewRoot(
                     requestId = args.requestId,
+                    selectedItemIds = args.selectedItemIds,
                     onNavigateBack = { rootBackStack.removeLastOrNull() },
                     onNavigateToOrderConfirmation = { orderId, pharmacyName ->
                         rootBackStack.navigateSingleTop(
