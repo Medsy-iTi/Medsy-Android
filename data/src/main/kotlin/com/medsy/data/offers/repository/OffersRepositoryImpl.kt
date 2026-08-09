@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.retryWhen
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class OffersRepositoryImpl @Inject constructor(
@@ -52,12 +53,9 @@ class OffersRepositoryImpl @Inject constructor(
     ): kotlinx.coroutines.flow.Flow<RequestResult> =
         remoteDataSource.streamRequestResult(requestId)
             .retryWhen { cause, attempt ->
-                // Retry on any IOException (network drop, SSE failure, server-side close).
-                // CancellationException is never an IOException so coroutine lifecycle is safe.
                 if (cause is IOException && attempt < 5) {
-                    // Exponential backoff: 2s, 4s, 8s, 16s, 30s
                     val delayMs = minOf(2_000L * (1L shl attempt.toInt()), 30_000L)
-                    delay(delayMs)
+                    delay(delayMs.milliseconds)
                     true
                 } else {
                     false

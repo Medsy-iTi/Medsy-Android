@@ -64,11 +64,11 @@ class OffersRemoteDataSource @Inject constructor(
             }
 
             override fun onClosed(eventSource: EventSource) {
-                close(java.io.IOException("SSE connection closed by server"))
+                close(java.io.IOException())
             }
 
             override fun onFailure(eventSource: EventSource, t: Throwable?, response: okhttp3.Response?) {
-                close(t ?: java.io.IOException("SSE connection failed"))
+                close(t ?: java.io.IOException())
             }
         }
 
