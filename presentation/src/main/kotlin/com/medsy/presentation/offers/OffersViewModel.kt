@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.medsy.domain.common.MedsyResult
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.domain.offers.usecase.AcceptOfferUseCase
+import com.medsy.domain.offers.model.SelectedOfferItem
 import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-import com.medsy.domain.offers.model.SelectedRequestItem
+
 import com.medsy.domain.offers.usecase.StreamRequestResultUseCase
 import kotlinx.coroutines.flow.catch
 
@@ -68,7 +69,7 @@ class OffersViewModel @Inject constructor(
         val selectedItems = requestResult.items
             .filter { selectedItemIds.contains(it.requestItemId) && it.productId != null }
             .mapNotNull { item ->
-                item.productId?.let { SelectedRequestItem(item.requestItemId, it) }
+                item.productId?.let { SelectedOfferItem(item.requestItemId, it) }
             }
 
         viewModelScope.launch {

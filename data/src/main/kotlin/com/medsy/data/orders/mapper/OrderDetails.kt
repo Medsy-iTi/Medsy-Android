@@ -24,18 +24,19 @@ fun OrderDetailsDto.toDomain(): OrderDetailsDomain {
         deliveryLatitude = deliveryLatitude,
         deliveryLongitude = deliveryLongitude,
         status = mapOrderStatus(status),
-        date = date,
-        prescriptionImage = prescriptionImage,
-        customerNote = customerNote,
-        pharmacyNote = pharmacyNote,
-        items = items.map { it.toDomain() }
+        date = createdAt,
+        prescriptionImage = prescriptionUrl,
+        customerNote = customerNotes,
+        pharmacyNote = null,
+        items = items.map { it.toDomain() },
     )
 }
 
 private fun mapOrderStatus(status: String?): OrderStatusDomain {
     return when (status?.uppercase()) {
         "PENDING" -> OrderStatusDomain.Pending
-        "CONFIRMED" -> OrderStatusDomain.Confirmed
+        "CONFIRMED", "PREPARING", "READY_FOR_PICKUP", "OUT_FOR_DELIVERY" ->
+            OrderStatusDomain.Confirmed
         "DELIVERED" -> OrderStatusDomain.Delivered
         "CANCELLED" -> OrderStatusDomain.Cancelled
         else -> OrderStatusDomain.Pending

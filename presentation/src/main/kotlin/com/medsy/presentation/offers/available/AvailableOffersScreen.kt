@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsyButton
 import com.medsy.designsystem.components.showError
 import com.medsy.designsystem.util.isNetworkAvailable
 import kotlinx.coroutines.launch
@@ -62,8 +64,7 @@ fun AvailableOffersScreen(
     state: OffersState,
     onIntent: (OffersUIIntent) -> Unit
 ) {
-    val snackbarHostState = androidx.compose.runtime.remember { androidx.compose.material3.SnackbarHostState() }
-    val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -77,7 +78,7 @@ fun AvailableOffersScreen(
             bottomBar = {
                 if (state.requestResult != null && state.selectedItemIds.isNotEmpty()) {
                     Box(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
-                        Button(
+                        MedsyButton(
                             onClick = { onIntent(OffersUIIntent.ProceedToReview) },
                             modifier = Modifier.fillMaxWidth().height(50.dp)
                         ) {
@@ -112,7 +113,7 @@ fun AvailableOffersScreen(
                     ) {
                         item {
                             Text(
-                                text = "Total estimated price: EGP ${state.requestResult.totalPrice}",
+                                text = stringResource(R.string.offers_estimated_price, state.requestResult.totalPrice.toString()),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(bottom = 16.dp)
@@ -155,26 +156,26 @@ fun RequestResultItemCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = item.product?.productName ?: "Unknown Product",
+                    text = item.product?.productName ?: stringResource(R.string.offers_unknown_product),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )
                 if (item.isAlternative) {
                     Text(
-                        text = "Alternative provided",
+                        text = stringResource(R.string.offers_alternative_provided),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "EGP ${item.unitPrice}",
+                    text = stringResource(R.string.search_price_egp, item.unitPrice.toString()),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 if (!item.isAvailable) {
                     Text(
-                        text = "Out of stock",
+                        text = stringResource(R.string.offers_out_of_stock),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error
                     )

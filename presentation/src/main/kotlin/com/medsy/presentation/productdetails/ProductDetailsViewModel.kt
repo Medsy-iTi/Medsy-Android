@@ -2,17 +2,23 @@ package com.medsy.presentation.productdetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
+import com.medsy.domain.favorites.model.FavoriteProduct
+import com.medsy.domain.favorites.usecase.AddFavoriteUseCase
+import com.medsy.domain.favorites.usecase.GetFavoritesUseCase
+import com.medsy.domain.favorites.usecase.RemoveFavoriteUseCase
 import com.medsy.domain.productdetails.model.ProductDetails
 import com.medsy.domain.productdetails.usecase.GetProductDetailsUseCase
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.productdetails.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,14 +33,22 @@ import javax.inject.Inject
 class ProductDetailsViewModel @Inject constructor(
     private val getProductDetailsUseCase: GetProductDetailsUseCase,
     private val addCartItem: AddCartItemUseCase,
+    private val observeSessionUseCase: ObserveSessionUseCase,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
 ) : ViewModel() {
 
     private var productId: Int = -1
     private var hasLoadedInitialData = false
+    private var loadedDetails: ProductDetails? = null
+    private var currentUserId: Long = 0L
+    private var favoritesJob: Job? = null
 
     fun init(rawId: String) {
         productId = rawId.toIntOrNull() ?: -1
         if (!hasLoadedInitialData) {
+            observeSessionAndFavorites()
             loadProduct()
             hasLoadedInitialData = true
         }
@@ -59,10 +73,42 @@ class ProductDetailsViewModel @Inject constructor(
             is ProductDetailsUIIntent.ImagePageChanged -> _state.update {
                 it.copy(selectedImageIndex = intent.index)
             }
+
             ProductDetailsUIIntent.AddToCartClicked -> addToCart()
             ProductDetailsUIIntent.ConsultPharmacistClicked ->
                 sendEffect(ProductDetailsUIEffect.NavigateToPharmacistChat)
+
             ProductDetailsUIIntent.RetryClicked -> loadProduct()
+        }
+    }
+
+    private fun observeSessionAndFavorites() {
+        viewModelScope.launch {
+            observeSessionUseCase().collect { session ->
+                val newUserId = session?.user?.id ?: 0L
+                if (newUserId != currentUserId) {
+                    currentUserId = newUserId
+                    observeFavoritesForUser(newUserId)
+                }
+            }
+        }
+    }
+
+    private fun observeFavoritesForUser(userId: Long) {
+        favoritesJob?.cancel()
+        if (userId == 0L) {
+            _state.update { it.copy(isFavorite = false) }
+            return
+        }
+        favoritesJob = viewModelScope.launch {
+            getFavoritesUseCase(userId).collect { result ->
+                result.onSuccess { favorites ->
+                    val isFav = favorites.any { it.id == productId }
+                    _state.update { currentState ->
+                        currentState.copy(isFavorite = isFav)
+                    }
+                }
+            }
         }
     }
 
@@ -90,15 +136,16 @@ class ProductDetailsViewModel @Inject constructor(
             when (val result = getProductDetailsUseCase(productId, language)) {
                 is MedsyResult.Success -> {
                     val details = result.data
+                    loadedDetails = details
                     _state.update {
                         it.copy(
                             isLoading = false,
                             product = details.toUiModel(),
-                            isFavorite = false,
                             errorMessageRes = null,
                         )
                     }
                 }
+
                 is MedsyResult.Error -> {
                     _state.update {
                         it.copy(
@@ -112,7 +159,36 @@ class ProductDetailsViewModel @Inject constructor(
     }
 
     private fun toggleFavorite() {
-        _state.update { it.copy(isFavorite = !it.isFavorite) }
+        val userId = currentUserId
+        if (userId == 0L || productId < 0) return
+        val details = loadedDetails ?: return
+        val productName = details.name
+
+        viewModelScope.launch {
+            if (_state.value.isFavorite) {
+                removeFavoriteUseCase(productId, userId)
+                    .onSuccess {
+                        sendEffect(
+                            ProductDetailsUIEffect.ShowMessage(
+                                R.string.search_removed_from_favorites,
+                                listOf(productName),
+                                isSuccess = true,
+                            )
+                        )
+                    }
+            } else {
+                addFavoriteUseCase(details.toFavorite(), userId)
+                    .onSuccess {
+                        sendEffect(
+                            ProductDetailsUIEffect.ShowMessage(
+                                R.string.search_added_to_favorites,
+                                listOf(productName),
+                                isSuccess = true,
+                            )
+                        )
+                    }
+            }
+        }
     }
 
     private fun addToCart() {
@@ -125,7 +201,8 @@ class ProductDetailsViewModel @Inject constructor(
                     _state.update { it.copy(isAddingToCart = false) }
                     sendEffect(
                         ProductDetailsUIEffect.ShowMessage(
-                            R.string.product_details_added_to_cart
+                            R.string.product_details_added_to_cart,
+                            isSuccess = true
                         )
                     )
                 }
@@ -144,11 +221,27 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun ProductDetails.toFavorite(): FavoriteProduct {
+        return FavoriteProduct(
+            id = id,
+            name = name,
+            arabicName = name,
+            scientificName = scientificName,
+            price = price,
+            imageUrl = imageUrl,
+            categoryId = categoryId,
+            categoryName = consumerCategory.orEmpty(),
+            company = company,
+            route = route
+        )
+    }
+
     private fun ProductDetails.toUiModel(): Product {
         return Product(
             id = id.toString(),
             name = name,
-            imageUrls = imageUrl?.let { listOf(it) } ?: emptyList(),            strength = strength.orEmpty(),
+            imageUrls = imageUrl?.let { listOf(it) } ?: emptyList(),
+            strength = strength.orEmpty(),
             packInfo = packSize.orEmpty(),
             price = price.toInt(),
             description = description.orEmpty(),

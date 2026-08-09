@@ -4,11 +4,11 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ConfirmRequestDto(
-    val selectedItems: List<SelectedRequestItemDto>
+    val selectedItems: List<SelectedItemDto>,
 )
 
 @JsonClass(generateAdapter = true)
-data class SelectedRequestItemDto(
+data class SelectedItemDto(
     val requestItemId: Long,
-    val productId: Long
+    val productId: Long,
 )

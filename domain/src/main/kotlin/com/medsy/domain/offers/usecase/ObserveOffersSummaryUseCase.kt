@@ -22,7 +22,7 @@ class ObserveOffersSummaryUseCase @Inject constructor(
 ) {
     operator fun invoke(requestId: Long): Flow<OfferSummary?> {
         return offersRepository.streamRequestResult(requestId)
-            .map<RequestResult, OfferSummary?> { result ->
+            .map { result ->
                 if (result.items.any { it.isAvailable }) {
                     result.toSummary(requestId)
                 } else {

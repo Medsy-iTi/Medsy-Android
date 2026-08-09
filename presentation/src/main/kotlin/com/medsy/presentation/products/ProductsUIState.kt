@@ -7,7 +7,8 @@ data class ProductsUIState(
     val errorMessageRes: Int? = null,
     val products: List<ProductUi> = emptyList(),
     val filteredProducts: List<ProductUi> = emptyList(),
-    val searchQuery: String = ""
+    val searchQuery: String = "",
+    val favoriteProductIds: Set<Int> = emptySet(),
 )
 
 data class ProductUi(
@@ -15,5 +16,6 @@ data class ProductUi(
     val name: String,
     val scientificName: String,
     val price: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val isFavorite: Boolean = false,
 )

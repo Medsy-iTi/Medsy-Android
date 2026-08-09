@@ -18,6 +18,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -41,6 +42,10 @@ object NetworkModule {
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .callTimeout(2, TimeUnit.MINUTES)
             .addInterceptor { chain ->
                 val original = chain.request()
                 val url = original.url.newBuilder()

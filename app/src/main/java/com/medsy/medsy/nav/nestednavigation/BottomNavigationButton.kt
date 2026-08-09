@@ -35,6 +35,7 @@ fun BottomNavigationButton(
             Text(
                 text = stringResource(label),
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                maxLines = 1,
             )
         },
         modifier = modifier,

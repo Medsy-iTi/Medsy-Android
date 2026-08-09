@@ -20,11 +20,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import com.medsy.designsystem.components.NullableProductImage
 import com.medsy.presentation.R
 
 @Composable
@@ -33,11 +32,11 @@ fun ProductImageCarousel(
     selectedIndex: Int,
     onPageChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: Painter? = null
 ) {
+    val displayImageUrls: List<String?> = if (imageUrls.isEmpty()) listOf(null) else imageUrls
     val pagerState = rememberPagerState(
         initialPage = selectedIndex,
-        pageCount = { imageUrls.size },
+        pageCount = { displayImageUrls.size },
     )
 
     LaunchedEffect(pagerState.currentPage) {
@@ -61,12 +60,9 @@ fun ProductImageCarousel(
                         .background(MaterialTheme.colorScheme.surface),
                     contentAlignment = Alignment.Center,
                 ) {
-                    AsyncImage(
-                        model = imageUrls[page],
+                    NullableProductImage(
+                        imageUrl = displayImageUrls[page],
                         contentDescription = stringResource(R.string.product_details_image_desc),
-                        placeholder = placeholder,
-                        error = placeholder,
-                        fallback = placeholder,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -75,14 +71,14 @@ fun ProductImageCarousel(
 
         }
 
-        if (imageUrls.size > 1) {
+        if (displayImageUrls.size > 1) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                repeat(imageUrls.size) { index ->
+                repeat(displayImageUrls.size) { index ->
                     val isSelected = index == pagerState.currentPage
                     Box(
                         modifier = Modifier

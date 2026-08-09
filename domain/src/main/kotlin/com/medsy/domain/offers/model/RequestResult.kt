@@ -3,6 +3,7 @@ package com.medsy.domain.offers.model
 data class RequestResult(
     val items: List<RequestResultItem>,
     val totalPrice: Double,
+    val paymentMethod: String?,
 )
 
 data class RequestResultItem(

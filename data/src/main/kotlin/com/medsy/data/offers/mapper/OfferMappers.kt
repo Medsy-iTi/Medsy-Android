@@ -8,6 +8,7 @@ import com.medsy.domain.offers.model.RequestResultItem
 fun RequestResultDto.toDomain(): RequestResult = RequestResult(
     items = medicineRequestResultItemList.map { it.toDomain() },
     totalPrice = totalPrice,
+    paymentMethod = paymentMethod,
 )
 
 fun RequestResultItemDto.toDomain(): RequestResultItem = RequestResultItem(
@@ -20,10 +21,10 @@ fun RequestResultItemDto.toDomain(): RequestResultItem = RequestResultItem(
     alternatives = alternatives.map { it.toDomain() }
 )
 
-fun com.medsy.data.offers.remote.ResultProductDto.toDomain(): com.medsy.domain.offers.model.ResultProduct = com.medsy.domain.offers.model.ResultProduct(
+fun com.medsy.data.offers.remote.RequestResultProductDto.toDomain(): com.medsy.domain.offers.model.ResultProduct = com.medsy.domain.offers.model.ResultProduct(
     id = id,
     name = name,
-    productName = productName,
+    productName = productName ?: name,
     strength = strength,
     packSize = packSize,
     form = form,

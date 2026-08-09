@@ -39,7 +39,10 @@ fun ActiveSearchOfferSummary(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = stringResource(R.string.home_search_status_available_medicines),
                 style = MaterialTheme.typography.labelMedium,
@@ -74,7 +77,10 @@ fun ActiveSearchOfferSummary(
             color = MaterialTheme.colorScheme.outlineVariant
         )
         
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
                 text = stringResource(R.string.home_search_status_starting_from),
                 style = MaterialTheme.typography.labelMedium,

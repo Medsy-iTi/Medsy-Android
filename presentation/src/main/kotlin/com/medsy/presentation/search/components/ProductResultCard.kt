@@ -23,17 +23,17 @@ import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import com.medsy.designsystem.ui.theme.extendedColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import com.medsy.designsystem.components.NullableProductImage
 import com.medsy.presentation.R
 
 @Composable
@@ -58,16 +58,14 @@ fun ProductResultCard(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        AsyncImage(
-            model = imageUrl,
+        NullableProductImage(
+            imageUrl = imageUrl,
             contentDescription = name,
             modifier = Modifier
                 .size(72.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentScale = ContentScale.Crop,
-            error = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent),
-            placeholder = painterResource(id = com.medsy.designsystem.R.drawable.ic_logo_transparent)
         )
 
         Spacer(modifier = Modifier.size(12.dp))
@@ -110,7 +108,7 @@ fun ProductResultCard(
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = stringResource(R.string.search_favorite_desc),
-                    tint = if (isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,                )
+                    tint = if (isFavorite) MaterialTheme.extendedColors.favoriteRed else MaterialTheme.colorScheme.onSurfaceVariant,                )
             }
 
             Box(

@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonClass
 data class RequestResultDto(
     val medicineRequestResultItemList: List<RequestResultItemDto>,
     val totalPrice: Double,
+    val paymentMethod: String?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -15,15 +16,15 @@ data class RequestResultItemDto(
     val unitPrice: Double,
     val alternative: Boolean,
     val available: Boolean,
-    val product: ResultProductDto?,
-    val alternatives: List<ResultProductDto> = emptyList()
+    val product: RequestResultProductDto?,
+    val alternatives: List<RequestResultProductDto> = emptyList(),
 )
 
 @JsonClass(generateAdapter = true)
-data class ResultProductDto(
+data class RequestResultProductDto(
     val id: Long,
     val name: String,
-    val productName: String,
+    val productName: String?,
     val strength: String?,
     val packSize: String?,
     val form: String?,
@@ -32,5 +33,5 @@ data class ResultProductDto(
     val company: String?,
     val route: String?,
     val description: String?,
-    val imageUrl: String?
+    val imageUrl: String?,
 )

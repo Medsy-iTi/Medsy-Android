@@ -104,6 +104,10 @@
     <string name="error_forbidden">ليس لديك صلاحية لتنفيذ هذا الإجراء.</string>
     <string name="error_not_found">المورد المطلوب غير موجود.</string>
     <string name="error_server">خطأ في الخادم. يرجى المحاولة لاحقاً.</string>
+    <string name="error_database_constraint">خطأ في قيود قاعدة البيانات.</string>
+    <string name="error_database_full">المساحة التخزينية ممتلئة. تعذر حفظ البيانات.</string>
+    <string name="error_database_corrupt">خطأ في قاعدة البيانات. يرجى مسح بيانات التطبيق أو إعادة التثبيت.</string>
+    <string name="error_database_io">خطأ في قراءة أو كتابة وحدة التخزين.</string>
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
 
@@ -189,6 +193,11 @@
     <string name="search_favorite_desc">أضف للمفضلة</string>
     <string name="search_add_to_cart_desc">أضف إلى السلة</string>
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
+    <string name="search_added_to_favorites">تمت إضافة %1$s إلى المفضلة</string>
+    <string name="search_removed_from_favorites">تمت إزالة %1$s من المفضلة</string>
+    <string name="profile_my_favourites">المفضلة</string>
+    <string name="profile_my_favourites_subtitle">إدارة منتجاتك المفضلة</string>
+    <string name="favorites_empty">ليس لديك أي منتجات مفضلة بعد.</string>
     <string name="search_empty_title">لا توجد نتائج</string>
     <string name="search_empty_subtitle">جرّب كلمة بحث مختلفة</string>
     <string name="search_sort_title">ترتيب حسب</string>
@@ -208,6 +217,7 @@
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">مشاركة</string>
+    <string name="product_details_favorite_desc">أضف للمفضلة</string>
     <string name="product_details_image_desc">صورة المنتج</string>
     <string name="product_details_pack_info_format">%1$s - %2$s</string>
     <string name="product_details_pharmacist_notice">لا يتم صرف هذا الدواء إلا بعد مراجعة الصيدلي لتحديد الجرعة المناسبة لحالتك.</string>
@@ -642,4 +652,8 @@
     <string name="cart_interactions_ai_note">فُحصت بالذكاء الاصطناعي · للاسترشاد فقط — اسأل الصيدلي</string>
     <string name="cart_interactions_expand">عرض النصيحة</string>
     <string name="cart_interactions_collapse">إخفاء النصيحة</string>
+    <string name="offers_unknown_product">منتج غير معروف</string>
+    <string name="offers_alternative_provided">تم توفير بديل</string>
+    <string name="offers_out_of_stock">غير متوفر</string>
+    <string name="offers_estimated_price">السعر الإجمالي المتوقع: %1$s ج.م</string>
 </resources>

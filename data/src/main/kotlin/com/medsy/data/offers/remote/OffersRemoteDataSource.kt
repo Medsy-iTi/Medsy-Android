@@ -4,6 +4,7 @@ import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.network.safeApiCall
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
+import com.medsy.domain.offers.model.SelectedOfferItem
 import javax.inject.Inject
 
 import com.medsy.data.BuildConfig
@@ -24,7 +25,7 @@ class OffersRemoteDataSource @Inject constructor(
     private val moshi: Moshi
 ) {
 
-    suspend fun acceptOffer(requestId: Long, selectedItems: List<SelectedRequestItemDto>): MedsyResult<ConfirmRequestResponseDto, MedsyError.Remote> {
+    suspend fun acceptOffer(requestId: Long, selectedItems: List<SelectedItemDto>): MedsyResult<ConfirmRequestResponseDto, MedsyError.Remote> {
         return safeApiCall {
             apiService.confirmRequest(requestId, ConfirmRequestDto(selectedItems))
         }

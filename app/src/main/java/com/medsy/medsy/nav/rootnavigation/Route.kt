@@ -62,6 +62,9 @@ sealed interface Route : NavKey {
     ) : Route
 
     @Serializable
+    data object Favorites : Route
+
+    @Serializable
     data class SearchNav(val initialQuery: String? = null, val localItemId: String? = null) : Route
 
     @Serializable
@@ -82,7 +85,10 @@ sealed interface Route : NavKey {
     data class AvailableOffers(val requestId: Long) : Route
     
     @Serializable
-    data class OrderReview(val requestId: Long, val selectedItemIds: Set<Long>) : Route
+    data class OfferDetails(val requestId: Long, val offerId: String) : Route
+    
+    @Serializable
+    data class OrderReview(val requestId: Long, val selectedItemIds: List<Long>) : Route
     
     @Serializable
     data class OrderConfirmation(val orderId: String, val pharmacyName: String) : Route

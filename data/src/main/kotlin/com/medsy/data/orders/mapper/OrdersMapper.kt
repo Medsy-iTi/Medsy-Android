@@ -10,7 +10,7 @@ import com.medsy.domain.orders.model.OrderItemDomain
 
 fun OrderPageDataDto.toDomain(): OrderPageDomain {
     return OrderPageDomain(
-        content = content.map { it.toDomain() },
+        content = content.flatMap { group -> group.orders.map(OrderDto::toDomain) },
         pageNumber = pageNumber,
         pageSize = pageSize,
         totalElements = totalElements,
@@ -37,11 +37,11 @@ fun OrderDto.toDomain(): Order {
         deliveryLatitude = deliveryLatitude,
         deliveryLongitude = deliveryLongitude,
         status = status.toOrderStatusDomain(),
-        dateLabel = date ?: "",
-        prescriptionImage = prescriptionImage,
-        customerNote = customerNote,
-        pharmacyNote = pharmacyNote,
-        items = items?.map { it.toDomain() } ?: emptyList()
+        dateLabel = createdAt.orEmpty(),
+        prescriptionImage = prescriptionUrl,
+        customerNote = customerNotes,
+        pharmacyNote = null,
+        items = items.map { it.toDomain() },
     )
 }
 
@@ -52,14 +52,15 @@ fun OrderItemDto.toDomain(): OrderItemDomain {
         quantity = quantity,
         unitPrice = unitPrice,
         totalPrice = totalPrice,
-        productName = productName,
-        imageUrl = imageUrl
+        productName = product.name.ifBlank { product.productName.orEmpty() },
+        imageUrl = product.imageUrl?.takeIf(String::isNotBlank),
     )
 }
 
 private fun String?.toOrderStatusDomain(): OrderStatusDomain {
     return when (this?.uppercase()) {
-        "CONFIRMED" -> OrderStatusDomain.Confirmed
+        "CONFIRMED", "PREPARING", "READY_FOR_PICKUP", "OUT_FOR_DELIVERY" ->
+            OrderStatusDomain.Confirmed
         "DELIVERED" -> OrderStatusDomain.Delivered
         "CANCELLED", "CANCELED" -> OrderStatusDomain.Cancelled
         "PENDING" -> OrderStatusDomain.Pending

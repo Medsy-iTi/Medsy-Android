@@ -7,6 +7,7 @@ sealed interface ProfileUIIntent {
     data object ScreenResumed : ProfileUIIntent
     data object RetryProfileLoad : ProfileUIIntent
     data object PersonalDetailsClicked : ProfileUIIntent
+    data object FavoritesClicked : ProfileUIIntent
     data object AddAddressClicked : ProfileUIIntent
     data object LanguageClicked : ProfileUIIntent
     data object AppearanceClicked : ProfileUIIntent

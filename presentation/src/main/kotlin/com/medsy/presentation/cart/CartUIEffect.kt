@@ -8,5 +8,6 @@ sealed interface CartUIEffect {
     data object OpenMedicineSearch : CartUIEffect
     data class ShowMessage(
         @StringRes val messageRes: Int,
+        val isSuccess: Boolean = false
     ) : CartUIEffect
 }

@@ -1,5 +1,6 @@
 package com.medsy.medsy.nav.nestednavigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -17,9 +18,11 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import com.medsy.medsy.nav.NAVIGATION_DURATION_MILLIS
+import com.medsy.medsy.nav.rootnavigation.NAVIGATION_DURATION_MILLIS
 import com.medsy.medsy.nav.rootnavigation.Route
-import com.medsy.medsy.nav.rootnavigation.navigateSingleTop
+import com.medsy.medsy.nav.rootnavigation.pop
+import com.medsy.medsy.nav.rootnavigation.push
+import com.medsy.medsy.nav.rootnavigation.setRoot
 import com.medsy.presentation.cart.CartRoot
 import com.medsy.presentation.home.HomeRoot
 import com.medsy.presentation.orders.orderslist.OrdersRoot
@@ -43,6 +46,7 @@ fun NestedNavDisplay(
     requestedDestination: Route?,
     onRequestedDestinationHandled: () -> Unit,
     openOrderDetails: (String) -> Unit,
+    openFavorites: () -> Unit,
 ) {
 
     val nestedBackStack = rememberNavBackStack(
@@ -62,11 +66,10 @@ fun NestedNavDisplay(
     LaunchedEffect(requestedDestination) {
         val destination = requestedDestination ?: return@LaunchedEffect
         nestedBackStack.apply {
-            clear()
+            setRoot(Route.NestedNav.Home)
             if (destination != Route.NestedNav.Home) {
-                navigateSingleTop(Route.NestedNav.Home)
+                push(destination)
             }
-            navigateSingleTop(destination)
         }
         onRequestedDestinationHandled()
     }
@@ -84,11 +87,10 @@ fun NestedNavDisplay(
                         BottomNavigationButton(
                             onClick = {
                                 nestedBackStack.apply {
-                                    clear()
+                                    setRoot(Route.NestedNav.Home)
                                     if (destination.route != Route.NestedNav.Home) {
-                                        navigateSingleTop(Route.NestedNav.Home)
+                                        push(destination.route)
                                     }
-                                    navigateSingleTop(destination.route)
                                 }
                             },
                             icon = if (isSelected) destination.selectedIcon else destination.icon,
@@ -114,18 +116,37 @@ fun NestedNavDisplay(
                 .fillMaxSize(),
             backStack = nestedBackStack,
             onBack = {
-                if (nestedBackStack.lastOrNull() != Route.NestedNav.Home) {
-                    nestedBackStack.removeLastOrNull()
-                } else {
+                if (!nestedBackStack.pop()) {
                     navigateBack()
                 }
             },
             transitionSpec = {
-                fadeIn(
-                    tween(NAVIGATION_DURATION_MILLIS)
-                ) togetherWith fadeOut(
-                    tween(NAVIGATION_DURATION_MILLIS)
-                )
+                fadeIn(tween(NAVIGATION_DURATION_MILLIS)) togetherWith
+                        fadeOut(tween(NAVIGATION_DURATION_MILLIS))
+            },
+            popTransitionSpec = {
+                (slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(NAVIGATION_DURATION_MILLIS),
+                    initialOffset = { it / 3 },
+                ) + fadeIn(tween(NAVIGATION_DURATION_MILLIS))) togetherWith
+                        (slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(NAVIGATION_DURATION_MILLIS),
+                            targetOffset = { it / 3 },
+                        ) + fadeOut(tween(NAVIGATION_DURATION_MILLIS)))
+            },
+            predictivePopTransitionSpec = { _ ->
+                (slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.End,
+                    animationSpec = tween(NAVIGATION_DURATION_MILLIS),
+                    initialOffset = { it / 3 },
+                ) + fadeIn(tween(NAVIGATION_DURATION_MILLIS))) togetherWith
+                        (slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(NAVIGATION_DURATION_MILLIS),
+                            targetOffset = { it / 3 },
+                        ) + fadeOut(tween(NAVIGATION_DURATION_MILLIS)))
             },
             entryProvider = entryProvider {
                 entry<Route.NestedNav.Home> {
@@ -158,6 +179,7 @@ fun NestedNavDisplay(
                     ProfileRoot(
                         onNavigateToPersonalDetails = openPersonalDetails,
                         onNavigateToLogin = openLogin,
+                        onNavigateToFavorites = openFavorites,
                     )
                 }
             }

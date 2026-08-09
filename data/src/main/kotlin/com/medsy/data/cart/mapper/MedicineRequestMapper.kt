@@ -17,17 +17,18 @@ fun MedicineRequestDto.toDomain(): MedicineRequestDetails = MedicineRequestDetai
     createdAt = createdAt,
     items = items.map { it.toDomain() },
     prescriptionUrl = prescriptionUrl,
-    notes = notes
+    notes = notes,
+    paymentMethod = paymentMethod,
 )
 
 fun MedicineRequestItemDto.toDomain(): MedicineRequestItem = MedicineRequestItem(
     id = id,
     productId = productId,
-    imageUrl = product?.imageUrl,
-    productName = product?.productName ?: product?.name ?: "",
+    imageUrl = product?.imageUrl?.takeIf(String::isNotBlank),
+    productName = product?.name?.ifBlank { product.productName.orEmpty() } ?: product?.productName.orEmpty(),
     strength = product?.strength,
     packSize = product?.packSize,
     form = product?.form,
     quantity = quantity,
-    unitPrice = unitPrice
+    unitPrice = unitPrice,
 )
