@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.LocalPharmacy
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -21,11 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.domain.orders.model.MasterOrderAllocation
 import com.medsy.presentation.R
+import com.medsy.designsystem.R as RDesign
 
 @Composable
 fun OrderDetailsPharmacyCard(
@@ -48,7 +49,7 @@ fun OrderDetailsPharmacyCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                Icons.Outlined.LocalPharmacy,
+                painter = painterResource(RDesign.drawable.ic_pharmacy_snake),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
@@ -56,9 +57,11 @@ fun OrderDetailsPharmacyCard(
                     .background(MaterialTheme.colorScheme.primaryContainer)
                     .padding(8.dp),
             )
-            Column(Modifier
-                .weight(1f)
-                .padding(start = 12.dp)) {
+            Column(
+                Modifier
+                    .weight(1f)
+                    .padding(start = 12.dp)
+            ) {
                 Text(
                     stringResource(R.string.order_details_pharmacy_label),
                     style = MaterialTheme.typography.bodySmall,

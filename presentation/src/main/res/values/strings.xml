@@ -551,6 +551,11 @@
     <string name="orders_status_delivering">Delivering</string>
     <string name="orders_status_delivered">Delivered</string>
     <string name="orders_status_cancelled">Cancelled</string>
+    <string name="orders_timeline_offered">Offered</string>
+    <string name="orders_timeline_accepted">Accepted</string>
+    <string name="orders_timeline_preparing">Preparing</string>
+    <string name="orders_timeline_ready">Ready</string>
+    <string name="orders_timeline_delivered">Delivered</string>
     <string name="orders_from_pharmacy_format">From %1$s</string>
     <string name="orders_cancelled_note">Order was cancelled</string>
     <string name="orders_products_count_format">%1$d products</string>

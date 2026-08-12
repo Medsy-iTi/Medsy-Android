@@ -1,5 +1,6 @@
 package com.medsy.presentation.orders.details.components
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -7,15 +8,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.LocalOffer
 import androidx.compose.material.icons.outlined.LocalShipping
 import androidx.compose.material.icons.outlined.Storefront
+import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,8 +29,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.domain.orders.model.FulfillmentMethod
@@ -44,9 +53,15 @@ fun OrderDetailsStatusHeader(
         else -> MaterialTheme.colorScheme.primary
     }
     Column(
-        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp))
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(20.dp))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
+                RoundedCornerShape(20.dp)
+            )
             .padding(16.dp),
     ) {
         Row(
@@ -74,7 +89,11 @@ fun OrderDetailsStatusHeader(
 private fun FulfillmentBadge(method: FulfillmentMethod?) {
     val pickup = method == FulfillmentMethod.PICKUP
     Row(
-        modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(20.dp))
+        modifier = Modifier
+            .background(
+                MaterialTheme.colorScheme.secondaryContainer,
+                RoundedCornerShape(20.dp)
+            )
             .padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -101,78 +120,123 @@ private fun FulfillmentBadge(method: FulfillmentMethod?) {
 private fun OrderStatusStepper(status: OrderStatus, fulfillmentMethod: FulfillmentMethod?) {
     val cancelled = status == OrderStatus.CANCELLED
     val steps = if (cancelled) {
-        listOf(R.string.orders_status_placed, R.string.orders_status_cancelled)
-    } else if (fulfillmentMethod == FulfillmentMethod.PICKUP) {
         listOf(
-            R.string.orders_status_placed,
-            R.string.order_status_preparing,
-            R.string.order_status_ready_for_pickup,
-            R.string.order_status_delivered,
+            TimelineStep(R.string.orders_timeline_offered, Icons.Outlined.LocalOffer),
+            TimelineStep(R.string.orders_status_cancelled, Icons.Default.Close),
         )
     } else {
         listOf(
-            R.string.orders_status_placed,
-            R.string.orders_status_confirmed,
-            R.string.orders_status_delivering,
-            R.string.orders_status_delivered,
+            TimelineStep(R.string.orders_timeline_offered, Icons.Outlined.LocalOffer),
+            TimelineStep(R.string.orders_timeline_accepted, Icons.Outlined.ThumbUp),
+            TimelineStep(R.string.orders_timeline_preparing, Icons.Outlined.Inventory2),
+            TimelineStep(
+                R.string.orders_timeline_ready,
+                when {
+                    fulfillmentMethod == FulfillmentMethod.PICKUP || status == OrderStatus.READY_FOR_PICKUP ->
+                        Icons.Outlined.Storefront
+
+                    fulfillmentMethod == FulfillmentMethod.DELIVERY ||
+                            status == OrderStatus.READY_FOR_DELIVERY ||
+                            status == OrderStatus.OUT_FOR_DELIVERY -> Icons.Outlined.LocalShipping
+
+                    else -> Icons.Outlined.Inventory2
+                },
+            ),
+            TimelineStep(R.string.orders_timeline_delivered, Icons.Outlined.TaskAlt),
         )
     }
     val currentStep = when (status) {
-        OrderStatus.PENDING, OrderStatus.PENDING_PAYMENT -> 0
-        OrderStatus.PREPARING, OrderStatus.READY_FOR_PICKUP, OrderStatus.READY_FOR_DELIVERY -> 1
-        OrderStatus.OUT_FOR_DELIVERY -> 2
-        OrderStatus.DELIVERED -> 3
+        OrderStatus.PENDING, OrderStatus.PENDING_PAYMENT -> 1
+        OrderStatus.PREPARING -> 2
+        OrderStatus.READY_FOR_PICKUP, OrderStatus.READY_FOR_DELIVERY, OrderStatus.OUT_FOR_DELIVERY -> 3
+        OrderStatus.DELIVERED -> 4
         OrderStatus.CANCELLED -> 1
-        OrderStatus.UNKNOWN -> 0
+        OrderStatus.UNKNOWN -> null
     }
+    val successColor = MaterialTheme.extendedColors.success
+    val warningColor = MaterialTheme.extendedColors.warning
+    val errorColor = MaterialTheme.colorScheme.error
+    val futureColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.35f)
+    val connectorColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val layoutDirection = LocalLayoutDirection.current
+
     Box(Modifier.fillMaxWidth()) {
-        HorizontalDivider(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).align(Alignment.TopCenter)
-                .padding(top = 13.dp),
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-            thickness = 2.dp,
-        )
+        Canvas(Modifier
+            .fillMaxWidth()
+            .height(28.dp)) {
+            val centers = List(steps.size) { index ->
+                val logicalCenter = size.width * (index + 0.5f) / steps.size
+                if (layoutDirection == LayoutDirection.Ltr) logicalCenter else size.width - logicalCenter
+            }
+            for (index in 0 until centers.lastIndex) {
+                val destinationIndex = index + 1
+                val lineColor = when {
+                    cancelled && destinationIndex == 1 -> errorColor
+                    currentStep != null && destinationIndex <= currentStep -> successColor
+                    currentStep != null && destinationIndex == currentStep + 1 -> warningColor
+                    else -> connectorColor
+                }
+                drawLine(
+                    color = lineColor,
+                    start = androidx.compose.ui.geometry.Offset(centers[index], 14.dp.toPx()),
+                    end = androidx.compose.ui.geometry.Offset(centers[index + 1], 14.dp.toPx()),
+                    strokeWidth = 2.dp.toPx(),
+                )
+            }
+        }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            steps.forEachIndexed { index, label ->
-                val completed = index <= currentStep
+            steps.forEachIndexed { index, step ->
+                val reached = currentStep != null && index <= currentStep
+                val next = currentStep != null && index == currentStep + 1
                 val cancelledStep = cancelled && index == 1
                 val color = when {
                     cancelledStep -> MaterialTheme.colorScheme.error
-                    completed -> MaterialTheme.extendedColors.success
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                    reached -> successColor
+                    next -> warningColor
+                    else -> futureColor
                 }
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
-                        modifier = Modifier.size(26.dp).clip(CircleShape)
-                            .background(if (completed) color.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surface)
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .background(
+                                when {
+                                    cancelledStep -> MaterialTheme.colorScheme.errorContainer
+                                    reached -> MaterialTheme.extendedColors.successContainer
+                                    next -> MaterialTheme.extendedColors.warningContainer
+                                    else -> MaterialTheme.colorScheme.surface
+                                },
+                            )
                             .border(2.dp, color, CircleShape),
                         contentAlignment = Alignment.Center,
                     ) {
-                        if (completed) {
-                            Icon(
-                                if (cancelledStep) Icons.Default.Close else Icons.Default.Check,
-                                contentDescription = null,
-                                tint = color,
-                                modifier = Modifier.size(14.dp),
-                            )
-                        } else {
-                            Box(Modifier.size(8.dp).clip(CircleShape).background(color))
-                        }
+                        Icon(
+                            if (cancelledStep) Icons.Default.Close else step.icon,
+                            contentDescription = null,
+                            tint = color,
+                            modifier = Modifier.size(15.dp),
+                        )
                     }
                     Text(
-                        stringResource(label),
+                        stringResource(step.labelRes),
                         style = MaterialTheme.typography.labelSmall,
-                        fontWeight = if (index == currentStep) FontWeight.Bold else FontWeight.Medium,
-                        color = if (index == currentStep) MaterialTheme.colorScheme.onSurface
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = if (reached || next) FontWeight.Bold else FontWeight.Medium,
+                        color = color,
                         modifier = Modifier.padding(top = 8.dp),
                         maxLines = 1,
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
         }
     }
 }
+
+private data class TimelineStep(
+    val labelRes: Int,
+    val icon: ImageVector,
+)
 
 private fun OrderStatus.labelRes(): Int = when (this) {
     OrderStatus.PENDING -> R.string.order_status_pending
