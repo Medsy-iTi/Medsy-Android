@@ -2,19 +2,14 @@ package com.medsy.presentation.orders.orderslist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.medsy.domain.common.fold
-import com.medsy.domain.orders.model.OrderStatusDomain
+import com.medsy.domain.common.onError
+import com.medsy.domain.common.onSuccess
+import com.medsy.domain.orders.model.MasterOrder
 import com.medsy.domain.orders.usecase.GetOrdersUseCase
+import com.medsy.domain.orders.model.OrderNextAction
+import com.medsy.domain.orders.usecase.DetermineOrderNextActionUseCase
 import com.medsy.presentation.common.util.toMessageRes
-import com.medsy.presentation.common.util.formatOrderDate
-import com.medsy.presentation.orders.orderslist.OrdersUIEffect
-import com.medsy.presentation.orders.orderslist.OrdersUIIntent
-import com.medsy.presentation.orders.orderslist.OrdersUIState
-import com.medsy.presentation.orders.orderslist.model.OrderProductThumbnail
-import com.medsy.presentation.orders.orderslist.model.OrderStatus
-import com.medsy.presentation.orders.orderslist.model.OrderSummary
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,50 +18,50 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class OrdersViewModel @Inject constructor(
-    private val getOrdersUseCase: GetOrdersUseCase
+    private val getOrdersUseCase: GetOrdersUseCase,
+    private val determineOrderNextActionUseCase: DetermineOrderNextActionUseCase,
 ) : ViewModel() {
     private var hasLoadedInitialData = false
-    private val allFetchedOrders = mutableListOf<OrderSummary>()
+    private var hasHandledInitialResume = false
+    private val allFetchedOrders = mutableListOf<MasterOrder>()
 
     private val _state = MutableStateFlow(OrdersUIState())
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                reloadOrders()
                 hasLoadedInitialData = true
+                reloadOrders()
             }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = OrdersUIState(),
-        )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), OrdersUIState())
 
-    private val _effect = Channel<OrdersUIEffect>(capacity = Channel.BUFFERED)
+    private val _effect = Channel<OrdersUIEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
     fun onIntent(intent: OrdersUIIntent) {
         when (intent) {
-            is OrdersUIIntent.FilterSelected -> _state.update {
-                it.copy(selectedFilter = intent.filter)
+            is OrdersUIIntent.FilterSelected -> _state.update { it.copy(selectedFilter = intent.filter) }
+            is OrdersUIIntent.OrderClicked -> {
+                val order = allFetchedOrders.firstOrNull { it.id == intent.orderId } ?: return
+                when (determineOrderNextActionUseCase(order)) {
+                    OrderNextAction.CHOOSE_FULFILLMENT,
+                    OrderNextAction.PAY_CARD -> sendEffect(
+                        OrdersUIEffect.NavigateToOrderReview(order.requestId, order.id)
+                    )
+                    OrderNextAction.VIEW_DETAILS -> sendEffect(
+                        OrdersUIEffect.NavigateToOrderDetails(order.id.toString())
+                    )
+                }
             }
-
-            is OrdersUIIntent.OrderClicked ->
-                sendEffect(OrdersUIEffect.NavigateToOrderDetails(intent.orderId))
-
-            OrdersUIIntent.LoadNextPage -> {
-                loadNextPage()
-            }
-
-            OrdersUIIntent.Retry -> {
-                reloadOrders()
-            }
-
-            OrdersUIIntent.Refresh -> {
-                reloadOrders(isPullToRefresh = true)
+            OrdersUIIntent.LoadNextPage -> loadNextPage()
+            OrdersUIIntent.Retry -> reloadOrders()
+            OrdersUIIntent.Refresh -> reloadOrders(isPullToRefresh = true)
+            OrdersUIIntent.Resume -> {
+                if (hasHandledInitialResume) reloadOrders() else hasHandledInitialResume = true
             }
         }
     }
@@ -77,7 +72,7 @@ class OrdersViewModel @Inject constructor(
                 isLoading = !isPullToRefresh,
                 isRefreshing = isPullToRefresh,
                 currentPage = 0,
-                errorMessageRes = null
+                errorMessageRes = null,
             )
         }
         allFetchedOrders.clear()
@@ -85,86 +80,45 @@ class OrdersViewModel @Inject constructor(
     }
 
     private fun loadNextPage() {
-        val currentState = _state.value
-        if (currentState.isLoading || currentState.isLoadMore || currentState.isLastPage) return
-
-        android.util.Log.d("OrdersViewModel", "Loading next page of orders: ${currentState.currentPage + 1}")
+        val current = _state.value
+        if (current.isLoading || current.isLoadMore || current.isLastPage) return
         _state.update { it.copy(isLoadMore = true) }
-        fetchPage(currentState.currentPage + 1)
+        fetchPage(current.currentPage + 1)
     }
 
-    private fun fetchPage(page: Int, sort: List<String>? = null) {
+    private fun fetchPage(page: Int) {
         viewModelScope.launch {
-            val result = getOrdersUseCase(
-                page = page,
-                size = 10,
-                sort = sort
-            )
-
-            result.fold(
-                onSuccess = { pageDomain ->
-                    val uiOrders = pageDomain.content.map { domainOrder ->
-                        val presentationStatus = when (domainOrder.status) {
-                            OrderStatusDomain.Confirmed -> OrderStatus.Confirmed
-                            OrderStatusDomain.Delivered -> OrderStatus.Delivered
-                            OrderStatusDomain.Cancelled -> OrderStatus.Cancelled
-                            OrderStatusDomain.Pending -> OrderStatus.Confirmed
-                        }
-
-                        OrderSummary(
-                            id = domainOrder.id.toString(),
-                            dateLabel = formatOrderDate(domainOrder.dateLabel),
-                            status = presentationStatus,
-                            pharmacyName = domainOrder.pharmacyName,
-                            total = domainOrder.total.toInt(),
-                            productCount = domainOrder.items.sumOf { it.quantity },
-                            productThumbnails = domainOrder.items.map { item ->
-                                OrderProductThumbnail(
-                                    productId = item.productId,
-                                    imageUrl = item.imageUrl
-                                )
-                            }
-                        )
-                    }
-
-                    if (page == 0) {
-                        allFetchedOrders.clear()
-                    }
-                    allFetchedOrders.addAll(uiOrders)
-
-                    android.util.Log.d("OrdersViewModel", "Loaded ${uiOrders.size} orders for page $page. Total loaded: ${allFetchedOrders.size}")
-
-                    _state.update { currentState ->
-                        currentState.copy(
+            getOrdersUseCase(page = page, size = 10, sort = listOf("id,desc"))
+                .onSuccess { resultPage ->
+                    if (page == 0) allFetchedOrders.clear()
+                    allFetchedOrders.addAll(resultPage.content)
+                    _state.update {
+                        it.copy(
                             isLoading = false,
                             isRefreshing = false,
                             isLoadMore = false,
-                            currentPage = pageDomain.pageNumber,
-                            totalPages = pageDomain.totalPages,
-                            isLastPage = pageDomain.last,
+                            currentPage = resultPage.pageNumber,
+                            totalPages = resultPage.totalPages,
+                            isLastPage = resultPage.last,
                             orders = allFetchedOrders.toList(),
-                            errorMessageRes = null
-                        )
-                    }
-                },
-                onError = { error ->
-                    android.util.Log.e("OrdersViewModel", "Error loading page $page: $error")
-                    _state.update { currentState ->
-                        currentState.copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            isLoadMore = false,
-                            errorMessageRes = error.toMessageRes()
+                            errorMessageRes = null,
                         )
                     }
                 }
-            )
+                .onError { error ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isRefreshing = false,
+                            isLoadMore = false,
+                            errorMessageRes = error.toMessageRes(),
+                        )
+                    }
+                }
         }
     }
 
     private fun sendEffect(effect: OrdersUIEffect) {
-        viewModelScope.launch {
-            _effect.send(effect)
-        }
+        viewModelScope.launch { _effect.send(effect) }
     }
 }

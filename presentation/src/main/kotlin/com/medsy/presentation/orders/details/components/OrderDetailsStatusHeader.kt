@@ -28,169 +28,145 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
+import com.medsy.domain.orders.model.FulfillmentMethod
+import com.medsy.domain.orders.model.OrderStatus
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.details.model.FulfillmentType
-import com.medsy.presentation.orders.orderslist.model.OrderStatus
 
 @Composable
 fun OrderDetailsStatusHeader(
     status: OrderStatus,
-    dateLabel: String,
-    fulfillmentType: FulfillmentType,
+    fulfillmentMethod: FulfillmentMethod?,
     modifier: Modifier = Modifier,
 ) {
-    val (statusLabelRes, statusColor) = when (status) {
-        OrderStatus.Confirmed -> R.string.orders_status_confirmed to MaterialTheme.extendedColors.success
-        OrderStatus.Delivered -> R.string.orders_status_delivered to MaterialTheme.extendedColors.success
-        OrderStatus.Cancelled -> R.string.orders_status_cancelled to MaterialTheme.colorScheme.error
+    val statusColor = when (status) {
+        OrderStatus.CANCELLED -> MaterialTheme.colorScheme.error
+        OrderStatus.DELIVERED -> MaterialTheme.extendedColors.success
+        else -> MaterialTheme.colorScheme.primary
     }
-
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
+        modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
-                shape = RoundedCornerShape(20.dp)
-            )
-            .padding(16.dp)
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.15f), RoundedCornerShape(20.dp))
+            .padding(16.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column {
-                Text(
-                    text = stringResource(statusLabelRes),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = statusColor,
-                )
-                Text(
-                    text = dateLabel,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 2.dp),
-                )
-            }
-
-            OrderFulfillmentBadge(fulfillmentType = fulfillmentType)
+            Text(
+                stringResource(status.labelRes()),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = statusColor,
+            )
+            FulfillmentBadge(fulfillmentMethod)
         }
-
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 16.dp),
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
         )
-
-        OrderStatusStepper(status = status)
+        OrderStatusStepper(status, fulfillmentMethod)
     }
 }
 
 @Composable
-private fun OrderStatusStepper(
-    status: OrderStatus,
-    modifier: Modifier = Modifier,
-) {
-    val steps = if (status == OrderStatus.Cancelled) {
+private fun FulfillmentBadge(method: FulfillmentMethod?) {
+    val pickup = method == FulfillmentMethod.PICKUP
+    Row(
+        modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(20.dp))
+            .padding(horizontal = 12.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            if (pickup) Icons.Outlined.Storefront else Icons.Outlined.LocalShipping,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier.size(18.dp),
+        )
+        Text(
+            stringResource(
+                if (pickup) R.string.order_details_fulfillment_pickup
+                else R.string.order_details_fulfillment_delivery,
+            ),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier.padding(start = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun OrderStatusStepper(status: OrderStatus, fulfillmentMethod: FulfillmentMethod?) {
+    val cancelled = status == OrderStatus.CANCELLED
+    val steps = if (cancelled) {
+        listOf(R.string.orders_status_placed, R.string.orders_status_cancelled)
+    } else if (fulfillmentMethod == FulfillmentMethod.PICKUP) {
         listOf(
-            R.string.orders_status_placed to true,
-            R.string.orders_status_cancelled to false
+            R.string.orders_status_placed,
+            R.string.order_status_preparing,
+            R.string.order_status_ready_for_pickup,
+            R.string.order_status_delivered,
         )
     } else {
         listOf(
-            R.string.orders_status_placed to true,
-            R.string.orders_status_confirmed to true,
-            R.string.orders_status_delivering to true,
-            R.string.orders_status_delivered to true
+            R.string.orders_status_placed,
+            R.string.orders_status_confirmed,
+            R.string.orders_status_delivering,
+            R.string.orders_status_delivered,
         )
     }
-
-    val currentStepIndex = when (status) {
-        OrderStatus.Cancelled -> 1
-        OrderStatus.Confirmed -> 1
-        OrderStatus.Delivered -> 3
+    val currentStep = when (status) {
+        OrderStatus.PENDING, OrderStatus.PENDING_PAYMENT -> 0
+        OrderStatus.PREPARING, OrderStatus.READY_FOR_PICKUP, OrderStatus.READY_FOR_DELIVERY -> 1
+        OrderStatus.OUT_FOR_DELIVERY -> 2
+        OrderStatus.DELIVERED -> 3
+        OrderStatus.CANCELLED -> 1
+        OrderStatus.UNKNOWN -> 0
     }
-
-    Box(modifier = modifier.fillMaxWidth()) {
+    Box(Modifier.fillMaxWidth()) {
         HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp)
-                .align(Alignment.TopCenter)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).align(Alignment.TopCenter)
                 .padding(top = 13.dp),
             color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-            thickness = 2.dp
+            thickness = 2.dp,
         )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
-            steps.forEachIndexed { index, (labelRes, isValidStep) ->
-                val isCompleted = index <= currentStepIndex
-                val isActive = index == currentStepIndex
-                val isCancelledStep = !isValidStep
-
-                val stepColor = when {
-                    isCancelledStep -> MaterialTheme.colorScheme.error
-                    isCompleted -> MaterialTheme.extendedColors.success
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            steps.forEachIndexed { index, label ->
+                val completed = index <= currentStep
+                val cancelledStep = cancelled && index == 1
+                val color = when {
+                    cancelledStep -> MaterialTheme.colorScheme.error
+                    completed -> MaterialTheme.extendedColors.success
                     else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
                 }
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
+                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
-                        modifier = Modifier
-                            .size(26.dp)
-                            .clip(CircleShape)
-                            .background(
-                                if (isCompleted || isCancelledStep) stepColor.copy(alpha = 0.15f)
-                                else MaterialTheme.colorScheme.surface
-                            )
-                            .border(
-                                width = 2.dp,
-                                color = stepColor,
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier.size(26.dp).clip(CircleShape)
+                            .background(if (completed) color.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surface)
+                            .border(2.dp, color, CircleShape),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        if (isCancelledStep) {
+                        if (completed) {
                             Icon(
-                                imageVector = Icons.Default.Close,
+                                if (cancelledStep) Icons.Default.Close else Icons.Default.Check,
                                 contentDescription = null,
-                                tint = stepColor,
-                                modifier = Modifier.size(14.dp)
-                            )
-                        } else if (isCompleted) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = null,
-                                tint = stepColor,
-                                modifier = Modifier.size(14.dp)
+                                tint = color,
+                                modifier = Modifier.size(14.dp),
                             )
                         } else {
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(stepColor)
-                            )
+                            Box(Modifier.size(8.dp).clip(CircleShape).background(color))
                         }
                     }
-
                     Text(
-                        text = stringResource(labelRes),
+                        stringResource(label),
                         style = MaterialTheme.typography.labelSmall,
-                        fontWeight = if (isActive) FontWeight.Bold else FontWeight.Medium,
-                        color = if (isActive) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = if (index == currentStep) FontWeight.Bold else FontWeight.Medium,
+                        color = if (index == currentStep) MaterialTheme.colorScheme.onSurface
+                        else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 8.dp),
-                        maxLines = 1
+                        maxLines = 1,
                     )
                 }
             }
@@ -198,36 +174,14 @@ private fun OrderStatusStepper(
     }
 }
 
-@Composable
-private fun OrderFulfillmentBadge(
-    fulfillmentType: FulfillmentType,
-    modifier: Modifier = Modifier,
-) {
-    val (icon, labelRes) = when (fulfillmentType) {
-        FulfillmentType.Pickup -> Icons.Outlined.Storefront to R.string.order_details_fulfillment_pickup
-        FulfillmentType.Delivery -> Icons.Outlined.LocalShipping to R.string.order_details_fulfillment_delivery
-    }
-
-    Row(
-        modifier = modifier
-            .background(
-                MaterialTheme.colorScheme.secondaryContainer,
-                RoundedCornerShape(20.dp),
-            )
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = Modifier.padding(end = 6.dp),
-        )
-        Text(
-            text = stringResource(labelRes),
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSecondaryContainer,
-        )
-    }
+private fun OrderStatus.labelRes(): Int = when (this) {
+    OrderStatus.PENDING -> R.string.order_status_pending
+    OrderStatus.PENDING_PAYMENT -> R.string.order_status_pending_payment
+    OrderStatus.PREPARING -> R.string.order_status_preparing
+    OrderStatus.READY_FOR_PICKUP -> R.string.order_status_ready_for_pickup
+    OrderStatus.READY_FOR_DELIVERY -> R.string.order_status_ready_for_delivery
+    OrderStatus.OUT_FOR_DELIVERY -> R.string.order_status_out_for_delivery
+    OrderStatus.DELIVERED -> R.string.order_status_delivered
+    OrderStatus.CANCELLED -> R.string.order_status_cancelled
+    OrderStatus.UNKNOWN -> R.string.order_status_unknown
 }

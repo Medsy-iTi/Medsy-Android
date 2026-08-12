@@ -35,13 +35,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
+import com.medsy.domain.orders.model.MasterOrder
+import com.medsy.domain.orders.model.OrderStatus
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.orderslist.model.OrderSummary
-import com.medsy.presentation.orders.orderslist.model.OrderStatus
+import com.medsy.presentation.common.util.PriceFormatter
+import java.util.Locale
 
 @Composable
 fun OrderCard(
-    order: OrderSummary,
+    order: MasterOrder,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -52,10 +54,10 @@ fun OrderCard(
         label = "OrderCardScale"
     )
 
-    val accentColor = when (order.status) {
-        OrderStatus.Confirmed -> MaterialTheme.extendedColors.success
-        OrderStatus.Delivered -> MaterialTheme.extendedColors.success
-        OrderStatus.Cancelled -> MaterialTheme.colorScheme.error
+    val accentColor = when (order.orderStatus) {
+        OrderStatus.DELIVERED -> MaterialTheme.extendedColors.success
+        OrderStatus.CANCELLED -> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.primary
     }
 
     Card(
@@ -94,16 +96,10 @@ fun OrderCard(
                 ) {
                     Column {
                         Text(
-                            text = stringResource(R.string.order_number_format, order.id),
+                            text = stringResource(R.string.order_number_format, order.id.toString()),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Text(
-                            text = order.dateLabel,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 2.dp),
                         )
                     }
 
@@ -115,8 +111,9 @@ fun OrderCard(
                 }
 
                 OrderStatusText(
-                    status = order.status,
-                    pharmacyName = order.pharmacyName,
+                    status = order.orderStatus,
+                    pharmacyName = order.pharmacyAllocations.map { it.pharmacyName }
+                        .filter(String::isNotBlank).distinct().joinToString(),
                     modifier = Modifier.padding(top = 12.dp),
                 )
 
@@ -127,11 +124,14 @@ fun OrderCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    OrderProductThumbnails(thumbnails = order.productThumbnails)
+                    OrderProductThumbnails(thumbnails = order.items)
 
                     Column(horizontalAlignment = Alignment.End) {
                         Text(
-                            text = stringResource(R.string.search_price_egp, order.total),
+                            text = stringResource(
+                                R.string.search_price_egp,
+                                PriceFormatter.formatPrice(order.displayedTotal, Locale.getDefault()),
+                            ),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -139,7 +139,7 @@ fun OrderCard(
                         Text(
                             text = stringResource(
                                 R.string.orders_products_count_format,
-                                order.productCount,
+                                order.items.sumOf { it.quantity },
                             ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,

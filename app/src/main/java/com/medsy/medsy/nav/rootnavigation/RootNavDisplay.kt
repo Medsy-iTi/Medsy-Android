@@ -17,6 +17,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.medsy.domain.offers.model.SelectedOfferItem
 import com.medsy.medsy.nav.nestednavigation.NestedNavDisplay
 import com.medsy.presentation.aichat.AiChatRoot
 import com.medsy.presentation.auth.login.LoginRoot
@@ -25,11 +26,10 @@ import com.medsy.presentation.auth.register.RegisterRoot
 import com.medsy.presentation.cart.cartrequest.CartRequestRoot
 import com.medsy.presentation.categories.CategoriesRoot
 import com.medsy.presentation.favorites.FavoritesRoot
-import com.medsy.presentation.offers.available.AvailableOffersRoot
-import com.medsy.presentation.offers.confirmation.OrderConfirmationRoot
-import com.medsy.presentation.offers.review.OrderReviewRoot
+import com.medsy.presentation.offers.details.OfferDetailsRoot
 import com.medsy.presentation.onboarding.OnboardingRoot
 import com.medsy.presentation.orders.details.OrderDetailsRoot
+import com.medsy.presentation.orders.review.OrderReviewRoot
 import com.medsy.presentation.pharmacyprofile.PharmacyProfileRoot
 import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
@@ -159,7 +159,15 @@ fun RootNavDisplay() {
                         rootBackStack.push(Route.OrderDetails(orderId))
                     },
                     openOffers = { requestId ->
-                        rootBackStack.push(Route.AvailableOffers(requestId))
+                        rootBackStack.push(Route.OfferDetails(requestId))
+                    },
+                    openOrderReview = { requestId, masterOrderId ->
+                        rootBackStack.push(
+                            Route.OrderReview(
+                                requestId = requestId,
+                                masterOrderId = masterOrderId,
+                            )
+                        )
                     },
                     openPrescription = { attachmentOnly, isMedicineSearch ->
                         rootBackStack.push(
@@ -344,13 +352,28 @@ fun RootNavDisplay() {
                     }
                 )
             }
-            entry<Route.AvailableOffers> {
+            entry<Route.OfferDetails> {
                 val args = it
-                AvailableOffersRoot(
+                OfferDetailsRoot(
                     requestId = args.requestId,
-                    onNavigateBack = { rootBackStack.popIfCurrent(args) },
-                    onNavigateToOrderReview = { selectedItemIds ->
-                        rootBackStack.push(Route.OrderReview(args.requestId, selectedItemIds.toList()))
+                    onNavigateBack = {
+                        rootBackStack.navigateToNestedDestination(Route.NestedNav.Home) {
+                            requestedNestedDestination = it
+                        }
+                    },
+                    onNavigateToOrderReview = { masterOrderId, selectedItems ->
+                        rootBackStack.replace(
+                            Route.OrderReview(
+                                requestId = args.requestId,
+                                masterOrderId = masterOrderId,
+                                selectedItems = selectedItems.map { selected ->
+                                    Route.SelectedOfferItemArg(
+                                        requestItemId = selected.requestItemId,
+                                        productId = selected.productId,
+                                    )
+                                },
+                            )
+                        )
                     }
                 )
             }
@@ -358,26 +381,23 @@ fun RootNavDisplay() {
                 val args = it
                 OrderReviewRoot(
                     requestId = args.requestId,
-                    selectedItemIds = args.selectedItemIds.toSet(),
-                    onNavigateBack = { rootBackStack.popIfCurrent(args) },
-                    onNavigateToOrderConfirmation = { orderId, pharmacyName ->
-                        rootBackStack.push(
-                            Route.OrderConfirmation(
-                                orderId,
-                                pharmacyName
-                            )
-                        )
-                    }
-                )
-            }
-            entry<Route.OrderConfirmation> { route ->
-                OrderConfirmationRoot(
-                    orderId = route.orderId,
-                    pharmacyName = route.pharmacyName,
-                    onNavigateToTrackOrder = {
-                        rootBackStack.setRoot(Route.NestedNav)
+                    selectedItems = args.selectedItems.map { selected ->
+                        SelectedOfferItem(selected.requestItemId, selected.productId)
                     },
-                    onNavigateToHome = { rootBackStack.setRoot(Route.NestedNav) }
+                    masterOrderId = args.masterOrderId,
+                    onNavigateBack = {
+                        rootBackStack.navigateToNestedDestination(Route.NestedNav.Home) {
+                            requestedNestedDestination = it
+                        }
+                    },
+                    onStartCardPayment = { _ -> },
+                    onNavigateToOrderDetails = { masterOrderId ->
+                        rootBackStack.popTo(Route.NestedNav)
+                        rootBackStack.push(Route.OrderDetails(masterOrderId.toString()))
+                    },
+                    onNavigateToPharmacyProfile = { pharmacyId ->
+                        rootBackStack.push(Route.PharmacyProfile(pharmacyId))
+                    },
                 )
             }
         }

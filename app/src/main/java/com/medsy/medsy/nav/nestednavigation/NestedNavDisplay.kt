@@ -41,6 +41,7 @@ fun NestedNavDisplay(
     openCategories: () -> Unit,
     openProducts: (Int, String) -> Unit,
     openOffers: (Long) -> Unit,
+    openOrderReview: (Long, Long) -> Unit,
     openPrescription: (Boolean, Boolean) -> Unit,
     openCartRequest: () -> Unit,
     requestedDestination: Route?,
@@ -160,7 +161,8 @@ fun NestedNavDisplay(
                         onCategoryClick = { categoryId, categoryName ->
                             openProducts(categoryId, categoryName)
                         },
-                        onViewOffersClick = { requestId -> openOffers(requestId) }
+                        onViewOffersClick = { requestId -> openOffers(requestId) },
+                        onResumeOrderReview = openOrderReview,
                     )
                 }
                 entry<Route.NestedNav.Cart> {
@@ -172,7 +174,8 @@ fun NestedNavDisplay(
                 }
                 entry<Route.NestedNav.Orders> {
                     OrdersRoot(
-                        onOrderClick = openOrderDetails,
+                        onOpenOrderDetails = openOrderDetails,
+                        onOpenOrderReview = openOrderReview,
                     )
                 }
                 entry<Route.NestedNav.Profile> {
