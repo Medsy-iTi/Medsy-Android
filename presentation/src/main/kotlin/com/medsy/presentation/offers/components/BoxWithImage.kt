@@ -1,6 +1,5 @@
 package com.medsy.presentation.offers.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,34 +8,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import com.medsy.presentation.R
+import com.medsy.designsystem.components.NullableProductImage
 
 @Composable
 fun BoxWithImage(imageUrl: String?) {
-    if (imageUrl.isNullOrEmpty()) {
-        Image(
-            painter = painterResource(R.drawable.person),
-            contentDescription = null,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface),
-            contentScale = ContentScale.Fit
-        )
-    } else {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = null,
-            placeholder = painterResource(R.drawable.person),
-            error = painterResource(R.drawable.person),
-            modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface),
-            contentScale = ContentScale.Fit
-        )
-    }
+    NullableProductImage(
+        imageUrl = imageUrl,
+        contentDescription = null,
+        modifier = Modifier
+            .size(48.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surface),
+        contentScale = ContentScale.Fit,
+    )
 }

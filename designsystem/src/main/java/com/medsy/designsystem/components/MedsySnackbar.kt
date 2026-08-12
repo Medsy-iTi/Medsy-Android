@@ -1,5 +1,9 @@
 package com.medsy.designsystem.components
 
+import android.content.Context
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -199,4 +203,24 @@ private suspend fun SnackbarHostState.showUnique(
             duration = SnackbarDuration.Short,
         )
     )
+}
+
+suspend fun SnackbarHostState.showMessage(
+    context: Context,
+    @StringRes messageRes: Int,
+    isSuccess: Boolean,
+    args: List<Any> = emptyList(),
+    actionLabel: String? = null,
+): SnackbarResult? {
+    val rawMessage = ContextCompat.getString(context, messageRes)
+    val message = if (args.isEmpty()) {
+        rawMessage
+    } else {
+        rawMessage.format(*args.toTypedArray())
+    }
+    return if (isSuccess) {
+        showSuccess(message, actionLabel)
+    } else {
+        showError(message, actionLabel)
+    }
 }

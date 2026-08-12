@@ -22,12 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.painterResource
-import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.home.CategoryUi
 
 @Composable
@@ -36,13 +35,14 @@ fun CategoryGridCard(
     containerColor: Color,
     contentColor: Color,
     borderColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     val isDark = androidx.compose.foundation.isSystemInDarkTheme()
 
-    Column(
-        modifier = Modifier
+    Box(
+        modifier = modifier
             .fillMaxWidth()
             .shadow(
                 elevation = if (isDark) 10.dp else 4.dp,
@@ -53,44 +53,48 @@ fun CategoryGridCard(
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
             .border(1.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .size(90.dp)
-                .background(
-                    if (category.imageRes != null) Color.Transparent else containerColor,
-                    RoundedCornerShape(14.dp)
-                ),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (category.imageRes != null) {
-                androidx.compose.foundation.Image(
-                    painter = painterResource(id = category.imageRes),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.MedicalServices,
-                    contentDescription = null,
-                    tint = contentColor,
-                    modifier = Modifier.size(42.dp)
-                )
+            Box(
+                modifier = Modifier
+                    .size(90.dp)
+                    .background(
+                        if (category.imageRes != null) Color.Transparent else containerColor,
+                        RoundedCornerShape(14.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                if (category.imageRes != null) {
+                    androidx.compose.foundation.Image(
+                        painter = painterResource(id = category.imageRes),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.MedicalServices,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(42.dp)
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = category.name.lowercase()
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },
+                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
         }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = category.name.lowercase()
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },
-            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center,
-            maxLines = 4,
-            overflow = TextOverflow.Ellipsis
-        )
     }
 }

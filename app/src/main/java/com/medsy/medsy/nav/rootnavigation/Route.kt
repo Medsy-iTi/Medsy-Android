@@ -30,16 +30,13 @@ sealed interface Route : NavKey {
         @Serializable
         data object Cart : Route
 
-
         @Serializable
         data object Orders : Route
 
-
         @Serializable
         data object Profile : Route
-
-
     }
+
 
     @Serializable
     data class ProductDetails(val id: String) : Route
@@ -63,6 +60,9 @@ sealed interface Route : NavKey {
     data class PersonalDetails(
         val startInEditMode: Boolean = false,
     ) : Route
+
+    @Serializable
+    data object Favorites : Route
 
     @Serializable
     data class SearchNav(val initialQuery: String? = null, val localItemId: String? = null) : Route

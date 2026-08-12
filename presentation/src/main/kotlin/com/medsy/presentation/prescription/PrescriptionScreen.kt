@@ -22,6 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showMessage
+import kotlinx.coroutines.flow.collectLatest
 import com.medsy.presentation.prescription.medicinepicker.MedicinePickerScreen
 import com.medsy.presentation.prescription.prescriptionuploaderror.PrescriptionConfirmationScreen
 import com.medsy.presentation.prescription.prescriptionextracting.PrescriptionExtractingScreen
@@ -79,7 +82,7 @@ fun PrescriptionRoot(
     )
 
     LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 is PrescriptionUIEffect.LaunchCamera -> cameraLauncher.launch(Uri.parse(effect.uri))
                 PrescriptionUIEffect.LaunchGallery -> galleryLauncher.launch(
@@ -100,8 +103,10 @@ fun PrescriptionRoot(
                 )
 
                 is PrescriptionUIEffect.ShowMessage ->
-                    snackbarHostState.showSnackbar(
-                        ContextCompat.getString(context, effect.messageRes)
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess
                     )
             }
         }
@@ -109,7 +114,7 @@ fun PrescriptionRoot(
 
     BackHandler { viewModel.onIntent(PrescriptionUIIntent.BackClicked) }
 
-    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
+    Scaffold(snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) }) { padding ->
         PrescriptionScreen(
             state = state,
             onIntent = viewModel::onIntent,

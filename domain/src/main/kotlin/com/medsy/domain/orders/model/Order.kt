@@ -21,7 +21,7 @@ data class Order(
     val pharmacistName: String?,
     val offerId: Long?,
     val subTotal: Double,
-    val deliveryFee: Double,
+    val deliveryFee: Double?,
     val total: Double,
     val deliveryLatitude: Double?,
     val deliveryLongitude: Double?,

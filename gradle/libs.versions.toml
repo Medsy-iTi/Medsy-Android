@@ -35,6 +35,9 @@ runtime = "1.11.4"
 material3 = "1.4.0"
 securityCrypto = "1.1.0-alpha06"
 stripe = "23.13.1"
+room = "2.8.4"
+
+
 [libraries]
 stripe-android = { module = "com.stripe:stripe-android", version.ref = "stripe" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
@@ -95,6 +98,11 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 #collect as state with lifecycle
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
 google-play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+
+# Room
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

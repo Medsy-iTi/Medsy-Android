@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.usecase.ClearCartUseCase
+import com.medsy.domain.cart.usecase.GetCartInteractionsUseCase
 import com.medsy.domain.cart.usecase.GetCartUseCase
 import com.medsy.domain.cart.usecase.ObserveCartDraftUseCase
 import com.medsy.domain.cart.usecase.RemoveCartItemUseCase
@@ -17,6 +18,7 @@ import com.medsy.domain.common.onSuccess
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,9 +36,12 @@ class CartViewModel @Inject constructor(
     private val observeCartDraft: ObserveCartDraftUseCase,
     private val updateCartNote: UpdateCartNoteUseCase,
     private val removeCartPrescription: RemoveCartPrescriptionUseCase,
+    private val getCartInteractions: GetCartInteractionsUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CartState())
     val state = _state.asStateFlow()
+
+    private var interactionsJob: Job? = null
 
     private val _effect = Channel<CartUIEffect>(capacity = Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
@@ -202,16 +207,19 @@ class CartViewModel @Inject constructor(
             }
             clearCart.invoke()
                 .onSuccess {
+                    interactionsJob?.cancel()
                     _state.update {
                         it.copy(
                             items = emptyList(),
                             totalPriceEgp = 0.0,
                             updatingItemIds = emptySet(),
                             isClearing = false,
+                            interactionWarnings = emptyList(),
+                            isCheckingInteractions = false,
                             errorMessageRes = null,
                         )
                     }
-                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_cleared))
+                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_cleared, isSuccess = true))
                 }
                 .onError { error ->
                     _state.update { it.copy(isClearing = false) }
@@ -225,7 +233,7 @@ class CartViewModel @Inject constructor(
             updateCartNote(_state.value.noteInput.trim())
                 .onSuccess {
                     _state.update { it.copy(isNoteDialogVisible = false) }
-                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_note_saved))
+                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_note_saved, isSuccess = true))
                 }
                 .onError { error ->
                     sendEffect(CartUIEffect.ShowMessage(error.toMessageRes()))
@@ -237,7 +245,7 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             removeCartPrescription()
                 .onSuccess {
-                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_prescription_removed))
+                    sendEffect(CartUIEffect.ShowMessage(R.string.cart_prescription_removed, isSuccess = true))
                 }
                 .onError { error ->
                     sendEffect(CartUIEffect.ShowMessage(error.toMessageRes()))
@@ -256,6 +264,42 @@ class CartViewModel @Inject constructor(
                 isClearing = false,
                 errorMessageRes = null,
             )
+        }
+        refreshInteractionWarnings(cart)
+    }
+
+    /**
+     * AI drug-interaction check, re-run after every cart mutation. Strictly
+     * best-effort: failures clear the warnings silently and never block or
+     * toast — the cart itself must stay fully usable without it.
+     */
+    private fun refreshInteractionWarnings(cart: Cart) {
+        interactionsJob?.cancel()
+        if (cart.items.size < 2) {
+            _state.update {
+                it.copy(interactionWarnings = emptyList(), isCheckingInteractions = false)
+            }
+            return
+        }
+        interactionsJob = viewModelScope.launch {
+            _state.update { it.copy(isCheckingInteractions = true) }
+            getCartInteractions()
+                .onSuccess { warnings ->
+                    _state.update {
+                        it.copy(
+                            interactionWarnings = warnings,
+                            isCheckingInteractions = false,
+                        )
+                    }
+                }
+                .onError {
+                    _state.update {
+                        it.copy(
+                            interactionWarnings = emptyList(),
+                            isCheckingInteractions = false,
+                        )
+                    }
+                }
         }
     }
 }

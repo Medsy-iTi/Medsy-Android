@@ -77,6 +77,10 @@
     <string name="error_forbidden">You don\'t have permission to perform this action.</string>
     <string name="error_not_found">The requested resource was not found.</string>
     <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_database_constraint">Database constraint error.</string>
+    <string name="error_database_full">Storage space is full. Cannot save data.</string>
+    <string name="error_database_corrupt">Database error. Please clear app data or reinstall.</string>
+    <string name="error_database_io">Storage read/write error.</string>
 
     <!-- Success -->
     <string name="success_account_created">Account created successfully</string>
@@ -196,6 +200,11 @@
     <string name="search_favorite_desc">Add to favorites</string>
     <string name="search_add_to_cart_desc">Add to cart</string>
     <string name="search_added_to_cart">Added to cart</string>
+    <string name="search_added_to_favorites">Added %1$s to favorites</string>
+    <string name="search_removed_from_favorites">Removed %1$s from favorites</string>
+    <string name="profile_my_favourites">My Favorites</string>
+    <string name="profile_my_favourites_subtitle">Manage your favorite products</string>
+    <string name="favorites_empty">You have no favorite products yet.</string>
     <string name="search_empty_title">No results found</string>
     <string name="search_empty_subtitle">Try a different search term</string>
     <string name="search_sort_title">Sort By</string>
@@ -215,6 +224,7 @@
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">Share</string>
+    <string name="product_details_favorite_desc">Add to favorites</string>
     <string name="product_details_image_desc">Product image</string>
     <string name="product_details_pack_info_format">%1$s · %2$s</string>
     <string name="product_details_pharmacist_notice">This medicine is dispensed only after pharmacist review to determine the appropriate dose for your condition.</string>
@@ -463,7 +473,7 @@
         <item quantity="one">medicine</item>
         <item quantity="other">medicines</item>
     </plurals>
-  
+
     <!-- Pharmacy profile -->
     <string name="pharmacy_profile_title">Pharmacy profile</string>
     <string name="pharmacy_profile_verified">Verified</string>
@@ -572,4 +582,73 @@
     <string name="order_details_error_load">We couldn\'t load this order\'s details.</string>
     <string name="reordered_products">Products added to cart successfully.</string>
 
+
+    <!-- Orders placeholder -->
+    <string name="orders_coming_soon_title">Orders are coming soon</string>
+    <string name="orders_coming_soon_body">Your active and previous orders will appear here in a future update.</string>
+
+    <!-- Medsy AI chat -->
+    <string name="ai_chat_title">Medsy AI</string>
+    <string name="ai_chat_online">Online · always here to help</string>
+    <string name="ai_chat_new_chat_description">Start a new chat</string>
+    <string name="ai_chat_greeting">Ask Medsy anything</string>
+    <string name="ai_chat_welcome_supporting">Ask about medicines and symptoms, add products to your cart, set dose reminders, or send a photo of a prescription.</string>
+    <string name="ai_chat_disclaimer">Guidance only — not a diagnosis or prescription. Confirm that a medicine is suitable for you with a pharmacist or doctor.</string>
+    <string name="ai_chat_catalog_empty_answer">I couldn\'t produce an answer for that. Please try again.</string>
+    <string name="ai_chat_catalog_error_title">Couldn\'t reach Medsy AI</string>
+    <string name="ai_chat_catalog_retry">Try again</string>
+    <string name="ai_chat_history_error_title">Couldn\'t load your conversation</string>
+    <string name="ai_chat_history_retry">Reload chat</string>
+    <string name="ai_chat_add_to_cart">Add to cart</string>
+    <string name="ai_chat_view_product_details">View product details</string>
+    <string name="ai_chat_price_egp">%1$.2f EGP</string>
+    <string name="ai_chat_added_to_cart">Medicine added to cart</string>
+    <string name="ai_chat_input_hint">Ask about a medicine…</string>
+    <string name="ai_chat_attach_description">Attach a photo</string>
+    <string name="ai_chat_attach_title">Send a photo</string>
+    <string name="ai_chat_attach_camera">Take a photo</string>
+    <string name="ai_chat_attach_gallery">Choose from gallery</string>
+    <string name="ai_chat_attachment_ready">Photo ready to send — add a caption if you like</string>
+    <string name="ai_chat_attachment_remove">Remove photo</string>
+    <string name="ai_chat_sent_photo_description">Photo you sent</string>
+    <string name="ai_chat_voice_description">Speak your message</string>
+    <string name="ai_chat_send_description">Send message</string>
+    <string name="ai_chat_emergency_numbers_title">Emergency numbers</string>
+    <string name="ai_chat_emergency_ambulance">Ambulance</string>
+    <string name="ai_chat_emergency_police">Police</string>
+    <string name="ai_chat_emergency_fire">Fire department</string>
+    <string name="ai_chat_emergency_call">Call</string>
+    <string name="ai_chat_specializations_title">Suggested doctor specialties</string>
+    <string name="ai_chat_category_browse">Browse products</string>
+    <string name="ai_chat_cart_success_title">Added to your cart</string>
+    <string name="ai_chat_cart_success_quantity">×%1$d</string>
+    <string name="ai_chat_cart_success_count">Your cart now has %1$d item(s)</string>
+    <string name="ai_chat_view_cart">View cart</string>
+    <string name="ai_chat_confirm_request_title">Your request is ready to confirm</string>
+    <string name="ai_chat_confirm_request_button">Confirm request</string>
+    <string name="ai_chat_reminder_icon_description">Medication reminder</string>
+    <string name="ai_chat_quick_symptom">I have a headache</string>
+    <string name="ai_chat_quick_symptom_question">I have a mild headache, what should I do?</string>
+    <string name="ai_chat_quick_add_cart">Add Panadol to my cart</string>
+    <string name="ai_chat_quick_add_cart_question">Add Panadol to my cart</string>
+    <string name="ai_chat_quick_reminder">Remind me of my medicine</string>
+    <string name="ai_chat_quick_reminder_question">Remind me to take my medicine twice a day</string>
+    <string name="ai_chat_quick_categories">What sections do you have?</string>
+    <string name="ai_chat_quick_categories_question">What product sections do you have?</string>
+    <string name="ai_chat_quick_usage">How do I take a medicine?</string>
+    <string name="ai_chat_quick_usage_question">How should I take Panadol Extra?</string>
+    <string name="ai_chat_quick_photo">Scan a prescription photo</string>
+    <string name="ai_chat_new_chat_title">Start a new chat?</string>
+    <string name="ai_chat_new_chat_body">This deletes your conversation history from the server and starts fresh.</string>
+    <string name="ai_chat_cancel">Cancel</string>
+    <string name="ai_chat_start_new">Start new</string>
+    <string name="ai_chat_voice_prompt">Speak to Medsy AI</string>
+    <string name="ai_chat_voice_unavailable">Speech recognition is not available on this device.</string>
+    <string name="ai_chat_dialer_unavailable">No phone app is available.</string>
+
+    <!-- Cart drug-interaction warnings -->
+    <string name="cart_interactions_checking">Checking for drug interactions…</string>
+    <string name="cart_interactions_ai_note">AI-checked · informational only — ask your pharmacist</string>
+    <string name="cart_interactions_expand">Show advice</string>
+    <string name="cart_interactions_collapse">Hide advice</string>
 </resources>

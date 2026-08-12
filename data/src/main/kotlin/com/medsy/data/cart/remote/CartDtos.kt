@@ -34,11 +34,26 @@ data class ProductsRequestDto(
 data class CartItemDto(
     val id: Long,
     val productId: Int,
-    val productName: String,
-    val imageUrl: String,
     val unitPrice: Double,
     val quantity: Int,
+    val product: CartItemProductDto,
     val subtotal: Double,
+)
+
+@JsonClass(generateAdapter = true)
+data class CartItemProductDto(
+    val id: Long,
+    val name: String,
+    val productName: String?,
+    val strength: String?,
+    val packSize: String?,
+    val form: String?,
+    val price: Double,
+    val scientificName: String,
+    val company: String?,
+    val route: String?,
+    val description: String?,
+    val imageUrl: String?,
 )
 
 @JsonClass(generateAdapter = true)

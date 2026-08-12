@@ -104,6 +104,10 @@
     <string name="error_forbidden">ليس لديك صلاحية لتنفيذ هذا الإجراء.</string>
     <string name="error_not_found">المورد المطلوب غير موجود.</string>
     <string name="error_server">خطأ في الخادم. يرجى المحاولة لاحقاً.</string>
+    <string name="error_database_constraint">خطأ في قيود قاعدة البيانات.</string>
+    <string name="error_database_full">المساحة التخزينية ممتلئة. تعذر حفظ البيانات.</string>
+    <string name="error_database_corrupt">خطأ في قاعدة البيانات. يرجى مسح بيانات التطبيق أو إعادة التثبيت.</string>
+    <string name="error_database_io">خطأ في قراءة أو كتابة وحدة التخزين.</string>
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
 
@@ -189,6 +193,11 @@
     <string name="search_favorite_desc">أضف للمفضلة</string>
     <string name="search_add_to_cart_desc">أضف إلى السلة</string>
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
+    <string name="search_added_to_favorites">تمت إضافة %1$s إلى المفضلة</string>
+    <string name="search_removed_from_favorites">تمت إزالة %1$s من المفضلة</string>
+    <string name="profile_my_favourites">المفضلة</string>
+    <string name="profile_my_favourites_subtitle">إدارة منتجاتك المفضلة</string>
+    <string name="favorites_empty">ليس لديك أي منتجات مفضلة بعد.</string>
     <string name="search_empty_title">لا توجد نتائج</string>
     <string name="search_empty_subtitle">جرّب كلمة بحث مختلفة</string>
     <string name="search_sort_title">ترتيب حسب</string>
@@ -208,6 +217,7 @@
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">مشاركة</string>
+    <string name="product_details_favorite_desc">أضف للمفضلة</string>
     <string name="product_details_image_desc">صورة المنتج</string>
     <string name="product_details_pack_info_format">%1$s - %2$s</string>
     <string name="product_details_pharmacist_notice">لا يتم صرف هذا الدواء إلا بعد مراجعة الصيدلي لتحديد الجرعة المناسبة لحالتك.</string>
@@ -574,4 +584,74 @@
     <string name="order_details_reorder">إعادة الطلب</string>
     <string name="order_details_error_load">تعذر تحميل تفاصيل هذا الطلب.</string>
     <string name="reordered_products">تم اضافة المنتجات الى السله بنجاح.</string>
+    <!-- محادثة ميدسي AI -->
+
+    <!-- شاشة الطلبات المؤقتة -->
+    <string name="orders_coming_soon_title">الطلبات قريبًا</string>
+    <string name="orders_coming_soon_body">ستظهر طلباتك الحالية والسابقة هنا في تحديث قادم.</string>
+
+    <!-- Medsy AI chat -->
+    <string name="ai_chat_title">ميدسي AI</string>
+    <string name="ai_chat_online">متصل · دائمًا هنا للمساعدة</string>
+    <string name="ai_chat_new_chat_description">بدء محادثة جديدة</string>
+    <string name="ai_chat_greeting">اسأل ميدسي عن أي شيء</string>
+    <string name="ai_chat_welcome_supporting">اسأل عن الأدوية والأعراض، أضِف منتجات إلى سلتك، اضبط تذكيرات الجرعات، أو أرسل صورة روشتة.</string>
+    <string name="ai_chat_disclaimer">إرشادات فقط — ليست تشخيصًا أو وصفة. تأكد من ملاءمة الدواء لك مع الصيدلي أو الطبيب.</string>
+    <string name="ai_chat_catalog_empty_answer">لم أستطع إيجاد إجابة لذلك. حاول مرة أخرى.</string>
+    <string name="ai_chat_catalog_error_title">تعذّر الوصول إلى ميدسي AI</string>
+    <string name="ai_chat_catalog_retry">حاول مجددًا</string>
+    <string name="ai_chat_history_error_title">تعذّر تحميل محادثتك</string>
+    <string name="ai_chat_history_retry">إعادة تحميل المحادثة</string>
+    <string name="ai_chat_add_to_cart">أضِف إلى السلة</string>
+    <string name="ai_chat_view_product_details">عرض تفاصيل المنتج</string>
+    <string name="ai_chat_price_egp">%1$.2f ج.م</string>
+    <string name="ai_chat_added_to_cart">تمت إضافة الدواء إلى السلة</string>
+    <string name="ai_chat_input_hint">اسأل عن دواء…</string>
+    <string name="ai_chat_attach_description">إرفاق صورة</string>
+    <string name="ai_chat_attach_title">إرسال صورة</string>
+    <string name="ai_chat_attach_camera">التقاط صورة</string>
+    <string name="ai_chat_attach_gallery">اختيار من المعرض</string>
+    <string name="ai_chat_attachment_ready">الصورة جاهزة للإرسال — أضِف تعليقًا إذا أردت</string>
+    <string name="ai_chat_attachment_remove">إزالة الصورة</string>
+    <string name="ai_chat_sent_photo_description">الصورة التي أرسلتها</string>
+    <string name="ai_chat_voice_description">تحدّث برسالتك</string>
+    <string name="ai_chat_send_description">إرسال الرسالة</string>
+    <string name="ai_chat_emergency_numbers_title">أرقام الطوارئ</string>
+    <string name="ai_chat_emergency_ambulance">الإسعاف</string>
+    <string name="ai_chat_emergency_police">الشرطة</string>
+    <string name="ai_chat_emergency_fire">المطافئ</string>
+    <string name="ai_chat_emergency_call">اتصال</string>
+    <string name="ai_chat_specializations_title">تخصصات أطباء مقترحة</string>
+    <string name="ai_chat_category_browse">تصفّح المنتجات</string>
+    <string name="ai_chat_cart_success_title">تمت الإضافة إلى سلتك</string>
+    <string name="ai_chat_cart_success_quantity">×%1$d</string>
+    <string name="ai_chat_cart_success_count">سلتك تحتوي الآن على %1$d منتج</string>
+    <string name="ai_chat_view_cart">عرض السلة</string>
+    <string name="ai_chat_confirm_request_title">طلبك جاهز للتأكيد</string>
+    <string name="ai_chat_confirm_request_button">تأكيد الطلب</string>
+    <string name="ai_chat_reminder_icon_description">تذكير دواء</string>
+    <string name="ai_chat_quick_symptom">عندي صداع</string>
+    <string name="ai_chat_quick_symptom_question">عندي صداع خفيف، أعمل إيه؟</string>
+    <string name="ai_chat_quick_add_cart">ضيف بانادول للسلة</string>
+    <string name="ai_chat_quick_add_cart_question">ضيف بانادول للسلة</string>
+    <string name="ai_chat_quick_reminder">فكرني بدوائي</string>
+    <string name="ai_chat_quick_reminder_question">فكرني آخد دوائي مرتين في اليوم</string>
+    <string name="ai_chat_quick_categories">إيه الأقسام اللي عندكم؟</string>
+    <string name="ai_chat_quick_categories_question">إيه أقسام المنتجات اللي عندكم؟</string>
+    <string name="ai_chat_quick_usage">إزاي آخد دواء معين؟</string>
+    <string name="ai_chat_quick_usage_question">إزاي آخد بانادول إكسترا؟</string>
+    <string name="ai_chat_quick_photo">مسح صورة روشتة</string>
+    <string name="ai_chat_new_chat_title">بدء محادثة جديدة؟</string>
+    <string name="ai_chat_new_chat_body">سيؤدي هذا إلى حذف سجل محادثتك من الخادم والبدء من جديد.</string>
+    <string name="ai_chat_cancel">إلغاء</string>
+    <string name="ai_chat_start_new">بدء جديدة</string>
+    <string name="ai_chat_voice_prompt">تحدث إلى ميدسي AI</string>
+    <string name="ai_chat_voice_unavailable">التعرف على الكلام غير متاح على هذا الجهاز.</string>
+    <string name="ai_chat_dialer_unavailable">لا يوجد تطبيق هاتف متاح.</string>
+
+    <!-- Cart drug-interaction warnings -->
+    <string name="cart_interactions_checking">جارٍ فحص التفاعلات الدوائية…</string>
+    <string name="cart_interactions_ai_note">فُحصت بالذكاء الاصطناعي · للاسترشاد فقط — اسأل الصيدلي</string>
+    <string name="cart_interactions_expand">عرض النصيحة</string>
+    <string name="cart_interactions_collapse">إخفاء النصيحة</string>
 </resources>

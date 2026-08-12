@@ -9,14 +9,13 @@ fun ProductDto.toDomain(): SearchProduct {
     return SearchProduct(
         id = id,
         name = name,
-        arabicName = arabicName ?: "",
         scientificName = scientificName,
         price = price,
         imageUrl = imageUrl,
         categoryId = categoryId,
-        categoryName = categoryName,
-        company = company,
-        route = route
+        categoryName = categoryName.orEmpty(),
+        company = company.orEmpty(),
+        route = route.orEmpty(),
     )
 }
 

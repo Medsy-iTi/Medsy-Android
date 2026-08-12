@@ -33,7 +33,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -57,8 +56,9 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsyButton
-import com.medsy.presentation.R
+import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.designsystem.components.showError
+import com.medsy.presentation.R
 
 private const val OTP_LENGTH = 6
 
@@ -99,7 +99,7 @@ fun OtpScreen(
 ) {
 
     Scaffold(
-        snackbarHost = { com.medsy.designsystem.components.MedsySnackbarHost(snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(

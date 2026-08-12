@@ -41,13 +41,14 @@ fun OffersPageDto.toDomain(): OffersPage = OffersPage(
 fun RequestResultDto.toDomain(): RequestResult = RequestResult(
     items = medicineRequestResultItemList.map { it.toDomain() },
     totalPrice = totalPrice,
+    paymentMethod = paymentMethod,
 )
 
 fun RequestResultItemDto.toDomain(): RequestResultItem = RequestResultItem(
     requestItemId = requestItemId,
     productId = productId,
-    productName = productName,
-    imageUrl = imageUrl,
+    productName = product.name.ifBlank { product.productName.orEmpty() },
+    imageUrl = product.imageUrl?.takeIf(String::isNotBlank),
     unitPrice = unitPrice,
     isAlternative = alternative,
     isAvailable = available,

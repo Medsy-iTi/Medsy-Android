@@ -8,6 +8,7 @@ import com.medsy.domain.offers.usecase.AcceptOfferUseCase
 import com.medsy.domain.offers.usecase.GetOffersForRequestUseCase
 import com.medsy.domain.offers.usecase.GetRequestResultUseCase
 import com.medsy.domain.payment.usecase.CreatePaymentIntentUseCase
+import com.medsy.domain.offers.model.SelectedOfferItem
 import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
 import com.medsy.presentation.offers.mapper.toPharmacyOffer
 import kotlinx.coroutines.async
@@ -62,12 +63,22 @@ class OffersViewModel @Inject constructor(
     private fun handleConfirmOrder() {
         val selectedOffer = _state.value.selectedOffer ?: return
         val requestId = _state.value.requestId ?: return
+        val selectedItems = selectedOffer.medicines
+            .filter { it.isAvailable }
+            .mapNotNull { medicine ->
+                medicine.id.toLongOrNull()?.let { requestItemId ->
+                    SelectedOfferItem(
+                        requestItemId = requestItemId,
+                        productId = medicine.productId,
+                    )
+                }
+            }
         val selectedItemIds =
             selectedOffer.medicines.filter { it.isAvailable }.mapNotNull { it.id.toLongOrNull() }
 
         viewModelScope.launch {
             _state.update { it.copy(isConfirmingOrder = true) }
-            val result = acceptOfferUseCase(requestId, selectedItemIds)
+            val result = acceptOfferUseCase(requestId, selectedItems)
             when (result) {
                 is MedsyResult.Success -> {
                     val orderId = result.data.orders.firstOrNull()?.orderId
