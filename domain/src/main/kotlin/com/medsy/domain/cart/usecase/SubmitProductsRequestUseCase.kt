@@ -8,48 +8,47 @@ import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.asEmptyDataResult
 import com.medsy.domain.common.onSuccess
-import com.medsy.domain.requests.model.MedicineRequest
-import com.medsy.domain.requests.repository.ActiveRequestRepository
 import javax.inject.Inject
 
 class SubmitProductsRequestUseCase @Inject constructor(
     private val cartRepository: CartRepository,
-    private val activeRequestRepository: ActiveRequestRepository,
 ) {
     suspend operator fun invoke(
         request: ProductsRequest,
     ): EmptyMedsyResult<MedsyError> {
-        val hasProducts = request.items.isNotEmpty()
-        val hasValidDeliveryAddress = request.deliveryMethod != DeliveryMethod.DELIVERY || (
-                request.deliveryAddress?.isNotBlank() == true &&
-                        request.deliveryLatitude?.let { it in -90.0..90.0 } == true &&
-                        request.deliveryLongitude?.let { it in -180.0..180.0 } == true
-                )
-
-        if (!hasProducts || !hasValidDeliveryAddress) {
+        if (!request.isValidRequest()) {
             return MedsyResult.Error(MedsyError.Validation.REQUIRED_FIELDS)
         }
 
-        val normalizedRequest = request.copy(
-            notes = request.notes?.trim()?.takeIf(String::isNotBlank),
-            deliveryAddress = request.deliveryAddress?.trim()?.takeIf(String::isNotBlank),
-            deliveryLatitude = request.deliveryLatitude.takeIf {
-                request.deliveryMethod == DeliveryMethod.DELIVERY
-            },
-            deliveryLongitude = request.deliveryLongitude.takeIf {
-                request.deliveryMethod == DeliveryMethod.DELIVERY
-            },
-        )
-
-        return cartRepository.submitProductsRequest(normalizedRequest)
-            .onSuccess { requestId ->
-                activeRequestRepository.addActiveRequest(
-                    MedicineRequest(
-                        id = requestId,
-                        createdAtMillis = System.currentTimeMillis()
-                    )
-                )
+        return cartRepository.submitProductsRequest(request.normalizeRequest())
+            .onSuccess {
+                cartRepository.clearDraft()
             }
             .asEmptyDataResult()
     }
+
+    private fun ProductsRequest.isValidRequest(): Boolean {
+        val hasProducts = items.isNotEmpty()
+
+        val hasValidDeliveryAddress = deliveryMethod !=
+                DeliveryMethod.DELIVERY || (
+                deliveryAddress?.isNotBlank() == true &&
+                        deliveryLatitude?.let { it in -90.0..90.0 } == true &&
+                        deliveryLongitude?.let { it in -180.0..180.0 } == true
+                )
+
+        return (hasProducts && hasValidDeliveryAddress)
+    }
+
+    private fun ProductsRequest.normalizeRequest(): ProductsRequest =
+        this.copy(
+            notes = notes?.trim()?.takeIf(String::isNotBlank),
+            deliveryAddress = deliveryAddress?.trim()?.takeIf(String::isNotBlank),
+            deliveryLatitude = deliveryLatitude.takeIf {
+                deliveryMethod == DeliveryMethod.DELIVERY
+            },
+            deliveryLongitude = deliveryLongitude.takeIf {
+                deliveryMethod == DeliveryMethod.DELIVERY
+            },
+        )
 }

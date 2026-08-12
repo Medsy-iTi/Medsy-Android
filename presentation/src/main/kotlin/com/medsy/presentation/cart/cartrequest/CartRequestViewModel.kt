@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.cart.model.DeliveryMethod
 import com.medsy.domain.cart.model.ProductsRequest
-import com.medsy.domain.cart.usecase.ClearCartDraftUseCase
 import com.medsy.domain.cart.usecase.GetCartUseCase
 import com.medsy.domain.cart.usecase.ObserveCartDraftUseCase
 import com.medsy.domain.cart.usecase.SubmitProductsRequestUseCase
@@ -29,7 +28,6 @@ import javax.inject.Inject
 class CartRequestViewModel @Inject constructor(
     private val getCart: GetCartUseCase,
     private val observeCartDraft: ObserveCartDraftUseCase,
-    private val clearCartDraft: ClearCartDraftUseCase,
     private val getProfile: GetProfileUseCase,
     private val submitProductsRequest: SubmitProductsRequestUseCase,
 ) : ViewModel() {
@@ -221,7 +219,6 @@ class CartRequestViewModel @Inject constructor(
                     paymentMethod = currentState.paymentOption,
                 )
             ).onSuccess {
-                clearCartDraft()
                 _state.update { it.copy(isSubmitting = false) }
                 _effect.send(CartRequestUIEffect.NavigateHome)
             }.onError { error ->

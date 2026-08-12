@@ -9,10 +9,9 @@ sealed interface HomeUIIntent {
     object OnPromoClick : HomeUIIntent
     object OnViewAllCategoriesClick : HomeUIIntent
     data class OnCategoryClick(val categoryId: String) : HomeUIIntent
-    data class OnCancelSearchSimulation(val requestId: Long) : HomeUIIntent
     data class OnViewOffersClick(val requestId: Long) : HomeUIIntent
-    object OnSearchWiderRangeClick : HomeUIIntent
-    object RefreshData : HomeUIIntent
+    object OnContinueOrderClick : HomeUIIntent
     object OnResume : HomeUIIntent
+    object RefreshData : HomeUIIntent
     data class LanguageChanged(val languageTag: String) : HomeUIIntent
 }

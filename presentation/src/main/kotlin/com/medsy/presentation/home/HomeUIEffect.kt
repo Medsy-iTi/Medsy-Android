@@ -9,4 +9,5 @@ sealed interface HomeUIEffect {
     object NavigateToCategories : HomeUIEffect
     data class NavigateToCategory(val categoryId: String, val categoryName: String) : HomeUIEffect
     data class NavigateToOffers(val requestId: Long) : HomeUIEffect
+    data class NavigateToOrderReview(val requestId: Long, val masterOrderId: Long) : HomeUIEffect
 }
