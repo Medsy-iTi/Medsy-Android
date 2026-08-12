@@ -8,6 +8,7 @@ import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartItem
 import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.cart.model.ProductsRequest
+import com.medsy.domain.cart.model.PaymentOption
 
 fun CartItemInput.toDto(): CartItemInputDto = CartItemInputDto(
     productId = productId,
@@ -32,7 +33,10 @@ fun ProductsRequest.toDto(): ProductsRequestDto = ProductsRequestDto(
     deliveryAddress = deliveryAddress,
     deliveryLatitude = deliveryLatitude,
     deliveryLongitude = deliveryLongitude,
-    paymentMethod = paymentMethod.name,
+    paymentMethod = when (paymentMethod) {
+        PaymentOption.CASH -> "CASH"
+        PaymentOption.VISA -> "CARD"
+    },
 )
 
 private fun CartItemDto.toDomain(): CartItem = CartItem(

@@ -1,17 +1,25 @@
 package com.medsy.domain.offers.repository
 
-import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
+import com.medsy.domain.offers.model.FulfillmentConfirmation
 import com.medsy.domain.offers.model.RequestResult
+import com.medsy.domain.offers.model.RequestResultEvent
+import com.medsy.domain.offers.model.SelectionDraft
 import com.medsy.domain.offers.model.SelectedOfferItem
+import com.medsy.domain.orders.model.FulfillmentMethod
 import kotlinx.coroutines.flow.Flow
 
 interface OffersRepository {
-    suspend fun acceptOffer(
+    suspend fun selectItems(
         requestId: Long,
         selectedItems: List<SelectedOfferItem>,
-    ): MedsyResult<com.medsy.domain.offers.model.ConfirmOfferResult, MedsyError.Remote>
+    ): MedsyResult<SelectionDraft, MedsyError.Remote>
+
+    suspend fun confirmFulfillment(
+        requestId: Long,
+        fulfillmentMethod: FulfillmentMethod,
+    ): MedsyResult<FulfillmentConfirmation, MedsyError.Remote>
 
     suspend fun getRequestResult(
         requestId: Long,
@@ -19,5 +27,5 @@ interface OffersRepository {
 
     fun streamRequestResult(
         requestId: Long,
-    ): Flow<RequestResult>
+    ): Flow<MedsyResult<RequestResultEvent, MedsyError.Remote>>
 }

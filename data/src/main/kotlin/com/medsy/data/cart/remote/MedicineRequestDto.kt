@@ -22,10 +22,20 @@ data class MedicineRequestDto(
 @JsonClass(generateAdapter = true)
 data class MedicineRequestItemDto(
     val id: Long,
-    val productId: Int,
-    val quantity: Int,
-    val unitPrice: Double,
+    val productId: Long?,
+    val quantity: Long?,
+    val unitPrice: Double?,
     val product: MedicineRequestProductDto?,
+)
+
+@JsonClass(generateAdapter = true)
+data class MedicineRequestPageDto(
+    val content: List<MedicineRequestDto>,
+    val pageNumber: Int,
+    val pageSize: Int,
+    val totalElements: Int,
+    val totalPages: Int,
+    val last: Boolean,
 )
 
 @JsonClass(generateAdapter = true)
