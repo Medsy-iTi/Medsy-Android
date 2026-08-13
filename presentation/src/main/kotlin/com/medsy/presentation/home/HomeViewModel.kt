@@ -6,13 +6,15 @@ import com.medsy.domain.categories.usecase.GetCategoriesUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.domain.profile.usecase.GetProfileUseCase
-import com.medsy.domain.requests.model.ActiveRequestStatus
+import com.medsy.domain.requests.usecase.GetActiveRequestsUseCase
 import com.medsy.domain.requests.usecase.ObserveActiveRequestsWithStatusUseCase
-import com.medsy.domain.requests.usecase.RemoveActiveRequestUseCase
 import com.medsy.presentation.common.util.toMessageRes
 import com.medsy.presentation.home.HomeUIEffect.NavigateToCategory
 import com.medsy.presentation.home.HomeUIEffect.NavigateToOffers
+import com.medsy.domain.orders.model.OrderNextAction
+import com.medsy.domain.orders.usecase.DetermineOrderNextActionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,8 +30,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getProfileUseCase: GetProfileUseCase,
+    private val getActiveRequestsUseCase: GetActiveRequestsUseCase,
     private val observeActiveRequestsWithStatusUseCase: ObserveActiveRequestsWithStatusUseCase,
-    private val removeActiveRequestUseCase: RemoveActiveRequestUseCase
+    private val determineOrderNextActionUseCase: DetermineOrderNextActionUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUIState())
     val state: StateFlow<HomeUIState> = _state.asStateFlow()
@@ -40,7 +43,6 @@ class HomeViewModel @Inject constructor(
     var language: String = Locale.getDefault().language
 
     init {
-        observeActiveRequest()
         loadHome()
     }
 
@@ -90,38 +92,23 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun observeActiveRequest() {
-        viewModelScope.launch {
-            observeActiveRequestsWithStatusUseCase().collectLatest { statuses ->
-                _state.update { s ->
-                    val uiStatuses = statuses.map { domainStatus ->
-                        when (domainStatus) {
-                            is ActiveRequestStatus.Searching -> ActiveSearchStatus.Searching(
-                                requestId = domainStatus.requestId,
-                                remainingTimeSeconds = domainStatus.remainingTimeSeconds
-                            )
+    private var activeRequestsJob: Job? = null
 
-                            is ActiveRequestStatus.FirstOfferArrived -> ActiveSearchStatus.FirstOfferArrived(
-                                requestId = domainStatus.requestId,
-                                remainingTimeSeconds = domainStatus.remainingTimeSeconds,
-                                minPrice = domainStatus.minPrice,
-                                foundCount = domainStatus.foundCount,
-                                totalCount = domainStatus.totalCount
-                            )
-
-                            is ActiveRequestStatus.MultipleOffersArrived -> ActiveSearchStatus.MultipleOffersArrived(
-                                requestId = domainStatus.requestId,
-                                remainingTimeSeconds = domainStatus.remainingTimeSeconds,
-                                minPrice = domainStatus.minPrice,
-                                totalOffers = domainStatus.totalOffers,
-                                foundCount = domainStatus.foundCount,
-                                totalCount = domainStatus.totalCount
-                            )
-                        }
+    private fun refreshActiveRequests() {
+        activeRequestsJob?.cancel()
+        activeRequestsJob = viewModelScope.launch {
+            getActiveRequestsUseCase()
+                .onSuccess { lookup ->
+                    _state.update { it.copy(resumableOrder = lookup.resumableOrder) }
+                    observeActiveRequestsWithStatusUseCase(lookup.activeRequests).collectLatest { statuses ->
+                        _state.update { it.copy(activeSearchStatuses = statuses) }
                     }
-                    s.copy(activeSearchStatuses = uiStatuses)
                 }
-            }
+                .onError {
+                    _state.update {
+                        it.copy(activeSearchStatuses = emptyList(), resumableOrder = null)
+                    }
+                }
         }
     }
 
@@ -146,21 +133,27 @@ class HomeViewModel @Inject constructor(
                 sendEffect(NavigateToCategory(intent.categoryId, categoryName))
             }
 
-            is HomeUIIntent.OnCancelSearchSimulation -> {
-                viewModelScope.launch {
-                    removeActiveRequestUseCase(intent.requestId)
-                }
-            }
-
             is HomeUIIntent.OnViewOffersClick -> {
                 sendEffect(NavigateToOffers(intent.requestId))
             }
 
-            HomeUIIntent.OnSearchWiderRangeClick -> { /* Refresh/Widen Search */
+            HomeUIIntent.OnContinueOrderClick -> {
+                _state.value.resumableOrder?.let { order ->
+                    when (determineOrderNextActionUseCase(order)) {
+                        OrderNextAction.CHOOSE_FULFILLMENT,
+                        OrderNextAction.PAY_CARD -> sendEffect(
+                            HomeUIEffect.NavigateToOrderReview(order.requestId, order.id)
+                        )
+                        OrderNextAction.VIEW_DETAILS -> Unit
+                    }
+                }
             }
+
+            HomeUIIntent.OnResume -> refreshActiveRequests()
 
             HomeUIIntent.RefreshData -> {
                 loadHome()
+                refreshActiveRequests()
             }
 
             is HomeUIIntent.LanguageChanged -> {
@@ -169,6 +162,7 @@ class HomeViewModel @Inject constructor(
                     loadHome()
                 }
             }
+
         }
     }
 

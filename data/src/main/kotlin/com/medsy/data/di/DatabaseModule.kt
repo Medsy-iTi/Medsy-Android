@@ -22,10 +22,10 @@ object DatabaseModule {
         @ApplicationContext context: Context
     ): MedsyDatabase {
         return Room.databaseBuilder(
-            context,
-            MedsyDatabase::class.java,
-            DatabaseConstants.DATABASE_NAME
-        ).fallbackToDestructiveMigration().build()
+                context,
+                MedsyDatabase::class.java,
+                DatabaseConstants.DATABASE_NAME
+            ).fallbackToDestructiveMigration(false).build()
     }
 
     @Provides

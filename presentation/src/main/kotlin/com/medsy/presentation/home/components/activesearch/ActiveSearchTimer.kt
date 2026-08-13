@@ -1,7 +1,13 @@
 package com.medsy.presentation.home.components.activesearch
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Schedule
@@ -12,55 +18,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.medsy.domain.requests.model.ActiveRequestStatus
 import com.medsy.presentation.R
-import com.medsy.presentation.home.ActiveSearchStatus
-import java.util.Locale
 
 @Composable
-fun ActiveSearchTimer(status: ActiveSearchStatus) {
-    val remainingTime = when (status) {
-        is ActiveSearchStatus.Searching -> status.remainingTimeSeconds
-        is ActiveSearchStatus.FirstOfferArrived -> status.remainingTimeSeconds
-        is ActiveSearchStatus.MultipleOffersArrived -> status.remainingTimeSeconds
-    }
-    
-    val minutes = remainingTime / 60
-    val seconds = remainingTime % 60
-    val timeString = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-    val isExpiringSoon = remainingTime <= 60
-
+fun ActiveSearchTimer(status: ActiveRequestStatus) {
+    val minutes = status.remainingTimeSeconds / 60
+    val seconds = status.remainingTimeSeconds % 60
+    val contentColor = if (status.remainingTimeSeconds <= 60) MaterialTheme.colorScheme.error
+    else MaterialTheme.colorScheme.onPrimaryContainer
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.primaryContainer).padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Rounded.Schedule,
-                contentDescription = null,
-            tint = if (isExpiringSoon) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(R.string.home_search_status_time),
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (isExpiringSoon) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimaryContainer
-            )
+            Icon(Icons.Rounded.Schedule, null, tint = contentColor, modifier = Modifier.size(20.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(R.string.home_search_status_time), color = contentColor)
         }
-        
         Text(
-            text = timeString,
+            String.format(LocalLocale.current.platformLocale, "%02d:%02d", minutes, seconds),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = if (isExpiringSoon) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimaryContainer
+            color = contentColor,
         )
     }
 }

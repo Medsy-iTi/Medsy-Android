@@ -1,71 +1,45 @@
 package com.medsy.presentation.home.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.medsy.presentation.home.ActiveSearchStatus
+import com.medsy.domain.requests.model.ActiveRequestStatus
 import com.medsy.presentation.home.components.activesearch.ActiveSearchContent
 import com.medsy.presentation.home.components.activesearch.ActiveSearchHeader
 import com.medsy.presentation.home.components.activesearch.ActiveSearchTimer
-import androidx.compose.foundation.clickable
 
 @Composable
 fun ActiveSearchCard(
-    status: ActiveSearchStatus,
-    onCancelClick: () -> Unit,
+    status: ActiveRequestStatus,
     onViewOffersClick: () -> Unit,
-    onSearchWiderRangeClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val isEnded = false
-
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 5.dp, vertical = 8.dp)
-            .clickable {
-                if (!isEnded && status !is ActiveSearchStatus.Searching) {
-                    onViewOffersClick()
-                }
-            },
-        shape = RoundedCornerShape(16.dp),
+            .clickable(enabled = status.hasAvailableProducts, onClick = onViewOffersClick),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            ActiveSearchHeader(status = status, onCancelClick = onCancelClick)
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            if (!isEnded) {
-                ActiveSearchTimer(status = status)
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            
-            ActiveSearchContent(
-                status = status,
-                onViewOffersClick = onViewOffersClick,
-                onSearchWiderRangeClick = onSearchWiderRangeClick,
-                onCancelClick = onCancelClick
-            )
+        Column(modifier = Modifier.padding(16.dp)) {
+            ActiveSearchHeader(status)
+            Spacer(Modifier.height(16.dp))
+            ActiveSearchTimer(status)
+            Spacer(Modifier.height(16.dp))
+            ActiveSearchContent(status, onViewOffersClick)
         }
     }
 }

@@ -1,13 +1,14 @@
 package com.medsy.presentation.offers
 
 import androidx.annotation.StringRes
+import com.medsy.domain.offers.model.SelectedOfferItem
 
 sealed interface OffersUIEffect {
-    data object NavigateToOfferDetails : OffersUIEffect
-    data object NavigateToOrderReview : OffersUIEffect
-    data class NavigateToOrderConfirmation(val orderId: String, val pharmacyName: String) : OffersUIEffect
+    data class NavigateToOrderReview(
+        val masterOrderId: Long,
+        val selectedItems: List<SelectedOfferItem>,
+    ) : OffersUIEffect
+
     data object NavigateBack : OffersUIEffect
-    data object NavigateToHome : OffersUIEffect
-    data object NavigateToTrackOrder : OffersUIEffect
     data class ShowError(@StringRes val messageRes: Int) : OffersUIEffect
 }

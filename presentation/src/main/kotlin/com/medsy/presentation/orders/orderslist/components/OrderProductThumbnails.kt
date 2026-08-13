@@ -19,11 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.components.NullableProductImage
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.orderslist.model.OrderProductThumbnail
+import com.medsy.domain.orders.model.MasterOrderItem
 
 @Composable
 fun OrderProductThumbnails(
-    thumbnails: List<OrderProductThumbnail>,
+    thumbnails: List<MasterOrderItem>,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -45,7 +45,7 @@ fun OrderProductThumbnails(
                     ),
             ) {
                 NullableProductImage(
-                    imageUrl = thumbnail.imageUrl,
+                imageUrl = thumbnail.product?.imageUrl,
                     contentDescription = stringResource(R.string.orders_product_image_desc),
                     modifier = Modifier.size(40.dp),
                 )

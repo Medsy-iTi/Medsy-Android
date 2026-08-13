@@ -1,30 +1,19 @@
 package com.medsy.presentation.orders.orderslist.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Cancel
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.medsy.designsystem.ui.theme.extendedColors
+import com.medsy.domain.orders.model.OrderStatus
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.orderslist.model.OrderStatus
 
 @Composable
 fun OrderStatusText(
@@ -32,76 +21,40 @@ fun OrderStatusText(
     pharmacyName: String?,
     modifier: Modifier = Modifier,
 ) {
-    val (statusLabelRes, statusColor, statusBgColor, statusIcon) = when (status) {
-        OrderStatus.Confirmed -> Quadruple(
-            R.string.orders_status_confirmed,
-            MaterialTheme.extendedColors.onSuccessContainer,
-            MaterialTheme.extendedColors.successContainer,
-            Icons.Outlined.Schedule
+    Column(modifier) {
+        Text(
+            text = stringResource(status.labelRes()),
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    if (status == OrderStatus.CANCELLED) MaterialTheme.colorScheme.errorContainer
+                    else MaterialTheme.colorScheme.primaryContainer
+                )
+                .padding(horizontal = 10.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = if (status == OrderStatus.CANCELLED) MaterialTheme.colorScheme.onErrorContainer
+            else MaterialTheme.colorScheme.onPrimaryContainer,
         )
-        OrderStatus.Delivered -> Quadruple(
-            R.string.orders_status_delivered,
-            MaterialTheme.extendedColors.onSuccessContainer,
-            MaterialTheme.extendedColors.successContainer,
-            Icons.Outlined.CheckCircle
-        )
-        OrderStatus.Cancelled -> Quadruple(
-            R.string.orders_status_cancelled,
-            MaterialTheme.colorScheme.onErrorContainer,
-            MaterialTheme.colorScheme.errorContainer,
-            Icons.Outlined.Cancel
-        )
-    }
-
-    val subtitle = if (status == OrderStatus.Cancelled) {
-        stringResource(R.string.orders_cancelled_note)
-    } else if (!pharmacyName.isNullOrBlank()) {
-        stringResource(R.string.orders_from_pharmacy_format, pharmacyName)
-    } else {
-        null
-    }
-
-    Column(modifier = modifier) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(statusBgColor)
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        imageVector = statusIcon,
-                        contentDescription = null,
-                        tint = statusColor,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = stringResource(statusLabelRes),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = statusColor,
-                    )
-                }
-            }
-        }
-        if (subtitle != null) {
+        if (!pharmacyName.isNullOrBlank()) {
             Text(
-                text = subtitle,
+                stringResource(R.string.orders_from_pharmacy_format, pharmacyName),
+                modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp),
             )
         }
     }
 }
 
-private data class Quadruple<out A, out B, out C, out D>(
-    val first: A,
-    val second: B,
-    val third: C,
-    val fourth: D
-)
+private fun OrderStatus.labelRes(): Int = when (this) {
+    OrderStatus.PENDING -> R.string.order_status_pending
+    OrderStatus.PENDING_PAYMENT -> R.string.order_status_pending_payment
+    OrderStatus.PREPARING -> R.string.order_status_preparing
+    OrderStatus.READY_FOR_PICKUP -> R.string.order_status_ready_for_pickup
+    OrderStatus.READY_FOR_DELIVERY -> R.string.order_status_ready_for_delivery
+    OrderStatus.OUT_FOR_DELIVERY -> R.string.order_status_out_for_delivery
+    OrderStatus.DELIVERED -> R.string.order_status_delivered
+    OrderStatus.CANCELLED -> R.string.order_status_cancelled
+    OrderStatus.UNKNOWN -> R.string.order_status_unknown
+}

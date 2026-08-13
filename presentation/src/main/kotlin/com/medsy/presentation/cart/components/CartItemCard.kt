@@ -61,7 +61,7 @@ internal fun CartItemCard(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.Top,
     ) {
-        // 1. Product Image (Start)
+
         NullableProductImage(
             imageUrl = item.imageUrl,
             contentDescription = item.productName,
@@ -72,7 +72,7 @@ internal fun CartItemCard(
             contentScale = ContentScale.Fit,
         )
 
-        // 2. Product Info (Center)
+
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -99,7 +99,6 @@ internal fun CartItemCard(
             )
         }
 
-        // 3. Actions: Delete at top, Stepper at bottom (End)
         Column(
             modifier = Modifier.height(100.dp),
             verticalArrangement = Arrangement.SpaceBetween,

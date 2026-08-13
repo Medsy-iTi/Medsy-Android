@@ -1,5 +1,7 @@
 package com.medsy.presentation.home
 
+import com.medsy.domain.requests.model.ActiveRequestStatus
+import com.medsy.domain.orders.model.MasterOrder
 import com.medsy.presentation.R
 
 data class HomeUIState(
@@ -10,36 +12,9 @@ data class HomeUIState(
     val banners: List<PromoBannerUi> = PromoBannerUi.banners,
     val currentBannerIndex: Int = 0,
     val categories: List<CategoryUi> = emptyList(),
-    val activeSearchStatuses: List<ActiveSearchStatus> = emptyList()
+    val activeSearchStatuses: List<ActiveRequestStatus> = emptyList(),
+    val resumableOrder: MasterOrder? = null,
 )
-
-sealed interface ActiveSearchStatus {
-    val requestId: Long
-    val remainingTimeSeconds: Int
-
-    data class Searching(
-        override val requestId: Long,
-        override val remainingTimeSeconds: Int
-    ) : ActiveSearchStatus
-
-    data class FirstOfferArrived(
-        override val requestId: Long,
-        override val remainingTimeSeconds: Int,
-        val minPrice: Int,
-        val totalOffers: Int = 1,
-        val foundCount: Int = 0,
-        val totalCount: Int = 0
-    ) : ActiveSearchStatus
-
-    data class MultipleOffersArrived(
-        override val requestId: Long,
-        override val remainingTimeSeconds: Int,
-        val minPrice: Int,
-        val totalOffers: Int,
-        val foundCount: Int = 0,
-        val totalCount: Int = 0
-    ) : ActiveSearchStatus
-}
 
 data class PromoBannerUi(
     val id: String,

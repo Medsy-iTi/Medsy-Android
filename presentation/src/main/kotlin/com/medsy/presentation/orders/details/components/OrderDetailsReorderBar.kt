@@ -16,36 +16,29 @@ import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.components.MedsyButton
 import com.medsy.presentation.R
 
-
 @Composable
 fun OrderDetailsReorderBar(
+    isLoading: Boolean,
+    enabled: Boolean,
     onReorderClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
-    enabled: Boolean = true,
 ) {
     MedsyButton(
         onClick = onReorderClick,
         enabled = enabled,
         isLoading = isLoading,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp),
     ) {
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
                 color = MaterialTheme.colorScheme.onPrimary,
-                strokeWidth = 2.dp
+                strokeWidth = 2.dp,
             )
         } else {
-            Icon(
-                imageVector = Icons.Filled.Replay,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary,
-            )
+            Icon(Icons.Filled.Replay, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
             Text(
-                text = stringResource(R.string.order_details_reorder),
+                stringResource(R.string.order_details_reorder),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 8.dp),
             )

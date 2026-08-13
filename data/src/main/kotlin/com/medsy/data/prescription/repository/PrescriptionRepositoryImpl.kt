@@ -40,7 +40,6 @@ class PrescriptionRepositoryImpl @Inject constructor(
     ): EmptyMedsyResult<MedsyError.Local> =
         imageOperation {
             imageStorage.delete(image)
-            Unit
         }
 
     override suspend fun extractPrescription(
