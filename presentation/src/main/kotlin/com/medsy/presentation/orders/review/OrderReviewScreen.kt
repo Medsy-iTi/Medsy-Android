@@ -90,7 +90,9 @@ fun OrderReviewRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 OrderReviewUIEffect.NavigateBack -> onNavigateBack()
-                is OrderReviewUIEffect.StartCardPayment -> onStartCardPayment(effect.masterOrderId)
+                is OrderReviewUIEffect.StartCardPayment ->
+                    onStartCardPayment(effect.orderId)
+
                 is OrderReviewUIEffect.NavigateToOrderDetails -> onNavigateToOrderDetails(effect.masterOrderId)
                 is OrderReviewUIEffect.NavigateToPharmacyProfile -> onNavigateToPharmacyProfile(
                     effect.pharmacyId

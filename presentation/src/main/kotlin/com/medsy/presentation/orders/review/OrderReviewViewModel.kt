@@ -41,30 +41,54 @@ class OrderReviewViewModel @Inject constructor(
 
     fun onIntent(intent: OrderReviewUIIntent) {
         when (intent) {
-            is OrderReviewUIIntent.Load -> initialize(
-                intent.requestId,
-                intent.masterOrderId,
-                intent.selectedItems
-            )
+
+            is OrderReviewUIIntent.Load -> {
+                initialize(
+                    intent.requestId,
+                    intent.masterOrderId,
+                    intent.selectedItems,
+                )
+            }
 
             is OrderReviewUIIntent.FulfillmentChanged -> {
                 if (_state.value.nextAction == OrderNextAction.CHOOSE_FULFILLMENT) {
-                    _state.update { it.copy(selectedFulfillment = intent.method) }
+                    _state.update {
+                        it.copy(
+                            selectedFulfillment = intent.method,
+                        )
+                    }
                 }
             }
 
-            is OrderReviewUIIntent.PharmacyClicked -> sendEffect(
-                OrderReviewUIEffect.NavigateToPharmacyProfile(intent.pharmacyId)
-            )
-
-            OrderReviewUIIntent.ConfirmFulfillment -> confirmFulfillment()
-            OrderReviewUIIntent.PayClicked -> pay()
-            OrderReviewUIIntent.Retry -> loadOrder(isRefreshing = false)
-            OrderReviewUIIntent.Refresh -> {
-                if (_state.value.order != null) loadOrder(isRefreshing = true)
+            is OrderReviewUIIntent.PharmacyClicked -> {
+                sendEffect(
+                    OrderReviewUIEffect.NavigateToPharmacyProfile(
+                        intent.pharmacyId,
+                    )
+                )
             }
 
-            OrderReviewUIIntent.NavigateBack -> sendEffect(OrderReviewUIEffect.NavigateBack)
+            OrderReviewUIIntent.ConfirmFulfillment -> {
+                confirmFulfillment()
+            }
+
+            OrderReviewUIIntent.PayClicked -> {
+                pay()
+            }
+
+            OrderReviewUIIntent.Retry -> {
+                loadOrder(isRefreshing = false)
+            }
+
+            OrderReviewUIIntent.Refresh -> {
+                if (_state.value.order != null) {
+                    loadOrder(isRefreshing = true)
+                }
+            }
+
+            OrderReviewUIIntent.NavigateBack -> {
+                sendEffect(OrderReviewUIEffect.NavigateBack)
+            }
         }
     }
 
@@ -77,15 +101,38 @@ class OrderReviewViewModel @Inject constructor(
         initialized = true
         this.requestId = requestId
         this.masterOrderId = masterOrderId
-        _state.update { it.copy(selectedItems = selectedItems) }
+
+        _state.update {
+            it.copy(
+                selectedItems = selectedItems,
+            )
+        }
+
         viewModelScope.launch {
+
             loadOrderInternal(isRefreshing = false)
+
             when (val request = getMedicineRequestByIdUseCase(requestId)) {
-                is MedsyResult.Success -> _state.update { it.copy(request = request.data) }
+                is MedsyResult.Success -> {
+                    _state.update {
+                        it.copy(
+                            request = request.data,
+                        )
+                    }
+                }
+
                 is MedsyResult.Error -> Unit
             }
+
             when (val result = getRequestResultUseCase(requestId)) {
-                is MedsyResult.Success -> _state.update { it.copy(requestResult = result.data) }
+                is MedsyResult.Success -> {
+                    _state.update {
+                        it.copy(
+                            requestResult = result.data,
+                        )
+                    }
+                }
+
                 is MedsyResult.Error -> Unit
             }
         }
@@ -93,11 +140,18 @@ class OrderReviewViewModel @Inject constructor(
 
     private fun loadOrder(isRefreshing: Boolean) {
         if (masterOrderId == null) return
-        viewModelScope.launch { loadOrderInternal(isRefreshing) }
+
+        viewModelScope.launch {
+            loadOrderInternal(isRefreshing)
+        }
     }
 
-    private suspend fun loadOrderInternal(isRefreshing: Boolean): Boolean {
+    private suspend fun loadOrderInternal(
+        isRefreshing: Boolean,
+    ): Boolean {
+
         val id = masterOrderId ?: return false
+
         _state.update {
             it.copy(
                 isLoading = !isRefreshing,
@@ -140,45 +194,121 @@ class OrderReviewViewModel @Inject constructor(
 
     private fun confirmFulfillment() {
         val requestId = requestId ?: return
-        val method = _state.value.selectedFulfillment ?: return
-        if (fulfillmentConfirmationStarted || _state.value.fulfillmentConfirmed) return
+
+        val method =
+            _state.value.selectedFulfillment ?: return
+
+        if (
+            fulfillmentConfirmationStarted ||
+            _state.value.fulfillmentConfirmed
+        ) {
+            return
+        }
+
         fulfillmentConfirmationStarted = true
+
         viewModelScope.launch {
-            _state.update { it.copy(isConfirming = true, errorMessageRes = null) }
-            when (val result = confirmFulfillmentUseCase(requestId, method)) {
+
+            _state.update {
+                it.copy(
+                    isConfirming = true,
+                    errorMessageRes = null,
+                )
+            }
+
+            when (
+                val result =
+                    confirmFulfillmentUseCase(
+                        requestId,
+                        method,
+                    )
+            ) {
+
                 is MedsyResult.Success -> {
-                    _state.update { it.copy(isConfirming = false, fulfillmentConfirmed = true) }
-                    if (result.data.paymentMethod == PaymentMethod.CASH) {
-                        sendEffect(OrderReviewUIEffect.NavigateToOrderDetails(result.data.masterOrderId))
+
+                    _state.update {
+                        it.copy(
+                            isConfirming = false,
+                            fulfillmentConfirmed = true,
+                        )
+                    }
+
+                    if (
+                        result.data.paymentMethod ==
+                        PaymentMethod.CASH
+                    ) {
+
+                        sendEffect(
+                            OrderReviewUIEffect.NavigateToOrderDetails(
+                                result.data.masterOrderId,
+                            )
+                        )
+
                     } else {
-                        if (!loadOrderInternal(isRefreshing = false)) {
-                            _state.value.errorMessageRes?.let { messageRes ->
-                                sendEffect(OrderReviewUIEffect.ShowError(messageRes))
-                            }
+
+                        if (
+                            !loadOrderInternal(
+                                isRefreshing = false,
+                            )
+                        ) {
+                            _state.value.errorMessageRes
+                                ?.let { messageRes ->
+                                    sendEffect(
+                                        OrderReviewUIEffect.ShowError(
+                                            messageRes,
+                                        )
+                                    )
+                                }
                         }
                     }
                 }
 
                 is MedsyResult.Error -> {
+
                     fulfillmentConfirmationStarted = false
+
                     _state.update {
                         it.copy(
                             isConfirming = false,
-                            errorMessageRes = result.error.toMessageRes()
+                            errorMessageRes =
+                                result.error.toMessageRes(),
                         )
                     }
-                    sendEffect(OrderReviewUIEffect.ShowError(result.error.toMessageRes()))
+
+                    sendEffect(
+                        OrderReviewUIEffect.ShowError(
+                            result.error.toMessageRes(),
+                        )
+                    )
                 }
             }
         }
     }
 
+
     private fun pay() {
-        if (_state.value.nextAction != OrderNextAction.PAY_CARD) return
-        masterOrderId?.let { sendEffect(OrderReviewUIEffect.StartCardPayment(it)) }
+
+        if (
+            _state.value.nextAction !=
+            OrderNextAction.PAY_CARD
+        ) {
+            return
+        }
+
+        val orderId = masterOrderId ?: return
+
+        sendEffect(
+            OrderReviewUIEffect.StartCardPayment(
+                orderId = orderId,
+            )
+        )
     }
 
-    private fun sendEffect(effect: OrderReviewUIEffect) {
-        viewModelScope.launch { _effect.send(effect) }
+    private fun sendEffect(
+        effect: OrderReviewUIEffect,
+    ) {
+        viewModelScope.launch {
+            _effect.send(effect)
+        }
     }
 }
