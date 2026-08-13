@@ -31,6 +31,7 @@ data class CartRequestState(
     val customLatitude: Double = CairoLatitude,
     val customLongitude: Double = CairoLongitude,
     val hasConfirmedCustomLocation: Boolean = false,
+    val isResolvingAddress: Boolean = false,
     val isMapPickerVisible: Boolean = false,
     val paymentOption: PaymentOption = PaymentOption.CASH,
     val isSubmitting: Boolean = false,

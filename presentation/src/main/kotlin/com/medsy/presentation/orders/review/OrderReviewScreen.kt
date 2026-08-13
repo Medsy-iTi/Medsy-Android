@@ -160,8 +160,8 @@ fun OrderReviewScreen(
                             Text(
                                 stringResource(
                                     when {
-                                        state.fulfillmentConfirmed -> R.string.offers_error_retry
-                                        state.nextAction != OrderNextAction.PAY_CARD -> R.string.offers_confirm_order
+                                        state.nextAction == OrderNextAction.CHOOSE_FULFILLMENT ->
+                                            R.string.offers_confirm_order
                                         state.isRetryPayment -> R.string.order_details_try_payment_again
                                         else -> R.string.order_details_pay_now
                                     }

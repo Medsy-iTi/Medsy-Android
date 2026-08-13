@@ -438,7 +438,7 @@
     <string name="offers_load_error">فشل تحميل العروض. يرجى المحاولة مرة أخرى.</string>
     <string name="offers_error_retry">إعادة المحاولة</string>
     <!--  Active Search Status  -->
-    <string name="cart_request_address_title">عنوان التوصيل</string>
+    <string name="cart_request_address_title">عنوانك الحالي</string>
     <string name="cart_request_default_address">العنوان الافتراضي</string>
     <string name="cart_request_default_badge">افتراضي</string>
     <string name="cart_request_other_address">استخدام عنوان آخر</string>
@@ -450,12 +450,13 @@
     <string name="cart_request_change_location">تغيير الموقع على الخريطة</string>
     <string name="cart_request_location_confirmed">تم تأكيد الموقع على الخريطة</string>
     <string name="cart_request_location_required">أكد موقع التوصيل على الخريطة</string>
+    <string name="cart_request_address_lookup_failed">تعذّر العثور على عنوان لهذا الموقع. يمكنك إدخاله يدويًا.</string>
     <string name="cart_request_payment_title">كيف ترغب في الدفع؟</string>
     <string name="cart_request_payment_description">اختر طريقة دفع واحدة لهذا الطلب.</string>
     <string name="cart_request_cash">نقدًا</string>
     <string name="cart_request_cash_description">ادفع عند استلام الطلب</string>
     <string name="cart_request_visa">فيزا</string>
-    <string name="cart_request_visa_description">الدفع باستخدام البطاقة</string>
+    <string name="cart_request_visa_description">الدفع باستخدام البطاقة\n</string>
     <string name="cart_request_submit">إرسال طلب الأدوية</string>
     <string name="cart_request_retry">إعادة المحاولة</string>
     <string name="cart_request_empty_request">أضف دواءً واحدًا على الأقل قبل إرسال الطلب. الروشتة والملاحظات عناصر مساعدة فقط.</string>
@@ -556,8 +557,6 @@
     <string name="orders_status_delivering">جاري التوصيل</string>
     <string name="orders_status_delivered">تم التسليم</string>
     <string name="orders_status_cancelled">ملغي</string>
-    <string name="orders_timeline_offered">تم العرض</string>
-    <string name="orders_timeline_accepted">تم القبول</string>
     <string name="orders_timeline_preparing">التجهيز</string>
     <string name="orders_timeline_ready">جاهز</string>
     <string name="orders_timeline_delivered">تم التسليم</string>
@@ -685,6 +684,7 @@
     <string name="order_status_ready_for_pickup">جاهز للاستلام</string>
     <string name="order_status_ready_for_delivery">جاهز للتوصيل</string>
     <string name="order_status_out_for_delivery">خرج للتوصيل</string>
+    <string name="orders_timeline_on_the_way">في الطريق</string>
     <string name="order_status_delivered">تم التوصيل</string>
     <string name="order_status_cancelled">ملغي</string>
     <string name="order_status_unknown">الحالة غير متاحة</string>

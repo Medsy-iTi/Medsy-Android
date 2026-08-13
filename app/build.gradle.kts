@@ -16,6 +16,9 @@ val medsyLocalProperties = Properties().apply {
 require(!medsyLocalProperties.getProperty("MAPS_API_KEY").isNullOrBlank()) {
     "MAPS_API_KEY must be configured in the gitignored local.properties file."
 }
+require(!medsyLocalProperties.getProperty("STRIPE_PUBLISHABLE_KEY").isNullOrBlank()) {
+    "STRIPE_PUBLISHABLE_KEY must be configured in the gitignored local.properties file."
+}
 
 android {
     namespace = "com.medsy.medsy"

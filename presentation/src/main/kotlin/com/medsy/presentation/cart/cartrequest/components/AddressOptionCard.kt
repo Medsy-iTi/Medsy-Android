@@ -1,5 +1,6 @@
 package com.medsy.presentation.cart.cartrequest.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,14 +70,18 @@ internal fun AddressOptionCard(
                 )
                 if (badge != null) StatusPill(label = badge)
             }
-            if (address != null) {
-                Text(
-                    text = address,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            AnimatedVisibility(visible = selected && (address != null || content != null)) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    if (address != null) {
+                        Text(
+                            text = address,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    content?.invoke()
+                }
             }
-            content?.invoke()
         }
     }
 }
