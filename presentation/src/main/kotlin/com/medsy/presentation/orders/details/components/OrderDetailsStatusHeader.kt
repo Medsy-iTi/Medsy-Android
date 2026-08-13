@@ -15,12 +15,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.DeliveryDining
 import androidx.compose.material.icons.outlined.Inventory2
-import androidx.compose.material.icons.outlined.LocalOffer
 import androidx.compose.material.icons.outlined.LocalShipping
 import androidx.compose.material.icons.outlined.Storefront
 import androidx.compose.material.icons.outlined.TaskAlt
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -119,40 +118,41 @@ private fun FulfillmentBadge(method: FulfillmentMethod?) {
 @Composable
 private fun OrderStatusStepper(status: OrderStatus, fulfillmentMethod: FulfillmentMethod?) {
     val cancelled = status == OrderStatus.CANCELLED
-    val steps = if (cancelled) {
-        listOf(
-            TimelineStep(R.string.orders_timeline_offered, Icons.Outlined.LocalOffer),
+    val isDelivery = fulfillmentMethod == FulfillmentMethod.DELIVERY ||
+            status == OrderStatus.READY_FOR_DELIVERY ||
+            status == OrderStatus.OUT_FOR_DELIVERY
+    val steps = when {
+        cancelled -> listOf(
+            TimelineStep(R.string.orders_timeline_preparing, Icons.Outlined.Inventory2),
             TimelineStep(R.string.orders_status_cancelled, Icons.Default.Close),
         )
-    } else {
-        listOf(
-            TimelineStep(R.string.orders_timeline_offered, Icons.Outlined.LocalOffer),
-            TimelineStep(R.string.orders_timeline_accepted, Icons.Outlined.ThumbUp),
+
+        isDelivery -> listOf(
             TimelineStep(R.string.orders_timeline_preparing, Icons.Outlined.Inventory2),
-            TimelineStep(
-                R.string.orders_timeline_ready,
-                when {
-                    fulfillmentMethod == FulfillmentMethod.PICKUP || status == OrderStatus.READY_FOR_PICKUP ->
-                        Icons.Outlined.Storefront
+            TimelineStep(R.string.orders_timeline_ready, Icons.Outlined.LocalShipping),
+            TimelineStep(R.string.orders_timeline_on_the_way, Icons.Outlined.DeliveryDining),
+            TimelineStep(R.string.orders_timeline_delivered, Icons.Outlined.TaskAlt),
+        )
 
-                    fulfillmentMethod == FulfillmentMethod.DELIVERY ||
-                            status == OrderStatus.READY_FOR_DELIVERY ||
-                            status == OrderStatus.OUT_FOR_DELIVERY -> Icons.Outlined.LocalShipping
-
-                    else -> Icons.Outlined.Inventory2
-                },
-            ),
+        else -> listOf(
+            TimelineStep(R.string.orders_timeline_preparing, Icons.Outlined.Inventory2),
+            TimelineStep(R.string.orders_timeline_ready, Icons.Outlined.Storefront),
             TimelineStep(R.string.orders_timeline_delivered, Icons.Outlined.TaskAlt),
         )
     }
-    val currentStep = when (status) {
-        OrderStatus.PENDING, OrderStatus.PENDING_PAYMENT -> 1
-        OrderStatus.PREPARING -> 2
-        OrderStatus.READY_FOR_PICKUP, OrderStatus.READY_FOR_DELIVERY, OrderStatus.OUT_FOR_DELIVERY -> 3
-        OrderStatus.DELIVERED -> 4
-        OrderStatus.CANCELLED -> 1
-        OrderStatus.UNKNOWN -> null
+    val currentStep = when {
+        status == OrderStatus.CANCELLED -> 1
+        status == OrderStatus.PENDING ||
+                status == OrderStatus.PENDING_PAYMENT ||
+                status == OrderStatus.UNKNOWN ||
+                status == OrderStatus.DELIVERED -> null
+        status == OrderStatus.OUT_FOR_DELIVERY && isDelivery -> 2
+        status == OrderStatus.READY_FOR_PICKUP ||
+                status == OrderStatus.READY_FOR_DELIVERY -> 1
+        status == OrderStatus.PREPARING -> 0
+        else -> null
     }
+    val delivered = status == OrderStatus.DELIVERED
     val successColor = MaterialTheme.extendedColors.success
     val warningColor = MaterialTheme.extendedColors.warning
     val errorColor = MaterialTheme.colorScheme.error
@@ -172,8 +172,8 @@ private fun OrderStatusStepper(status: OrderStatus, fulfillmentMethod: Fulfillme
                 val destinationIndex = index + 1
                 val lineColor = when {
                     cancelled && destinationIndex == 1 -> errorColor
+                    delivered -> successColor
                     currentStep != null && destinationIndex <= currentStep -> successColor
-                    currentStep != null && destinationIndex == currentStep + 1 -> warningColor
                     else -> connectorColor
                 }
                 drawLine(
@@ -186,13 +186,13 @@ private fun OrderStatusStepper(status: OrderStatus, fulfillmentMethod: Fulfillme
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             steps.forEachIndexed { index, step ->
-                val reached = currentStep != null && index <= currentStep
-                val next = currentStep != null && index == currentStep + 1
+                val completed = delivered || currentStep != null && index < currentStep
+                val current = currentStep != null && index == currentStep
                 val cancelledStep = cancelled && index == 1
                 val color = when {
                     cancelledStep -> MaterialTheme.colorScheme.error
-                    reached -> successColor
-                    next -> warningColor
+                    current -> warningColor
+                    completed -> successColor
                     else -> futureColor
                 }
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -203,8 +203,8 @@ private fun OrderStatusStepper(status: OrderStatus, fulfillmentMethod: Fulfillme
                             .background(
                                 when {
                                     cancelledStep -> MaterialTheme.colorScheme.errorContainer
-                                    reached -> MaterialTheme.extendedColors.successContainer
-                                    next -> MaterialTheme.extendedColors.warningContainer
+                                    current -> MaterialTheme.extendedColors.warningContainer
+                                    completed -> MaterialTheme.extendedColors.successContainer
                                     else -> MaterialTheme.colorScheme.surface
                                 },
                             )
@@ -221,7 +221,11 @@ private fun OrderStatusStepper(status: OrderStatus, fulfillmentMethod: Fulfillme
                     Text(
                         stringResource(step.labelRes),
                         style = MaterialTheme.typography.labelSmall,
-                        fontWeight = if (reached || next) FontWeight.Bold else FontWeight.Medium,
+                        fontWeight = if (completed || current || cancelledStep) {
+                            FontWeight.Bold
+                        } else {
+                            FontWeight.Medium
+                        },
                         color = color,
                         modifier = Modifier.padding(top = 8.dp),
                         maxLines = 1,

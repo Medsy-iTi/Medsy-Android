@@ -39,7 +39,12 @@ class OrderDetailsViewModel @Inject constructor(
     fun init(id: String) {
         val parsed = id.toLongOrNull()
         if (parsed == null) {
-            _state.update { it.copy(isLoading = false, errorMessageRes = R.string.order_details_error_load) }
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    errorMessageRes = R.string.order_details_error_load
+                )
+            }
         } else if (orderId != parsed) {
             orderId = parsed
             loadOrderDetails()
@@ -53,6 +58,7 @@ class OrderDetailsViewModel @Inject constructor(
             OrderDetailsUIIntent.Refresh -> loadOrderDetails(isPullToRefresh = true)
             is OrderDetailsUIIntent.PharmacyClicked ->
                 sendEffect(OrderDetailsUIEffect.NavigateToPharmacyProfile(intent.pharmacyId))
+
             OrderDetailsUIIntent.ReorderClicked -> reorder()
             is OrderDetailsUIIntent.LineItemClicked ->
                 sendEffect(OrderDetailsUIEffect.NavigateToProductDetails(intent.productId))

@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsyButton
 import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.designsystem.components.showError
+import com.medsy.domain.orders.model.OrderStatus
 import com.medsy.presentation.R
 import com.medsy.presentation.orders.details.components.OrderDetailsLineItemRow
 import com.medsy.presentation.orders.details.components.OrderDetailsPharmacyCard
@@ -231,7 +232,7 @@ private fun OrderDetailsContent(
             }
         }
 
-        if (order.items.isNotEmpty()) {
+        if (order.orderStatus == OrderStatus.DELIVERED && order.items.isNotEmpty()) {
             OrderDetailsReorderBar(
                 isLoading = state.isReordering,
                 enabled = !state.isReordering,

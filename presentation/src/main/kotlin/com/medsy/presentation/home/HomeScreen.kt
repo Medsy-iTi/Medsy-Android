@@ -143,7 +143,19 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(18.dp))
 
-                if (state.resumableOrder != null) {
+                if (state.activeSearchStatuses.firstOrNull() != null) {
+                    val status = state.activeSearchStatuses.first()
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
+                    ) {
+                        ActiveSearchCard(
+                            status = status,
+                            onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick(status.requestId)) },
+                        )
+                    }
+                } else if (state.resumableOrder != null) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -173,18 +185,6 @@ fun HomeScreen(
                                 Text(stringResource(R.string.home_continue_order_action))
                             }
                         }
-                    }
-                } else if (state.activeSearchStatuses.firstOrNull() != null) {
-                    val status = state.activeSearchStatuses.first()
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth()
-                    ) {
-                        ActiveSearchCard(
-                            status = status,
-                            onViewOffersClick = { onIntent(HomeUIIntent.OnViewOffersClick(status.requestId)) },
-                        )
                     }
                 } else {
                     Box(modifier = Modifier.padding(horizontal = 16.dp)) {

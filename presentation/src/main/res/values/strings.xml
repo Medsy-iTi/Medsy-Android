@@ -413,7 +413,7 @@
     <string name="cart_request_delivery_description">Delivered to your selected location</string>
     <string name="cart_request_pickup">Pickup</string>
     <string name="cart_request_pickup_description">Collect it from the pharmacy</string>
-    <string name="cart_request_address_title">Delivery address</string>
+    <string name="cart_request_address_title">Your current address</string>
     <string name="cart_request_default_address">Default address</string>
     <string name="cart_request_default_badge">Default</string>
     <string name="cart_request_other_address">Use another address</string>
@@ -425,12 +425,13 @@
     <string name="cart_request_change_location">Change map location</string>
     <string name="cart_request_location_confirmed">Map location confirmed</string>
     <string name="cart_request_location_required">Confirm the delivery pin on the map</string>
+    <string name="cart_request_address_lookup_failed">Address could not be found for this location. Enter it manually.</string>
     <string name="cart_request_payment_title">How would you like to pay?</string>
     <string name="cart_request_payment_description">Select one payment option for this request.</string>
     <string name="cart_request_cash">Cash</string>
     <string name="cart_request_cash_description">Pay when you receive the order</string>
     <string name="cart_request_visa">Visa</string>
-    <string name="cart_request_visa_description">Pay by card</string>
+    <string name="cart_request_visa_description">Pay by card\n</string>
     <string name="cart_request_submit">Submit medicine request</string>
     <string name="cart_request_retry">Retry</string>
     <string name="cart_request_empty_request">Add at least one medicine before submitting. Prescriptions and notes only support the request.</string>
@@ -552,8 +553,6 @@
     <string name="orders_status_delivering">Delivering</string>
     <string name="orders_status_delivered">Delivered</string>
     <string name="orders_status_cancelled">Cancelled</string>
-    <string name="orders_timeline_offered">Offered</string>
-    <string name="orders_timeline_accepted">Accepted</string>
     <string name="orders_timeline_preparing">Preparing</string>
     <string name="orders_timeline_ready">Ready</string>
     <string name="orders_timeline_delivered">Delivered</string>
@@ -682,6 +681,7 @@
     <string name="order_status_ready_for_pickup">Ready for pickup</string>
     <string name="order_status_ready_for_delivery">Ready for delivery</string>
     <string name="order_status_out_for_delivery">Out for delivery</string>
+    <string name="orders_timeline_on_the_way">On the way</string>
     <string name="order_status_delivered">Delivered</string>
     <string name="order_status_cancelled">Cancelled</string>
     <string name="order_status_unknown">Status unavailable</string>
