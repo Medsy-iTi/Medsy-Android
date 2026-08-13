@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +23,6 @@ import com.medsy.presentation.R
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
-import com.stripe.android.paymentsheet.rememberPaymentSheet
 
 @Composable
 fun PaymentScreenRoot(
@@ -108,7 +108,7 @@ private fun PaymentSheetWrapper(
 ) {
     val context = LocalContext.current
 
-    val paymentSheet = rememberPaymentSheet { result ->
+    val paymentSheet = PaymentSheet.Builder { result ->
         when (result) {
             is PaymentSheetResult.Completed -> {
                 onPaymentCompleted()
@@ -122,7 +122,7 @@ private fun PaymentSheetWrapper(
                 onPaymentCanceled()
             }
         }
-    }
+    }.build()
 
     LaunchedEffect(clientSecret, publishableKey) {
         PaymentConfiguration.init(
