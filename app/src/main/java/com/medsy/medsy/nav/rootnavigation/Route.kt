@@ -93,4 +93,9 @@ sealed interface Route : NavKey {
         val masterOrderId: Long,
         val selectedItems: List<SelectedOfferItemArg> = emptyList(),
     ) : Route
+    @Serializable
+    data class Payment(
+        val orderId: Long,
+    ) : Route
 }
+
