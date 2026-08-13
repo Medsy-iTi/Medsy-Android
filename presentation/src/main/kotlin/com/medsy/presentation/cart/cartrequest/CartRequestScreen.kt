@@ -148,18 +148,11 @@ fun CartRequestScreen(
                     isLoading = state.isSubmitting,
                     snackbarHostState = snackbarHostState,
                 ) {
-                    if (state.isSubmitting) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(22.dp),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            strokeWidth = 2.dp,
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(R.string.cart_request_submit),
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.cart_request_submit),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             }
         },
