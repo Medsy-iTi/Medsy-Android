@@ -363,6 +363,7 @@
     <string name="error_server_message">Server error: %1$s</string>
     <string name="error_unknown">An unexpected error occurred, please try again later.</string>
     <string name="error_invalid_id">Invalid product ID.</string>
+    <string name="error_payment_failed">Payment failed. Please try again.</string>
 
     <!-- Cart -->
     <string name="cart_title">Request cart</string>

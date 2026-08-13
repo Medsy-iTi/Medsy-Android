@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import com.medsy.medsy.BuildConfig
+import com.medsy.presentation.payment.PaymentScreenRoot
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -390,13 +392,38 @@ fun RootNavDisplay() {
                             requestedNestedDestination = it
                         }
                     },
-                    onStartCardPayment = { _ -> },
+                    onStartCardPayment = { orderId ->
+                        rootBackStack.push(
+                            Route.Payment(orderId)
+                        )
+                    },
                     onNavigateToOrderDetails = { masterOrderId ->
                         rootBackStack.popTo(Route.NestedNav)
                         rootBackStack.push(Route.OrderDetails(masterOrderId.toString()))
                     },
                     onNavigateToPharmacyProfile = { pharmacyId ->
                         rootBackStack.push(Route.PharmacyProfile(pharmacyId))
+                    },
+                )
+            }
+            entry<Route.Payment> { route ->
+                PaymentScreenRoot(
+                    orderId = route.orderId,
+                    publishableKey = BuildConfig.STRIPE_PUBLISHABLE_KEY,
+
+                    onPaymentCompleted = {
+                        rootBackStack.popTo(Route.NestedNav)
+                        rootBackStack.push(
+                            Route.OrderDetails(route.orderId.toString())
+                        )
+                    },
+
+                    onPaymentFailed = {
+                        rootBackStack.popIfCurrent(route)
+                    },
+
+                    onPaymentCanceled = {
+                        rootBackStack.popIfCurrent(route)
                     },
                 )
             }
