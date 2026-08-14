@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CartRepository {
     val draft: Flow<CartDraft>
+    val cartItemCount: Flow<Int>
 
     suspend fun getCart(): MedsyResult<Cart, MedsyError.Remote>
     suspend fun addItem(

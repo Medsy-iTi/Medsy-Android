@@ -12,7 +12,10 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -24,6 +27,7 @@ import com.medsy.medsy.nav.rootnavigation.pop
 import com.medsy.medsy.nav.rootnavigation.push
 import com.medsy.medsy.nav.rootnavigation.setRoot
 import com.medsy.presentation.cart.CartRoot
+import com.medsy.presentation.cart.CartBadgeViewModel
 import com.medsy.presentation.home.HomeRoot
 import com.medsy.presentation.orders.orderslist.OrdersRoot
 import com.medsy.presentation.profile.ProfileRoot
@@ -49,7 +53,9 @@ fun NestedNavDisplay(
     openOrderDetails: (String) -> Unit,
     openFavorites: () -> Unit,
     openReminders: () -> Unit,
+    cartBadgeViewModel: CartBadgeViewModel = hiltViewModel()
 ) {
+    val cartBadgeCount by cartBadgeViewModel.cartItemCount.collectAsStateWithLifecycle()
 
     val nestedBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -99,6 +105,7 @@ fun NestedNavDisplay(
                             modifier = Modifier.weight(1f),
                             selected = isSelected,
                             label = destination.title,
+                            badgeCount = if (destination.route == Route.NestedNav.Cart) cartBadgeCount else 0
                         )
                     } else {
                         AiChatNavigationButton(

@@ -18,6 +18,9 @@ import com.medsy.domain.common.MedsyResult
 import com.medsy.domain.common.map
 import com.medsy.domain.prescription.model.PrescriptionImage
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import com.medsy.domain.common.onSuccess
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -28,16 +31,23 @@ class CartRepositoryImpl @Inject constructor(
     private val draftStorage: CartDraftStorage,
     private val imageStorage: PrescriptionImageStorage,
 ) : CartRepository {
+    private val _cartItemCount = MutableStateFlow(0)
+    override val cartItemCount: Flow<Int> = _cartItemCount.asStateFlow()
+
     override val draft: Flow<CartDraft> = draftStorage.draft
 
     override suspend fun getCart(): MedsyResult<Cart, MedsyError.Remote> =
-        remoteDataSource.getCart().map { it.toDomain() }
+        remoteDataSource.getCart().map { it.toDomain() }.onSuccess { cart ->
+            _cartItemCount.value = cart.items.sumOf { it.quantity }
+        }
 
     override suspend fun addItem(
         productId: Int,
         quantity: Int,
     ): MedsyResult<Cart, MedsyError.Remote> =
-        remoteDataSource.addItem(productId, quantity).map { it.toDomain() }
+        remoteDataSource.addItem(productId, quantity).map { it.toDomain() }.onSuccess { cart ->
+            _cartItemCount.value = cart.items.sumOf { it.quantity }
+        }
 
     override suspend fun addItemsBulk(
         items: List<CartItemInput>,
@@ -48,15 +58,21 @@ class CartRepositoryImpl @Inject constructor(
         cartItemId: Long,
         quantity: Int,
     ): MedsyResult<Cart, MedsyError.Remote> =
-        remoteDataSource.setItemQuantity(cartItemId, quantity).map { it.toDomain() }
+        remoteDataSource.setItemQuantity(cartItemId, quantity).map { it.toDomain() }.onSuccess { cart ->
+            _cartItemCount.value = cart.items.sumOf { it.quantity }
+        }
 
     override suspend fun removeItem(
         cartItemId: Long,
     ): MedsyResult<Cart, MedsyError.Remote> =
-        remoteDataSource.removeItem(cartItemId).map { it.toDomain() }
+        remoteDataSource.removeItem(cartItemId).map { it.toDomain() }.onSuccess { cart ->
+            _cartItemCount.value = cart.items.sumOf { it.quantity }
+        }
 
     override suspend fun clearCart(): EmptyMedsyResult<MedsyError.Remote> =
-        remoteDataSource.clearCart()
+        remoteDataSource.clearCart().onSuccess {
+            _cartItemCount.value = 0
+        }
 
     override suspend fun getCartInteractions(): MedsyResult<List<InteractionWarning>, MedsyError.Remote> =
         remoteDataSource.getCartInteractions().map { it.toDomain() }
