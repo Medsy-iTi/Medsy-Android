@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reminder_notification_channel_name">Medication Alarms</string>
+    <string name="reminder_notification_channel_description">Medication alarms created in Medsy</string>
+    <string name="reminder_notification_title">Medication reminder</string>
+    <string name="reminder_notification_body">It’s time to take %1$s.</string>
+    <string name="reminder_notification_public_title">Medication reminder</string>
+    <string name="reminder_notification_public_body">Open Medsy to view your reminder.</string>
+</resources>

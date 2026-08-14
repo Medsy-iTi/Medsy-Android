@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reminder_notification_channel_name">منبهات الأدوية</string>
+    <string name="reminder_notification_channel_description">منبهات الأدوية التي أنشأتها في ميدسي</string>
+    <string name="reminder_notification_title">تذكير بالدواء</string>
+    <string name="reminder_notification_body">حان وقت تناول %1$s.</string>
+    <string name="reminder_notification_public_title">تذكير بالدواء</string>
+    <string name="reminder_notification_public_body">افتح ميدسي لعرض التذكير.</string>
+</resources>
