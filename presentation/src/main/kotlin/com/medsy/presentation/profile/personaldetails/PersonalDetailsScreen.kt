@@ -6,11 +6,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,16 +22,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -147,86 +153,127 @@ fun PersonalDetailsScreen(
 
     Scaffold(
         snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.profile_personal_details_title),
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                },
-                navigationIcon = {
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = innerPadding.calculateBottomPadding())
+        ) {
+            // Header Background
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(280.dp)
+                    .background(MaterialTheme.colorScheme.primary)
+            ) {
+                // Top app bar items
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top = innerPadding.calculateTopPadding() + 8.dp,
+                            start = 8.dp,
+                            end = 8.dp
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.content_desc_back),
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
-                },
-                actions = {
+                    Text(
+                        text = stringResource(R.string.profile_personal_details_title),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                     if (state.profile != null && !state.isLoading) {
                         TextButton(
                             onClick = {
                                 onIntent(
-                                    if (state.isEditing) {
-                                        PersonalDetailsUIIntent.CancelEditClicked
-                                    } else {
-                                        PersonalDetailsUIIntent.EditClicked
-                                    }
+                                    if (state.isEditing) PersonalDetailsUIIntent.CancelEditClicked
+                                    else PersonalDetailsUIIntent.EditClicked
                                 )
                             },
                             enabled = !state.isSaving,
                         ) {
                             Text(
                                 text = stringResource(
-                                    if (state.isEditing) {
-                                        R.string.profile_personal_details_cancel
-                                    } else {
-                                        R.string.profile_personal_details_edit
-                                    }
-                                )
+                                    if (state.isEditing) R.string.profile_personal_details_cancel
+                                    else R.string.profile_personal_details_edit
+                                ),
+                                color = if (state.isSaving) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
+                                else MaterialTheme.colorScheme.onPrimary
                             )
                         }
+                    } else {
+                        Spacer(modifier = Modifier.width(64.dp))
                     }
-                },
-            )
-        },
-    ) { innerPadding ->
-        when {
-            state.isLoading -> LoadingContent(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-            )
+                }
 
-            state.hasLoadError || state.profile == null -> ErrorContent(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                messageRes = state.loadErrorMessageRes,
-                onRetry = { onIntent(PersonalDetailsUIIntent.Retry) },
-            )
+                // Avatar in Header
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 56.dp)
+                        .size(100.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f),
+                            shape = CircleShape,
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(82.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = CircleShape,
+                            ),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Person,
+                            contentDescription = stringResource(R.string.profile_avatar_content_description),
+                            modifier = Modifier.size(42.dp),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
+            }
 
-            else -> PersonalDetailsContent(
-                state = state,
+            // Overlapping Content
+            Surface(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                onFirstNameChanged = {
-                    onIntent(PersonalDetailsUIIntent.FirstNameChanged(it))
-                },
-                onLastNameChanged = {
-                    onIntent(PersonalDetailsUIIntent.LastNameChanged(it))
-                },
-                onAddressChanged = {
-                    onIntent(PersonalDetailsUIIntent.HomeAddressChanged(it))
-                },
-                onLocationPickerClick = {
-                    onIntent(PersonalDetailsUIIntent.LocationPickerClicked)
-                },
-                onDatePickerClick = { showDatePicker = true },
-                onSaveClick = { onIntent(PersonalDetailsUIIntent.SaveClicked) },
-            )
+                    .padding(top = 230.dp),
+                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                when {
+                    state.isLoading -> LoadingContent(Modifier.fillMaxSize())
+                    state.hasLoadError || state.profile == null -> ErrorContent(
+                        modifier = Modifier.fillMaxSize(),
+                        messageRes = state.loadErrorMessageRes,
+                        onRetry = { onIntent(PersonalDetailsUIIntent.Retry) },
+                    )
+
+                    else -> PersonalDetailsContent(
+                        state = state,
+                        modifier = Modifier.fillMaxSize(),
+                        onFirstNameChanged = { onIntent(PersonalDetailsUIIntent.FirstNameChanged(it)) },
+                        onLastNameChanged = { onIntent(PersonalDetailsUIIntent.LastNameChanged(it)) },
+                        onAddressChanged = { onIntent(PersonalDetailsUIIntent.HomeAddressChanged(it)) },
+                        onLocationPickerClick = { onIntent(PersonalDetailsUIIntent.LocationPickerClicked) },
+                        onDatePickerClick = { showDatePicker = true },
+                        onSaveClick = { onIntent(PersonalDetailsUIIntent.SaveClicked) },
+                    )
+                }
+            }
         }
     }
 
@@ -259,120 +306,112 @@ private fun PersonalDetailsContent(
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(
-            start = 20.dp,
-            top = 20.dp,
-            end = 20.dp,
-            bottom = 32.dp,
+            start = 24.dp,
+            top = 32.dp,
+            end = 24.dp,
+            bottom = 40.dp,
         ),
-        verticalArrangement = Arrangement.spacedBy(18.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        // Identity Group
         item {
-            Box(
-                modifier = Modifier
-                    .size(82.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape,
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Person,
-                    contentDescription = stringResource(R.string.profile_avatar_content_description),
-                    modifier = Modifier.size(42.dp),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                )
+            GroupCard {
+                if (state.isEditing) {
+                    PersonalDetailsEditableField(
+                        label = stringResource(R.string.profile_personal_details_customer_id),
+                        value = profile.id?.toString().orEmpty().orNotProvided(notProvided),
+                        placeholder = notProvided,
+                        readOnly = true,
+                        leadingIcon = { Icon(Icons.Outlined.Badge, contentDescription = null) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsEditableField(
+                        label = stringResource(R.string.profile_personal_details_first_name),
+                        value = state.draftFirstName,
+                        placeholder = notProvided,
+                        onValueChange = onFirstNameChanged,
+                        isError = !state.isFirstNameValid,
+                        errorMessage = stringResource(R.string.profile_personal_details_name_required),
+                        leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsEditableField(
+                        label = stringResource(R.string.profile_personal_details_last_name),
+                        value = state.draftLastName,
+                        placeholder = notProvided,
+                        onValueChange = onLastNameChanged,
+                        isError = !state.isLastNameValid,
+                        errorMessage = stringResource(R.string.profile_personal_details_name_required),
+                        leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsEditableField(
+                        label = stringResource(R.string.profile_personal_details_dob),
+                        value = state.draftDob,
+                        placeholder = notProvided,
+                        readOnly = true,
+                        leadingIcon = { Icon(Icons.Outlined.CalendarMonth, contentDescription = null) },
+                        trailingIcon = {
+                            IconButton(onClick = onDatePickerClick) {
+                                Icon(
+                                    imageVector = Icons.Outlined.CalendarMonth,
+                                    contentDescription = stringResource(R.string.profile_personal_details_select_dob),
+                                )
+                            }
+                        },
+                    )
+                } else {
+                    PersonalDetailsInfoRow(
+                        label = stringResource(R.string.profile_personal_details_customer_id),
+                        value = profile.id?.toString().orEmpty().orNotProvided(notProvided),
+                        leadingIcon = { Icon(Icons.Outlined.Badge, contentDescription = null) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsInfoRow(
+                        label = stringResource(R.string.profile_personal_details_first_name),
+                        value = profile.firstName.orNotProvided(notProvided),
+                        leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null) },
+                        editable = true,
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsInfoRow(
+                        label = stringResource(R.string.profile_personal_details_last_name),
+                        value = profile.lastName.orNotProvided(notProvided),
+                        leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null) },
+                        editable = true,
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsInfoRow(
+                        label = stringResource(R.string.profile_personal_details_dob),
+                        value = profile.dob.orEmpty().orNotProvided(notProvided),
+                        leadingIcon = { Icon(Icons.Outlined.CalendarMonth, contentDescription = null) },
+                        editable = true,
+                    )
+                }
             }
         }
 
+        // Contact Group
         item {
-            if (state.isEditing) {
-                PersonalDetailsEditableField(
-                    label = stringResource(R.string.profile_personal_details_customer_id),
-                    value = profile.id?.toString().orEmpty().orNotProvided(notProvided),
-                    placeholder = notProvided,
-                    readOnly = true,
-                )
-            } else {
-                PersonalDetailsInfoContainer(
-                    label = stringResource(R.string.profile_personal_details_customer_id),
-                    value = profile.id?.toString().orEmpty().orNotProvided(notProvided),
-                )
-            }
-        }
-        item {
-            if (state.isEditing) {
-                PersonalDetailsEditableField(
-                    label = stringResource(R.string.profile_personal_details_first_name),
-                    value = state.draftFirstName,
-                    placeholder = notProvided,
-                    onValueChange = onFirstNameChanged,
-                    isError = !state.isFirstNameValid,
-                    errorMessage = stringResource(R.string.profile_personal_details_name_required),
-                )
-            } else {
-                PersonalDetailsInfoContainer(
-                    label = stringResource(R.string.profile_personal_details_first_name),
-                    value = profile.firstName.orNotProvided(notProvided),
-                    editable = true,
-                )
-            }
-        }
-        item {
-            if (state.isEditing) {
-                PersonalDetailsEditableField(
-                    label = stringResource(R.string.profile_personal_details_last_name),
-                    value = state.draftLastName,
-                    placeholder = notProvided,
-                    onValueChange = onLastNameChanged,
-                    isError = !state.isLastNameValid,
-                    errorMessage = stringResource(R.string.profile_personal_details_name_required),
-                )
-            } else {
-                PersonalDetailsInfoContainer(
-                    label = stringResource(R.string.profile_personal_details_last_name),
-                    value = profile.lastName.orNotProvided(notProvided),
-                    editable = true,
-                )
-            }
-        }
-        item {
-            if (state.isEditing) {
-                PersonalDetailsEditableField(
-                    label = stringResource(R.string.profile_personal_details_email),
-                    value = profile.email.orNotProvided(notProvided),
-                    placeholder = notProvided,
-                    readOnly = true,
-                )
-            } else {
-                PersonalDetailsInfoContainer(
-                    label = stringResource(R.string.profile_personal_details_email),
-                    value = profile.email.orNotProvided(notProvided),
-                )
-            }
-        }
-        item {
-            if (state.isEditing) {
-                PersonalDetailsEditableField(
-                    label = stringResource(R.string.profile_personal_details_phone),
-                    value = profile.phoneNumber.orNotProvided(notProvided),
-                    placeholder = notProvided,
-                    readOnly = true,
-                )
-            } else {
-                PersonalDetailsInfoContainer(
-                    label = stringResource(R.string.profile_personal_details_phone),
-                    value = profile.phoneNumber.orNotProvided(notProvided),
-                )
-            }
-        }
-        item {
-            if (state.isEditing) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
+            GroupCard {
+                if (state.isEditing) {
+                    PersonalDetailsEditableField(
+                        label = stringResource(R.string.profile_personal_details_email),
+                        value = profile.email.orNotProvided(notProvided),
+                        placeholder = notProvided,
+                        readOnly = true,
+                        leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsEditableField(
+                        label = stringResource(R.string.profile_personal_details_phone),
+                        value = profile.phoneNumber.orNotProvided(notProvided),
+                        placeholder = notProvided,
+                        readOnly = true,
+                        leadingIcon = { Icon(Icons.Outlined.Phone, contentDescription = null) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                     PersonalDetailsEditableField(
                         label = stringResource(R.string.profile_personal_details_home_address),
                         value = state.draftHomeAddress,
@@ -380,6 +419,7 @@ private fun PersonalDetailsContent(
                         onValueChange = onAddressChanged,
                         singleLine = false,
                         minLines = 3,
+                        leadingIcon = { Icon(Icons.Outlined.Home, contentDescription = null) },
                     )
                     ProfileLocationCard(
                         latitude = state.draftLatitude,
@@ -387,15 +427,23 @@ private fun PersonalDetailsContent(
                         isEditing = true,
                         onChangeLocation = onLocationPickerClick,
                     )
-                }
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    PersonalDetailsInfoContainer(
+                } else {
+                    PersonalDetailsInfoRow(
+                        label = stringResource(R.string.profile_personal_details_email),
+                        value = profile.email.orNotProvided(notProvided),
+                        leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsInfoRow(
+                        label = stringResource(R.string.profile_personal_details_phone),
+                        value = profile.phoneNumber.orNotProvided(notProvided),
+                        leadingIcon = { Icon(Icons.Outlined.Phone, contentDescription = null) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                    PersonalDetailsInfoRow(
                         label = stringResource(R.string.profile_personal_details_home_address),
                         value = profile.homeAddress.orEmpty().orNotProvided(notProvided),
+                        leadingIcon = { Icon(Icons.Outlined.Home, contentDescription = null) },
                         editable = true,
                     )
                     ProfileLocationCard(
@@ -407,41 +455,22 @@ private fun PersonalDetailsContent(
                 }
             }
         }
-        item {
-            if (state.isEditing) {
-                PersonalDetailsEditableField(
-                    label = stringResource(R.string.profile_personal_details_dob),
-                    value = state.draftDob,
-                    placeholder = notProvided,
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(onClick = onDatePickerClick) {
-                            Icon(
-                                imageVector = Icons.Outlined.CalendarMonth,
-                                contentDescription = stringResource(
-                                    R.string.profile_personal_details_select_dob
-                                ),
-                            )
-                        }
-                    },
-                )
-            } else {
-                PersonalDetailsInfoContainer(
-                    label = stringResource(R.string.profile_personal_details_dob),
-                    value = profile.dob.orEmpty().orNotProvided(notProvided),
-                    editable = true,
-                )
-            }
-        }
+
         item {
             Button(
                 onClick = onSaveClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 56.dp),
+                    .heightIn(min = 56.dp)
+                    .padding(top = 8.dp),
                 enabled = state.isEditing && state.hasChanges && !state.isSaving &&
                         state.isFirstNameValid && state.isLastNameValid,
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(100.dp), // pill shape
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 6.dp,
+                    pressedElevation = 8.dp,
+                    disabledElevation = 0.dp
+                ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                 ),
@@ -455,6 +484,7 @@ private fun PersonalDetailsContent(
                 } else {
                     Text(
                         text = stringResource(R.string.profile_personal_details_save),
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
@@ -464,29 +494,52 @@ private fun PersonalDetailsContent(
 }
 
 @Composable
-private fun PersonalDetailsInfoContainer(
-    label: String,
-    value: String,
-    editable: Boolean = false,
+private fun GroupCard(
+    content: @Composable ColumnScope.() -> Unit
 ) {
-    val borderColor = if (editable) {
-        MaterialTheme.colorScheme.primary.copy(alpha = 0.65f)
-    } else {
-        MaterialTheme.colorScheme.outline.copy(alpha = 0.55f)
-    }
-
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(24.dp),
         color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(
-            width = 1.dp,
-            color = borderColor,
-        ),
+        shadowElevation = 2.dp,
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            content = content
+        )
+    }
+}
+
+@Composable
+private fun PersonalDetailsInfoRow(
+    label: String,
+    value: String,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    editable: Boolean = false,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        if (leadingIcon != null) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                leadingIcon()
+            }
+        }
+
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -499,39 +552,19 @@ private fun PersonalDetailsInfoContainer(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 if (editable) {
-                    Surface(
-                        shape = RoundedCornerShape(50),
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(
-                                horizontal = 8.dp,
-                                vertical = 4.dp,
-                            ),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = null,
-                                modifier = Modifier.size(14.dp),
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = stringResource(
-                                    R.string.profile_personal_details_editable
-                                ),
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.SemiBold,
-                            )
-                        }
-                    }
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Medium,
             )
         }
     }
@@ -548,6 +581,7 @@ private fun PersonalDetailsEditableField(
     minLines: Int = 1,
     isError: Boolean = false,
     errorMessage: String? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     Column(
@@ -556,9 +590,10 @@ private fun PersonalDetailsEditableField(
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(start = 4.dp)
         )
         OutlinedTextField(
             value = value,
@@ -568,6 +603,7 @@ private fun PersonalDetailsEditableField(
             singleLine = singleLine,
             minLines = minLines,
             isError = isError,
+            leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             placeholder = {
                 Text(text = placeholder)
@@ -577,10 +613,10 @@ private fun PersonalDetailsEditableField(
             } else {
                 null
             },
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                 focusedContainerColor = MaterialTheme.colorScheme.surface,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
