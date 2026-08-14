@@ -21,15 +21,31 @@ fun BottomNavigationButton(
     modifier: Modifier = Modifier,
     selected: Boolean = false,
     @StringRes label: Int,
+    badgeCount: Int = 0,
 ) {
     ShortNavigationBarItem(
         selected = selected,
         onClick = onClick,
         icon = {
-            Icon(
-                painter = painterResource(icon),
-                contentDescription = null,
-            )
+            if (badgeCount > 0) {
+                androidx.compose.material3.BadgedBox(
+                    badge = {
+                        androidx.compose.material3.Badge {
+                            Text(text = badgeCount.toString())
+                        }
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = null,
+                    )
+                }
+            } else {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = null,
+                )
+            }
         },
         label = {
             Text(
