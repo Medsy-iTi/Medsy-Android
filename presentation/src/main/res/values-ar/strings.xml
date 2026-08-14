@@ -456,7 +456,7 @@
     <string name="cart_request_cash">نقدًا</string>
     <string name="cart_request_cash_description">ادفع عند استلام الطلب</string>
     <string name="cart_request_visa">فيزا</string>
-    <string name="cart_request_visa_description">الدفع باستخدام البطاقة\n</string>
+    <string name="cart_request_visa_description">الدفع باستخدام البطاقة</string>
     <string name="cart_request_submit">إرسال طلب الأدوية</string>
     <string name="cart_request_retry">إعادة المحاولة</string>
     <string name="cart_request_empty_request">أضف دواءً واحدًا على الأقل قبل إرسال الطلب. الروشتة والملاحظات عناصر مساعدة فقط.</string>
