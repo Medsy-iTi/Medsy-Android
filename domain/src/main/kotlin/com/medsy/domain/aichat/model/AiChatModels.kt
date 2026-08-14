@@ -1,6 +1,7 @@
 package com.medsy.domain.aichat.model
 
 import com.medsy.domain.prescription.model.PrescriptionImage
+import java.time.LocalTime
 
 data class AiChatSession(
     val messages: List<AiChatMessage> = emptyList(),
@@ -34,6 +35,7 @@ sealed interface AiChatContent {
         val categories: List<AiChatCategory>,
         val disclaimer: String?,
         val action: AiChatMessageAction?,
+        val reminder: AiReminderInfo?,
     ) : AiChatContent
 }
 
@@ -48,10 +50,20 @@ enum class AiChatIntent {
     ADD_TO_CART,
     CREATE_REQUEST,
     SET_REMINDER,
-    DELETE_REMINDER,
-    LIST_REMINDERS,
     OTHER,
 }
+
+data class AiReminderInfo(
+    val sourceMessageId: Long,
+    val medicineName: String,
+    val times: List<LocalTime>,
+    val durationDays: Int,
+)
+
+data class AiChatSendResult(
+    val action: AiChatMessageAction?,
+    val reminder: AiReminderInfo?,
+)
 
 data class AiEmergencyNumber(
     val service: AiEmergencyService,

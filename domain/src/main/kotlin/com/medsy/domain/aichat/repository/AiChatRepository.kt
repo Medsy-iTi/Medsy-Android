@@ -1,7 +1,7 @@
 package com.medsy.domain.aichat.repository
 
-import com.medsy.domain.aichat.model.AiChatMessageAction
 import com.medsy.domain.aichat.model.AiChatOutgoingMessage
+import com.medsy.domain.aichat.model.AiChatSendResult
 import com.medsy.domain.aichat.model.AiChatSession
 import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
@@ -16,12 +16,12 @@ interface AiChatRepository {
 
     /**
      * Sends a text or image message. The resulting messages flow through the
-     * observed session; the returned value is only the one-shot action the
-     * assistant may attach (added-to-cart / create-request).
+     * observed session; the returned value contains one-shot instructions
+     * that must not be reconstructed from conversation history.
      */
     suspend fun send(
         message: AiChatOutgoingMessage,
-    ): MedsyResult<AiChatMessageAction?, MedsyError.Remote>
+    ): MedsyResult<AiChatSendResult, MedsyError.Remote>
 
     /** Deletes the server-side history and clears the local session. */
     suspend fun startNewChat(): EmptyMedsyResult<MedsyError.Remote>

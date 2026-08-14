@@ -67,7 +67,11 @@ fun AiChatConversation(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(state.messages, key = AiChatMessage::id) { message ->
-            AiChatMessageItem(message = message, onIntent = onIntent)
+            AiChatMessageItem(
+                message = message,
+                reminderStatus = state.reminderStatuses[message.id],
+                onIntent = onIntent,
+            )
         }
         if (state.isResponding) {
             item(key = "typing") { AiChatTypingIndicator() }
@@ -79,10 +83,10 @@ fun AiChatConversation(
         }
     }
 }
-
 @Composable
 private fun LazyItemScope.AiChatMessageItem(
     message: AiChatMessage,
+    reminderStatus: com.medsy.presentation.aichat.ReminderUiStatus?,
     onIntent: (AiChatUIIntent) -> Unit,
 ) {
     val itemModifier = Modifier.animateItem()
@@ -90,12 +94,12 @@ private fun LazyItemScope.AiChatMessageItem(
         is AiChatContent.UserText -> UserBubble(content, itemModifier)
         is AiChatContent.AssistantMessage -> AssistantMessageItem(
             content = content,
+            reminderStatus = reminderStatus,
             onIntent = onIntent,
             modifier = itemModifier,
         )
     }
 }
-
 @Composable
 private fun UserBubble(content: AiChatContent.UserText, modifier: Modifier = Modifier) {
     Row(
@@ -134,14 +138,14 @@ private fun UserBubble(content: AiChatContent.UserText, modifier: Modifier = Mod
         }
     }
 }
-
 @Composable
 private fun AssistantMessageItem(
     content: AiChatContent.AssistantMessage,
+    reminderStatus: com.medsy.presentation.aichat.ReminderUiStatus?,
     onIntent: (AiChatUIIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isReminder = content.intent in REMINDER_INTENTS
+    val isReminder = content.intent == AiChatIntent.SET_REMINDER
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -155,7 +159,7 @@ private fun AssistantMessageItem(
             val answer = content.answer.takeIf(String::isNotBlank)
                 ?: stringResource(R.string.ai_chat_catalog_empty_answer)
             if (isReminder) {
-                AiChatReminderCard(answer = answer)
+                AiChatReminderCard(answer = answer, status = reminderStatus)
             } else {
                 AssistantBubble(text = answer)
             }
@@ -265,9 +269,3 @@ private fun SendRetryCard(
         }
     }
 }
-
-private val REMINDER_INTENTS = setOf(
-    AiChatIntent.SET_REMINDER,
-    AiChatIntent.DELETE_REMINDER,
-    AiChatIntent.LIST_REMINDERS,
-)

@@ -26,4 +26,14 @@ sealed interface AiChatUIIntent {
     data class CategoryClicked(val categoryId: Int, val categoryName: String) : AiChatUIIntent
     data object ViewCartClicked : AiChatUIIntent
     data object ConfirmRequestClicked : AiChatUIIntent
+    data class NotificationPermissionResult(
+        val reminderId: Long,
+        val messageId: Long,
+        val granted: Boolean,
+    ) : AiChatUIIntent
+    data object EnableExactAlarmsClicked : AiChatUIIntent
+    data object UseApproximateAlarmsClicked : AiChatUIIntent
+    data object ExactAlarmSettingsReturned : AiChatUIIntent
+    data object BatteryReliabilityDismissed : AiChatUIIntent
+    data object BatterySettingsClicked : AiChatUIIntent
 }
