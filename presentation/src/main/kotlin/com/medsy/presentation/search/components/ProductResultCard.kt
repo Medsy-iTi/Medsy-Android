@@ -19,11 +19,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import com.medsy.designsystem.ui.theme.extendedColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.components.NullableProductImage
+import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
 
 @Composable
@@ -108,7 +107,8 @@ fun ProductResultCard(
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = stringResource(R.string.search_favorite_desc),
-                    tint = if (isFavorite) MaterialTheme.extendedColors.favoriteRed else MaterialTheme.colorScheme.onSurfaceVariant,                )
+                    tint = if (isFavorite) MaterialTheme.extendedColors.favoriteRed else MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
 
             Box(
@@ -121,7 +121,7 @@ fun ProductResultCard(
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = stringResource(R.string.search_add_to_cart_desc),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = androidx.compose.ui.graphics.Color.White,
                     modifier = Modifier.size(16.dp),
                 )
             }
