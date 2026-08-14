@@ -40,6 +40,7 @@ fun ProductDetailsRoot(
     productId: String,
     onNavigateBack: () -> Unit,
     onNavigateToPharmacistChat: () -> Unit,
+    onNavigateToCart: () -> Unit,
     viewModel: ProductDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -55,6 +56,7 @@ fun ProductDetailsRoot(
             when (effect) {
                 ProductDetailsUIEffect.NavigateBack -> onNavigateBack()
                 ProductDetailsUIEffect.NavigateToPharmacistChat -> onNavigateToPharmacistChat()
+                ProductDetailsUIEffect.NavigateToCart -> onNavigateToCart()
                 ProductDetailsUIEffect.OpenShareSheet -> {
                 }
 
@@ -115,9 +117,8 @@ fun ProductDetailsScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         ProductTopBar(
-            isFavorite = state.isFavorite,
             onBackClick = { onIntent(ProductDetailsUIIntent.BackClicked) },
-            onFavoriteClick = { onIntent(ProductDetailsUIIntent.FavoriteClicked) },
+            onCartClick = { onIntent(ProductDetailsUIIntent.CartClicked) },
         )
 
         Column(
@@ -136,6 +137,8 @@ fun ProductDetailsScreen(
                 strength = product.strength,
                 packInfo = product.packInfo,
                 price = product.price,
+                isFavorite = state.isFavorite,
+                onFavoriteClick = { onIntent(ProductDetailsUIIntent.FavoriteClicked) },
                 modifier = Modifier.padding(top = 12.dp),
             )
 
