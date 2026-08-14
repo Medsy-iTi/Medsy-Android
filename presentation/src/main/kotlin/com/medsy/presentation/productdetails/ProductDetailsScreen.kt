@@ -40,6 +40,7 @@ fun ProductDetailsRoot(
     productId: String,
     onNavigateBack: () -> Unit,
     onNavigateToPharmacistChat: () -> Unit,
+    onNavigateToCart: () -> Unit,
     viewModel: ProductDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -55,6 +56,7 @@ fun ProductDetailsRoot(
             when (effect) {
                 ProductDetailsUIEffect.NavigateBack -> onNavigateBack()
                 ProductDetailsUIEffect.NavigateToPharmacistChat -> onNavigateToPharmacistChat()
+                ProductDetailsUIEffect.NavigateToCart -> onNavigateToCart()
                 ProductDetailsUIEffect.OpenShareSheet -> {
                 }
 
@@ -118,6 +120,7 @@ fun ProductDetailsScreen(
             isFavorite = state.isFavorite,
             onBackClick = { onIntent(ProductDetailsUIIntent.BackClicked) },
             onFavoriteClick = { onIntent(ProductDetailsUIIntent.FavoriteClicked) },
+            onCartClick = { onIntent(ProductDetailsUIIntent.CartClicked) },
         )
 
         Column(

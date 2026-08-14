@@ -7,5 +7,6 @@ sealed interface ProductDetailsUIIntent {
     data class ImagePageChanged(val index: Int) : ProductDetailsUIIntent
     data object AddToCartClicked : ProductDetailsUIIntent
     data object ConsultPharmacistClicked : ProductDetailsUIIntent
+    data object CartClicked : ProductDetailsUIIntent
     data object RetryClicked : ProductDetailsUIIntent
 }

@@ -77,6 +77,8 @@ class ProductDetailsViewModel @Inject constructor(
             ProductDetailsUIIntent.AddToCartClicked -> addToCart()
             ProductDetailsUIIntent.ConsultPharmacistClicked ->
                 sendEffect(ProductDetailsUIEffect.NavigateToPharmacistChat)
+            ProductDetailsUIIntent.CartClicked ->
+                sendEffect(ProductDetailsUIEffect.NavigateToCart)
 
             ProductDetailsUIIntent.RetryClicked -> loadProduct()
         }

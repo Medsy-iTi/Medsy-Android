@@ -282,6 +282,11 @@ fun RootNavDisplay(
                             rootBackStack.replace(Route.AiChat())
                         }
                     },
+                    onNavigateToCart = {
+                        rootBackStack.navigateToNestedDestination(Route.NestedNav.Cart) {
+                            requestedNestedDestination = it
+                        }
+                    },
                 )
             }
             entry<Route.PharmacyProfile> { route ->
