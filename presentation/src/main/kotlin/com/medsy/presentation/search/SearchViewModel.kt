@@ -156,13 +156,24 @@ class SearchViewModel @Inject constructor(
         }
         viewModelScope.launch {
             addCartItem(productId)
-                .onSuccess {
-                    sendEffect(
-                        SearchUIEffect.ShowMessage(
-                            R.string.search_added_to_cart,
-                            isSuccess = true
+                .onSuccess { cart ->
+                    val cartItem = cart.items.find { it.productId == productId }
+                    if (cartItem != null) {
+                        sendEffect(
+                            SearchUIEffect.ShowMessage(
+                                R.string.product_added_to_cart_format,
+                                args = listOf(cartItem.quantity, cartItem.productName),
+                                isSuccess = true
+                            )
                         )
-                    )
+                    } else {
+                        sendEffect(
+                            SearchUIEffect.ShowMessage(
+                                R.string.search_added_to_cart,
+                                isSuccess = true
+                            )
+                        )
+                    }
                 }
                 .onError { error ->
                     sendEffect(SearchUIEffect.ShowMessage(error.toMessageRes()))
