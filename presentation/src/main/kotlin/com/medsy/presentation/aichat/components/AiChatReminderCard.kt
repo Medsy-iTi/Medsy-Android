@@ -1,5 +1,6 @@
 package com.medsy.presentation.aichat.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.medsy.designsystem.ui.theme.extendedColors
 import com.medsy.presentation.R
+import com.medsy.presentation.aichat.ReminderUiStatus
 import androidx.compose.material3.Icon
 
 /**
@@ -27,6 +30,7 @@ import androidx.compose.material3.Icon
 @Composable
 fun AiChatReminderCard(
     answer: String,
+    status: ReminderUiStatus?,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -45,11 +49,27 @@ fun AiChatReminderCard(
                 modifier = Modifier.size(20.dp),
             )
             Spacer(Modifier.width(10.dp))
-            ChatMarkdownText(
-                text = answer,
-                color = MaterialTheme.extendedColors.onInfoContainer,
-                modifier = Modifier.weight(1f),
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                ChatMarkdownText(
+                    text = answer,
+                    color = MaterialTheme.extendedColors.onInfoContainer,
+                )
+                status?.let {
+                    Text(
+                        text = stringResource(
+                            when (it) {
+                                ReminderUiStatus.SAVING -> R.string.reminder_status_saving
+                                ReminderUiStatus.SCHEDULED -> R.string.reminder_status_scheduled
+                                ReminderUiStatus.NOTIFICATIONS_DISABLED ->
+                                    R.string.reminder_status_notifications_disabled
+                                ReminderUiStatus.SAVE_FAILED -> R.string.reminder_status_save_failed
+                            }
+                        ),
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(top = 8.dp),
+                    )
+                }
+            }
         }
     }
 }

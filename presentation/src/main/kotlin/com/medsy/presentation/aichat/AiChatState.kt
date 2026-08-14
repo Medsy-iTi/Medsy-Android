@@ -16,6 +16,10 @@ data class AiChatState(
     val isNewChatDialogVisible: Boolean = false,
     val failedSubmission: AiChatOutgoingMessage? = null,
     @StringRes val errorMessageRes: Int? = null,
+    val reminderStatuses: Map<Long, ReminderUiStatus> = emptyMap(),
+    val pendingExactAlarmReminderId: Long? = null,
+    val pendingExactAlarmMessageId: Long? = null,
+    val isBatteryReliabilityDialogVisible: Boolean = false,
 ) {
     val canSend: Boolean
         get() = !isResponding && !isLoadingHistory && historyErrorRes == null
@@ -24,3 +28,10 @@ data class AiChatState(
 data class PendingAttachment(
     val image: PrescriptionImage,
 )
+
+enum class ReminderUiStatus {
+    SAVING,
+    SCHEDULED,
+    NOTIFICATIONS_DISABLED,
+    SAVE_FAILED,
+}

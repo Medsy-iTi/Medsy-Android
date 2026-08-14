@@ -6,6 +6,7 @@ import com.medsy.data.aichat.remote.ChatHistoryMessageDto
 import com.medsy.data.aichat.remote.ChatMessageResponseDto
 import com.medsy.data.aichat.remote.ChatProductDto
 import com.medsy.data.aichat.remote.EmergencyNumberDto
+import com.medsy.data.aichat.remote.ReminderDto
 import com.medsy.domain.aichat.model.AiCatalogProduct
 import com.medsy.domain.aichat.model.AiChatCategory
 import com.medsy.domain.aichat.model.AiChatContent
@@ -15,6 +16,10 @@ import com.medsy.domain.aichat.model.AiChatMessageAction
 import com.medsy.domain.aichat.model.AiChatSender
 import com.medsy.domain.aichat.model.AiEmergencyNumber
 import com.medsy.domain.aichat.model.AiEmergencyService
+import com.medsy.domain.aichat.model.AiReminderInfo
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 private const val ACTION_ADDED_TO_CART = "ADDED_TO_CART"
 private const val ACTION_CREATE_REQUEST = "CREATE_REQUEST"
@@ -32,6 +37,7 @@ fun ChatMessageResponseDto.toDomain(): AiChatContent.AssistantMessage =
         categories = categories.orEmpty().mapNotNull(ChatCategoryDto::toDomain),
         disclaimer = disclaimer?.takeIf(String::isNotBlank),
         action = action?.toDomain(),
+        reminder = reminder?.toDomain(messageId),
     )
 
 fun ChatHistoryMessageDto.toDomain(): AiChatMessage? {
@@ -59,11 +65,39 @@ fun ChatHistoryMessageDto.toDomain(): AiChatMessage? {
                 // History never replays disclaimers or one-shot actions.
                 disclaimer = null,
                 action = null,
+                reminder = null,
             ),
         )
 
         else -> null
     }
+}
+
+private fun ReminderDto.toDomain(sourceMessageId: Long?): AiReminderInfo? {
+    val resolvedSourceMessageId = sourceMessageId ?: return null
+    val resolvedMedicineName = medicineName?.trim()?.takeIf(String::isNotBlank) ?: return null
+    val resolvedDuration = durationDays?.takeIf { it in 1..MAX_REMINDER_DURATION_DAYS }
+        ?: return null
+    val resolvedTimes = times.orEmpty()
+        .mapNotNull { value ->
+            val normalizedValue = value.trim()
+            if (!REMINDER_TIME_REGEX.matches(normalizedValue)) return@mapNotNull null
+            try {
+                LocalTime.parse(normalizedValue, REMINDER_TIME_FORMAT)
+            } catch (_: DateTimeParseException) {
+                null
+            }
+        }
+        .distinct()
+        .sorted()
+    if (resolvedTimes.isEmpty()) return null
+
+    return AiReminderInfo(
+        sourceMessageId = resolvedSourceMessageId,
+        medicineName = resolvedMedicineName,
+        times = resolvedTimes,
+        durationDays = resolvedDuration,
+    )
 }
 
 private fun String?.toIntent(): AiChatIntent {
@@ -127,3 +161,7 @@ private fun ChatProductDto.toDomain(): AiCatalogProduct? {
         imageUrl = imageUrl?.takeIf(String::isNotBlank),
     )
 }
+
+private val REMINDER_TIME_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+private val REMINDER_TIME_REGEX = Regex("^(?:[01]\\d|2[0-3]):[0-5]\\d$")
+private const val MAX_REMINDER_DURATION_DAYS = 90

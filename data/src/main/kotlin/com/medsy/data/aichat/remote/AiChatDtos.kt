@@ -20,6 +20,14 @@ data class ChatMessageResponseDto(
     val categories: List<ChatCategoryDto>? = null,
     val disclaimer: String? = null,
     val action: ChatActionDto? = null,
+    val reminder: ReminderDto? = null,
+)
+
+@JsonClass(generateAdapter = true)
+data class ReminderDto(
+    val medicineName: String? = null,
+    val times: List<String>? = null,
+    val durationDays: Int? = null,
 )
 
 @JsonClass(generateAdapter = true)

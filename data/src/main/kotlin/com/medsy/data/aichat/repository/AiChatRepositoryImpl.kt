@@ -7,8 +7,8 @@ import com.medsy.data.aichat.remote.ChatMessageRequestDto
 import com.medsy.data.common.media.PrescriptionImageStorage
 import com.medsy.data.prescription.remote.PrescriptionImageMimeType
 import com.medsy.domain.aichat.model.AiChatContent
-import com.medsy.domain.aichat.model.AiChatMessageAction
 import com.medsy.domain.aichat.model.AiChatOutgoingMessage
+import com.medsy.domain.aichat.model.AiChatSendResult
 import com.medsy.domain.aichat.model.AiChatSession
 import com.medsy.domain.aichat.repository.AiChatRepository
 import com.medsy.domain.common.EmptyMedsyResult
@@ -50,9 +50,9 @@ class AiChatRepositoryImpl @Inject constructor(
 
     override suspend fun send(
         message: AiChatOutgoingMessage,
-    ): MedsyResult<AiChatMessageAction?, MedsyError.Remote> {
+    ): MedsyResult<AiChatSendResult, MedsyError.Remote> {
         if (sessionDataSource.state.value.isResponding) {
-            return MedsyResult.Success(null)
+            return MedsyResult.Success(AiChatSendResult(action = null, reminder = null))
         }
 
         val userContent = when (message) {
@@ -93,7 +93,10 @@ class AiChatRepositoryImpl @Inject constructor(
                     serverMessageId = response.messageId,
                     response = assistantMessage,
                 )
-                assistantMessage.action
+                AiChatSendResult(
+                    action = assistantMessage.action,
+                    reminder = assistantMessage.reminder,
+                )
             }
             .onError { sessionDataSource.failQuestion(generation) }
     }

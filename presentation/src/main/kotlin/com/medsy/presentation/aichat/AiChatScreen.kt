@@ -1,9 +1,13 @@
 package com.medsy.presentation.aichat
 
 import android.app.Activity
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -26,6 +30,7 @@ import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,10 +40,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +55,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
@@ -75,6 +87,11 @@ fun AiChatRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var pendingNotificationRequest by remember {
+        mutableStateOf<Pair<Long, Long>?>(null)
+    }
+    var awaitingExactAlarmSettingsReturn by remember { mutableStateOf(false) }
 
     LaunchedEffect(initialPrompt) {
         viewModel.setInitialPrompt(initialPrompt)
@@ -102,6 +119,27 @@ fun AiChatRoot(
             viewModel.onIntent(AiChatUIIntent.GalleryImageSelected(it?.toString()))
         },
     )
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        pendingNotificationRequest?.let { (reminderId, messageId) ->
+            viewModel.onIntent(
+                AiChatUIIntent.NotificationPermissionResult(reminderId, messageId, granted)
+            )
+        }
+        pendingNotificationRequest = null
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME && awaitingExactAlarmSettingsReturn) {
+                awaitingExactAlarmSettingsReturn = false
+                viewModel.onIntent(AiChatUIIntent.ExactAlarmSettingsReturned)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.effect.collectLatest { effect ->
@@ -150,6 +188,46 @@ fun AiChatRoot(
 
                 AiChatUIEffect.NavigateToCartTab -> onOpenCartTab()
                 AiChatUIEffect.NavigateToCartRequest -> onOpenCartRequest()
+                is AiChatUIEffect.RequestNotificationPermission -> {
+                    val granted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.POST_NOTIFICATIONS,
+                        ) == PackageManager.PERMISSION_GRANTED
+                    if (granted) {
+                        viewModel.onIntent(
+                            AiChatUIIntent.NotificationPermissionResult(
+                                effect.reminderId,
+                                effect.messageId,
+                                true,
+                            )
+                        )
+                    } else {
+                        pendingNotificationRequest = effect.reminderId to effect.messageId
+                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }
+
+                AiChatUIEffect.OpenExactAlarmSettings -> {
+                    awaitingExactAlarmSettingsReturn = true
+                    try {
+                        context.startActivity(
+                            Intent(
+                                Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                Uri.parse("package:${context.packageName}"),
+                            )
+                        )
+                    } catch (_: ActivityNotFoundException) {
+                        context.startActivity(Intent(Settings.ACTION_SETTINGS))
+                    }
+                }
+
+                AiChatUIEffect.OpenBatteryOptimizationSettings -> try {
+                    context.startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+                } catch (_: ActivityNotFoundException) {
+                    context.startActivity(Intent(Settings.ACTION_SETTINGS))
+                }
+
                 is AiChatUIEffect.ShowMessage -> snackbarHostState.showMessage(
                     context = context,
                     messageRes = effect.messageRes,
@@ -168,6 +246,54 @@ fun AiChatRoot(
         MedsySnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier.align(Alignment.BottomCenter),
+        )
+    }
+
+    if (state.pendingExactAlarmReminderId != null) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.onIntent(AiChatUIIntent.UseApproximateAlarmsClicked)
+            },
+            title = { Text(stringResource(R.string.reminder_exact_alarm_title)) },
+            text = { Text(stringResource(R.string.reminder_exact_alarm_body)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.onIntent(AiChatUIIntent.EnableExactAlarmsClicked)
+                }) {
+                    Text(stringResource(R.string.reminder_enable_exact_alarms))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    viewModel.onIntent(AiChatUIIntent.UseApproximateAlarmsClicked)
+                }) {
+                    Text(stringResource(R.string.reminder_use_approximate_alarms))
+                }
+            },
+        )
+    }
+
+    if (state.isBatteryReliabilityDialogVisible) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.onIntent(AiChatUIIntent.BatteryReliabilityDismissed)
+            },
+            title = { Text(stringResource(R.string.reminder_battery_title)) },
+            text = { Text(stringResource(R.string.reminder_battery_body)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.onIntent(AiChatUIIntent.BatterySettingsClicked)
+                }) {
+                    Text(stringResource(R.string.reminder_open_battery_settings))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    viewModel.onIntent(AiChatUIIntent.BatteryReliabilityDismissed)
+                }) {
+                    Text(stringResource(R.string.reminder_not_now))
+                }
+            },
         )
     }
 }

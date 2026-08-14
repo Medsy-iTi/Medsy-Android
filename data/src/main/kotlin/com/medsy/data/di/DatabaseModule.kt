@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.medsy.data.local.database.DatabaseConstants
 import com.medsy.data.local.database.MedsyDatabase
+import com.medsy.data.local.database.MIGRATION_2_3
 import com.medsy.data.local.database.dao.FavoriteProductDao
+import com.medsy.data.reminders.local.MedicationReminderDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +27,7 @@ object DatabaseModule {
                 context,
                 MedsyDatabase::class.java,
                 DatabaseConstants.DATABASE_NAME
-            ).fallbackToDestructiveMigration(false).build()
+            ).addMigrations(MIGRATION_2_3).fallbackToDestructiveMigration(false).build()
     }
 
     @Provides
@@ -33,4 +35,9 @@ object DatabaseModule {
     fun provideFavoriteProductDao(database: MedsyDatabase): FavoriteProductDao {
         return database.favoriteProductDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideMedicationReminderDao(database: MedsyDatabase): MedicationReminderDao =
+        database.medicationReminderDao()
 }
