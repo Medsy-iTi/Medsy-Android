@@ -3,14 +3,13 @@ package com.medsy.data.cart.repository
 import com.medsy.data.cart.local.CartDraftStorage
 import com.medsy.data.cart.mapper.toDomain
 import com.medsy.data.cart.mapper.toDto
-import com.medsy.data.cart.remote.CartItemInputDto
 import com.medsy.data.cart.remote.CartRemoteDataSource
-import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.data.common.media.PrescriptionImageStorage
 import com.medsy.data.prescription.remote.PrescriptionImageMimeType
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartDraft
 import com.medsy.domain.cart.model.CartItemInput
+import com.medsy.domain.cart.model.InteractionWarning
 import com.medsy.domain.cart.model.ProductsRequest
 import com.medsy.domain.cart.repository.CartRepository
 import com.medsy.domain.common.EmptyMedsyResult
@@ -59,6 +58,9 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun clearCart(): EmptyMedsyResult<MedsyError.Remote> =
         remoteDataSource.clearCart()
 
+    override suspend fun getCartInteractions(): MedsyResult<List<InteractionWarning>, MedsyError.Remote> =
+        remoteDataSource.getCartInteractions().map { it.toDomain() }
+
     override suspend fun submitProductsRequest(
         request: ProductsRequest,
     ): MedsyResult<Long, MedsyError.Remote> {
@@ -72,15 +74,7 @@ class CartRepositoryImpl @Inject constructor(
             }
         }
         
-        val requestDto = ProductsRequestDto(
-            items = request.items.map { CartItemInputDto(it.productId, it.quantity) },
-            notes = request.notes,
-            deliveryMethod = request.deliveryMethod.name,
-            deliveryAddress = request.deliveryAddress,
-            deliveryLatitude = request.deliveryLatitude,
-            deliveryLongitude = request.deliveryLongitude,
-            paymentMethod = request.paymentMethod.name
-        )
+        val requestDto = request.toDto()
         return remoteDataSource.submitProductsRequest(requestDto, multipartImage)
     }
 

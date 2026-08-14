@@ -1,15 +1,14 @@
 package com.medsy.presentation.orders.details
 
-import OrderNoteSection
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +17,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,9 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
+import com.medsy.designsystem.components.MedsyButton
+import com.medsy.designsystem.components.MedsySnackbarHost
+import com.medsy.designsystem.components.showError
+import com.medsy.domain.orders.model.OrderStatus
 import com.medsy.presentation.R
 import com.medsy.presentation.orders.details.components.OrderDetailsLineItemRow
 import com.medsy.presentation.orders.details.components.OrderDetailsPharmacyCard
@@ -48,7 +46,6 @@ import com.medsy.presentation.orders.details.components.OrderDetailsReorderBar
 import com.medsy.presentation.orders.details.components.OrderDetailsShimmer
 import com.medsy.presentation.orders.details.components.OrderDetailsStatusHeader
 import com.medsy.presentation.orders.details.components.OrderDetailsTopBar
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun OrderDetailsRoot(
@@ -59,43 +56,32 @@ fun OrderDetailsRoot(
     onNavigateToProductDetails: (String) -> Unit,
     viewModel: OrderDetailsViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(orderId) {
-        viewModel.init(orderId)
-    }
-
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    LaunchedEffect(orderId) { viewModel.init(orderId) }
     LaunchedEffect(viewModel) {
-        viewModel.effect.collectLatest { effect ->
+        viewModel.effect.collect { effect ->
             when (effect) {
                 OrderDetailsUIEffect.NavigateBack -> onNavigateBack()
-                is OrderDetailsUIEffect.NavigateToPharmacyProfile ->
-                    onNavigateToPharmacyProfile(effect.pharmacyId)
+                is OrderDetailsUIEffect.NavigateToPharmacyProfile -> onNavigateToPharmacyProfile(
+                    effect.pharmacyId
+                )
 
-                is OrderDetailsUIEffect.ReorderRequested -> {
-                    onReorder()
-                }
+                OrderDetailsUIEffect.ReorderRequested -> onReorder()
+                is OrderDetailsUIEffect.NavigateToProductDetails -> onNavigateToProductDetails(
+                    effect.productId
+                )
 
-                is OrderDetailsUIEffect.NavigateToProductDetails ->
-                    onNavigateToProductDetails(effect.productId)
-
-                is OrderDetailsUIEffect.ShowErrorSnackbar -> {
-                    snackbarHostState.showSnackbar(
-                        message = ContextCompat.getString(context, effect.messageRes)
-                    )
-                }
+                is OrderDetailsUIEffect.ShowErrorSnackbar -> snackbarHostState.showError(
+                    ContextCompat.getString(context, effect.messageRes)
+                )
             }
         }
     }
 
-    OrderDetailsScreen(
-        orderId = orderId,
-        state = state,
-        snackbarHostState = snackbarHostState,
-        onIntent = viewModel::onIntent,
-    )
+    OrderDetailsScreen(orderId, state, snackbarHostState, viewModel::onIntent)
 }
 
 @Composable
@@ -104,49 +90,27 @@ fun OrderDetailsScreen(
     state: OrderDetailsUIState,
     snackbarHostState: SnackbarHostState,
     onIntent: (OrderDetailsUIIntent) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
         topBar = {
             OrderDetailsTopBar(
-                orderId = orderId,
+                orderId,
                 onBackClick = {
-                    if (!state.isReordering) {
-                        onIntent(OrderDetailsUIIntent.BackClicked)
-                    }
-                },
+                    if (!state.isReordering) onIntent(OrderDetailsUIIntent.BackClicked)
+                }
             )
         },
-    ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            PullToRefreshBox(
-                isRefreshing = state.isRefreshing,
-                onRefresh = {
-                    if (!state.isReordering) {
-                        onIntent(OrderDetailsUIIntent.Refresh)
-                    }
-                },
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            ) {
-                OrderDetailsContent(
-                    state = state,
-                    onIntent = onIntent,
-                    modifier = Modifier.fillMaxSize(),
-                )
-            }
-
-            if (state.isReordering) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .pointerInput(Unit) {}
-                )
-            }
+    ) { padding ->
+        PullToRefreshBox(
+            isRefreshing = state.isRefreshing,
+            onRefresh = { if (!state.isReordering) onIntent(OrderDetailsUIIntent.Refresh) },
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+        ) {
+            OrderDetailsContent(state, onIntent)
         }
     }
 }
@@ -155,98 +119,66 @@ fun OrderDetailsScreen(
 private fun OrderDetailsContent(
     state: OrderDetailsUIState,
     onIntent: (OrderDetailsUIIntent) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     if (state.isLoading) {
         OrderDetailsShimmer(
-            modifier = modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         )
         return
     }
-
-    if (state.errorMessageRes != null || state.order == null) {
-        Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    val order = state.order
+    if (state.errorMessageRes != null || order == null) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = stringResource(
-                        state.errorMessageRes ?: R.string.order_details_error_load
-                    ),
-                    style = MaterialTheme.typography.bodyMedium,
+                    stringResource(state.errorMessageRes ?: R.string.order_details_error_load),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 TextButton(onClick = { onIntent(OrderDetailsUIIntent.RetryClicked) }) {
-                    Text(text = stringResource(R.string.product_details_error_retry))
+                    Text(stringResource(R.string.product_details_error_retry))
                 }
             }
         }
         return
     }
 
-    val order = state.order
-
-    Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
+    Column(Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            item {
-                OrderDetailsStatusHeader(
-                    status = order.status,
-                    dateLabel = order.dateLabel,
-                    fulfillmentType = order.fulfillmentType,
-                )
-            }
+            item { OrderDetailsStatusHeader(order.orderStatus, order.fulfillmentMethod) }
 
-            if (order.pharmacy != null) {
+            if (order.pharmacyAllocations.count { it.pharmacyName.isNotBlank() } > 1) {
                 item {
-                    OrderDetailsPharmacyCard(
-                        pharmacy = order.pharmacy,
-                        onClick = { onIntent(OrderDetailsUIIntent.PharmacyClicked) },
+                    Text(
+                        stringResource(R.string.offers_pharmacies_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
-
-            if (!order.prescriptionImage.isNullOrBlank()) {
-                item {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(
-                            text = stringResource(R.string.order_details_prescription_title),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                            border = BorderStroke(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
-                            ),
-                        ) {
-                            AsyncImage(
-                                model = order.prescriptionImage,
-                                contentDescription = stringResource(R.string.order_details_prescription_title),
-                                contentScale = ContentScale.FillWidth,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .heightIn(max = 240.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                            )
+            order.pharmacyAllocations.filter { it.pharmacyName.isNotBlank() }.forEach { pharmacy ->
+                item(key = "pharmacy-${pharmacy.subOrderId}") {
+                    OrderDetailsPharmacyCard(
+                        pharmacy,
+                        onClick = {
+                            onIntent(OrderDetailsUIIntent.PharmacyClicked(pharmacy.pharmacyId))
                         }
-                    }
+                    )
                 }
             }
 
             item {
                 Text(
-                    text = stringResource(R.string.order_details_items_title),
+                    stringResource(R.string.order_details_items_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
 
@@ -256,21 +188,35 @@ private fun OrderDetailsContent(
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = BorderStroke(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
+                        1.dp,
+                        MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
                     ),
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        order.lineItems.forEachIndexed { index, lineItem ->
-                            OrderDetailsLineItemRow(
-                                item = lineItem,
-                                onClick = { onIntent(OrderDetailsUIIntent.LineItemClicked(lineItem.productId.toString())) }
-                            )
-                            if (index < order.lineItems.lastIndex) {
-                                HorizontalDivider(
-                                    modifier = Modifier.padding(vertical = 12.dp),
-                                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                    if (order.items.isEmpty()) {
+                        Text(
+                            stringResource(R.string.order_details_items_unavailable),
+                            modifier = Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    } else {
+                        Column(Modifier.padding(16.dp)) {
+                            val allocatedItems = order.pharmacyAllocations.flatMap { allocation ->
+                                allocation.items.map { allocation to it }
+                            }
+                            allocatedItems.forEachIndexed { index, (allocation, item) ->
+                                OrderDetailsLineItemRow(
+                                    item,
+                                    allocation.pharmacyName,
+                                    onClick = {
+                                        onIntent(OrderDetailsUIIntent.LineItemClicked(item.productId.toString()))
+                                    }
                                 )
+                                if (index < allocatedItems.lastIndex) {
+                                    HorizontalDivider(
+                                        Modifier.padding(vertical = 12.dp),
+                                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                                    )
+                                }
                             }
                         }
                     }
@@ -278,25 +224,20 @@ private fun OrderDetailsContent(
             }
 
             item {
-                OrderNoteSection(
-                    titleRes = R.string.order_details_customer_note_title,
-                    note = order.customerNote
-                )
-            }
-
-            item {
                 OrderDetailsPriceSummary(
-                    itemsSubtotal = order.itemsSubtotal.toInt(),
-                    deliveryFee = order.deliveryFee?.toInt(),
-                    finalTotal = order.finalTotal.toInt(),
+                    itemsSubtotal = order.itemSubtotal,
+                    deliveryFee = order.displayedDeliveryFee,
+                    finalTotal = order.displayedTotal,
                 )
             }
         }
 
-        OrderDetailsReorderBar(
-            isLoading = state.isReordering,
-            enabled = !state.isReordering,
-            onReorderClick = { onIntent(OrderDetailsUIIntent.ReorderClicked) },
-        )
+        if (order.orderStatus == OrderStatus.DELIVERED && order.items.isNotEmpty()) {
+            OrderDetailsReorderBar(
+                isLoading = state.isReordering,
+                enabled = !state.isReordering,
+                onReorderClick = { onIntent(OrderDetailsUIIntent.ReorderClicked) },
+            )
+        }
     }
 }

@@ -1,86 +1,79 @@
 package com.medsy.presentation.home.components.activesearch
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.medsy.domain.requests.model.ActiveRequestStatus
 import com.medsy.presentation.R
-import com.medsy.presentation.home.ActiveSearchStatus
 
 @Composable
-fun ActiveSearchContent(
-    status: ActiveSearchStatus,
-    onViewOffersClick: () -> Unit,
-    onSearchWiderRangeClick: () -> Unit,
-    onCancelClick: () -> Unit
-) {
-    when (status) {
-        is ActiveSearchStatus.Searching -> {
-            val stage = when {
-                status.remainingTimeSeconds > 600 -> 1
-                status.remainingTimeSeconds > 300 -> 2
-                else -> 3
-            }
-            ActiveSearchStages(currentStage = stage)
-            Spacer(modifier = Modifier.height(16.dp))
+fun ActiveSearchContent(status: ActiveRequestStatus, onViewOffersClick: () -> Unit) {
+    if (!status.hasAvailableProducts) {
+        val currentStage = when {
+            status.remainingTimeSeconds > 600 -> 1
+            status.remainingTimeSeconds > 300 -> 2
+            else -> 3
+        }
+        ActiveSearchStages(currentStage)
+        Spacer(Modifier.height(16.dp))
+        Text(
+            stringResource(R.string.home_search_status_notification_note),
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+        return
+    }
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = stringResource(R.string.home_search_status_notification_note),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                stringResource(R.string.home_search_status_available_medicines),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(
+                    R.string.home_search_status_medicine_count_format,
+                    status.foundCount,
+                    status.totalCount
+                ),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
             )
         }
-        is ActiveSearchStatus.FirstOfferArrived -> {
-            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = status.foundCount, totalCount = status.totalCount, onViewOffersClick = onViewOffersClick) 
-            Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = onViewOffersClick,
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+        ) {
             Text(
-                text = stringResource(R.string.home_search_status_auto_stop_note),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                stringResource(R.string.home_search_status_view_offer),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
             )
         }
-        is ActiveSearchStatus.MultipleOffersArrived -> {
-            ActiveSearchOfferSummary(minPrice = status.minPrice, foundCount = status.foundCount, totalCount = status.totalCount, onViewOffersClick = onViewOffersClick)
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
-                    .padding(vertical = 12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.home_search_status_offers_available_format, status.totalOffers),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = stringResource(R.string.home_search_status_auto_stop_note),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-        }
+
+        Spacer(Modifier.height(12.dp))
+        Text(
+            stringResource(R.string.home_search_status_auto_stop_note),
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
     }
 }

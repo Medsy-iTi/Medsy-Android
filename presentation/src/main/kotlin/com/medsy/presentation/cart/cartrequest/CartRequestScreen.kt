@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,18 +35,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsyButton
+import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.designsystem.components.location.MedsyLocationPickerScreen
+import com.medsy.designsystem.components.showMessage
 import com.medsy.domain.cart.model.DeliveryMethod
 import com.medsy.domain.cart.model.PaymentOption
 import com.medsy.presentation.R
 import com.medsy.presentation.cart.cartrequest.components.CartRequestOrderSummary
 import com.medsy.presentation.cart.cartrequest.components.DeliveryAddressSection
-import com.medsy.presentation.cart.cartrequest.components.FulfillmentSection
 import com.medsy.presentation.cart.cartrequest.components.PaymentSection
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun CartRequestRoot(
@@ -62,12 +62,14 @@ fun CartRequestRoot(
     BackHandler(enabled = state.isSubmitting) {}
 
     LaunchedEffect(viewModel) {
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 CartRequestUIEffect.NavigateHome -> onNavigateHome()
                 is CartRequestUIEffect.ShowMessage -> {
-                    snackbarHostState.showSnackbar(
-                        ContextCompat.getString(context, effect.messageRes)
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess
                     )
                 }
             }
@@ -109,7 +111,7 @@ fun CartRequestScreen(
     onIntent: (CartRequestUIIntent) -> Unit,
 ) {
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -143,18 +145,11 @@ fun CartRequestScreen(
                     isLoading = state.isSubmitting,
                     snackbarHostState = snackbarHostState,
                 ) {
-                    if (state.isSubmitting) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(22.dp),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            strokeWidth = 2.dp,
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(R.string.cart_request_submit),
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.cart_request_submit),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             }
         },
@@ -195,10 +190,10 @@ fun CartRequestScreen(
                     )
                 }
                 item {
-                    FulfillmentSection(
-                        selected = state.deliveryMethod,
+                    PaymentSection(
+                        selected = state.paymentOption,
                         onSelected = {
-                            onIntent(CartRequestUIIntent.DeliveryMethodSelected(it))
+                            onIntent(CartRequestUIIntent.PaymentOptionSelected(it))
                         },
                     )
                 }
@@ -219,14 +214,7 @@ fun CartRequestScreen(
                         },
                     )
                 }
-                item {
-                    PaymentSection(
-                        selected = state.paymentOption,
-                        onSelected = {
-                            onIntent(CartRequestUIIntent.PaymentOptionSelected(it))
-                        },
-                    )
-                }
+
             }
         }
     }

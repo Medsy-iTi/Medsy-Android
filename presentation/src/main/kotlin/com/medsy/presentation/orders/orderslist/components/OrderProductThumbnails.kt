@@ -17,13 +17,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import com.medsy.designsystem.components.NullableProductImage
 import com.medsy.presentation.R
-import com.medsy.presentation.orders.orderslist.model.OrderProductThumbnail
+import com.medsy.domain.orders.model.MasterOrderItem
 
 @Composable
 fun OrderProductThumbnails(
-    thumbnails: List<OrderProductThumbnail>,
+    thumbnails: List<MasterOrderItem>,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -44,13 +44,11 @@ fun OrderProductThumbnails(
                         shape = RoundedCornerShape(12.dp),
                     ),
             ) {
-                if (thumbnail.imageUrl != null) {
-                    AsyncImage(
-                        model = thumbnail.imageUrl,
-                        contentDescription = stringResource(R.string.orders_product_image_desc),
-                        modifier = Modifier.size(40.dp),
-                    )
-                }
+                NullableProductImage(
+                imageUrl = thumbnail.product?.imageUrl,
+                    contentDescription = stringResource(R.string.orders_product_image_desc),
+                    modifier = Modifier.size(40.dp),
+                )
             }
         }
 

@@ -104,6 +104,10 @@
     <string name="error_forbidden">ليس لديك صلاحية لتنفيذ هذا الإجراء.</string>
     <string name="error_not_found">المورد المطلوب غير موجود.</string>
     <string name="error_server">خطأ في الخادم. يرجى المحاولة لاحقاً.</string>
+    <string name="error_database_constraint">خطأ في قيود قاعدة البيانات.</string>
+    <string name="error_database_full">المساحة التخزينية ممتلئة. تعذر حفظ البيانات.</string>
+    <string name="error_database_corrupt">خطأ في قاعدة البيانات. يرجى مسح بيانات التطبيق أو إعادة التثبيت.</string>
+    <string name="error_database_io">خطأ في قراءة أو كتابة وحدة التخزين.</string>
 
     <string name="success_account_created">تم إنشاء الحساب بنجاح</string>
 
@@ -189,6 +193,11 @@
     <string name="search_favorite_desc">أضف للمفضلة</string>
     <string name="search_add_to_cart_desc">أضف إلى السلة</string>
     <string name="search_added_to_cart">تمت الإضافة إلى السلة</string>
+    <string name="search_added_to_favorites">تمت إضافة %1$s إلى المفضلة</string>
+    <string name="search_removed_from_favorites">تمت إزالة %1$s من المفضلة</string>
+    <string name="profile_my_favourites">المفضلة</string>
+    <string name="profile_my_favourites_subtitle">إدارة منتجاتك المفضلة</string>
+    <string name="favorites_empty">ليس لديك أي منتجات مفضلة بعد.</string>
     <string name="search_empty_title">لا توجد نتائج</string>
     <string name="search_empty_subtitle">جرّب كلمة بحث مختلفة</string>
     <string name="search_sort_title">ترتيب حسب</string>
@@ -208,6 +217,7 @@
 
     <!--  Product Details  -->
     <string name="product_details_share_desc">مشاركة</string>
+    <string name="product_details_favorite_desc">أضف للمفضلة</string>
     <string name="product_details_image_desc">صورة المنتج</string>
     <string name="product_details_pack_info_format">%1$s - %2$s</string>
     <string name="product_details_pharmacist_notice">لا يتم صرف هذا الدواء إلا بعد مراجعة الصيدلي لتحديد الجرعة المناسبة لحالتك.</string>
@@ -349,6 +359,7 @@
     <string name="error_server_message">خطأ في السيرفر: %1$s</string>
     <string name="error_unknown">حدث خطأ غير متوقع، يرجى المحاولة لاحقاً.</string>
     <string name="error_invalid_id">رقم المنتج غير صحيح.</string>
+    <string name="error_payment_failed">فشلت عملية الدفع. يرجى المحاولة مرة أخرى.</string>
 
     <!-- Cart -->
     <string name="cart_title">سلة الطلب</string>
@@ -426,8 +437,8 @@
     <string name="offers_confirm_order_error">فشل تأكيد الطلب. يرجى المحاولة مرة أخرى.</string>
     <string name="offers_load_error">فشل تحميل العروض. يرجى المحاولة مرة أخرى.</string>
     <string name="offers_error_retry">إعادة المحاولة</string>
-   <!--  Active Search Status  -->
-    <string name="cart_request_address_title">عنوان التوصيل</string>
+    <!--  Active Search Status  -->
+    <string name="cart_request_address_title">عنوانك الحالي</string>
     <string name="cart_request_default_address">العنوان الافتراضي</string>
     <string name="cart_request_default_badge">افتراضي</string>
     <string name="cart_request_other_address">استخدام عنوان آخر</string>
@@ -439,6 +450,7 @@
     <string name="cart_request_change_location">تغيير الموقع على الخريطة</string>
     <string name="cart_request_location_confirmed">تم تأكيد الموقع على الخريطة</string>
     <string name="cart_request_location_required">أكد موقع التوصيل على الخريطة</string>
+    <string name="cart_request_address_lookup_failed">تعذّر العثور على عنوان لهذا الموقع. يمكنك إدخاله يدويًا.</string>
     <string name="cart_request_payment_title">كيف ترغب في الدفع؟</string>
     <string name="cart_request_payment_description">اختر طريقة دفع واحدة لهذا الطلب.</string>
     <string name="cart_request_cash">نقدًا</string>
@@ -464,15 +476,15 @@
     <string name="home_search_status_stage_3">المرحلة ٣</string>
     <string name="home_search_status_stage_3_desc">جميع المناطق</string>
     <string name="home_search_status_notification_note">سأرسل لك إشعارًا فور وصول عرض مناسب</string>
-    <string name="home_search_status_first_offer_title">وصل أول عرض!</string>
-    <string name="home_search_status_first_offer_desc">ما زلنا نستقبل عروضًا إضافية</string>
+    <string name="home_search_status_first_offer_title">تم العثور على أدوية</string>
+    <string name="home_search_status_first_offer_desc">يمكنك مراجعة المتاح بينما نواصل البحث.</string>
     <string name="home_search_status_multiple_offers_title">وصلت عدة عروض</string>
     <string name="home_search_status_multiple_offers_desc">يمكنك الآن مقارنة العروض المتاحة</string>
     <string name="home_search_status_available_medicines">الأدوية المتاحة</string>
     <string name="home_search_status_medicine_count_format">%1$d / %2$d دواء</string>
     <string name="home_search_status_starting_from">من</string>
     <string name="home_search_status_price_format">%1$d جنيه</string>
-    <string name="home_search_status_view_offer">عرض العرض</string>
+    <string name="home_search_status_view_offer">مراجعة الأدوية المتاحة</string>
     <string name="home_search_status_compare_offers">مقارنة العروض</string>
     <string name="home_search_status_continue_and_compare">متابعة ومقارنة العروض</string>
     <string name="home_search_status_view_details">عرض تفاصيل الطلب</string>
@@ -545,6 +557,9 @@
     <string name="orders_status_delivering">جاري التوصيل</string>
     <string name="orders_status_delivered">تم التسليم</string>
     <string name="orders_status_cancelled">ملغي</string>
+    <string name="orders_timeline_preparing">التجهيز</string>
+    <string name="orders_timeline_ready">جاهز</string>
+    <string name="orders_timeline_delivered">تم التسليم</string>
     <string name="orders_from_pharmacy_format">من %1$s</string>
     <string name="orders_cancelled_note">تم إلغاء الطلب</string>
     <string name="orders_products_count_format">%1$d منتجات</string>
@@ -572,4 +587,170 @@
     <string name="order_details_reorder">إعادة الطلب</string>
     <string name="order_details_error_load">تعذر تحميل تفاصيل هذا الطلب.</string>
     <string name="reordered_products">تم اضافة المنتجات الى السله بنجاح.</string>
+    <!-- محادثة ميدسي AI -->
+
+    <!-- شاشة الطلبات المؤقتة -->
+    <string name="orders_coming_soon_title">الطلبات قريبًا</string>
+    <string name="orders_coming_soon_body">ستظهر طلباتك الحالية والسابقة هنا في تحديث قادم.</string>
+
+    <!-- Medsy AI chat -->
+    <string name="ai_chat_title">ميدسي AI</string>
+    <string name="ai_chat_online">متصل · دائمًا هنا للمساعدة</string>
+    <string name="ai_chat_new_chat_description">بدء محادثة جديدة</string>
+    <string name="ai_chat_greeting">اسأل ميدسي عن أي شيء</string>
+    <string name="ai_chat_welcome_supporting">اسأل عن الأدوية والأعراض، أضِف منتجات إلى سلتك، اضبط تذكيرات الجرعات، أو أرسل صورة روشتة.</string>
+    <string name="ai_chat_disclaimer">إرشادات فقط — ليست تشخيصًا أو وصفة. تأكد من ملاءمة الدواء لك مع الصيدلي أو الطبيب.</string>
+    <string name="ai_chat_catalog_empty_answer">لم أستطع إيجاد إجابة لذلك. حاول مرة أخرى.</string>
+    <string name="ai_chat_catalog_error_title">تعذّر الوصول إلى ميدسي AI</string>
+    <string name="ai_chat_catalog_retry">حاول مجددًا</string>
+    <string name="ai_chat_history_error_title">تعذّر تحميل محادثتك</string>
+    <string name="ai_chat_history_retry">إعادة تحميل المحادثة</string>
+    <string name="ai_chat_add_to_cart">أضِف إلى السلة</string>
+    <string name="ai_chat_view_product_details">عرض تفاصيل المنتج</string>
+    <string name="ai_chat_price_egp">%1$.2f ج.م</string>
+    <string name="ai_chat_added_to_cart">تمت إضافة الدواء إلى السلة</string>
+    <string name="ai_chat_input_hint">اسأل عن دواء…</string>
+    <string name="ai_chat_attach_description">إرفاق صورة</string>
+    <string name="ai_chat_attach_title">إرسال صورة</string>
+    <string name="ai_chat_attach_camera">التقاط صورة</string>
+    <string name="ai_chat_attach_gallery">اختيار من المعرض</string>
+    <string name="ai_chat_attachment_ready">الصورة جاهزة للإرسال — أضِف تعليقًا إذا أردت</string>
+    <string name="ai_chat_attachment_remove">إزالة الصورة</string>
+    <string name="ai_chat_sent_photo_description">الصورة التي أرسلتها</string>
+    <string name="ai_chat_voice_description">تحدّث برسالتك</string>
+    <string name="ai_chat_send_description">إرسال الرسالة</string>
+    <string name="ai_chat_emergency_numbers_title">أرقام الطوارئ</string>
+    <string name="ai_chat_emergency_ambulance">الإسعاف</string>
+    <string name="ai_chat_emergency_police">الشرطة</string>
+    <string name="ai_chat_emergency_fire">المطافئ</string>
+    <string name="ai_chat_emergency_call">اتصال</string>
+    <string name="ai_chat_specializations_title">تخصصات أطباء مقترحة</string>
+    <string name="ai_chat_category_browse">تصفّح المنتجات</string>
+    <string name="ai_chat_cart_success_title">تمت الإضافة إلى سلتك</string>
+    <string name="ai_chat_cart_success_quantity">×%1$d</string>
+    <string name="ai_chat_cart_success_count">سلتك تحتوي الآن على %1$d منتج</string>
+    <string name="ai_chat_view_cart">عرض السلة</string>
+    <string name="ai_chat_confirm_request_title">طلبك جاهز للتأكيد</string>
+    <string name="ai_chat_confirm_request_button">تأكيد الطلب</string>
+    <string name="ai_chat_reminder_icon_description">تذكير دواء</string>
+    <string name="ai_chat_quick_symptom">عندي صداع</string>
+    <string name="ai_chat_quick_symptom_question">عندي صداع خفيف، أعمل إيه؟</string>
+    <string name="ai_chat_quick_add_cart">ضيف بانادول للسلة</string>
+    <string name="ai_chat_quick_add_cart_question">ضيف بانادول للسلة</string>
+    <string name="ai_chat_quick_reminder">فكرني بدوائي</string>
+    <string name="ai_chat_quick_reminder_question">فكرني آخد دوائي مرتين في اليوم</string>
+    <string name="ai_chat_quick_categories">إيه الأقسام اللي عندكم؟</string>
+    <string name="ai_chat_quick_categories_question">إيه أقسام المنتجات اللي عندكم؟</string>
+    <string name="ai_chat_quick_usage">إزاي آخد دواء معين؟</string>
+    <string name="ai_chat_quick_usage_question">إزاي آخد بانادول إكسترا؟</string>
+    <string name="ai_chat_quick_photo">مسح صورة روشتة</string>
+    <string name="ai_chat_new_chat_title">بدء محادثة جديدة؟</string>
+    <string name="ai_chat_new_chat_body">سيؤدي هذا إلى حذف سجل محادثتك من الخادم والبدء من جديد.</string>
+    <string name="ai_chat_cancel">إلغاء</string>
+    <string name="ai_chat_start_new">بدء جديدة</string>
+    <string name="ai_chat_voice_prompt">تحدث إلى ميدسي AI</string>
+    <string name="ai_chat_voice_unavailable">التعرف على الكلام غير متاح على هذا الجهاز.</string>
+    <string name="ai_chat_dialer_unavailable">لا يوجد تطبيق هاتف متاح.</string>
+
+    <!-- Cart drug-interaction warnings -->
+    <string name="cart_interactions_checking">جارٍ فحص التفاعلات الدوائية…</string>
+    <string name="cart_interactions_ai_note">فُحصت بالذكاء الاصطناعي · للاسترشاد فقط — اسأل الصيدلي</string>
+    <string name="cart_interactions_expand">عرض النصيحة</string>
+    <string name="cart_interactions_collapse">إخفاء النصيحة</string>
+    <string name="offers_unknown_product">منتج غير معروف</string>
+    <string name="offers_alternative_provided">تم توفير بديل</string>
+    <string name="offers_out_of_stock">غير متوفر</string>
+    <string name="offers_estimated_price">السعر الإجمالي المتوقع: %1$s ج.م</string>
+    <string name="common_back">رجوع</string>
+    <string name="offers_select_items">اختيار الأدوية</string>
+    <string name="offers_single_offer_explanation">هذه أفضل نتيجة مجمعة تم العثور عليها لطلبك. اختر الأدوية والبدائل التي تريدها قبل المتابعة.</string>
+    <string name="offers_requested_product_found">تم العثور على الدواء المطلوب</string>
+    <string name="offers_supplied_by">مقدم من %1$s</string>
+    <string name="offers_selected_medicines">الأدوية المختارة</string>
+    <string name="offers_quantity_format">الكمية: %1$d</string>
+    <string name="offers_pharmacies_title">الصيدليات الموردة</string>
+    <string name="offers_pharmacies_unavailable">تفاصيل الصيدليات غير متاحة حاليًا.</string>
+    <string name="offers_pharmacy_name_bullet">• %1$s</string>
+    <string name="offers_fulfillment_title">اختر طريقة استلام طلبك</string>
+    <string name="offers_fulfillment_total">الإجمالي: %1$s ج.م</string>
+    <string name="order_details_payment_required_title">الدفع مطلوب</string>
+    <string name="order_details_payment_required_message">أكمل الدفع بالبطاقة قبل انتهاء مهلة الدفع حتى تتمكن الصيدليات من متابعة تجهيز طلبك.</string>
+    <string name="order_details_pay_now">ادفع الآن</string>
+    <string name="order_details_try_payment_again">حاول الدفع مرة أخرى</string>
+    <string name="order_details_items_unavailable">تفاصيل أصناف الطلب غير متاحة حاليًا.</string>
+    <string name="order_status_pending">في انتظار اختيار طريقة الاستلام</string>
+    <string name="order_status_pending_payment">في انتظار الدفع</string>
+    <string name="order_status_preparing">جارٍ التجهيز</string>
+    <string name="order_status_ready_for_pickup">جاهز للاستلام</string>
+    <string name="order_status_ready_for_delivery">جاهز للتوصيل</string>
+    <string name="order_status_out_for_delivery">خرج للتوصيل</string>
+    <string name="orders_timeline_on_the_way">في الطريق</string>
+    <string name="order_status_delivered">تم التوصيل</string>
+    <string name="order_status_cancelled">ملغي</string>
+    <string name="order_status_unknown">الحالة غير متاحة</string>
+    <string name="home_continue_order_title">أكمل طلبك</string>
+    <string name="home_continue_order_message">تم حفظ اختيار الأدوية. تابع لاختيار طريقة الاستلام أو إكمال الدفع.</string>
+    <string name="home_continue_order_action">متابعة الطلب</string>
+    <string name="offers_payment_cash">نقدًا</string>
+    <string name="offers_payment_card">الدفع بالبطاقة</string>
+    <string name="offers_payment_unknown">طريقة الدفع غير متاحة</string>
+    <!-- تذكيرات الأدوية -->
+    <string name="profile_my_reminders">تذكيراتي</string>
+    <string name="profile_my_reminders_subtitle">عرض تذكيرات الأدوية وإدارتها</string>
+    <string name="reminder_list_title">تذكيراتي</string>
+    <string name="reminder_status_saving">جارٍ حفظ التذكير…</string>
+    <string name="reminder_status_scheduled">تم الحفظ والجدولة</string>
+    <string name="reminder_status_notifications_disabled">تم الحفظ · الإشعارات متوقفة</string>
+    <string name="reminder_status_save_failed">تعذر حفظ هذا التذكير</string>
+    <string name="reminder_notifications_disabled">تم حفظ التذكير، لكن الإشعارات متوقفة.</string>
+    <string name="reminder_notifications_enabled">تم تفعيل إشعارات الأدوية.</string>
+    <string name="reminder_exact_alarm_title">هل تسمح بالتذكيرات الدقيقة؟</string>
+    <string name="reminder_exact_alarm_body">تمت جدولة التذكير بشكل تقريبي. اسمح لميدسي بالوصول إلى المنبهات والتذكيرات ليصلك في وقت أقرب إلى الموعد المحدد.</string>
+    <string name="reminder_enable_exact_alarms">السماح بالتذكيرات الدقيقة</string>
+    <string name="reminder_use_approximate_alarms">الاستمرار بالتوقيت التقريبي</string>
+    <string name="reminder_battery_title">ساعد التذكيرات على الوصول بانتظام</string>
+    <string name="reminder_battery_body">قد تؤخر بعض الهواتف التذكيرات لتوفير البطارية. راجع إعدادات بطارية ميدسي إذا وصلت التذكيرات متأخرة.</string>
+    <string name="reminder_open_battery_settings">مراجعة الإعدادات</string>
+    <string name="reminder_not_now">ليس الآن</string>
+    <string name="reminder_notifications_off_title">إشعارات الأدوية متوقفة</string>
+    <string name="reminder_notifications_off_body">تذكيراتك محفوظة، لكن ميدسي لن يتمكن من تنبيهك حتى تفعّل الإشعارات.</string>
+    <string name="reminder_enable_notifications">تفعيل الإشعارات</string>
+    <string name="reminder_approximate_title">قد تصل التذكيرات متأخرة</string>
+    <string name="reminder_approximate_body">اسمح بالمنبهات الدقيقة ليصلك تذكير الدواء في وقت أقرب إلى موعده.</string>
+    <string name="reminder_empty_title">لا توجد تذكيرات أدوية</string>
+    <string name="reminder_empty_body">اطلب من ميدسي AI أن يذكّرك عندما يحين موعد تناول الدواء.</string>
+    <plurals name="reminder_duration_days">
+        <item quantity="zero">%d يوم</item>
+        <item quantity="one">يوم واحد</item>
+        <item quantity="two">يومان</item>
+        <item quantity="few">%d أيام</item>
+        <item quantity="many">%d يومًا</item>
+        <item quantity="other">%d يوم</item>
+    </plurals>
+    <string name="reminder_duration_and_end">%1$s · ينتهي في %2$s</string>
+    <string name="reminder_time_separator"> · </string>
+    <string name="reminder_active">نشط</string>
+    <string name="reminder_completed">مكتمل</string>
+    <string name="reminder_delete_description">حذف تذكير %1$s</string>
+    <string name="reminder_delete_title">حذف التذكير؟</string>
+    <string name="reminder_delete_body">سيوقف ميدسي جميع إشعارات %1$s ويحذف هذا التذكير.</string>
+    <string name="reminder_delete_confirm">حذف</string>
+    <string name="reminder_deleted">تم حذف التذكير.</string>
+    <string name="reminder_add">إضافة تذكير</string>
+    <string name="reminder_add_title">إضافة تذكير دواء</string>
+    <string name="reminder_medicine_name_label">اسم الدواء</string>
+    <string name="reminder_times_label">مواعيد التذكير</string>
+    <string name="reminder_no_times_added">لم تُضف أي مواعيد بعد</string>
+    <string name="reminder_add_time">إضافة موعد</string>
+    <string name="reminder_remove_time_description">إزالة موعد %1$s</string>
+    <string name="reminder_duration_label">المدة</string>
+    <string name="reminder_decrease_duration">تقليل المدة</string>
+    <string name="reminder_increase_duration">زيادة المدة</string>
+    <string name="reminder_save">حفظ</string>
+    <string name="reminder_saving">جارٍ الحفظ…</string>
+    <string name="reminder_cancel">إلغاء</string>
+    <string name="reminder_invalid_details">أدخل اسم الدواء وأضف موعد تذكير واحدًا على الأقل.</string>
+    <string name="reminder_manual_saved">تم حفظ التذكير وجدولته.</string>
+    <string name="reminder_saved_notifications_disabled">تم حفظ التذكير. فعّل الإشعارات لاستلامه.</string>
+    <string name="reminder_saved_schedule_failed">تم حفظ التذكير، لكن تعذرت جدولته. حاول تفعيل الإشعارات من شاشة تذكيراتي.</string>
 </resources>

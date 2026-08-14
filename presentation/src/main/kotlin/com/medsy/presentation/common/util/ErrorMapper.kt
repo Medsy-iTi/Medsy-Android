@@ -16,6 +16,11 @@ fun MedsyError.toMessageRes(): Int = when (this) {
 @StringRes
 private fun MedsyError.Local.resolveLocalError(): Int = when (this) {
     MedsyError.Local.MEDIA -> R.string.prescription_media_error
+    MedsyError.Local.DATABASE_CONSTRAINT -> R.string.error_database_constraint
+    MedsyError.Local.DATABASE_FULL -> R.string.error_database_full
+    MedsyError.Local.DATABASE_CORRUPT -> R.string.error_database_corrupt
+    MedsyError.Local.DATABASE_IO -> R.string.error_database_io
+    MedsyError.Local.DATABASE_ERROR,
     MedsyError.Local.UNKNOWN -> R.string.error_generic
 }
 
@@ -24,6 +29,7 @@ private fun MedsyError.Validation.resolveValidationError(): Int = when (this) {
     MedsyError.Validation.REQUIRED_FIELDS -> R.string.auth_error_required_field
     MedsyError.Validation.INVALID_PHONE_NUMBER -> R.string.error_phone_invalid
     MedsyError.Validation.INVALID_OTP -> R.string.auth_invalid_code
+    MedsyError.Validation.INVALID_REMINDER_DETAILS -> R.string.reminder_invalid_details
 }
 
 @StringRes

@@ -19,10 +19,16 @@ sealed interface MedsyError {
         REQUIRED_FIELDS,
         INVALID_PHONE_NUMBER,
         INVALID_OTP,
+        INVALID_REMINDER_DETAILS,
     }
 
     enum class Local : MedsyError {
         MEDIA,
+        DATABASE_CONSTRAINT,
+        DATABASE_FULL,
+        DATABASE_CORRUPT,
+        DATABASE_IO,
+        DATABASE_ERROR,
         UNKNOWN,
     }
 }

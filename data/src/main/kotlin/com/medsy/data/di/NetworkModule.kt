@@ -1,6 +1,7 @@
 package com.medsy.data.di
 
 import com.medsy.data.BuildConfig
+import com.medsy.data.aichat.remote.AiService
 import com.medsy.data.prescription.remote.AiInterceptor
 import com.medsy.data.remote.api.ApiService
 import com.medsy.data.remote.auth.AuthInterceptor
@@ -12,12 +13,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.Locale
+import java.util.concurrent.TimeUnit
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -40,6 +43,10 @@ object NetworkModule {
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .callTimeout(2, TimeUnit.MINUTES)
             .addInterceptor { chain ->
                 val original = chain.request()
                 val url = original.url.newBuilder()
@@ -70,6 +77,15 @@ object NetworkModule {
             .build()
     }
 
+    @Provides
+    @Singleton
+    @Named("SseClient")
+    fun provideSseOkHttpClient(okHttpClient: OkHttpClient): OkHttpClient =
+        okHttpClient.newBuilder()
+            .readTimeout(0, TimeUnit.MILLISECONDS)
+            .callTimeout(0, TimeUnit.MILLISECONDS)
+            .build()
+
 
     @Provides
     @Singleton
@@ -93,4 +109,9 @@ object NetworkModule {
         return retrofit.create(AuthApi::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideAiService(retrofit: Retrofit): AiService {
+        return retrofit.create(AiService::class.java)
+    }
 }

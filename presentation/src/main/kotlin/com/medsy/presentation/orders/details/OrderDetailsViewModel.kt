@@ -3,7 +3,6 @@ package com.medsy.presentation.orders.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.model.CartItemInput
-import com.medsy.domain.common.fold
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.domain.orders.usecase.GetOrderByIdUseCase
@@ -25,60 +24,80 @@ class OrderDetailsViewModel @Inject constructor(
     private val getOrderByIdUseCase: GetOrderByIdUseCase,
     private val reOrderUseCase: ReOrderUseCase,
 ) : ViewModel() {
+    private var orderId: Long? = null
 
-    private var orderId: String = ""
-    private var hasLoadedInitialData = false
+    private val _state = MutableStateFlow(OrderDetailsUIState())
+    val state = _state.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5_000),
+        OrderDetailsUIState(),
+    )
+
+    private val _effect = Channel<OrderDetailsUIEffect>(Channel.BUFFERED)
+    val effect = _effect.receiveAsFlow()
 
     fun init(id: String) {
-        if (orderId != id) {
-            orderId = id
+        val parsed = id.toLongOrNull()
+        if (parsed == null) {
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    errorMessageRes = R.string.order_details_error_load
+                )
+            }
+        } else if (orderId != parsed) {
+            orderId = parsed
             loadOrderDetails()
         }
     }
 
-    private val _state = MutableStateFlow(OrderDetailsUIState())
-    val state = _state
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = OrderDetailsUIState(),
-        )
-
-    private val _effect = Channel<OrderDetailsUIEffect>(capacity = Channel.BUFFERED)
-    val effect = _effect.receiveAsFlow()
-
     fun onIntent(intent: OrderDetailsUIIntent) {
         when (intent) {
-            OrderDetailsUIIntent.BackClicked ->
-                sendEffect(OrderDetailsUIEffect.NavigateBack)
-
-            OrderDetailsUIIntent.RetryClicked -> loadOrderDetails(isPullToRefresh = false)
-
+            OrderDetailsUIIntent.BackClicked -> sendEffect(OrderDetailsUIEffect.NavigateBack)
+            OrderDetailsUIIntent.RetryClicked -> loadOrderDetails()
             OrderDetailsUIIntent.Refresh -> loadOrderDetails(isPullToRefresh = true)
+            is OrderDetailsUIIntent.PharmacyClicked ->
+                sendEffect(OrderDetailsUIEffect.NavigateToPharmacyProfile(intent.pharmacyId))
 
-            OrderDetailsUIIntent.PharmacyClicked -> {
-                _state.value.order?.pharmacy?.id?.let { pharmacyId ->
-                    sendEffect(OrderDetailsUIEffect.NavigateToPharmacyProfile(pharmacyId))
-                }
-            }
-
-            OrderDetailsUIIntent.ReorderClicked -> {
-                reOrder()
-            }
-
+            OrderDetailsUIIntent.ReorderClicked -> reorder()
             is OrderDetailsUIIntent.LineItemClicked ->
                 sendEffect(OrderDetailsUIEffect.NavigateToProductDetails(intent.productId))
         }
     }
 
-    private fun reOrder() {
-        val currentOrder = state.value.order ?: return
-        val items = currentOrder.lineItems.map {
-            CartItemInput(
-                productId = it.productId.toInt(),
-                quantity = it.quantity,
-            )
+    private fun loadOrderDetails(isPullToRefresh: Boolean = false) {
+        val id = orderId ?: return
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isLoading = !isPullToRefresh,
+                    isRefreshing = isPullToRefresh,
+                    errorMessageRes = null,
+                )
+            }
+            getOrderByIdUseCase(id)
+                .onSuccess { order ->
+                    _state.update {
+                        it.copy(isLoading = false, isRefreshing = false, order = order)
+                    }
+                }
+                .onError { error ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isRefreshing = false,
+                            errorMessageRes = error.toMessageRes(),
+                        )
+                    }
+                }
         }
+    }
+
+    private fun reorder() {
+        val items = _state.value.order?.items.orEmpty().map {
+            CartItemInput(productId = it.productId.toInt(), quantity = it.quantity)
+        }
+        if (items.isEmpty()) return
         viewModelScope.launch {
             _state.update { it.copy(isReordering = true) }
             reOrderUseCase(items)
@@ -93,58 +112,7 @@ class OrderDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun loadOrderDetails(isPullToRefresh: Boolean = false) {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isLoading = !isPullToRefresh,
-                    isRefreshing = isPullToRefresh,
-                    errorMessageRes = null
-                )
-            }
-
-            val idAsLong = orderId.toLongOrNull()
-            if (idAsLong == null) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        isRefreshing = false,
-                        errorMessageRes = R.string.order_details_error_load
-                    )
-                }
-                return@launch
-            }
-
-            val result = getOrderByIdUseCase(idAsLong)
-
-            result.fold(
-                onSuccess = { domainOrder ->
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            order = domainOrder.toPresentation(),
-                            errorMessageRes = null
-                        )
-                    }
-                },
-                onError = { error ->
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            errorMessageRes = error.toMessageRes()
-                        )
-                    }
-                }
-            )
-        }
-    }
-
     private fun sendEffect(effect: OrderDetailsUIEffect) {
-        viewModelScope.launch {
-            _effect.send(effect)
-        }
+        viewModelScope.launch { _effect.send(effect) }
     }
-
 }

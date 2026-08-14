@@ -1,30 +1,31 @@
 package com.medsy.domain.offers.repository
 
-import com.medsy.domain.common.EmptyMedsyResult
 import com.medsy.domain.common.MedsyError
 import com.medsy.domain.common.MedsyResult
-import com.medsy.domain.offers.model.OffersPage
+import com.medsy.domain.offers.model.FulfillmentConfirmation
 import com.medsy.domain.offers.model.RequestResult
+import com.medsy.domain.offers.model.RequestResultEvent
+import com.medsy.domain.offers.model.SelectionDraft
+import com.medsy.domain.offers.model.SelectedOfferItem
+import com.medsy.domain.orders.model.FulfillmentMethod
 import kotlinx.coroutines.flow.Flow
 
 interface OffersRepository {
-    suspend fun getOffersForRequest(
+    suspend fun selectItems(
         requestId: Long,
-        page: Int = 0,
-        size: Int = 20,
-    ): MedsyResult<OffersPage, MedsyError.Remote>
+        selectedItems: List<SelectedOfferItem>,
+    ): MedsyResult<SelectionDraft, MedsyError.Remote>
 
-    fun observeOffersWithPolling(
+    suspend fun confirmFulfillment(
         requestId: Long,
-        pollIntervalMillis: Long = 5000
-    ): Flow<MedsyResult<OffersPage, MedsyError.Remote>>
-
-    suspend fun acceptOffer(
-        requestId: Long,
-        selectedRequestItemIds: List<Long>,
-    ): MedsyResult<com.medsy.domain.offers.model.ConfirmOfferResult, MedsyError.Remote>
+        fulfillmentMethod: FulfillmentMethod,
+    ): MedsyResult<FulfillmentConfirmation, MedsyError.Remote>
 
     suspend fun getRequestResult(
         requestId: Long,
     ): MedsyResult<RequestResult, MedsyError.Remote>
+
+    fun streamRequestResult(
+        requestId: Long,
+    ): Flow<MedsyResult<RequestResultEvent, MedsyError.Remote>>
 }

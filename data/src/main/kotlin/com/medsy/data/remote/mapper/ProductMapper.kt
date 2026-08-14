@@ -7,7 +7,7 @@ fun ProductDto.toDomain(): Product {
     return Product(
         id = id,
         name = name,
-        scientificName = scientificName ?: "",
+        scientificName = scientificName,
         price = price,
         imageUrl = imageUrl ?: "",
         categoryId = categoryId,

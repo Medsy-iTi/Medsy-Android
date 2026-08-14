@@ -32,19 +32,17 @@ fun OrderCard(
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     onClick: () -> Unit
 ) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
-
     Column(
         modifier = modifier
             .shadow(
-                elevation = if (isDark) 12.dp else 6.dp,
+                elevation = 12.dp,
                 shape = RoundedCornerShape(16.dp),
                 ambientColor = MaterialTheme.colorScheme.primary,
                 spotColor = MaterialTheme.colorScheme.primary
             )
             .background(containerColor, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
-            .padding(16.dp),
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(

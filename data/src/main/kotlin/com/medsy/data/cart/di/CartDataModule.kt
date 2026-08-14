@@ -1,6 +1,8 @@
 package com.medsy.data.cart.di
 
+import com.medsy.data.cart.repository.CartLocationRepositoryImpl
 import com.medsy.data.cart.repository.CartRepositoryImpl
+import com.medsy.domain.cart.repository.CartLocationRepository
 import com.medsy.domain.cart.repository.CartRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,10 @@ abstract class CartDataModule {
     abstract fun bindCartRepository(
         implementation: CartRepositoryImpl,
     ): CartRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCartLocationRepository(
+        implementation: CartLocationRepositoryImpl,
+    ): CartLocationRepository
 }

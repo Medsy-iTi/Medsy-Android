@@ -6,5 +6,6 @@ sealed interface CartRequestUIEffect {
     data object NavigateHome : CartRequestUIEffect
     data class ShowMessage(
         @StringRes val messageRes: Int,
+        val isSuccess: Boolean = false
     ) : CartRequestUIEffect
 }

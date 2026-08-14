@@ -5,15 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.cart.model.DeliveryMethod
 import com.medsy.domain.cart.model.ProductsRequest
-import com.medsy.domain.cart.usecase.ClearCartDraftUseCase
+import com.medsy.domain.cart.usecase.GetAddressFromLocationUseCase
 import com.medsy.domain.cart.usecase.GetCartUseCase
 import com.medsy.domain.cart.usecase.ObserveCartDraftUseCase
 import com.medsy.domain.cart.usecase.SubmitProductsRequestUseCase
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
 import com.medsy.domain.profile.usecase.GetProfileUseCase
+import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,9 +31,9 @@ import javax.inject.Inject
 class CartRequestViewModel @Inject constructor(
     private val getCart: GetCartUseCase,
     private val observeCartDraft: ObserveCartDraftUseCase,
-    private val clearCartDraft: ClearCartDraftUseCase,
     private val getProfile: GetProfileUseCase,
     private val submitProductsRequest: SubmitProductsRequestUseCase,
+    private val getAddressFromLocation: GetAddressFromLocationUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(CartRequestState())
     val state = _state
@@ -44,6 +46,7 @@ class CartRequestViewModel @Inject constructor(
 
     private val _effect = Channel<CartRequestUIEffect>(capacity = Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
+    private var addressLookupJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -79,14 +82,10 @@ class CartRequestViewModel @Inject constructor(
                 it.copy(isMapPickerVisible = false)
             }
 
-            is CartRequestUIIntent.LocationSelected -> _state.update {
-                it.copy(
-                    isMapPickerVisible = false,
-                    customLatitude = intent.latitude,
-                    customLongitude = intent.longitude,
-                    hasConfirmedCustomLocation = true,
-                )
-            }
+            is CartRequestUIIntent.LocationSelected -> resolveAddress(
+                latitude = intent.latitude,
+                longitude = intent.longitude,
+            )
 
             is CartRequestUIIntent.PaymentOptionSelected -> _state.update {
                 it.copy(paymentOption = intent.paymentOption)
@@ -101,6 +100,39 @@ class CartRequestViewModel @Inject constructor(
     private suspend fun loadRequest() = coroutineScope {
         launch { loadCart() }
         launch { loadProfile() }
+    }
+
+    private fun resolveAddress(latitude: Double, longitude: Double) {
+        addressLookupJob?.cancel()
+        _state.update {
+            it.copy(
+                isMapPickerVisible = false,
+                customAddress = "",
+                customLatitude = latitude,
+                customLongitude = longitude,
+                hasConfirmedCustomLocation = true,
+                isResolvingAddress = true,
+            )
+        }
+        addressLookupJob = viewModelScope.launch {
+            getAddressFromLocation(latitude, longitude)
+                .onSuccess { address ->
+                    _state.update {
+                        it.copy(
+                            customAddress = address,
+                            isResolvingAddress = false,
+                        )
+                    }
+                }
+                .onError {
+                    _state.update { it.copy(isResolvingAddress = false) }
+                    _effect.send(
+                        CartRequestUIEffect.ShowMessage(
+                            R.string.cart_request_address_lookup_failed
+                        )
+                    )
+                }
+        }
     }
 
     private suspend fun loadCart() {
@@ -221,7 +253,6 @@ class CartRequestViewModel @Inject constructor(
                     paymentMethod = currentState.paymentOption,
                 )
             ).onSuccess {
-                clearCartDraft()
                 _state.update { it.copy(isSubmitting = false) }
                 _effect.send(CartRequestUIEffect.NavigateHome)
             }.onError { error ->

@@ -27,23 +27,18 @@ fun OrderDetailsTopBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-
             .statusBarsPadding()
             .padding(horizontal = 4.dp, vertical = 4.dp),
     ) {
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier.align(Alignment.CenterStart),
-        ) {
+        IconButton(onClick = onBackClick, modifier = Modifier.align(Alignment.CenterStart)) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = stringResource(R.string.content_desc_back),
                 tint = MaterialTheme.colorScheme.onSurface,
             )
         }
-
         Text(
-            text = stringResource(R.string.order_details_title_format, orderId),
+            stringResource(R.string.order_details_title_format, orderId),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,

@@ -16,6 +16,9 @@ val medsyLocalProperties = Properties().apply {
 require(!medsyLocalProperties.getProperty("MAPS_API_KEY").isNullOrBlank()) {
     "MAPS_API_KEY must be configured in the gitignored local.properties file."
 }
+require(!medsyLocalProperties.getProperty("STRIPE_PUBLISHABLE_KEY").isNullOrBlank()) {
+    "STRIPE_PUBLISHABLE_KEY must be configured in the gitignored local.properties file."
+}
 
 android {
     namespace = "com.medsy.medsy"
@@ -25,10 +28,11 @@ android {
         applicationId = "com.medsy.medsy"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -70,7 +74,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.lottie.compose)
 
     // splash screen
     implementation(libs.androidx.core.splashscreen)

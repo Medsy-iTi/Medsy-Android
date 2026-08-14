@@ -1,27 +1,54 @@
 package com.medsy.medsy.nav.rootnavigation
 
-import android.content.Context
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 
-fun <T : NavKey> NavBackStack<T>.navigateSingleTop(
-    route: T
-) {
+fun <T : NavKey> NavBackStack<T>.push(route: T) {
     if (lastOrNull() != route) {
         add(route)
     }
 }
 
-inline fun <reified T : NavKey> NavBackStack<*>.popIfCurrentIs() {
-    if (lastOrNull() is T) {
-        removeLastOrNull()
-    }
+fun <T : NavKey> NavBackStack<T>.pop(): Boolean {
+    if (size <= 1) return false
+
+    removeLastOrNull()
+    return true
 }
 
-fun NavBackStack<NavKey>.onBack(context: Context) {
-    if (size > 1) {
+fun <T : NavKey> NavBackStack<T>.popIfCurrent(route: T): Boolean {
+    if (lastOrNull() != route) return false
+
+    return pop()
+}
+
+fun <T : NavKey> NavBackStack<T>.replace(route: T) {
+    removeLastOrNull()
+    push(route)
+}
+
+fun <T : NavKey> NavBackStack<T>.setRoot(root: T) {
+    clear()
+    add(root)
+}
+
+fun <T : NavKey> NavBackStack<T>.popTo(route: T): Boolean {
+    val routeIndex = indexOfLast { it == route }
+    if (routeIndex < 0) return false
+
+    while (lastIndex > routeIndex) {
         removeLastOrNull()
-    } else {
-        context.findActivity()?.finish()
+    }
+    return true
+}
+
+fun NavBackStack<NavKey>.navigateToNestedDestination(
+    destination: Route,
+    onDestinationRequested: (Route) -> Unit,
+) {
+    onDestinationRequested(destination)
+
+    if (!popTo(Route.NestedNav)) {
+        setRoot(Route.NestedNav)
     }
 }

@@ -1,13 +1,14 @@
 package com.medsy.data.cart.mapper
 
 import com.medsy.data.cart.remote.CartDto
-import com.medsy.data.cart.remote.CartItemInputDto
 import com.medsy.data.cart.remote.CartItemDto
+import com.medsy.data.cart.remote.CartItemInputDto
 import com.medsy.data.cart.remote.ProductsRequestDto
 import com.medsy.domain.cart.model.Cart
 import com.medsy.domain.cart.model.CartItem
 import com.medsy.domain.cart.model.CartItemInput
 import com.medsy.domain.cart.model.ProductsRequest
+import com.medsy.domain.cart.model.PaymentOption
 
 fun CartItemInput.toDto(): CartItemInputDto = CartItemInputDto(
     productId = productId,
@@ -32,14 +33,17 @@ fun ProductsRequest.toDto(): ProductsRequestDto = ProductsRequestDto(
     deliveryAddress = deliveryAddress,
     deliveryLatitude = deliveryLatitude,
     deliveryLongitude = deliveryLongitude,
-    paymentMethod = paymentMethod.name,
+    paymentMethod = when (paymentMethod) {
+        PaymentOption.CASH -> "CASH"
+        PaymentOption.VISA -> "CARD"
+    },
 )
 
 private fun CartItemDto.toDomain(): CartItem = CartItem(
     id = id,
     productId = productId,
-    productName = productName,
-    imageUrl = imageUrl,
+    productName = product.name.ifBlank { product.productName.orEmpty() },
+    imageUrl = product.imageUrl?.takeIf(String::isNotBlank),
     unitPriceEgp = unitPrice,
     quantity = quantity,
     subtotalEgp = subtotal,

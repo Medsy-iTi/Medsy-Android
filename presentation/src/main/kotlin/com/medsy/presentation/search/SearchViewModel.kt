@@ -2,12 +2,16 @@ package com.medsy.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medsy.domain.auth.usecase.ObserveSessionUseCase
 import com.medsy.domain.cart.usecase.AddCartItemUseCase
 import com.medsy.domain.categories.usecase.GetCategoriesUseCase
-import com.medsy.domain.common.LocaleConstants
 import com.medsy.domain.common.fold
 import com.medsy.domain.common.onError
 import com.medsy.domain.common.onSuccess
+import com.medsy.domain.favorites.model.FavoriteProduct
+import com.medsy.domain.favorites.usecase.AddFavoriteUseCase
+import com.medsy.domain.favorites.usecase.GetFavoritesUseCase
+import com.medsy.domain.favorites.usecase.RemoveFavoriteUseCase
 import com.medsy.domain.search.model.SearchProduct
 import com.medsy.domain.search.usecase.SearchProductsUseCase
 import com.medsy.presentation.R
@@ -22,7 +26,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +33,10 @@ class SearchViewModel @Inject constructor(
     private val searchProductsUseCase: SearchProductsUseCase,
     private val addCartItem: AddCartItemUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase,
+    private val observeSessionUseCase: ObserveSessionUseCase,
 ) : ViewModel() {
 
     private val allFetchedProducts = mutableListOf<SearchProduct>()
@@ -53,6 +60,7 @@ class SearchViewModel @Inject constructor(
     init {
         reloadProducts()
         loadCategories()
+        observeSessionAndFavorites()
     }
 
     fun onIntent(intent: SearchUIIntent) {
@@ -74,14 +82,17 @@ class SearchViewModel @Inject constructor(
                     SearchFilterId.SORT.name -> {
                         _state.value = _state.value.copy(isSortBottomSheetOpen = true)
                     }
+
                     SearchFilterId.PRICE.name -> {
                         _state.value = _state.value.copy(isPriceBottomSheetOpen = true)
                     }
+
                     SearchFilterId.CATEGORY.name -> {
                         _state.value = _state.value.copy(isCategoryBottomSheetOpen = true)
                     }
                 }
             }
+
             is SearchUIIntent.SortOptionSelected -> {
                 _state.update { currentState ->
                     currentState.copy(
@@ -130,11 +141,7 @@ class SearchViewModel @Inject constructor(
                 sendEffect(SearchUIEffect.NavigateToProductDetails(intent.productId))
 
             is SearchUIIntent.FavoriteClicked -> {
-                _state.value = _state.value.copy(
-                    favoriteProductIds = _state.value.favoriteProductIds.let { current ->
-                        if (intent.productId in current) current - intent.productId else current + intent.productId
-                    }
-                )
+                toggleFavorite(intent.productId)
             }
 
             is SearchUIIntent.AddToCartClicked -> addToCart(intent.productId)
@@ -150,7 +157,12 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             addCartItem(productId)
                 .onSuccess {
-                    sendEffect(SearchUIEffect.ShowMessage(R.string.search_added_to_cart))
+                    sendEffect(
+                        SearchUIEffect.ShowMessage(
+                            R.string.search_added_to_cart,
+                            isSuccess = true
+                        )
+                    )
                 }
                 .onError { error ->
                     sendEffect(SearchUIEffect.ShowMessage(error.toMessageRes()))
@@ -254,8 +266,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun SearchProduct.toUi(): SearchProductUi {
-        val isArabic = Locale.getDefault().language == LocaleConstants.ARABIC_TAG
-        val localizedName = if (isArabic && arabicName.isNotBlank()) arabicName else name
         val subtitle = if (scientificName.isNotBlank() && company.isNotBlank()) {
             "$scientificName · $company"
         } else if (scientificName.isNotBlank()) {
@@ -265,10 +275,114 @@ class SearchViewModel @Inject constructor(
         }
         return SearchProductUi(
             id = id.toString(),
-            name = localizedName,
+            name = name,
             subtitle = subtitle,
             priceEgp = price.toInt(),
             imageUrl = imageUrl
+        )
+    }
+
+    private var currentUserId: Long = 0L
+    private var favoritesJob: Job? = null
+
+    private fun observeSessionAndFavorites() {
+        viewModelScope.launch {
+            observeSessionUseCase().collect { session ->
+                val newUserId = session?.user?.id ?: 0L
+                if (newUserId != currentUserId) {
+                    currentUserId = newUserId
+                    observeFavoritesForUser(newUserId)
+                }
+            }
+        }
+    }
+
+    private fun observeFavoritesForUser(userId: Long) {
+        favoritesJob?.cancel()
+        if (userId == 0L) {
+            _state.update { it.copy(favoriteProductIds = emptySet()) }
+            return
+        }
+        favoritesJob = viewModelScope.launch {
+            getFavoritesUseCase(userId).collect { result ->
+                result.onSuccess { favorites ->
+                    _state.update { currentState ->
+                        currentState.copy(
+                            favoriteProductIds = favorites.map { it.id.toString() }.toSet()
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun toggleFavorite(productId: String) {
+        val idInt = productId.toIntOrNull() ?: return
+        val userId = currentUserId
+        if (userId == 0L) return
+
+        val currentFavorites = _state.value.favoriteProductIds
+        val isFav = productId in currentFavorites
+
+        viewModelScope.launch {
+            if (isFav) {
+                val product = allFetchedProducts.find { it.id == idInt }
+                val productName = product?.name ?: ""
+                removeFavoriteUseCase(idInt, userId)
+                    .onSuccess {
+                        sendEffect(
+                            SearchUIEffect.ShowMessage(
+                                R.string.search_removed_from_favorites,
+                                listOf(productName),
+                                isSuccess = true,
+                            )
+                        )
+                    }
+                    .onError { error ->
+                        sendEffect(
+                            SearchUIEffect.ShowMessage(
+                                error.toMessageRes()
+                            )
+                        )
+                    }
+            } else {
+                val product = allFetchedProducts.find { it.id == idInt }
+                if (product != null) {
+                    addFavoriteUseCase(product.toFavorite(), userId)
+                        .onSuccess {
+                            sendEffect(
+                                SearchUIEffect.ShowMessage(
+                                    R.string.search_added_to_favorites,
+                                    listOf(product.name),
+                                    isSuccess = true,
+                                )
+                            )
+                        }
+                        .onError { error ->
+                            sendEffect(
+                                SearchUIEffect.ShowMessage(
+                                    error.toMessageRes()
+                                )
+                            )
+                        }
+
+                }
+            }
+        }
+    }
+
+    private fun SearchProduct.toFavorite(): FavoriteProduct {
+        return FavoriteProduct(
+            id = id,
+            name = name,
+            arabicName = name,
+            scientificName = scientificName,
+            price = price,
+            imageUrl = imageUrl,
+            categoryId = categoryId,
+            categoryName = categoryName,
+            company = company,
+            route = route
         )
     }
 

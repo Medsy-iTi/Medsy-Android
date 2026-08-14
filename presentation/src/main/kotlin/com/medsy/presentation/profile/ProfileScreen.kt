@@ -11,8 +11,9 @@ import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.SupportAgent
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -56,6 +57,8 @@ import com.medsy.presentation.profile.components.ProfileSelectionOption
 fun ProfileRoot(
     onNavigateToPersonalDetails: (startInEditMode: Boolean) -> Unit,
     onNavigateToLogin: () -> Unit,
+    onNavigateToFavorites: () -> Unit,
+    onNavigateToReminders: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -79,6 +82,8 @@ fun ProfileRoot(
                 }
 
                 ProfileUIEffect.NavigateToLogin -> onNavigateToLogin()
+                ProfileUIEffect.NavigateToFavorites -> onNavigateToFavorites()
+                ProfileUIEffect.NavigateToReminders -> onNavigateToReminders()
             }
         }
     }
@@ -198,11 +203,18 @@ fun ProfileScreen(
                                 onClick = { onIntent(ProfileUIIntent.PersonalDetailsClicked) },
                             ),
                             ProfileMenuItem(
-                                title = stringResource(R.string.profile_notifications),
-                                subtitle = stringResource(R.string.profile_notifications_subtitle),
-                                icon = Icons.Outlined.Notifications,
+                                title = stringResource(R.string.profile_my_favourites),
+                                subtitle = stringResource(R.string.profile_my_favourites_subtitle),
+                                icon = Icons.Outlined.FavoriteBorder,
+                                iconTint = MaterialTheme.extendedColors.favoriteRed,
+                                onClick = { onIntent(ProfileUIIntent.FavoritesClicked) },
+                            ),
+                            ProfileMenuItem(
+                                title = stringResource(R.string.profile_my_reminders),
+                                subtitle = stringResource(R.string.profile_my_reminders_subtitle),
+                                icon = Icons.Outlined.Alarm,
                                 iconTint = MaterialTheme.extendedColors.blueContent,
-                                onClick = {},
+                                onClick = { onIntent(ProfileUIIntent.RemindersClicked) },
                             ),
                         ),
                     )

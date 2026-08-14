@@ -33,6 +33,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.medsy.presentation.R
 import com.medsy.presentation.orders.orderslist.components.OrderCard
 import com.medsy.presentation.orders.orderslist.components.OrderCardShimmer
@@ -41,15 +42,24 @@ import com.medsy.presentation.orders.orderslist.components.OrdersFilterChipsShim
 
 @Composable
 fun OrdersRoot(
-    onOrderClick: (String) -> Unit,
+    onOpenOrderDetails: (String) -> Unit,
+    onOpenOrderReview: (Long, Long) -> Unit,
     viewModel: OrdersViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LifecycleEventEffect(androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+        viewModel.onIntent(OrdersUIIntent.Resume)
+    }
+
     LaunchedEffect(viewModel) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is OrdersUIEffect.NavigateToOrderDetails -> onOrderClick(effect.orderId)
+                is OrdersUIEffect.NavigateToOrderDetails -> onOpenOrderDetails(effect.orderId)
+                is OrdersUIEffect.NavigateToOrderReview -> onOpenOrderReview(
+                    effect.requestId,
+                    effect.masterOrderId,
+                )
             }
         }
     }

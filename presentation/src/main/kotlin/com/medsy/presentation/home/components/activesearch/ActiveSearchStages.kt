@@ -1,10 +1,24 @@
 package com.medsy.presentation.home.components.activesearch
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,110 +37,113 @@ import com.medsy.presentation.R
 @Composable
 fun ActiveSearchStages(currentStage: Int) {
     val stages = listOf(
-        Pair(R.string.home_search_status_stage_1, R.string.home_search_status_stage_1_desc),
-        Pair(R.string.home_search_status_stage_2, R.string.home_search_status_stage_2_desc),
-        Pair(R.string.home_search_status_stage_3, R.string.home_search_status_stage_3_desc)
+        R.string.home_search_status_stage_1 to R.string.home_search_status_stage_1_desc,
+        R.string.home_search_status_stage_2 to R.string.home_search_status_stage_2_desc,
+        R.string.home_search_status_stage_3 to R.string.home_search_status_stage_3_desc,
     )
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
+        verticalAlignment = Alignment.Top,
     ) {
-        stages.forEachIndexed { index, pair ->
-            val stageNum = index + 1
-            val isCurrentOrPast = currentStage >= stageNum
-            val isCurrent = currentStage == stageNum
-
-            val targetColor = if (isCurrentOrPast) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-            val animatedColor by animateColorAsState(targetValue = targetColor, animationSpec = tween(400))
-            
-            val circleSize by animateDpAsState(targetValue = if (isCurrent) 20.dp else 16.dp, animationSpec = tween(400))
-            val innerCircleSize by animateDpAsState(targetValue = if (isCurrentOrPast) 10.dp else 0.dp, animationSpec = tween(400))
+        stages.forEachIndexed { index, stage ->
+            val stageNumber = index + 1
+            val reached = currentStage >= stageNumber
+            val current = currentStage == stageNumber
+            val color by animateColorAsState(
+                if (reached) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                animationSpec = tween(400),
+                label = "search-stage-color",
+            )
+            val circleSize by animateDpAsState(
+                if (current) 20.dp else 16.dp,
+                animationSpec = tween(400),
+                label = "search-stage-size",
+            )
+            val innerSize by animateDpAsState(
+                if (reached) 10.dp else 0.dp,
+                animationSpec = tween(400),
+                label = "search-stage-inner-size",
+            )
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp),
             ) {
                 Text(
-                    text = stringResource(pair.first),
+                    stringResource(stage.first),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                    color = animatedColor,
-                    textAlign = TextAlign.Center
+                    color = color,
+                    textAlign = TextAlign.Center,
                 )
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(Modifier.height(2.dp))
                 Text(
-                    text = stringResource(pair.second),
+                    stringResource(stage.second),
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (isCurrent) animatedColor else MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = if (current) color else MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     minLines = 2,
-                    maxLines = 2
+                    maxLines = 2,
                 )
-                Spacer(modifier = Modifier.height(12.dp))
-                Box(
-                    modifier = Modifier.size(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (isCurrent) {
-                        val infiniteTransition = rememberInfiniteTransition()
-                        val ringScale by infiniteTransition.animateFloat(
-                            initialValue = 1f,
-                            targetValue = 1.6f,
-                            animationSpec = infiniteRepeatable(
-                                animation = tween(1000, easing = LinearOutSlowInEasing),
-                                repeatMode = RepeatMode.Restart
-                            )
+                Spacer(Modifier.height(12.dp))
+                Box(Modifier.size(32.dp), contentAlignment = Alignment.Center) {
+                    if (current) {
+                        val transition = rememberInfiniteTransition(label = "search-stage-ring")
+                        val ringScale by transition.animateFloat(
+                            1f,
+                            1.6f,
+                            infiniteRepeatable(
+                                tween(1_000, easing = LinearOutSlowInEasing),
+                                RepeatMode.Restart
+                            ),
+                            label = "search-stage-ring-scale",
                         )
-                        val ringAlpha by infiniteTransition.animateFloat(
-                            initialValue = 0.5f,
-                            targetValue = 0f,
-                            animationSpec = infiniteRepeatable(
-                                animation = tween(1000, easing = LinearOutSlowInEasing),
-                                repeatMode = RepeatMode.Restart
-                            )
+                        val ringAlpha by transition.animateFloat(
+                            0.5f,
+                            0f,
+                            infiniteRepeatable(
+                                tween(1_000, easing = LinearOutSlowInEasing),
+                                RepeatMode.Restart
+                            ),
+                            label = "search-stage-ring-alpha",
                         )
                         Box(
-                            modifier = Modifier
+                            Modifier
                                 .size(circleSize)
                                 .scale(ringScale)
-                                .border(2.dp, animatedColor.copy(alpha = ringAlpha), CircleShape)
+                                .border(2.dp, color.copy(alpha = ringAlpha), CircleShape)
                         )
                     }
-
                     Box(
                         modifier = Modifier
                             .size(circleSize)
-                            .border(
-                                width = 2.dp,
-                                color = animatedColor,
-                                shape = CircleShape
-                            )
+                            .border(2.dp, color, CircleShape)
                             .background(MaterialTheme.colorScheme.surface, CircleShape),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(innerCircleSize)
-                                .clip(CircleShape)
-                                .background(animatedColor)
-                        )
+                        Box(Modifier
+                            .size(innerSize)
+                            .clip(CircleShape)
+                            .background(color))
                     }
                 }
             }
-            
-            if (index < stages.size - 1) {
-                val lineColor = if (currentStage > stageNum) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
-                val animatedLineColor by animateColorAsState(targetValue = lineColor, animationSpec = tween(400))
-                
-                Box(
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .padding(top = 54.dp)
-                        .height(2.dp)
-                        .background(animatedLineColor)
+
+            if (index < stages.lastIndex) {
+                val lineColor by animateColorAsState(
+                    if (currentStage > stageNumber) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.outlineVariant,
+                    animationSpec = tween(400),
+                    label = "search-stage-line",
                 )
+                Box(Modifier
+                    .weight(0.5f)
+                    .padding(top = 54.dp)
+                    .height(2.dp)
+                    .background(lineColor))
             }
         }
     }

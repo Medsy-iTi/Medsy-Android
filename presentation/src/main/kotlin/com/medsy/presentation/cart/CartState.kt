@@ -3,6 +3,7 @@ package com.medsy.presentation.cart
 import androidx.annotation.StringRes
 import com.medsy.domain.cart.model.CartDraft
 import com.medsy.domain.cart.model.CartItem
+import com.medsy.domain.cart.model.InteractionWarning
 
 data class CartState(
     val isLoading: Boolean = true,
@@ -16,6 +17,8 @@ data class CartState(
     val itemToRemove: Long? = null,
     val isNoteDialogVisible: Boolean = false,
     val noteInput: String = "",
+    val interactionWarnings: List<InteractionWarning> = emptyList(),
+    val isCheckingInteractions: Boolean = false,
     @StringRes val errorMessageRes: Int? = null,
 ) {
     val hasContent: Boolean

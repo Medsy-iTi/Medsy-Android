@@ -18,7 +18,8 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.medsy.designsystem.components.MedsySnackbarHost
-import com.medsy.designsystem.components.showInfo
+import com.medsy.designsystem.components.showMessage
+import kotlinx.coroutines.flow.collectLatest
 import com.medsy.presentation.cart.components.CartClearDialog
 import com.medsy.presentation.cart.components.CartContent
 import com.medsy.presentation.cart.components.CartError
@@ -38,17 +39,16 @@ fun CartRoot(
 
     LaunchedEffect(viewModel) {
         viewModel.onIntent(CartUIIntent.CartOpened)
-        viewModel.effect.collect { effect ->
+        viewModel.effect.collectLatest { effect ->
             when (effect) {
                 CartUIEffect.OpenPrescription -> onAddPrescription()
                 CartUIEffect.OpenMakeRequest -> onOpenCartRequest()
                 CartUIEffect.OpenMedicineSearch -> onMedicineSearch()
                 is CartUIEffect.ShowMessage ->
-                    snackbarHostState.showInfo(
-                        ContextCompat.getString(
-                            context,
-                            effect.messageRes,
-                        )
+                    snackbarHostState.showMessage(
+                        context = context,
+                        messageRes = effect.messageRes,
+                        isSuccess = effect.isSuccess
                     )
             }
         }

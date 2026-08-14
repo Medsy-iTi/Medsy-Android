@@ -14,95 +14,40 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.medsy.presentation.R
-
+import com.medsy.presentation.common.util.PriceFormatter
 
 @Composable
-fun OrderDetailsPriceSummary(
-    itemsSubtotal: Int,
-    deliveryFee: Int?,
-    finalTotal: Int,
-    modifier: Modifier = Modifier,
-) {
+fun OrderDetailsPriceSummary(itemsSubtotal: Double, deliveryFee: Double, finalTotal: Double) {
+    val locale = LocalConfiguration.current.locales[0]
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f),
-        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)),
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = stringResource(R.string.order_details_summary_title),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 12.dp),
-            )
-
-            PriceSummaryRow(
-                labelRes = R.string.order_details_items_subtotal,
-                amount = itemsSubtotal,
-            )
-
-            if (deliveryFee != null) {
-                PriceSummaryRow(
-                    labelRes = R.string.order_details_delivery_fee,
-                    amount = deliveryFee,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-            }
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 12.dp),
-                color = MaterialTheme.colorScheme.outlineVariant,
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = stringResource(R.string.order_details_final_total),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                Text(
-                    text = stringResource(R.string.search_price_egp, finalTotal),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(stringResource(R.string.order_details_summary_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            SummaryRow(R.string.order_details_items_subtotal, PriceFormatter.formatPrice(itemsSubtotal, locale))
+            SummaryRow(R.string.order_details_delivery_fee, PriceFormatter.formatPrice(deliveryFee, locale))
+            HorizontalDivider()
+            SummaryRow(R.string.order_details_final_total, PriceFormatter.formatPrice(finalTotal, locale), true)
         }
     }
 }
 
 @Composable
-private fun PriceSummaryRow(
-    labelRes: Int,
-    amount: Int,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
+private fun SummaryRow(labelRes: Int, value: String, bold: Boolean = false) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(stringResource(labelRes), fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal)
         Text(
-            text = stringResource(labelRes),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Text(
-            text = stringResource(R.string.search_price_egp, amount),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            stringResource(R.string.search_price_egp, value),
+            fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
+            color = if (bold) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
         )
     }
 }

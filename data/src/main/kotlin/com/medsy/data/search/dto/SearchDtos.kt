@@ -7,14 +7,19 @@ import com.squareup.moshi.JsonClass
 data class ProductDto(
     @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String,
-    @Json(name = "arabicName") val arabicName: String?,
+    @Json(name = "productName") val productName: String?,
+    @Json(name = "strength") val strength: String?,
+    @Json(name = "packSize") val packSize: String?,
+    @Json(name = "form") val form: String?,
     @Json(name = "scientificName") val scientificName: String,
+    @Json(name = "scientificCategory") val scientificCategory: String?,
     @Json(name = "price") val price: Double,
     @Json(name = "imageUrl") val imageUrl: String?,
     @Json(name = "categoryId") val categoryId: Int,
-    @Json(name = "consumerCategory") val categoryName: String,
-    @Json(name = "company") val company: String,
-    @Json(name = "route") val route: String
+    @Json(name = "consumerCategory") val categoryName: String?,
+    @Json(name = "company") val company: String?,
+    @Json(name = "route") val route: String?,
+    @Json(name = "description") val description: String?,
 )
 
 @JsonClass(generateAdapter = true)

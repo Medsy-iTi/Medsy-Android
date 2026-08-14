@@ -1,7 +1,7 @@
 package com.medsy.presentation.orders.orderslist
 
 import com.medsy.presentation.orders.orderslist.model.OrderFilter
-import com.medsy.presentation.orders.orderslist.model.OrderSummary
+import com.medsy.domain.orders.model.MasterOrder
 import com.medsy.presentation.orders.orderslist.model.matchesFilter
 
 data class OrdersUIState(
@@ -9,12 +9,12 @@ data class OrdersUIState(
     val isRefreshing: Boolean = false,
     val isLoadMore: Boolean = false,
     val selectedFilter: OrderFilter = OrderFilter.All,
-    val orders: List<OrderSummary> = emptyList(),
+    val orders: List<MasterOrder> = emptyList(),
     val currentPage: Int = 0,
     val totalPages: Int = 0,
     val isLastPage: Boolean = true,
     val errorMessageRes: Int? = null
 ) {
-    val filteredOrders: List<OrderSummary>
+    val filteredOrders: List<MasterOrder>
         get() = orders.filter { it.matchesFilter(selectedFilter) }
 }
