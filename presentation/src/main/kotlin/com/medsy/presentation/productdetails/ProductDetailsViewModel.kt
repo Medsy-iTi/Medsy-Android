@@ -199,14 +199,25 @@ class ProductDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isAddingToCart = true) }
             addCartItem(id)
-                .onSuccess {
+                .onSuccess { cart ->
                     _state.update { it.copy(isAddingToCart = false) }
-                    sendEffect(
-                        ProductDetailsUIEffect.ShowMessage(
-                            R.string.product_details_added_to_cart,
-                            isSuccess = true
+                    val cartItem = cart.items.find { it.productId == id }
+                    if (cartItem != null) {
+                        sendEffect(
+                            ProductDetailsUIEffect.ShowMessage(
+                                R.string.product_added_to_cart_format,
+                                args = listOf(cartItem.quantity, cartItem.productName),
+                                isSuccess = true
+                            )
                         )
-                    )
+                    } else {
+                        sendEffect(
+                            ProductDetailsUIEffect.ShowMessage(
+                                R.string.product_details_added_to_cart,
+                                isSuccess = true
+                            )
+                        )
+                    }
                 }
                 .onError { error ->
                     _state.update { it.copy(isAddingToCart = false) }

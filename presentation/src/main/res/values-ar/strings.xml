@@ -231,6 +231,7 @@
     <string name="product_details_dispensing_method_value">تصرف بعد مراجعة الصيدلي</string>
     <string name="product_details_add_to_cart">أضف إلى السلة</string>
     <string name="product_details_added_to_cart">تمت الإضافة إلى السلة</string>
+    <string name="product_added_to_cart_format">تمت إضافة %1$d %2$s إلى السلة</string>
     <string name="product_details_label_usage_method">طريقة الاستخدام</string>
     <string name="product_details_error_load">تعذر تحميل المنتج. يرجى المحاولة مرة أخرى.</string>
     <string name="product_details_error_retry">إعادة المحاولة</string>
