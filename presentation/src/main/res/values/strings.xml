@@ -239,6 +239,7 @@
     <string name="product_details_error_retry">Retry</string>
     <string name="product_details_add_to_cart">Add to Cart</string>
     <string name="product_details_added_to_cart">Added to cart</string>
+    <string name="product_added_to_cart_format">Added %1$d %2$s to cart</string>
     <string name="product_details_consult_pharmacist">Consult Pharmacist</string>
     <!-- Prescription reading -->
     <string name="prescription_upload_title">Upload prescription</string>
