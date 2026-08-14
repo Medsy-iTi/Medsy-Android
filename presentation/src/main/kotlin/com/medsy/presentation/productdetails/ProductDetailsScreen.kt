@@ -117,9 +117,7 @@ fun ProductDetailsScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         ProductTopBar(
-            isFavorite = state.isFavorite,
             onBackClick = { onIntent(ProductDetailsUIIntent.BackClicked) },
-            onFavoriteClick = { onIntent(ProductDetailsUIIntent.FavoriteClicked) },
             onCartClick = { onIntent(ProductDetailsUIIntent.CartClicked) },
         )
 
@@ -139,6 +137,8 @@ fun ProductDetailsScreen(
                 strength = product.strength,
                 packInfo = product.packInfo,
                 price = product.price,
+                isFavorite = state.isFavorite,
+                onFavoriteClick = { onIntent(ProductDetailsUIIntent.FavoriteClicked) },
                 modifier = Modifier.padding(top = 12.dp),
             )
 
