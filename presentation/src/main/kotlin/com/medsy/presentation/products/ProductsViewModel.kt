@@ -170,10 +170,21 @@ class ProductsViewModel @Inject constructor(
     private fun addToCart(productId: Int) {
         viewModelScope.launch {
             addCartItem(productId)
-                .onSuccess {
-                    sendEffect(
-                        ProductsUIEffect.ShowMessage(R.string.products_added_to_cart, isSuccess = true)
-                    )
+                .onSuccess { cart ->
+                    val cartItem = cart.items.find { it.productId == productId }
+                    if (cartItem != null) {
+                        sendEffect(
+                            ProductsUIEffect.ShowMessage(
+                                R.string.product_added_to_cart_format,
+                                args = listOf(cartItem.quantity, cartItem.productName),
+                                isSuccess = true
+                            )
+                        )
+                    } else {
+                        sendEffect(
+                            ProductsUIEffect.ShowMessage(R.string.products_added_to_cart, isSuccess = true)
+                        )
+                    }
                 }
                 .onError { error ->
                     sendEffect(ProductsUIEffect.ShowMessage(error.toMessageRes()))
