@@ -65,6 +65,9 @@ sealed interface Route : NavKey {
     data object Favorites : Route
 
     @Serializable
+    data object Reminders : Route
+
+    @Serializable
     data class SearchNav(val initialQuery: String? = null, val localItemId: String? = null) : Route
 
     @Serializable

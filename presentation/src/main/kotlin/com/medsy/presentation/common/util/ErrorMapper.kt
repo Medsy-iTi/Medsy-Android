@@ -29,6 +29,7 @@ private fun MedsyError.Validation.resolveValidationError(): Int = when (this) {
     MedsyError.Validation.REQUIRED_FIELDS -> R.string.auth_error_required_field
     MedsyError.Validation.INVALID_PHONE_NUMBER -> R.string.error_phone_invalid
     MedsyError.Validation.INVALID_OTP -> R.string.auth_invalid_code
+    MedsyError.Validation.INVALID_REMINDER_DETAILS -> R.string.reminder_invalid_details
 }
 
 @StringRes

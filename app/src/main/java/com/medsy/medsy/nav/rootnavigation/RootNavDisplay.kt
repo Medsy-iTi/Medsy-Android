@@ -7,6 +7,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import com.medsy.medsy.BuildConfig
 import com.medsy.presentation.payment.PaymentScreenRoot
@@ -37,6 +38,7 @@ import com.medsy.presentation.prescription.PrescriptionRoot
 import com.medsy.presentation.productdetails.ProductDetailsRoot
 import com.medsy.presentation.products.ProductsRoot
 import com.medsy.presentation.profile.personaldetails.PersonalDetailsRoot
+import com.medsy.presentation.reminders.MedicationRemindersRoot
 import com.medsy.presentation.search.SearchRoot
 import com.medsy.presentation.settings.SettingsRoot
 import com.medsy.presentation.splash.SplashRoot
@@ -44,12 +46,49 @@ import com.medsy.presentation.splash.SplashRoot
 const val NAVIGATION_DURATION_MILLIS = 350
 
 @Composable
-fun RootNavDisplay() {
+fun RootNavDisplay(
+    openRemindersRequest: Boolean = false,
+    onOpenRemindersRequestConsumed: () -> Unit = {},
+) {
 
     val context = LocalContext.current
     val rootBackStack = rememberNavBackStack(Route.Splash)
     var requestedNestedDestination by remember { mutableStateOf<Route?>(null) }
     var prescriptionSelectionResult by remember { mutableStateOf<Pair<String, Int>?>(null) }
+    var pendingOpenReminders by remember { mutableStateOf(openRemindersRequest) }
+
+    fun openHome() {
+        requestedNestedDestination = null
+        rootBackStack.setRoot(Route.NestedNav)
+        if (pendingOpenReminders) {
+            rootBackStack.push(Route.Reminders)
+            pendingOpenReminders = false
+            onOpenRemindersRequestConsumed()
+        }
+    }
+
+    LaunchedEffect(openRemindersRequest) {
+        if (!openRemindersRequest) return@LaunchedEffect
+        pendingOpenReminders = true
+        when (rootBackStack.lastOrNull()) {
+            Route.Splash,
+            Route.Onboarding,
+            Route.Login,
+            Route.Register,
+            is Route.Otp -> Unit
+
+            Route.Reminders -> {
+                pendingOpenReminders = false
+                onOpenRemindersRequestConsumed()
+            }
+
+            else -> {
+                rootBackStack.push(Route.Reminders)
+                pendingOpenReminders = false
+                onOpenRemindersRequestConsumed()
+            }
+        }
+    }
 
     NavDisplay(
         modifier = Modifier.fillMaxSize(),
@@ -82,8 +121,7 @@ fun RootNavDisplay() {
                         rootBackStack.setRoot(Route.Onboarding)
                     },
                     openHome = {
-                        requestedNestedDestination = null
-                        rootBackStack.setRoot(Route.NestedNav)
+                        openHome()
                     },
                     openLogin = {
                         rootBackStack.setRoot(Route.Login)
@@ -104,8 +142,7 @@ fun RootNavDisplay() {
                         rootBackStack.push(Route.Register)
                     },
                     openHome = {
-                        requestedNestedDestination = null
-                        rootBackStack.setRoot(Route.NestedNav)
+                        openHome()
                     }
                 )
             }
@@ -128,8 +165,7 @@ fun RootNavDisplay() {
                     email = route.email,
                     onNavigateBack = { rootBackStack.popIfCurrent(route) },
                     onNavigateHome = {
-                        requestedNestedDestination = null
-                        rootBackStack.setRoot(Route.NestedNav)
+                        openHome()
                     }
                 )
             }
@@ -188,7 +224,10 @@ fun RootNavDisplay() {
                     },
                     openFavorites = {
                         rootBackStack.push(Route.Favorites)
-                    }
+                    },
+                    openReminders = {
+                        rootBackStack.push(Route.Reminders)
+                    },
                 )
             }
             entry<Route.AiChat> { route ->
@@ -282,6 +321,11 @@ fun RootNavDisplay() {
                             Route.ProductDetails(id = productId)
                         )
                     }
+                )
+            }
+            entry<Route.Reminders> {
+                MedicationRemindersRoot(
+                    onNavigateBack = { rootBackStack.popIfCurrent(Route.Reminders) },
                 )
             }
             entry<Route.SearchNav> { route ->

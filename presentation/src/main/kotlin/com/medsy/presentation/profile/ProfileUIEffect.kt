@@ -6,4 +6,5 @@ sealed interface ProfileUIEffect {
     ) : ProfileUIEffect
     data object NavigateToLogin : ProfileUIEffect
     data object NavigateToFavorites : ProfileUIEffect
+    data object NavigateToReminders : ProfileUIEffect
 }
