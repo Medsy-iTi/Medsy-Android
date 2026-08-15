@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material3.Icon
@@ -52,6 +53,7 @@ fun CategoryGridCard(
             )
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
             .border(1.dp, borderColor, RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(16.dp)
     ) {
