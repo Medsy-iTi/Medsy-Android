@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -31,11 +32,13 @@ internal fun CartRequestChoiceCard(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = modifier.selectable(
-            selected = selected,
-            onClick = onClick,
-            role = Role.RadioButton,
-        ),
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .selectable(
+                selected = selected,
+                onClick = onClick,
+                role = Role.RadioButton,
+            ),
         shape = RoundedCornerShape(16.dp),
         color = if (selected) {
             MaterialTheme.colorScheme.primaryContainer

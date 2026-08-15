@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -115,7 +116,7 @@ private fun CategoryGridItem(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.clickable { item.onClick() }
+        modifier = modifier
     ) {
         Box(
             modifier = Modifier
@@ -127,7 +128,9 @@ private fun CategoryGridItem(
                     ambientColor = MaterialTheme.colorScheme.primary,
                     spotColor = MaterialTheme.colorScheme.primary
                 )
-                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)),
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(20.dp))
+                .clickable { item.onClick() },
             contentAlignment = Alignment.Center
         ) {
             if (item.imageRes != null) {

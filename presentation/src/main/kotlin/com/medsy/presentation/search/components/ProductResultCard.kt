@@ -53,6 +53,7 @@ fun ProductResultCard(
             .heightIn(min = 100.dp)
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -103,7 +104,13 @@ fun ProductResultCard(
                 .padding(vertical = 4.dp),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            IconButton(onClick = onFavoriteClick, modifier = Modifier.size(24.dp)) {
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onFavoriteClick),
+                contentAlignment = Alignment.Center
+            ) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = stringResource(R.string.search_favorite_desc),
@@ -114,7 +121,8 @@ fun ProductResultCard(
             Box(
                 modifier = Modifier
                     .size(28.dp)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
                     .clickable(onClick = onAddToCartClick),
                 contentAlignment = Alignment.Center,
             ) {
