@@ -75,15 +75,18 @@ fun CategoriesScreen(
     state: CategoriesUIState,
     onIntent: (CategoriesUIIntent) -> Unit
 ) {
-    if (state.isLoading) {
-        CategoriesShimmer()
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface)
-                .statusBarsPadding()
-        ) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+            .statusBarsPadding()
+    ) {
+        if (state.isLoading) {
+            CategoriesShimmer()
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
             CategoriesTopBar(
                 onBackClick = { onIntent(CategoriesUIIntent.OnBackClick) }
             )
@@ -168,5 +171,5 @@ fun CategoriesScreen(
         }
     }
 }
-
+}
 

@@ -11,7 +11,6 @@ fun CategoryDto.toDomain(): Category {
         image = getCategoryImageRes(this.id)
     )
 }
-
 private fun getCategoryImageRes(id: Int): Int? {
     return when (id) {
         1 -> R.drawable.ic_cat_mental_health
