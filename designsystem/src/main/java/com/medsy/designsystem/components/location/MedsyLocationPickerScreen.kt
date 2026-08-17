@@ -56,7 +56,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.medsy.designsystem.R
 import com.medsy.designsystem.components.MedsySnackbarHost
 import com.medsy.designsystem.components.showError
@@ -107,7 +107,7 @@ fun MedsyLocationPickerScreen(
         onDispose { cancellationTokenSource.cancel() }
     }
 
-    val markerState = rememberMarkerState(position = initialPosition)
+    val markerState = rememberUpdatedMarkerState(position = initialPosition)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             initialPosition,
