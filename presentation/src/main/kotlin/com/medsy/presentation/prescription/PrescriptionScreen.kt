@@ -114,14 +114,17 @@ fun PrescriptionRoot(
 
     BackHandler { viewModel.onIntent(PrescriptionUIIntent.BackClicked) }
 
-    Scaffold(snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) }) { padding ->
-        PrescriptionScreen(
-            state = state,
-            onIntent = viewModel::onIntent,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold() { padding ->
+            PrescriptionScreen(
+                state = state,
+                onIntent = viewModel::onIntent,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+            )
+        }
+        MedsySnackbarHost(hostState = snackbarHostState)
     }
 }
 

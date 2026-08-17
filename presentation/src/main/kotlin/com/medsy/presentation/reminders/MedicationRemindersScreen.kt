@@ -174,8 +174,7 @@ fun MedicationRemindersRoot(
     }
 
     Scaffold(
-        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
-        floatingActionButton = {
+                floatingActionButton = {
             if (!state.isLoading && state.errorMessageRes == null) {
                 ExtendedFloatingActionButton(
                     onClick = {
@@ -244,6 +243,7 @@ fun MedicationRemindersRoot(
             },
         )
     }
+    MedsySnackbarHost(hostState = snackbarHostState)
 }
 
 @Composable

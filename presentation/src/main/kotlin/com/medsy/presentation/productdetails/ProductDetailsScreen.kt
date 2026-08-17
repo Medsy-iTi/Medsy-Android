@@ -72,14 +72,16 @@ fun ProductDetailsRoot(
         }
     }
 
-    Scaffold(
-        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
-    ) { paddingValues ->
-        ProductDetailsScreen(
-            state = state,
-            onIntent = viewModel::onIntent,
-            modifier = Modifier.padding(paddingValues),
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+        ) { paddingValues ->
+            ProductDetailsScreen(
+                state = state,
+                onIntent = viewModel::onIntent,
+                modifier = Modifier.padding(paddingValues),
+            )
+        }
+        MedsySnackbarHost(hostState = snackbarHostState)
     }
 }
 

@@ -59,10 +59,7 @@ fun CartRoot(
             state = state,
             onIntent = viewModel::onIntent,
         )
-        MedsySnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
+        MedsySnackbarHost(hostState = snackbarHostState)
     }
 }
 

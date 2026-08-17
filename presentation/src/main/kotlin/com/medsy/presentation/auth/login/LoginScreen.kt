@@ -107,6 +107,7 @@ fun LoginScreen(
                     .padding(top = 24.dp, bottom = LoginConstants.ScreenPaddingVertical),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = Modifier.height(64.dp))
 
                 val logoRes = DesignR.drawable.ic_logo_transparent
 
@@ -201,27 +202,7 @@ fun LoginScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(LoginConstants.SpacerOr))
-
-                LoginOrDivider()
-
-                Spacer(modifier = Modifier.height(LoginConstants.SpacerOr))
-
-                LoginSocialButton(
-                    iconResId = DesignR.drawable.ic_google,
-                    text = stringResource(R.string.login_google),
-                    onClick = { }
-                )
-
-                Spacer(modifier = Modifier.height(LoginConstants.SpacerSocial))
-
-                LoginSocialButton(
-                    iconResId = DesignR.drawable.ic_facebook,
-                    text = stringResource(R.string.login_facebook),
-                    onClick = { }
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 val fullText = stringResource(
                     R.string.login_no_account_full,

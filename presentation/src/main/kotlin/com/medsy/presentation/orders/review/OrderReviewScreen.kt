@@ -211,7 +211,7 @@ fun OrderReviewScreen(
                 }
             }
         }
-        MedsySnackbarHost(snackbarHostState, Modifier.align(Alignment.TopCenter))
+        MedsySnackbarHost(snackbarHostState)
     }
 }
 

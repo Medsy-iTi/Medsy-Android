@@ -110,115 +110,118 @@ fun CartRequestScreen(
     onNavigateBack: () -> Unit,
     onIntent: (CartRequestUIIntent) -> Unit,
 ) {
-    Scaffold(
-        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.cart_request_title),
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onNavigateBack,
-                        enabled = !state.isSubmitting,
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.cart_request_back),
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.cart_request_title),
+                            fontWeight = FontWeight.Bold,
                         )
-                    }
-                },
-            )
-        },
-        bottomBar = {
-            Surface(
-                color = MaterialTheme.colorScheme.surface,
-                tonalElevation = 3.dp,
-            ) {
-                MedsyButton(
-                    onClick = { onIntent(CartRequestUIIntent.SubmitClicked) },
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
-                    enabled = state.isSubmitEnabled,
-                    isLoading = state.isSubmitting,
-                    snackbarHostState = snackbarHostState,
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = onNavigateBack,
+                            enabled = !state.isSubmitting,
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.cart_request_back),
+                            )
+                        }
+                    },
+                )
+            },
+            bottomBar = {
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 3.dp,
                 ) {
-                    Text(
-                        text = stringResource(R.string.cart_request_submit),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-            }
-        },
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(innerPadding),
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    start = 20.dp,
-                    top = 12.dp,
-                    end = 20.dp,
-                    bottom = 28.dp,
-                ),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                item {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                    MedsyButton(
+                        onClick = { onIntent(CartRequestUIIntent.SubmitClicked) },
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
+                        enabled = state.isSubmitEnabled,
+                        isLoading = state.isSubmitting,
+                        snackbarHostState = snackbarHostState,
                     ) {
                         Text(
-                            text = stringResource(R.string.cart_request_subtitle),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
+                            text = stringResource(R.string.cart_request_submit),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
-                item {
-                    CartRequestOrderSummary(
-                        state = state,
-                        onRetry = { onIntent(CartRequestUIIntent.RetryCart) },
-                    )
-                }
-                item {
-                    PaymentSection(
-                        selected = state.paymentOption,
-                        onSelected = {
-                            onIntent(CartRequestUIIntent.PaymentOptionSelected(it))
-                        },
-                    )
-                }
-                item {
-                    DeliveryAddressSection(
-                        state = state,
-                        onAddressOptionSelected = {
-                            onIntent(CartRequestUIIntent.AddressOptionSelected(it))
-                        },
-                        onCustomAddressChanged = {
-                            onIntent(CartRequestUIIntent.CustomAddressChanged(it))
-                        },
-                        onChooseLocation = {
-                            onIntent(CartRequestUIIntent.LocationPickerClicked)
-                        },
-                        onRetryProfile = {
-                            onIntent(CartRequestUIIntent.RetryProfile)
-                        },
-                    )
-                }
+            },
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(innerPadding),
+            ) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(
+                        start = 20.dp,
+                        top = 12.dp,
+                        end = 20.dp,
+                        bottom = 28.dp,
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    item {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.cart_request_subtitle),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                    item {
+                        CartRequestOrderSummary(
+                            state = state,
+                            onRetry = { onIntent(CartRequestUIIntent.RetryCart) },
+                        )
+                    }
+                    item {
+                        PaymentSection(
+                            selected = state.paymentOption,
+                            onSelected = {
+                                onIntent(CartRequestUIIntent.PaymentOptionSelected(it))
+                            },
+                        )
+                    }
+                    item {
+                        DeliveryAddressSection(
+                            state = state,
+                            onAddressOptionSelected = {
+                                onIntent(CartRequestUIIntent.AddressOptionSelected(it))
+                            },
+                            onCustomAddressChanged = {
+                                onIntent(CartRequestUIIntent.CustomAddressChanged(it))
+                            },
+                            onChooseLocation = {
+                                onIntent(CartRequestUIIntent.LocationPickerClicked)
+                            },
+                            onRetryProfile = {
+                                onIntent(CartRequestUIIntent.RetryProfile)
+                            },
+                        )
+                    }
 
+                }
             }
         }
+        MedsySnackbarHost(hostState = snackbarHostState)
     }
 }
+
 
 @Preview
 @Composable

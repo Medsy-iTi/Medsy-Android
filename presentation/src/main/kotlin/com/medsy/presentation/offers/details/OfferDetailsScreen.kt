@@ -102,10 +102,10 @@ fun OfferDetailsScreen(
     snackbarHostState: SnackbarHostState,
     onIntent: (OffersUIIntent) -> Unit,
 ) {
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
-        topBar = {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
+                topBar = {
             OfferTopAppBar(
                 title = stringResource(R.string.offers_details_title),
                 onBackClick = { onIntent(OffersUIIntent.NavigateBack) },
@@ -232,6 +232,8 @@ fun OfferDetailsScreen(
             }
         }
     }
+    }
+    MedsySnackbarHost(hostState = snackbarHostState)
 }
 
 @Composable
