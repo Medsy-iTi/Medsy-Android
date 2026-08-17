@@ -91,10 +91,10 @@ fun OrderDetailsScreen(
     snackbarHostState: SnackbarHostState,
     onIntent: (OrderDetailsUIIntent) -> Unit,
 ) {
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
-        topBar = {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
+                topBar = {
             OrderDetailsTopBar(
                 orderId,
                 onBackClick = {
@@ -113,6 +113,8 @@ fun OrderDetailsScreen(
             OrderDetailsContent(state, onIntent)
         }
     }
+    }
+    MedsySnackbarHost(hostState = snackbarHostState)
 }
 
 @Composable

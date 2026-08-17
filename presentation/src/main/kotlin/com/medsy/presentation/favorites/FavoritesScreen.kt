@@ -74,15 +74,17 @@ fun FavoritesRoot(
         }
     }
 
-    Scaffold(
-        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
-    ) { padding ->
-        padding
-        FavoritesScreen(
-            state = state,
-            onIntent = viewModel::onIntent,
-            modifier = Modifier,
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+        ) { _ ->
+
+            FavoritesScreen(
+                state = state,
+                onIntent = viewModel::onIntent,
+                modifier = Modifier,
+            )
+        }
+        MedsySnackbarHost(hostState = snackbarHostState)
     }
 }
 

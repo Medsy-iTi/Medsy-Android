@@ -111,7 +111,7 @@ fun MedsyLocationPickerScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             initialPosition,
-            if (hasSavedLocation) SavedLocationZoom else CairoZoom,
+            CairoZoom,
         )
     }
     var hasLocationPermission by remember {

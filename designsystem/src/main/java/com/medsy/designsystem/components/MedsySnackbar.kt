@@ -1,4 +1,4 @@
-package com.medsy.designsystem.components
+﻿package com.medsy.designsystem.components
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -12,17 +12,18 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -37,6 +38,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,12 +49,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
-
 enum class MedsySnackbarType { Success, Error, Info }
-
 
 private class MedsySnackbarVisuals(
     override val message: String,
@@ -61,12 +62,10 @@ private class MedsySnackbarVisuals(
     override val withDismissAction: Boolean = false,
     override val duration: SnackbarDuration = SnackbarDuration.Short,
 ) : SnackbarVisuals
-
 @Composable
 fun MedsySnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    alignment: Alignment = Alignment.BottomCenter,
 ) {
     val currentData = hostState.currentSnackbarData
     var lastData by remember { mutableStateOf<SnackbarData?>(null) }
@@ -74,7 +73,7 @@ fun MedsySnackbarHost(
 
     LaunchedEffect(currentData) {
         if (currentData != null) {
-            delay(1800L.milliseconds)
+            delay(2200L.milliseconds)
             currentData.dismiss()
         }
     }
@@ -83,22 +82,21 @@ fun MedsySnackbarHost(
         modifier = modifier
             .fillMaxWidth()
             .statusBarsPadding()
-            .navigationBarsPadding()
             .imePadding()
-            .padding(horizontal = 20.dp, vertical = 80.dp),
-        contentAlignment = alignment,
+            .padding(horizontal = 20.dp, vertical = 8.dp),
+        contentAlignment = Alignment.TopCenter,
     ) {
         AnimatedVisibility(
             visible = currentData != null,
             enter = slideInVertically(
-                initialOffsetY = { if (alignment == Alignment.TopCenter) -it else it },
+                initialOffsetY = { -it },
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioMediumBouncy,
                     stiffness = Spring.StiffnessMediumLow,
-                )
+                ),
             ) + fadeIn(animationSpec = tween(150)),
             exit = slideOutVertically(
-                targetOffsetY = { if (alignment == Alignment.TopCenter) -it else it },
+                targetOffsetY = { -it },
                 animationSpec = tween(220),
             ) + fadeOut(animationSpec = tween(180)),
         ) {
@@ -108,69 +106,76 @@ fun MedsySnackbarHost(
     }
 }
 
-
 @Composable
 private fun MedsySnackbarBanner(data: SnackbarData) {
     val visuals = data.visuals
     val type = (visuals as? MedsySnackbarVisuals)?.type ?: MedsySnackbarType.Error
 
-    val isError = type == MedsySnackbarType.Error
-    
-    val backgroundColor = if (isError) {
-        MaterialTheme.colorScheme.error
-    } else {
-        MaterialTheme.colorScheme.surface
-    }
-    val contentColor = if (isError) {
-        MaterialTheme.colorScheme.onError
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
-
-    val iconColor = when (type) {
+    val baseColor = when (type) {
         MedsySnackbarType.Success -> MaterialTheme.colorScheme.primary
-        MedsySnackbarType.Error -> MaterialTheme.colorScheme.onError
-        MedsySnackbarType.Info -> MaterialTheme.colorScheme.secondary
-    }
-    val icon = when (type) {
-        MedsySnackbarType.Success -> Icons.Filled.CheckCircle
-        MedsySnackbarType.Error -> Icons.Filled.Error
-        MedsySnackbarType.Info -> Icons.Filled.Info
+        MedsySnackbarType.Error   -> MaterialTheme.colorScheme.error
+        MedsySnackbarType.Info    -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 
     Surface(
         shape = RoundedCornerShape(28.dp),
-        color = backgroundColor,
-        shadowElevation = 8.dp,
-        border = if (!isError) androidx.compose.foundation.BorderStroke(
-            1.dp, 
-            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-        ) else null,
-        modifier = Modifier.wrapContentWidth(),
+        color = MaterialTheme.colorScheme.surface,
+        border = BorderStroke(
+            width = 1.dp,
+            color = baseColor.copy(alpha = 0.35f),
+        ),
+        shadowElevation = 12.dp,
+        tonalElevation = 4.dp,
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = iconColor,
-                modifier = Modifier.size(20.dp),
-            )
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(baseColor.copy(alpha = 0.16f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = when (type) {
+                        MedsySnackbarType.Success -> Icons.Filled.CheckCircle
+                        MedsySnackbarType.Error   -> Icons.Filled.Error
+                        MedsySnackbarType.Info    -> Icons.Filled.Info
+                    },
+                    contentDescription = null,
+                    tint = baseColor,
+                    modifier = Modifier.size(22.dp),
+                )
+            }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
             Text(
                 text = visuals.message,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = contentColor,
-                )
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f),
             )
+
+            visuals.actionLabel?.let { label ->
+                Spacer(modifier = Modifier.width(8.dp))
+                TextButton(onClick = { data.performAction() }) {
+                    Text(
+                        text = label,
+                        color = baseColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                    )
+                }
+            }
         }
     }
 }
+
+// ─── Extension helpers ───────────────────────────────────────────────────────
 
 suspend fun SnackbarHostState.showError(
     message: String,
@@ -213,14 +218,6 @@ suspend fun SnackbarHostState.showMessage(
     actionLabel: String? = null,
 ): SnackbarResult? {
     val rawMessage = ContextCompat.getString(context, messageRes)
-    val message = if (args.isEmpty()) {
-        rawMessage
-    } else {
-        rawMessage.format(*args.toTypedArray())
-    }
-    return if (isSuccess) {
-        showSuccess(message, actionLabel)
-    } else {
-        showError(message, actionLabel)
-    }
+    val message = if (args.isEmpty()) rawMessage else rawMessage.format(*args.toTypedArray())
+    return if (isSuccess) showSuccess(message, actionLabel) else showError(message, actionLabel)
 }

@@ -151,9 +151,9 @@ fun PersonalDetailsScreen(
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
 
-    Scaffold(
-        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
-    ) { innerPadding ->
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+        ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -287,6 +287,8 @@ fun PersonalDetailsScreen(
             },
         )
     }
+    }
+    MedsySnackbarHost(hostState = snackbarHostState)
 }
 
 @Composable

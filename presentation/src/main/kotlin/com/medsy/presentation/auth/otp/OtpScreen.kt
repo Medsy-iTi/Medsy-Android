@@ -97,11 +97,10 @@ fun OtpScreen(
     onNavigateBack: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
-
-    Scaffold(
-        snackbarHost = { MedsySnackbarHost(snackbarHostState) },
-        containerColor = MaterialTheme.colorScheme.background
-    ) { paddingValues ->
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background
+        ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -208,6 +207,8 @@ fun OtpScreen(
             }
         }
     }
+    }
+    MedsySnackbarHost(hostState = snackbarHostState)
 }
 
 // ─── Email Illustration ───────────────────────────────────────────────────────

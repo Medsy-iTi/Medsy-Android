@@ -92,14 +92,16 @@ fun SearchRoot(
         }
     }
 
-    Scaffold(
-        snackbarHost = { MedsySnackbarHost(hostState = snackbarHostState) },
-    ) { paddingValues ->
-        SearchScreen(
-            state = state,
-            onIntent = viewModel::onIntent,
-            modifier = Modifier.padding(paddingValues),
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+        ) { paddingValues ->
+            SearchScreen(
+                state = state,
+                onIntent = viewModel::onIntent,
+                modifier = Modifier.padding(paddingValues),
+            )
+        }
+        MedsySnackbarHost(hostState = snackbarHostState)
     }
 }
 
