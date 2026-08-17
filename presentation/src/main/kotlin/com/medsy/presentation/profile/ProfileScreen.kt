@@ -244,34 +244,6 @@ fun ProfileScreen(
                 }
 
                 item {
-                    ProfileMenuSection(
-                        title = stringResource(R.string.profile_section_support),
-                        modifier = Modifier.padding(horizontal = 20.dp),
-                        items = listOf(
-                            ProfileMenuItem(
-                                title = stringResource(R.string.profile_help_center),
-                                subtitle = stringResource(R.string.profile_help_center_subtitle),
-                                icon = Icons.AutoMirrored.Outlined.HelpOutline,
-                                iconTint = MaterialTheme.colorScheme.primary,
-                                onClick = {},
-                            ),
-                            ProfileMenuItem(
-                                title = stringResource(R.string.profile_contact_us),
-                                icon = Icons.Outlined.SupportAgent,
-                                iconTint = MaterialTheme.extendedColors.pinkContent,
-                                onClick = {},
-                            ),
-                            ProfileMenuItem(
-                                title = stringResource(R.string.profile_terms),
-                                icon = Icons.Outlined.Description,
-                                iconTint = MaterialTheme.extendedColors.neutralContent,
-                                onClick = {},
-                            ),
-                        ),
-                    )
-                }
-
-                item {
                     OutlinedButton(
                         onClick = { onIntent(ProfileUIIntent.LogoutClicked) },
                         modifier = Modifier

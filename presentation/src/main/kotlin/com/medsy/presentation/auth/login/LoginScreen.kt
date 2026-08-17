@@ -201,25 +201,7 @@ fun LoginScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(LoginConstants.SpacerOr))
 
-                LoginOrDivider()
-
-                Spacer(modifier = Modifier.height(LoginConstants.SpacerOr))
-
-                LoginSocialButton(
-                    iconResId = DesignR.drawable.ic_google,
-                    text = stringResource(R.string.login_google),
-                    onClick = { }
-                )
-
-                Spacer(modifier = Modifier.height(LoginConstants.SpacerSocial))
-
-                LoginSocialButton(
-                    iconResId = DesignR.drawable.ic_facebook,
-                    text = stringResource(R.string.login_facebook),
-                    onClick = { }
-                )
 
                 Spacer(modifier = Modifier.weight(1f))
 
