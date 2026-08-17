@@ -20,6 +20,11 @@ sealed interface MedsyError {
         INVALID_PHONE_NUMBER,
         INVALID_OTP,
         INVALID_REMINDER_DETAILS,
+        INVALID_NAME,
+        INVALID_EMAIL,
+        INVALID_PASSWORD_MAX_LENGTH,
+        INVALID_PASSWORD_SPACES,
+        INVALID_PASSWORD_MISSING_LETTER,
     }
 
     enum class Local : MedsyError {

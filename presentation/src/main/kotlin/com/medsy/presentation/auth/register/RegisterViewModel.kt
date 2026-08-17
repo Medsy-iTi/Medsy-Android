@@ -1,9 +1,12 @@
-package com.medsy.presentation.auth.register
+﻿package com.medsy.presentation.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medsy.domain.auth.model.RegisterParams
 import com.medsy.domain.auth.usecase.RegisterUseCase
+import com.medsy.domain.auth.usecase.ValidateEmailUseCase
+import com.medsy.domain.auth.usecase.ValidateNameUseCase
+import com.medsy.domain.auth.usecase.ValidatePasswordUseCase
 import com.medsy.domain.common.MedsyResult
 import com.medsy.presentation.R
 import com.medsy.presentation.common.util.toMessageRes
@@ -19,6 +22,9 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
+    private val validateNameUseCase: ValidateNameUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterUIState())
@@ -45,25 +51,43 @@ class RegisterViewModel @Inject constructor(
     private fun submit() = viewModelScope.launch {
         val s = _state.value
 
-        val emailError     = if (s.email.isBlank()) R.string.auth_error_required_field else null
-        val phoneError     = if (s.phoneNumber.isBlank()) R.string.auth_error_required_field else null
-        val firstNameError = if (s.firstName.isBlank()) R.string.auth_error_required_field else null
-        val lastNameError  = if (s.lastName.isBlank()) R.string.auth_error_required_field else null
-        val passwordError  = when {
-            s.password.isBlank()  -> R.string.auth_error_required_field
-            s.password.length < 6 -> R.string.auth_error_password_min_6
-            else                  -> null
+        val firstNameError = when {
+            s.firstName.isBlank()               -> R.string.auth_error_required_field
+            !validateNameUseCase(s.firstName)   -> R.string.auth_error_invalid_name
+            else                                -> null
+        }
+        val lastNameError = when {
+            s.lastName.isBlank()                -> R.string.auth_error_required_field
+            !validateNameUseCase(s.lastName)    -> R.string.auth_error_invalid_name
+            else                                -> null
+        }
+        val phoneError = when {
+            s.phoneNumber.isBlank()             -> R.string.auth_error_required_field
+            else                                -> null // full validation done in UseCase
+        }
+        val emailError = when {
+            s.email.isBlank()                   -> R.string.auth_error_required_field
+            !validateEmailUseCase(s.email)      -> R.string.auth_error_invalid_email
+            else                                -> null
+        }
+        val passwordError = when {
+            s.password.isBlank()                -> R.string.auth_error_required_field
+            s.password.length < 6               -> R.string.auth_error_password_min_6
+            s.password.length > 15              -> R.string.auth_error_password_max_15
+            s.password.contains(' ')            -> R.string.auth_error_password_spaces
+            !s.password.any { it.isLetter() }   -> R.string.auth_error_password_letters_required
+            else                                -> null
         }
 
-        if (emailError != null || phoneError != null || firstNameError != null ||
-            lastNameError != null || passwordError != null
+        if (firstNameError != null || lastNameError != null || phoneError != null ||
+            emailError != null || passwordError != null
         ) {
             _state.update {
                 it.copy(
-                    emailErrorRes     = emailError,
-                    phoneErrorRes     = phoneError,
                     firstNameErrorRes = firstNameError,
                     lastNameErrorRes  = lastNameError,
+                    phoneErrorRes     = phoneError,
+                    emailErrorRes     = emailError,
                     passwordErrorRes  = passwordError,
                 )
             }

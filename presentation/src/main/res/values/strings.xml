@@ -343,6 +343,11 @@
     <string name="auth_already_have_account">Already have an account? Log in</string>
     <string name="auth_error_required_field">This field is required</string>
     <string name="auth_error_password_min_6">Password must be at least 6 characters</string>
+    <string name="auth_error_invalid_name">Name must contain letters only, with no leading or trailing spaces</string>
+    <string name="auth_error_invalid_email">Please enter a valid email address</string>
+    <string name="auth_error_password_max_15">Password must be at most 15 characters</string>
+    <string name="auth_error_password_spaces">Password must not contain spaces</string>
+    <string name="auth_error_password_letters_required">Password must contain at least one letter</string>
 
     <!-- OTP -->
     <string name="otp_title">Verify your email</string>

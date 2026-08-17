@@ -338,6 +338,11 @@
     <string name="auth_already_have_account">لديك حساب بالفعل؟ تسجيل الدخول</string>
     <string name="auth_error_required_field">هذا الحقل مطلوب</string>
     <string name="auth_error_password_min_6">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل</string>
+    <string name="auth_error_invalid_name">يجب أن يحتوي الاسم على حروف فقط، بدون مسافات في البداية أو النهاية</string>
+    <string name="auth_error_invalid_email">يرجى إدخال عنوان بريد إلكتروني صحيح</string>
+    <string name="auth_error_password_max_15">يجب ألا تتجاوز كلمة المرور 15 حرفًا</string>
+    <string name="auth_error_password_spaces">يجب ألا تحتوي كلمة المرور على مسافات</string>
+    <string name="auth_error_password_letters_required">يجب أن تحتوي كلمة المرور على حرف واحد على الأقل</string>
 
     <!-- OTP -->
     <string name="otp_title">تحقق من بريدك الإلكتروني</string>
