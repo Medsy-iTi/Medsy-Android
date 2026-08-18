@@ -442,6 +442,7 @@
     <string name="cart_request_retry">Retry</string>
     <string name="cart_request_empty_request">Add at least one medicine before submitting. Prescriptions and notes only support the request.</string>
     <string name="cart_request_back">Back to cart</string>
+    <string name="cart_request_already_have_active_request">You already have an active request in SEARCHING status. You have to finish it first before submitting a new one</string>
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">Searching for your medicines</string>
     <string name="search_category_title">Category</string>
