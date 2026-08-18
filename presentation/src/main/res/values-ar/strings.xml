@@ -467,6 +467,8 @@
     <string name="cart_request_retry">إعادة المحاولة</string>
     <string name="cart_request_empty_request">أضف دواءً واحدًا على الأقل قبل إرسال الطلب. الروشتة والملاحظات عناصر مساعدة فقط.</string>
     <string name="cart_request_back">العودة إلى السلة</string>
+    <string name="cart_request_already_have_active_request">لديك طلب اخر يتم البحث عنه بالفعل. يجب انهاؤه اولا قبل البحث عن طلب جديد.</string>
+
     <!-- Active Search Status -->
     <string name="home_search_status_searching_title">جاري البحث عن أدويتك</string>
     <string name="home_search_status_searching_desc">نطابق طلبك مع الصيدليات القريبة</string>

@@ -26,15 +26,15 @@ private fun MedsyError.Local.resolveLocalError(): Int = when (this) {
 
 @StringRes
 private fun MedsyError.Validation.resolveValidationError(): Int = when (this) {
-    MedsyError.Validation.REQUIRED_FIELDS                  -> R.string.auth_error_required_field
-    MedsyError.Validation.INVALID_PHONE_NUMBER             -> R.string.error_phone_invalid
-    MedsyError.Validation.INVALID_OTP                      -> R.string.auth_invalid_code
-    MedsyError.Validation.INVALID_REMINDER_DETAILS         -> R.string.reminder_invalid_details
-    MedsyError.Validation.INVALID_NAME                     -> R.string.auth_error_invalid_name
-    MedsyError.Validation.INVALID_EMAIL                    -> R.string.auth_error_invalid_email
-    MedsyError.Validation.INVALID_PASSWORD_MAX_LENGTH      -> R.string.auth_error_password_max_15
-    MedsyError.Validation.INVALID_PASSWORD_SPACES          -> R.string.auth_error_password_spaces
-    MedsyError.Validation.INVALID_PASSWORD_MISSING_LETTER  -> R.string.auth_error_password_letters_required
+    MedsyError.Validation.REQUIRED_FIELDS -> R.string.auth_error_required_field
+    MedsyError.Validation.INVALID_PHONE_NUMBER -> R.string.error_phone_invalid
+    MedsyError.Validation.INVALID_OTP -> R.string.auth_invalid_code
+    MedsyError.Validation.INVALID_REMINDER_DETAILS -> R.string.reminder_invalid_details
+    MedsyError.Validation.INVALID_NAME -> R.string.auth_error_invalid_name
+    MedsyError.Validation.INVALID_EMAIL -> R.string.auth_error_invalid_email
+    MedsyError.Validation.INVALID_PASSWORD_MAX_LENGTH -> R.string.auth_error_password_max_15
+    MedsyError.Validation.INVALID_PASSWORD_SPACES -> R.string.auth_error_password_spaces
+    MedsyError.Validation.INVALID_PASSWORD_MISSING_LETTER -> R.string.auth_error_password_letters_required
 }
 
 @StringRes
@@ -52,6 +52,11 @@ private fun MedsyError.Remote.resolveRemoteError(): Int = when (this) {
 private fun resolveHttpError(statusCode: Int, serverMessage: String?): Int {
     if (statusCode == 400 || statusCode == 409) {
         when {
+            serverMessage.containsAny(
+                "You already have an active request",
+            ) ->
+                return R.string.cart_request_already_have_active_request
+
             serverMessage.containsAny(
                 "phone already",
                 "phone is already",
